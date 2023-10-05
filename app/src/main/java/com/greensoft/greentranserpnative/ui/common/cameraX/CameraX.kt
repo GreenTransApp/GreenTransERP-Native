@@ -1,4 +1,4 @@
-package com.greensoft.retrofittest.rough
+package com.greensoft.greentranserpnative.ui.common.cameraX
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -17,8 +17,8 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.greensoft.retrofittest.R
-import com.greensoft.retrofittest.databinding.ActivityCameraXBinding
+import com.greensoft.greentranserpnative.R
+import com.greensoft.greentranserpnative.databinding.ActivityCameraXBinding
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
