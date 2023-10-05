@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">GreenTransOld - Scanner [ Native ]</string>
+    <string name="app_name">GreenTransERP - Scanner [ Native ]</string>
     <string name="web_www_kgslpl_com">Web : WWW.KGSLPL.COM</string>
     <string name="my_app_name">KGS</string>
     <string name="new_and_select_label">New or Select Labels</string>
@@ -272,6 +272,8 @@
     <string name="none_mac_address">please input the mac address first!</string>
     <string name="usb_select">Please select USB dev</string>
     <string name="bt_select">Please select BLE dev</string>
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
     <string-array name="port">
         <item>USB</item>
         <item>NET</item>
