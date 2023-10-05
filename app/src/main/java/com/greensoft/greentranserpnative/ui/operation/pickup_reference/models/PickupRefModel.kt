@@ -1,4 +1,4 @@
-package com.greensoft.greentranserpnative.ui.booking.pickup_reference.models
+package com.greensoft.greentranserpnative.ui.operation.pickup_reference.models
 
 data class PickupRefModel(
     val commandmessage: Any,

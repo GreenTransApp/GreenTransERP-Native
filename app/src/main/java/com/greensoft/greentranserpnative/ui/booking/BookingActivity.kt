@@ -17,7 +17,7 @@ import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.ENV.Companion.DEBUGGING
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityBookingBinding
-import com.greensoft.greentranserpnative.ui.booking.eway_bill.EwayBillBottomSheet
+import com.greensoft.greentranserpnative.ui.operation.eway_bill.EwayBillBottomSheet
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.booking.models.ConsignorSelectionModel
 import com.greensoft.greentranserpnative.ui.booking.models.ContentSelectionModel
@@ -28,7 +28,7 @@ import com.greensoft.greentranserpnative.ui.booking.models.OriginSelectionModel
 import com.greensoft.greentranserpnative.ui.booking.models.PackingSelectionModel
 import com.greensoft.greentranserpnative.ui.booking.models.PickupBoySelectionModel
 import com.greensoft.greentranserpnative.ui.booking.models.TemperatureSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.pickup_reference.models.SinglePickupRefModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
@@ -123,7 +123,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         }
     }
     fun OpenEwayBillBottomSheet(){
-        val bottomSheet=EwayBillBottomSheet()
+        val bottomSheet= EwayBillBottomSheet()
         bottomSheet.show(supportFragmentManager,"Eway-Bill-BottomSheet")
     }
       private fun checkNullOrEmpty(value: Any?): String {

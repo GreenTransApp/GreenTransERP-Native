@@ -3,7 +3,6 @@ package com.greensoft.greentranserpnative.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.greensoft.greentranserpnative.base.BaseViewModel
-import com.greensoft.greentranserpnative.ui.booking.call_register.models.CallRegisterModel
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

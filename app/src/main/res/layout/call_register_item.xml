@@ -9,7 +9,7 @@
             />
     <variable
     name="registerList"
-    type="com.greensoft.greentranserpnative.ui.booking.call_register.models.CallRegisterModel" />
+    type="com.greensoft.greentranserpnative.ui.operation.call_register.models.CallRegisterModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

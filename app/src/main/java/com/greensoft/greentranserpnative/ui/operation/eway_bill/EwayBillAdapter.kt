@@ -1,11 +1,9 @@
-package com.greensoft.greentranserpnative.ui.booking.eway_bill
+package com.greensoft.greentranserpnative.ui.operation.eway_bill
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.greensoft.greentranserpnative.databinding.EwayBillRecyclerviewItemBinding
-import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
-import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 
 class EwayBillAdapter(private val EwayBillList: ArrayList<EwayBillModel>,
 //                      private val bottomSheetClick: BottomSheetClick<Any>
@@ -14,7 +12,7 @@ class EwayBillAdapter(private val EwayBillList: ArrayList<EwayBillModel>,
     inner class EwayBillViewHolder(private  val binding:EwayBillRecyclerviewItemBinding)
         :RecyclerView.ViewHolder(binding.root) {
 
-            fun bindData(model:EwayBillModel){
+            fun bindData(model: EwayBillModel){
                 binding.ewayBillModel=model
                 binding.index=adapterPosition
 //                binding.btnDelete.setOnClickListener{

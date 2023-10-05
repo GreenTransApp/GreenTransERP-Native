@@ -8,7 +8,7 @@
             />
         <variable
             name="gridData"
-            type="com.greensoft.greentranserpnative.ui.booking.pickup_reference.models.SinglePickupRefModel" />
+            type="com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel" />
 
     </data>
 

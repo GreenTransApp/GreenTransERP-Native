@@ -6,7 +6,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
-import com.greensoft.greentranserpnative.ui.booking.call_register.models.CallRegisterModel
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import retrofit2.Call
 import retrofit2.Callback

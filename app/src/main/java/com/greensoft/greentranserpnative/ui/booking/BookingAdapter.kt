@@ -8,7 +8,7 @@ import com.greensoft.greentranserpnative.databinding.BookingItemViewBinding
 import com.greensoft.greentranserpnative.ui.booking.models.ContentSelectionModel
 import com.greensoft.greentranserpnative.ui.booking.models.PackingSelectionModel
 import com.greensoft.greentranserpnative.ui.booking.models.TemperatureSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.pickup_reference.models.SinglePickupRefModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import javax.inject.Inject
 
@@ -20,7 +20,7 @@ class BookingAdapter @Inject constructor(
 
    inner class BookingViewHolder ( val binding:BookingItemViewBinding):RecyclerView.ViewHolder(binding.root){
 
-        fun bindData(singlePickupRefModel: SinglePickupRefModel,onRowClick: OnRowClick<Any>){
+        fun bindData(singlePickupRefModel: SinglePickupRefModel, onRowClick: OnRowClick<Any>){
             binding.gridData = singlePickupRefModel
             binding.index = adapterPosition
 

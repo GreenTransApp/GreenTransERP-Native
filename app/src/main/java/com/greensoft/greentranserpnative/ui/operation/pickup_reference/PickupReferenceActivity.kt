@@ -1,8 +1,7 @@
-package com.greensoft.greentranserpnative.ui.booking.pickup_reference
+package com.greensoft.greentranserpnative.ui.operation.pickup_reference
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -13,12 +12,10 @@ import com.google.gson.Gson
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityPickupReferenceBinding
 import com.greensoft.greentranserpnative.ui.booking.BookingActivity
-import com.greensoft.greentranserpnative.ui.booking.call_register.CallRegisterAdapter
-import com.greensoft.greentranserpnative.ui.booking.pickup_reference.models.PickupRefModel
-import com.greensoft.greentranserpnative.ui.booking.pickup_reference.models.SinglePickupRefModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.PickupRefModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject

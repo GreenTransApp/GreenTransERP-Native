@@ -1,4 +1,4 @@
-package com.greensoft.greentranserpnative.ui.booking.call_register
+package com.greensoft.greentranserpnative.ui.operation.call_register
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -9,16 +9,13 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityCallRegisterBinding
-import com.greensoft.greentranserpnative.ui.booking.call_register.models.CallRegisterModel
-import com.greensoft.greentranserpnative.ui.booking.pickup_reference.PickupReferenceActivity
+import com.greensoft.greentranserpnative.ui.operation.call_register.models.CallRegisterModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceActivity
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

@@ -8,7 +8,7 @@
             />
         <variable
             name="pickupRefData"
-            type="com.greensoft.greentranserpnative.ui.booking.pickup_reference.models.PickupRefModel" />
+            type="com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.PickupRefModel" />
 
     </data>
 

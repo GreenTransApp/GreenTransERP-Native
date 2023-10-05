@@ -1,15 +1,12 @@
-package com.greensoft.greentranserpnative.ui.booking.call_register
+package com.greensoft.greentranserpnative.ui.operation.call_register
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
-import com.greensoft.greentranserpnative.base.BaseActivity.Companion.successToast
 import com.greensoft.greentranserpnative.databinding.CallRegisterItemBinding
-import com.greensoft.greentranserpnative.ui.booking.call_register.models.CallRegisterModel
-import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
+import com.greensoft.greentranserpnative.ui.operation.call_register.models.CallRegisterModel
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import java.util.Locale
 import javax.inject.Inject
@@ -23,7 +20,7 @@ RecyclerView.Adapter<CallRegisterAdapter.CallRegisterViewHolder>(),Filterable {
     }
 
      class CallRegisterViewHolder(private val adapterBinding:CallRegisterItemBinding):RecyclerView.ViewHolder(adapterBinding.root){
-          fun bindData(model:CallRegisterModel,onRowClick: OnRowClick<Any>){
+          fun bindData(model: CallRegisterModel, onRowClick: OnRowClick<Any>){
               adapterBinding.registerList=model
               adapterBinding.index=adapterPosition
               adapterBinding.btnAccept.setOnClickListener{

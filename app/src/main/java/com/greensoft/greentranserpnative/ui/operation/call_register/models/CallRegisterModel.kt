@@ -1,4 +1,4 @@
-package com.greensoft.greentranserpnative.ui.booking.call_register.models
+package com.greensoft.greentranserpnative.ui.operation.call_register.models
 
 data class CallRegisterModel(
     val commandmessage: String?,

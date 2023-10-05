@@ -1,4 +1,4 @@
-package com.greensoft.greentranserpnative.ui.booking.pickup_reference
+package com.greensoft.greentranserpnative.ui.operation.pickup_reference
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,8 +6,8 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
-import com.greensoft.greentranserpnative.ui.booking.pickup_reference.models.PickupRefModel
-import com.greensoft.greentranserpnative.ui.booking.pickup_reference.models.SinglePickupRefModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.PickupRefModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

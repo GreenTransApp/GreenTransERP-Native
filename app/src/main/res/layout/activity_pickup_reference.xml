@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
 
-        tools:context=".ui.booking.pickup_reference.PickupReferenceActivity">
+        tools:context=".ui.operation.pickup_reference.PickupReferenceActivity">
         <include
             layout="@layout/toolbar"
             android:id="@+id/toolBar">

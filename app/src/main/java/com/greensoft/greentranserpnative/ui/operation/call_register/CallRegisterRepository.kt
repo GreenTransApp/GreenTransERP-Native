@@ -1,4 +1,4 @@
-package com.greensoft.greentranserpnative.ui.booking.call_register
+package com.greensoft.greentranserpnative.ui.operation.call_register
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,7 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
-import com.greensoft.greentranserpnative.ui.booking.call_register.models.CallRegisterModel
+import com.greensoft.greentranserpnative.ui.operation.call_register.models.CallRegisterModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

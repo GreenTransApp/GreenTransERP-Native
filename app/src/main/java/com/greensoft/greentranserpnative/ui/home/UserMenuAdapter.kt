@@ -4,9 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.greensoft.greentranserpnative.databinding.MenuItemsBinding
-import com.greensoft.greentranserpnative.databinding.PickupRefRecyclerItemBinding
-import com.greensoft.greentranserpnative.ui.booking.pickup_reference.PickupReferenceAdapter
-import com.greensoft.greentranserpnative.ui.booking.pickup_reference.models.PickupRefModel
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 

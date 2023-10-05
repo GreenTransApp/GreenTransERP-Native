@@ -1,4 +1,4 @@
-package com.greensoft.greentranserpnative.ui.booking.pickup_reference
+package com.greensoft.greentranserpnative.ui.operation.pickup_reference
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,8 +6,7 @@ import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import com.greensoft.greentranserpnative.databinding.PickupRefRecyclerItemBinding
-import com.greensoft.greentranserpnative.ui.booking.call_register.models.CallRegisterModel
-import com.greensoft.greentranserpnative.ui.booking.pickup_reference.models.PickupRefModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.PickupRefModel
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import java.util.Locale
 

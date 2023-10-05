@@ -1,8 +1,7 @@
-package com.greensoft.greentranserpnative.ui.booking.eway_bill
+package com.greensoft.greentranserpnative.ui.operation.eway_bill
 
 import android.content.Context
 import android.os.Bundle
-import android.service.autofill.OnClickAction
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,10 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.greensoft.greentranserpnative.databinding.EwayBillLayoutBinding
-import com.greensoft.greentranserpnative.ui.booking.BookingAdapter
-import com.greensoft.greentranserpnative.ui.booking.pickup_reference.models.SinglePickupRefModel
-import com.greensoft.greentranserpnative.ui.bottomsheet.common.CommonBottomSheet
-import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -34,7 +29,7 @@ class EwayBillBottomSheet @Inject constructor() : BottomSheetDialogFragment(), B
             mContext: Context,
             title: String,
 
-        ): EwayBillBottomSheet{
+        ): EwayBillBottomSheet {
             val instance: EwayBillBottomSheet = EwayBillBottomSheet()
             instance.title = title
             ITEM_CLICK_VIEW_TYPE = title

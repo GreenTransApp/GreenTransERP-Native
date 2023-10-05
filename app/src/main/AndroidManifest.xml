@@ -19,7 +19,7 @@
         android:theme="@style/Theme.GreenTransERPNative"
         tools:targetApi="31">
         <activity
-            android:name=".ui.booking.call_register.CallRegisterActivity"
+            android:name=".ui.operation.call_register.CallRegisterActivity"
             android:exported="false"
             android:parentActivityName=".ui.home.HomeActivity"
             />
@@ -28,14 +28,14 @@
             android:exported="false"
             />
         <activity
-            android:name=".ui.booking.pickup_reference.PickupReferenceActivity"
+            android:name=".ui.operation.pickup_reference.PickupReferenceActivity"
             android:exported="false"
-            android:parentActivityName=".ui.booking.call_register.CallRegisterActivity"
+            android:parentActivityName=".ui.operation.call_register.CallRegisterActivity"
             />
         <activity
             android:name=".ui.booking.BookingActivity"
             android:exported="false"
-            android:parentActivityName=".ui.booking.pickup_reference.PickupReferenceActivity"
+            android:parentActivityName=".ui.operation.pickup_reference.PickupReferenceActivity"
             />
         <activity
             android:name=".MainActivity"
