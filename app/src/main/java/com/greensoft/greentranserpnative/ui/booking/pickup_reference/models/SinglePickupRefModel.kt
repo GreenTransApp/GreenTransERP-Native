@@ -51,7 +51,7 @@ data class SinglePickupRefModel(
     val iatavolfactor: Int,
     val orgcode: String,
     val packagetype: String,
-    val packing: String,
+    var packing: String,
     val packingcode: String,
     val pckgbreath: Double,
     val pckgheight: Double,
@@ -61,7 +61,7 @@ data class SinglePickupRefModel(
     val referenceno: Any,
     val servicetype: String,
     val stockitemcode: String,
-    val tempurature: String,
+    var tempurature: String,
     val transactionid: Int,
     val volfactor: Int,
     val weight: Double

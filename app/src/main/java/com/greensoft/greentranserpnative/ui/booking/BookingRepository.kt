@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
+import com.greensoft.greentranserpnative.ui.booking.models.AgentSelectionModel
 import com.greensoft.greentranserpnative.ui.booking.models.ConsignorSelectionModel
 import com.greensoft.greentranserpnative.ui.booking.models.ContentSelectionModel
 import com.greensoft.greentranserpnative.ui.booking.models.CustomerSelectionModel
@@ -63,6 +64,10 @@ class BookingRepository @Inject constructor():BaseRepository(){
     private val gelPackMuteLiveData = MutableLiveData<ArrayList<GelPackItemSelectionModel>>()
     val gelPackLiveData: LiveData<ArrayList<GelPackItemSelectionModel>>
         get() = gelPackMuteLiveData
+
+    private val agentMuteLiveData = MutableLiveData<ArrayList<AgentSelectionModel>>()
+    val agentLiveData: LiveData<ArrayList<AgentSelectionModel>>
+        get() = agentMuteLiveData
 
 
 
@@ -366,6 +371,41 @@ class BookingRepository @Inject constructor():BaseRepository(){
                             val resultList: ArrayList<GelPackItemSelectionModel> =
                                 gson.fromJson(jsonArray.toString(), listType);
                             gelPackMuteLiveData.postValue(resultList)
+
+                        }
+                    } else {
+                        isError.postValue(result.CommandMessage.toString());
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR);
+                }
+                viewDialogMutData.postValue(false)
+            }
+
+            override fun onFailure(call: Call<CommonResult>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
+
+
+    }
+
+    fun getAgentLov(companyId: String, spname: String, param: List<String>, values: ArrayList<String>) {
+        api.commonApi(companyId, spname, param, values).enqueue(object : Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
+                if (response.body() != null) {
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if (result.CommandStatus == 1) {
+                        val jsonArray = getResult(result);
+                        if (jsonArray != null) {
+                            val listType =
+                                object : TypeToken<List<AgentSelectionModel>>() {}.type
+                            val resultList: ArrayList<AgentSelectionModel> =
+                                gson.fromJson(jsonArray.toString(), listType);
+                            agentMuteLiveData.postValue(resultList)
 
                         }
                     } else {

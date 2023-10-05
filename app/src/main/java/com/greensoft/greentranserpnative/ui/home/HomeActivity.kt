@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
+import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityHomeBinding
 import com.greensoft.greentranserpnative.ui.booking.call_register.CallRegisterActivity
@@ -62,7 +63,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
             loginDataModel?.companyid.toString(),
             "greentransapp_usermenu_native_WMS",
             listOf("prmusercode","prmapp"),
-            arrayListOf(userDataModel?.usercode.toString(),"GREENTRANSERP_NATIVE")
+            arrayListOf(userDataModel?.usercode.toString(), ENV.APP_NAME)
         )
     }
 

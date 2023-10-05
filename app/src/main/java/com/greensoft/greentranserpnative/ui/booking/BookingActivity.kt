@@ -25,10 +25,12 @@ import com.greensoft.greentranserpnative.ui.booking.models.CustomerSelectionMode
 import com.greensoft.greentranserpnative.ui.booking.models.DepartmentSelectionModel
 import com.greensoft.greentranserpnative.ui.booking.models.DestinationSelectionModel
 import com.greensoft.greentranserpnative.ui.booking.models.OriginSelectionModel
+import com.greensoft.greentranserpnative.ui.booking.models.PackingSelectionModel
 import com.greensoft.greentranserpnative.ui.booking.models.PickupBoySelectionModel
 import com.greensoft.greentranserpnative.ui.booking.models.TemperatureSelectionModel
 import com.greensoft.greentranserpnative.ui.booking.pickup_reference.models.SinglePickupRefModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
+import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -41,6 +43,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
     lateinit var activityBinding: ActivityBookingBinding
     lateinit var linearLayoutManager: LinearLayoutManager
+    private var menuModel: UserMenuModel? = null
     private var title: String = "BOOKING"
 //    private var bookingList: List<BookingRecyclerModel> = ArrayList()
     private val viewModel: BookingViewModel by viewModels()
@@ -72,10 +75,21 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar as Toolbar)
         setUpToolbar("BOOKING ENTRY")
+        menuModel = getMenuData()
         activityBinding.inputDate.inputType = InputType.TYPE_NULL;
         activityBinding.inputTime.inputType = InputType.TYPE_NULL;
         setLayoutVisibility()
         getIntentData()
+        getCustomerList()
+        getCngrList()
+        getCngeList()
+        getDeptList()
+        getOriginList()
+        getDestinationList()
+        getPickupBoyList()
+        getTempLov()
+        getpackingLov()
+        getContentList()
         setObservers()
         setReferenceData()
         spinnerSetUp()
@@ -87,7 +101,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
     override fun onResume() {
         super.onResume()
-        refreshData()
+//        refreshData()
     }
 
 //    override fun onResume() {
@@ -294,20 +308,13 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
        OpenEwayBillBottomSheet()
    }
     }
-    private fun refreshData(){
-        getCustomerList()
-        getCngrList()
-        getCngeList()
-        getDeptList()
-        getOriginList()
-        getDestinationList()
-        getPickupBoyList()
-        getContentList()
-    }
+//    private fun refreshData(){
+//
+//    }
 
     private fun setObservers() {
         activityBinding.refreshLayout.setOnRefreshListener {
-            refreshData()
+//            refreshData()
             lifecycleScope.launch {
                 delay(1500)
                 activityBinding.refreshLayout.isRefreshing=false
@@ -364,7 +371,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
         viewModel.tempLiveData.observe(this) { tempData ->
             temperatureList = tempData
-            openTemperatureSelectionBottomSheet(temperatureList)
+
         }
          viewModel.contentLiveData.observe(this) { itemData ->
             contentList = itemData
@@ -513,13 +520,13 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             arrayListOf()
         )
     }
-    private fun openTemperatureSelectionBottomSheet(rvList: ArrayList<TemperatureSelectionModel>) {
+    private fun openTemperatureSelectionBottomSheet(rvList: ArrayList<TemperatureSelectionModel>,index: Int) {
         val commonList = ArrayList<CommonBottomSheetModel<Any>>()
         for (i in 0 until rvList.size) {
             commonList.add(CommonBottomSheetModel(rvList[i].name, rvList[i]))
 
         }
-        openCommonBottomSheet(this, "Temperature Selection", this, commonList)
+        openCommonBottomSheet(this, "Temperature Selection", this, commonList,true, index)
     }
 
     private fun getContentList() {
@@ -537,6 +544,24 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
         }
         openCommonBottomSheet(this, "Content Selection", this, commonList, true, index)
+
+    }
+
+    private fun getpackingLov() {
+        viewModel.getContentLov(
+            loginDataModel?.companyid.toString(),
+            "greentransweb_packinglov_forbooking",
+            listOf(),
+            arrayListOf()
+        )
+    }
+    private fun openPackingSelectionBottomSheet(rvList: ArrayList<PackingSelectionModel>, index: Int) {
+        val commonList = ArrayList<CommonBottomSheetModel<Any>>()
+        for (i in 0 until rvList.size) {
+            commonList.add(CommonBottomSheetModel(rvList[i].packingname, rvList[i]))
+
+        }
+        openCommonBottomSheet(this, "Packing Selection", this, commonList, true, index)
 
     }
 
@@ -612,31 +637,40 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         if (clickType == "Content Selection") {
             val selectedContent=data as ContentSelectionModel
             bookingAdapter?.setContent(selectedContent, index)
+
+        } else if(clickType=="Temperature Selection"){
+            val selectedTemp=data as TemperatureSelectionModel
+            bookingAdapter?.setTemperature(selectedTemp, index)
+
+        }else if(clickType=="Packing Selection"){
+            val selectedPckg=data as PackingSelectionModel
+            bookingAdapter?.setPacking(selectedPckg, index)
+
         }
+
+
     }
 
     override fun onRowClick(data: Any, clickType: String, index: Int) {
         if (clickType == "CONTENT_SELECT") {
             openContentSelectionBottomSheet(contentList, index)
+
+        }else if (clickType == "TEMPERATURE_SELECT"){
+              openTemperatureSelectionBottomSheet(temperatureList,index)
+
+        }else if(clickType =="GEL_PACK_SELECT"){
+
+        }else if(clickType == "REMOVE_SELECT"){
+//                singlePickupDataList.forEachIndexed {index, element ->
+//                singlePickupDataList.removeAt(index)
+//                activityBinding.recyclerView.adapter!!.notifyItemRangeRemoved(index,singlePickupDataList.size)
+//
         }
     }
 
 
 
     override fun onCLick(data: Any, clickType: String) {
-        if (clickType == "PACKING_SELECT"){
-//            successToast("testing")
-        }else if(clickType =="GEL_PACK_SELECT"){
-
-        } else if(clickType=="TEMPERATURE_SELECT"){
-            getTempLov()
-        } else if(clickType == "REMOVE_SELECT"){
-//                singlePickupDataList.forEachIndexed {index, element ->
-//                singlePickupDataList.removeAt(index)
-//                activityBinding.recyclerView.adapter!!.notifyItemRangeRemoved(index,singlePickupDataList.size)
-//
-            }
-
 
     }
 }

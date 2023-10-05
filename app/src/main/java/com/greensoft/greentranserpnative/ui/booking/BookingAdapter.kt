@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.greensoft.greentranserpnative.databinding.BookingItemViewBinding
 import com.greensoft.greentranserpnative.ui.booking.models.ContentSelectionModel
+import com.greensoft.greentranserpnative.ui.booking.models.PackingSelectionModel
 import com.greensoft.greentranserpnative.ui.booking.models.TemperatureSelectionModel
 import com.greensoft.greentranserpnative.ui.booking.pickup_reference.models.SinglePickupRefModel
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
@@ -35,7 +36,7 @@ class BookingAdapter @Inject constructor(
             }
 
             binding.temperature.setOnClickListener{
-                onRowClick.onCLick(singlePickupRefModel, "TEMPERATURE_SELECT")
+                onRowClick.onRowClick(singlePickupRefModel, "TEMPERATURE_SELECT",adapterPosition)
             }
             binding.btnRemove.setOnClickListener{
                  removeItem(adapterPosition)
@@ -58,16 +59,22 @@ class BookingAdapter @Inject constructor(
         holder.bindData(gridData,onRowClick)
     }
 
-//    fun setTemperature(tempModel: TemperatureSelectionModel) {
-//          var tempvalue=tempModel.name.toString()
-//
-//    }
 
     fun setContent(contentModel:ContentSelectionModel, adapterPosition: Int) {
         Log.d("TEST_TEST", contentModel.itemname.toString())
         bookingList[adapterPosition].contents = contentModel.itemname
         notifyItemChanged(adapterPosition)
     }
+    fun setTemperature(tempModel:TemperatureSelectionModel, adapterPosition: Int) {
+        bookingList[adapterPosition].tempurature = tempModel.name
+        notifyItemChanged(adapterPosition)
+    }
+    fun setPacking(pckgModel:PackingSelectionModel, adapterPosition: Int) {
+        bookingList[adapterPosition].packing = pckgModel.packingname
+        notifyItemChanged(adapterPosition)
+    }
+
+
 
     fun removeItem(position: Int) {
 //        var currentList: ArrayList<SinglePickupRefModel> = ArrayList()
