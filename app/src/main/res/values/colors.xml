@@ -20,4 +20,6 @@
     <color name="green">#4CAF50</color>
     <color name="failed">#664147</color>
     <color name="success">#509753</color>
+    <color name="button_dark">#0fa466</color>
+    <color name="button_main">#18c117</color>
 </resources>

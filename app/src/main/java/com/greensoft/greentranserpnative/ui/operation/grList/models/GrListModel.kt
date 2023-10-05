@@ -1,0 +1,31 @@
+package com.greensoft.greentranserpnative.ui.operation.grList.models
+
+data class GrListModel(
+    val cnge: String,
+    val cngr: String,
+    val cngrcode: String,
+    val commandmessage: Any,
+    val commandstatus: Int,
+    val custcode: Any,
+    val custname: Any,
+    val cweight: Double,
+    val destcode: String,
+    val destname: String,
+    val ewaybillno: Any,
+    val flightno: String,
+    val freight: Double,
+    val grdt: String,
+    val grno: String,
+    val grtype: String,
+    val indentno: Int,
+    val isbillgenerated: String,
+    val jobid: Any,
+    val jobno: Any,
+    val loadtype: String,
+    val oamount: Double,
+    val orgcode: String,
+    val origin: String,
+    val pckgs: Int,
+    val sno: Int,
+    val tamount: Double
+)

@@ -5,6 +5,7 @@ plugins {
     id 'com.google.dagger.hilt.android'
 }
 
+
 android {
     namespace 'com.greensoft.greentranserpnative'
     compileSdk 33
@@ -34,6 +35,12 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
     }
 }
 
@@ -81,6 +88,14 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01"
     implementation 'com.google.code.gson:gson:2.10.1'
+
+
+    implementation(name: 'printer-lib-2.2.4', ext: 'aar')
+    implementation 'com.github.tbruyelle:rxpermissions:0.12'
+    implementation "io.reactivex.rxjava3:rxjava:3.1.5"
+    implementation 'io.github.jeremyliao:live-event-bus-x:1.8.0'
+    //noinspection GradleCompatible
+
 
 //    implementation 'androidx.core:core-ktx:1.7.0'
 //    implementation 'androidx.appcompat:appcompat:1.6.1'
