@@ -34,6 +34,7 @@ object Common {
     var progressDoalog: ProgressDialog? = null
     var ImageTransactionIdList = ArrayList<String>()
     private var mContext: Context? = null
+    const val EVENT_CONNECT_STATUS = "EVENT_CONNECT_STATUS"
     lateinit var dateFormat: DateFormat
     var appVersion = "1.0"
     var appVersionDate = "2020-06-27"
