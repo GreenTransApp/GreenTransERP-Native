@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".MainActivity">
+
+        <!--    <include-->
+        <!--        layout="@layout/toolbar"-->
+        <!--        android:id="@+id/toolBar"-->
+        <!--        />-->
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:rotationY="0"
+            android:layout_margin="16sp"
+            app:cardPreventCornerOverlap="true"
+            app:cardElevation="12dp"
+            app:cardCornerRadius="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16sp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_gravity="center_horizontal"
+                    android:id="@+id/compLogo"
+                    android:layout_width="80sp"
+                    android:layout_height="80sp">
+
+                </ImageView>
+
+                <TextView
+                    android:id="@+id/compName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="14dp"
+                    android:textColor="@color/colorPrimary" />
+
+
+                <TextView
+                    android:id="@+id/userName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="12dp"
+                    android:textColor="@color/colorPrimary" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1sp"
+                    android:layout_marginTop="6sp"
+                    android:background="@color/colorPrimary" />
+
+                <LinearLayout
+                    android:layout_marginTop="6sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/loginBranchLable"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:textSize="14dp"
+                            android:text="Login Branch"
+                            android:textColor="@color/colorPrimary" />
+
+                        <TextView
+                            android:id="@+id/loginBranch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:textSize="15dp"
+                            android:textColor="@color/colorPrimary" />
+
+                    </LinearLayout>
+
+
+                    <!--                <LinearLayout-->
+                    <!--                    android:layout_width="0dp"-->
+                    <!--                    android:layout_height="wrap_content"-->
+                    <!--                    android:layout_weight="1"-->
+                    <!--                    android:orientation="vertical">-->
+
+                    <!--                    <TextView-->
+                    <!--                        android:id="@+id/loginWareHouseLable"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_gravity="center_horizontal"-->
+                    <!--                        android:textSize="12dp"-->
+                    <!--                        android:text="Login Warehouse"-->
+                    <!--                        android:textColor="@color/colorPrimary"/>-->
+
+                    <!--                    <TextView-->
+                    <!--                        android:id="@+id/loginWareHouse"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_gravity="center_horizontal"-->
+                    <!--                        android:textSize="12dp"-->
+                    <!--                        android:textColor="@color/colorPrimary"/>-->
+
+                    <!--                </LinearLayout>-->
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp">
+            <TextView
+                android:text="Current Bluetooth："
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/tv_main_bluetooth"
+                android:layout_toStartOf="@+id/tv_main_bluetooth" />
+            <TextView
+                android:gravity="center_vertical"
+                android:layout_marginRight="5dp"
+                android:layout_alignParentRight="true"
+                android:text="@string/no_connect_blue_tooth"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:id="@+id/tv_main_bluetooth" />
+        </RelativeLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:rotationY="0"
+            android:layout_margin="16sp"
+            app:cardPreventCornerOverlap="true"
+            app:cardElevation="12dp"
+            app:cardCornerRadius="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_margin="10sp"
+                android:gravity="center_vertical">
+
+                <!--            <LinearLayout-->
+                <!--                android:layout_width="match_parent"-->
+                <!--                android:layout_height="match_parent"-->
+                <!--                android:orientation="horizontal"-->
+                <!--                android:weightSum="2">-->
+
+                <!--                <com.google.android.material.button.MaterialButton-->
+                <!--                    android:id="@+id/btn_inword"-->
+                <!--                    android:text="In-Scan"-->
+                <!--                    android:textAllCaps="false"-->
+                <!--                    android:layout_height="60sp"-->
+                <!--                    android:layout_width="0sp"-->
+                <!--                    android:layout_weight="1"-->
+                <!--                    app:cornerRadius="10sp"-->
+                <!--                    android:layout_margin="2sp"-->
+                <!--                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"-->
+                <!--                    app:strokeColor="@color/colorPrimary"/>-->
+
+
+                <!--                <com.google.android.material.button.MaterialButton-->
+                <!--                    android:id="@+id/btn_outword"-->
+                <!--                    android:text="Out-Scan"-->
+                <!--                    android:textAllCaps="false"-->
+                <!--                    android:layout_margin="2sp"-->
+                <!--                    android:layout_height="60sp"-->
+                <!--                    android:layout_width="0sp"-->
+                <!--                    android:layout_weight="1"-->
+                <!--                    app:cornerRadius="10sp"-->
+                <!--                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"-->
+                <!--                    app:strokeColor="@color/colorPrimary"/>-->
+
+                <!--            </LinearLayout>-->
+
+
+                <!--            <LinearLayout-->
+                <!--                android:layout_width="match_parent"-->
+                <!--                android:layout_height="match_parent"-->
+                <!--                android:orientation="horizontal"-->
+                <!--                android:weightSum="2">-->
+
+                <!--                <com.google.android.material.button.MaterialButton-->
+                <!--                    android:id="@+id/btn_allEnquiry"-->
+                <!--                    android:text="Enquiry"-->
+                <!--                    android:textAllCaps="false"-->
+                <!--                    android:layout_margin="2sp"-->
+                <!--                    android:layout_height="60sp"-->
+                <!--                    android:layout_width="0sp"-->
+                <!--                    android:layout_weight="1"-->
+                <!--                    app:cornerRadius="10sp"-->
+                <!--                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"-->
+                <!--                    app:strokeColor="@color/colorPrimary"/>-->
+
+
+                <!--                <com.google.android.material.button.MaterialButton-->
+                <!--                    android:id="@+id/btn_stockReport"-->
+                <!--                    android:text="Stock Report"-->
+                <!--                    android:layout_margin="2sp"-->
+                <!--                    android:textAllCaps="false"-->
+                <!--                    android:layout_height="60sp"-->
+                <!--                    android:layout_width="0sp"-->
+                <!--                    android:layout_weight="1"-->
+                <!--                    app:cornerRadius="10sp"-->
+                <!--                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"-->
+                <!--                    app:strokeColor="@color/colorPrimary"/>-->
+
+                <!--            </LinearLayout>-->
+
+
+                <!--            <LinearLayout-->
+                <!--                android:layout_width="match_parent"-->
+                <!--                android:layout_height="match_parent"-->
+                <!--                android:orientation="horizontal"-->
+                <!--                android:weightSum="2">-->
+
+                <!--                <com.google.android.material.button.MaterialButton-->
+                <!--                    android:id="@+id/btn_physicalstockReport"-->
+                <!--                    android:text="Physical Stock"-->
+                <!--                    android:textAllCaps="false"-->
+                <!--                    android:layout_margin="2sp"-->
+                <!--                    android:layout_height="60sp"-->
+                <!--                    android:layout_width="0sp"-->
+                <!--                    android:layout_weight="1"-->
+                <!--                    app:cornerRadius="10sp"-->
+                <!--                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"-->
+                <!--                    app:strokeColor="@color/colorPrimary"/>-->
+
+
+                <!--                <com.google.android.material.button.MaterialButton-->
+                <!--                    android:id="@+id/btnStockTransfer"-->
+                <!--                    android:text="Transfer Stock"-->
+                <!--                    android:textAllCaps="false"-->
+                <!--                    android:layout_margin="2sp"-->
+                <!--                    android:layout_height="60sp"-->
+                <!--                    android:layout_width="0sp"-->
+                <!--                    android:layout_weight="1"-->
+                <!--                    app:cornerRadius="10sp"-->
+                <!--                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"-->
+                <!--                    app:strokeColor="@color/colorPrimary"/>-->
+
+
+                <!--            </LinearLayout>-->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnPrintSticker"
+                        android:text="Print Sticker"
+                        android:textAllCaps="false"
+                        android:layout_margin="2sp"
+                        android:layout_height="60sp"
+                        app:cornerRadius="10sp"
+                        android:layout_width="0sp"
+                        android:layout_weight="2"
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        app:strokeColor="@color/colorPrimary" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:id="@+id/layout_check_printer"
+                    android:visibility="gone"
+                    >
+
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCheckPrint"
+                        android:text="Check Printer"
+                        android:textAllCaps="false"
+                        android:layout_margin="2sp"
+                        android:layout_height="60sp"
+                        app:cornerRadius="10sp"
+                        android:layout_width="0sp"
+                        android:layout_weight="2"
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        app:strokeColor="@color/colorPrimary" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnConnectBluetooth"
+                        android:text="Connect Printer / Bluetooth"
+                        android:textAllCaps="false"
+                        android:layout_margin="2sp"
+                        android:layout_height="60sp"
+                        app:cornerRadius="10sp"
+                        android:layout_width="0sp"
+                        android:layout_weight="2"
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        app:strokeColor="@color/colorPrimary" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/logout"
+                        android:text="Logout"
+                        android:textAllCaps="false"
+                        android:layout_marginVertical="20sp"
+                        android:layout_marginHorizontal="35dp"
+
+                        android:layout_height="60sp"
+                        app:cornerRadius="10sp"
+                        android:layout_width="0sp"
+                        android:layout_weight="2"
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        app:strokeColor="@color/colorPrimary" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</layout>

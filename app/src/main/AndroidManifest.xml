@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission
+        android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
+        tools:ignore="ProtectedPermissions" />
+
+    <application
+        android:name="com.greensoft.kgs_printer.hilt.HiltAndroidApp"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.GreenTransERPNative"
+        tools:targetApi="31">
+        <activity
+            android:name=".ui.booking.call_register.CallRegisterActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity"
+            />
+        <activity
+            android:name=".ui.home.HomeActivity"
+            android:exported="false"
+            />
+        <activity
+            android:name=".ui.booking.pickup_reference.PickupReferenceActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.booking.call_register.CallRegisterActivity"
+            />
+        <activity
+            android:name=".ui.booking.BookingActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.booking.pickup_reference.PickupReferenceActivity"
+            />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:exported="true">
+           <intent-filter>
+               <action android:name="android.intent.action.MAIN" />
+               <category android:name="android.intent.category.LAUNCHER" />
+           </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.update.UpdateActivity"
+            android:exported="false" />
+    </application>
+
+</manifest>

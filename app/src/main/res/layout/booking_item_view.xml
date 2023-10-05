@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="index"
+            type="Integer"
+            />
+        <variable
+            name="gridData"
+            type="com.greensoft.greentranserpnative.ui.booking.pickup_reference.models.SinglePickupRefModel" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/sNo"
+                        android:layout_width="50sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_margin="1dp"
+                        android:focusable="false"
+                        android:text="@{String.valueOf(index + 1)}"
+                        android:background="@drawable/table_content_cell_bg"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/pckgs"
+                        android:layout_width="200sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_margin="1dp"
+                        android:text="@{String.valueOf(gridData.pckgs)}"
+                        android:background="@drawable/table_content_cell_bg"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/refNo"
+                        android:layout_width="200sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:focusable="false"
+                        android:layout_margin="1dp"
+                        android:text="@{String.valueOf(gridData.referenceno)}"
+                        android:background="@drawable/table_content_cell_bg"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/packing"
+                        android:layout_width="250sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_margin="1dp"
+                        android:textColor="@color/black"
+                        android:focusable="false"
+                        android:text="@{String.valueOf(gridData.packing)}"
+                        android:background="@drawable/table_content_cell_bg"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/boxNo"
+                        android:layout_width="150sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_margin="1dp"
+                        android:focusable="false"
+                        android:text="@{String.valueOf(gridData.boxno)}"
+                        android:background="@drawable/table_content_cell_bg"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/content"
+                        android:layout_width="200sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:layout_margin="1dp"
+                        android:focusable="false"
+                        android:text="@{String.valueOf(gridData.contents)}"
+                        android:background="@drawable/table_content_cell_bg"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/temperature"
+                        android:layout_width="200sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:focusable="false"
+                        android:layout_margin="1dp"
+                        android:text="@{String.valueOf(gridData.tempurature)}"
+                        android:background="@drawable/table_content_cell_bg"
+                        android:textSize="16sp" />
+
+
+
+                    <EditText
+                        android:id="@+id/selectDatalogger"
+                        android:layout_width="200sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:focusable="false"
+                        android:layout_margin="1dp"
+                        android:text="@{String.valueOf(gridData.datalogger)}"
+                        android:background="@drawable/table_content_cell_bg"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/dataloggerNum"
+                        android:layout_width="200sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:focusable="false"
+                        android:layout_margin="1dp"
+                        android:text="@{String.valueOf(gridData.dataloggerno)}"
+                        android:background="@drawable/table_content_cell_bg"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/weight"
+                        android:layout_width="150sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_margin="1dp"
+                        android:text="@{String.valueOf(gridData.weight)}"
+                        android:background="@drawable/table_content_cell_bg"
+                        android:textSize="16sp"/>
+
+                   <EditText
+                        android:id="@+id/length"
+                        android:layout_width="150sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_margin="1dp"
+                        android:text="@{String.valueOf(gridData.pckglength)}"
+                        android:background="@drawable/table_content_cell_bg"
+                       android:textSize="16sp" />
+
+
+                    <EditText
+                        android:id="@+id/breadth"
+                        android:layout_width="150sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_margin="1dp"
+                        android:text="@{String.valueOf(gridData.pckgbreath)}"
+                        android:background="@drawable/table_content_cell_bg"
+                        android:textSize="16sp" />
+
+
+                    <EditText
+                        android:id="@+id/height"
+                        android:layout_width="150sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_margin="1dp"
+                        android:text="@{String.valueOf(gridData.pckgheight)}"
+                        android:background="@drawable/table_content_cell_bg"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                       android:layout_width="150sp"
+                       android:layout_height="match_parent"
+                        android:layout_margin="1sp"
+                       android:background="@drawable/table_content_cell_bg"
+                       android:gravity="center">
+                       <CheckBox
+                           android:id="@+id/chek_gel_pack"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:gravity="center"
+                            />
+
+                   </LinearLayout>
+
+
+                    <EditText
+                        android:id="@+id/gel_pack_item"
+                        android:layout_width="150sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_margin="1dp"
+                        android:focusable="false"
+                        android:text="@{String.valueOf(gridData.gelpack)}"
+                        android:background="@drawable/table_content_cell_bg"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/gel_pack_quantity"
+                        android:layout_width="150sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_margin="1dp"
+                        android:focusable="false"
+                        android:text="@{String.valueOf(gridData.gelpackqty)}"
+                        android:background="@drawable/table_content_cell_bg"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/dry_ice"
+                        android:layout_width="148sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_margin="1dp"
+                        android:text="@{String.valueOf(gridData.dryice)}"
+                        android:background="@drawable/table_content_cell_bg"
+                        android:textSize="16sp" />
+
+                   <LinearLayout
+                       android:layout_width="150sp"
+                       android:layout_height="match_parent"
+                       android:gravity="center"
+                       android:layout_gravity="center"
+                       android:background="@drawable/table_content_cell_bg">
+
+                       <Button
+                           android:id="@+id/btn_remove"
+                           android:layout_height="match_parent"
+                           android:gravity="center"
+                           android:layout_gravity="center"
+                           android:layout_width="148sp"
+                           android:background="@color/danger"
+                           android:text="Remove">
+
+                       </Button>
+                   </LinearLayout>
+
+
+
+
+                </LinearLayout>
+            </LinearLayout>
+        </HorizontalScrollView>
+
+    </LinearLayout>
+</layout>
