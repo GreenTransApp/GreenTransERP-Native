@@ -1,11 +1,19 @@
 package com.greensoft.greentranserpnative.ui.home
 
+import android.app.Activity
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.MediaStore
+import android.view.View
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
@@ -15,14 +23,15 @@ import com.google.gson.Gson
 import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityHomeBinding
-import com.greensoft.greentranserpnative.ui.operation.call_register.CallRegisterActivity
-import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceActivity
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.login.LoginActivity
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.call_register.CallRegisterActivity
+import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.InputStream
 import java.util.concurrent.Executors
 import javax.inject.Inject
 
@@ -38,6 +47,51 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
     val executor = Executors.newSingleThreadExecutor()
     val handler = Handler(Looper.getMainLooper())
     var image: Bitmap? = null
+    val CAMERA_REQUEST_CODE: Int = 10001
+
+    var resultLauncher: ActivityResultLauncher<Intent>
+    = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // There are no request codes
+            val data: Intent? = result.data
+            if(data != null) {
+//                val imageBitmap = data.extras?.getString("data") as Bitmap
+//                val dataString: String? = data.extras?.getString("data")
+                val dataString: Uri? = data.data
+                if(dataString != null) {
+                    try {
+                        val inputStream: InputStream? =
+                            contentResolver.openInputStream(dataString)
+                        val bitmap = BitmapFactory.decodeStream(inputStream)
+                        activityBinding.compLogo.setImageBitmap(bitmap)
+                        val selectedImagePath = getPathFormatUri(dataString)
+                    } catch (e: java.lang.Exception) {
+                        Toast.makeText(this, e.message, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+//                    val imageBitmap: Bitmap = dataString as Bitmap
+//                    activityBinding.compLogo.setImageBitmap(imageBitmap)
+                } else {
+                    errorToast("Unable to get the proper image.")
+                }
+            }
+        }
+    }
+
+    private fun getPathFormatUri(contentUri: Uri): String? {
+        val filePath: String?
+        val cursor: Cursor? = contentResolver
+            .query(contentUri, null, null, null, null)
+        if (cursor == null) {
+            filePath = contentUri.path
+        } else {
+            cursor.moveToFirst()
+            val index: Int = cursor.getColumnIndex("_data")
+            filePath = cursor.getString(index)
+            cursor.close()
+        }
+        return filePath
+    }
 
 
 
@@ -45,6 +99,9 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
+        if(ENV.DEBUGGING) {
+            activityBinding.testDebugging.visibility = View.VISIBLE
+        }
         setupUi()
         setObserver()
         setOnClicks()
@@ -135,7 +192,49 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
           }
 
      }
+
+    private fun selectImage() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        resultLauncher.launch(intent)
+    }
+
+    private fun dispatchTakePictureIntent() {
+//        Intent(Intent.ACTION_,MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            // Ensure that there's a camera activity to handle the intent
+//            takePictureIntent.resolveActivity(packageManager)?.also {
+//                // Create the File where the photo should go
+//                val photoFile: File? = try {
+//                    createImageFile()
+//                } catch (ex: IOException) {
+//                    // Error occurred while creating the File
+//                    ...
+//                    null
+//                }
+//                // Continue only if the File was successfully created
+//                photoFile?.also {
+//                    val photoURI: Uri = FileProvider.getUriForFile(
+//                        this,
+//                        "com.example.android.fileprovider",
+//                        it
+//                    )
+//                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+//                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+//                }
+//            }
+//            resultLauncher.launch(takePictureIntent)
+//        }
+    }
+
+    private fun testFunction() {
+//        dispatchTakePictureIntent()
+
+        selectImage()
+    }
     private fun setOnClicks() {
+        activityBinding.testDebugging.setOnClickListener {
+            successToast("Test")
+            testFunction()
+        }
         activityBinding.btnLogOut.setOnClickListener {
 //            successToast(packageName)
            logOut()

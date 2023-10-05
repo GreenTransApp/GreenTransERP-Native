@@ -1,4 +1,4 @@
-package com.greensoft.greentranserpnative.ui.booking.models
+package com.greensoft.greentranserpnative.ui.operation.booking.models
 
 data class TemperatureSelectionModel(
     val active: String,

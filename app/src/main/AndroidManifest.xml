@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
@@ -33,7 +35,7 @@
             android:parentActivityName=".ui.operation.call_register.CallRegisterActivity"
             />
         <activity
-            android:name=".ui.booking.BookingActivity"
+            android:name=".ui.operation.booking.BookingActivity"
             android:exported="false"
             android:parentActivityName=".ui.operation.pickup_reference.PickupReferenceActivity"
             />

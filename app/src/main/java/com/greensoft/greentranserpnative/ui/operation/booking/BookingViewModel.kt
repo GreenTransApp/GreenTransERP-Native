@@ -1,25 +1,25 @@
-package com.greensoft.greentranserpnative.ui.booking
+package com.greensoft.greentranserpnative.ui.operation.booking
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.greensoft.greentranserpnative.base.BaseViewModel
-import com.greensoft.greentranserpnative.ui.booking.models.ConsignorSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.ContentSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.CustomerSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.DepartmentSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.DestinationSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.GelPackItemSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.OriginSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.PackingSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.PickupBoySelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.TemperatureSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.ConsignorSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.ContentSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.CustomerSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.DepartmentSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.DestinationSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.GelPackItemSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.OriginSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.PickupBoySelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.TemperatureSelectionModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class BookingViewModel @Inject constructor(private val _repository:BookingRepository) : BaseViewModel() {
+class BookingViewModel @Inject constructor(private val _repository: BookingRepository) : BaseViewModel() {
     init {
         isError = _repository.isError
     }

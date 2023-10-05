@@ -1,13 +1,13 @@
-package com.greensoft.greentranserpnative.ui.booking
+package com.greensoft.greentranserpnative.ui.operation.booking
 
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.greensoft.greentranserpnative.databinding.BookingItemViewBinding
-import com.greensoft.greentranserpnative.ui.booking.models.ContentSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.PackingSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.TemperatureSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.ContentSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.TemperatureSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import javax.inject.Inject
@@ -60,16 +60,16 @@ class BookingAdapter @Inject constructor(
     }
 
 
-    fun setContent(contentModel:ContentSelectionModel, adapterPosition: Int) {
+    fun setContent(contentModel: ContentSelectionModel, adapterPosition: Int) {
         Log.d("TEST_TEST", contentModel.itemname.toString())
         bookingList[adapterPosition].contents = contentModel.itemname
         notifyItemChanged(adapterPosition)
     }
-    fun setTemperature(tempModel:TemperatureSelectionModel, adapterPosition: Int) {
+    fun setTemperature(tempModel: TemperatureSelectionModel, adapterPosition: Int) {
         bookingList[adapterPosition].tempurature = tempModel.name
         notifyItemChanged(adapterPosition)
     }
-    fun setPacking(pckgModel:PackingSelectionModel, adapterPosition: Int) {
+    fun setPacking(pckgModel: PackingSelectionModel, adapterPosition: Int) {
         bookingList[adapterPosition].packing = pckgModel.packingname
         notifyItemChanged(adapterPosition)
     }

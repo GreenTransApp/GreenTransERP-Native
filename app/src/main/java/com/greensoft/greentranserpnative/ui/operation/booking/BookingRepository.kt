@@ -1,4 +1,4 @@
-package com.greensoft.greentranserpnative.ui.booking
+package com.greensoft.greentranserpnative.ui.operation.booking
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,17 +6,17 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
-import com.greensoft.greentranserpnative.ui.booking.models.AgentSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.ConsignorSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.ContentSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.CustomerSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.DepartmentSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.DestinationSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.GelPackItemSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.OriginSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.PackingSelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.PickupBoySelectionModel
-import com.greensoft.greentranserpnative.ui.booking.models.TemperatureSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.AgentSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.ConsignorSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.ContentSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.CustomerSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.DepartmentSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.DestinationSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.GelPackItemSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.OriginSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.PickupBoySelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.TemperatureSelectionModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
