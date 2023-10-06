@@ -23,6 +23,8 @@ import com.google.gson.Gson
 import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityHomeBinding
+import com.greensoft.greentranserpnative.ui.common.cameraX.CameraX
+import com.greensoft.greentranserpnative.ui.common.cameraXFragment.CameraXFullscreenFragment
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.login.LoginActivity
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
@@ -150,6 +152,10 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
 
     }
     private fun setObserver() {
+        capturedImage.observe(this) { imageUri ->
+            successToast("HOME_ACTIVITY ${imageUri.path}")
+            activityBinding.compLogo.setImageURI(imageUri)
+        }
         activityBinding.refreshLayout.setOnRefreshListener {
             refreshData()
             lifecycleScope.launch {
@@ -227,8 +233,11 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
 
     private fun testFunction() {
 //        dispatchTakePictureIntent()
-
-        selectImage()
+//        selectImage()
+//        val intent = Intent(this, CameraX::class.java)
+//        startActivity(intent)
+        val frag = CameraXFullscreenFragment()
+        supportFragmentManager.beginTransaction().add(frag, "TEST").commit()
     }
     private fun setOnClicks() {
         activityBinding.testDebugging.setOnClickListener {

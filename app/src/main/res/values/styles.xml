@@ -21,33 +21,33 @@
         <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
-<!--    <style name="FeedbackBottomSheetDialog" parent="Theme.Design.BottomSheetDialog">-->
-<!--        <item name="bottomSheetStyle">@style/MyBottomSheetStyle</item>-->
-<!--        <item name="android:windowSoftInputMode">adjustResize</item>-->
-<!--        <item name="android:windowIsFloating">false</item>-->
-<!--    </style>-->
+    <!--    <style name="FeedbackBottomSheetDialog" parent="Theme.Design.BottomSheetDialog">-->
+    <!--        <item name="bottomSheetStyle">@style/MyBottomSheetStyle</item>-->
+    <!--        <item name="android:windowSoftInputMode">adjustResize</item>-->
+    <!--        <item name="android:windowIsFloating">false</item>-->
+    <!--    </style>-->
 
-<!--    <style name="MyBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">-->
-<!--        <item name="android:background">#00000000</item>-->
-<!--    </style>-->
+    <!--    <style name="MyBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">-->
+    <!--        <item name="android:background">#00000000</item>-->
+    <!--    </style>-->
 
     <!--    <style name="Toolbar" parent="Base.ThemeOverlay.AppCompat.ActionBar">-->
-<!--        <item name="android:textColorPrimary">#fff</item>-->
-<!--        <item name="android:background">@color/colorPrimary</item>-->
-<!--        <item name="android:textAlignment">center</item>-->
-<!--    </style>-->
+    <!--        <item name="android:textColorPrimary">#fff</item>-->
+    <!--        <item name="android:background">@color/colorPrimary</item>-->
+    <!--        <item name="android:textAlignment">center</item>-->
+    <!--    </style>-->
 
-   <!-- <style name="Toolbar_Popup" parent="Base.ThemeOverlay.AppCompat.ActionBar">
+    <!-- <style name="Toolbar_Popup" parent="Base.ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColorPrimary">#fff</item>
         <item name="android:background">@color/colorPrimary</item>
     </style>-->
-
 
 
     <style name="bottomSheetStyleWrapper" parent="Widget.Design.BottomSheet.Modal">
 
         <item name="behavior_peekHeight">600sp</item>
     </style>
+
     <style name="dialog" parent="Theme.AppCompat.DayNight.Dialog">
         <item name="android:background">#00000000</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -59,11 +59,13 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
     <style name="ClickRipple">
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
     </style>
+
     <style name="ButtonText">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -76,10 +78,16 @@
         <item name="android:shadowRadius">2</item>
         <item name="android:background">@drawable/customer_button_selector</item>
     </style>
+
     <style name="SpinnerStyle">
         <item name="android:textColor">#000</item>
         <item name="android:gravity">center</item>
         <item name="android:color">@color/button_main</item>
+    </style>
+
+    <style name="Widget.Theme.GreenTransERPNative.ButtonBar.Fullscreen" parent="">
+        <item name="android:background">@color/black_overlay</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
     </style>
 
 </resources>

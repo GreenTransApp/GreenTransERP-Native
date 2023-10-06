@@ -4,4 +4,8 @@
         <attr name="mhv_HeightRatio" format="reference|float" />
         <attr name="mhv_HeightDimen" format="reference|dimension" />
     </declare-styleable>
+    <declare-styleable name="FullscreenAttrs">
+        <attr name="fullscreenBackgroundColor" format="color" />
+        <attr name="fullscreenTextColor" format="color" />
+    </declare-styleable>
 </resources>

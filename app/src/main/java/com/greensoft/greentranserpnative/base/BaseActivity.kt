@@ -9,6 +9,7 @@ import android.content.SharedPreferences
 import android.graphics.PorterDuff
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -37,6 +38,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.net.URI
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -70,6 +72,30 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
         supportActionBar?.title = title
     }
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        mContext=this@BaseActivity
+        setObservers()
+        val loginModel = getLoginData()
+
+        if(loginModel != null) {
+            loginDataModel = loginModel
+        }
+        val userModel = getUserData()
+        if(userModel != null) {
+            userDataModel = userModel
+        }
+//        openDatePicker()
+//        SingleDateSelector()
+    }
+
+    private fun setObservers() {
+//        capturedImage.observe(this) { imageUri ->
+//            successToast("BASE_ACTIVITY ${imageUri.path}")
+//        }
+    }
+
 //    fun setUpToolbar(activity: AppCompatActivity, title: String) {
 //        activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
 //        activity.supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -78,6 +104,7 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
 
     companion object {
 
+        var capturedImage: MutableLiveData<Uri> = MutableLiveData()
 
         fun successToast(mContext: Context, msg: String?) {
 //        Toast.makeText(mContext,msg,Toast.LENGTH_LONG).show();
@@ -267,22 +294,6 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
         return null
     }
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mContext=this@BaseActivity
-        val loginModel = getLoginData()
-
-        if(loginModel != null) {
-            loginDataModel = loginModel
-        }
-        val userModel = getUserData()
-        if(userModel != null) {
-            userDataModel = userModel
-        }
-//        openDatePicker()
-//        SingleDateSelector()
-    }
     open fun getResult(response: CommonResult): JSONArray? {
         var Obj: JSONObject? = null
         var JsonArray: JSONArray? = null

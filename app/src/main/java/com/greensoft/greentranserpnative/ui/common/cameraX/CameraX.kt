@@ -18,6 +18,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.greensoft.greentranserpnative.R
+import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityCameraXBinding
 import java.io.File
 import java.text.SimpleDateFormat
@@ -87,10 +88,11 @@ class CameraX : AppCompatActivity() {
                     // set the saved uri to the image view
                     activityBinding.ivCapture.visibility = View.VISIBLE
                     activityBinding.ivCapture.setImageURI(savedUri)
-
                     val msg = "Photo capture succeeded: $savedUri"
-                    Toast.makeText(baseContext, msg, Toast.LENGTH_LONG).show()
+//                    Toast.makeText(baseContext, msg, Toast.LENGTH_LONG).show()
                     Log.d(TAG, msg)
+                    BaseActivity.capturedImage.postValue(savedUri)
+                    finish()
                 }
             })
     }
