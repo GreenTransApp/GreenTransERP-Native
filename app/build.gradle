@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace 'com.greensoft.greentranserpnative'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.greensoft.greentranserpnative"
         minSdk 26
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -46,6 +46,8 @@ repositories {
 }
 
 dependencies {
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.4'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.7.4'
 
 
 //    implementation 'com.google.android.ads:mediation-test-suite:2.0.0'

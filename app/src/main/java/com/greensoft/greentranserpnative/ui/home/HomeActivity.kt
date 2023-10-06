@@ -28,6 +28,7 @@ import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.login.LoginActivity
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.call_register.CallRegisterActivity
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -231,6 +232,9 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
     }
 
     private fun testFunction() {
+        val intent=Intent(this,PickupManifestActivity::class.java)
+        startActivity(intent)
+
 //        dispatchTakePictureIntent()
 //        selectImage()
 //        val intent = Intent(this, CameraX::class.java)
@@ -240,7 +244,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
     }
     private fun setOnClicks() {
         activityBinding.testDebugging.setOnClickListener {
-            successToast("Test")
+        //    successToast("Test")
             testFunction()
         }
         activityBinding.btnLogOut.setOnClickListener {
