@@ -12,7 +12,6 @@ import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
@@ -20,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.ENV
@@ -30,6 +28,7 @@ import com.greensoft.greentranserpnative.common.TimeSelection
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.CommonBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
+import com.greensoft.greentranserpnative.ui.login.LoginActivity
 import com.greensoft.greentranserpnative.ui.login.models.LoginDataModel
 import com.greensoft.greentranserpnative.ui.login.models.UserDataModel
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
@@ -38,7 +37,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.net.URI
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
