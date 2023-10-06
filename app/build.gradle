@@ -107,6 +107,10 @@ dependencies {
 // CameraX View class
     implementation "androidx.camera:camera-view:1.0.0-alpha14"
 
+    // This library is used for crop image feature
+    api "com.theartofdev.edmodo:android-image-cropper:2.8.+"
+// This library is used for loading the cropped image into ImageView.
+    implementation "com.squareup.picasso:picasso:2.5.2"
 
     //noinspection GradleCompatible
     

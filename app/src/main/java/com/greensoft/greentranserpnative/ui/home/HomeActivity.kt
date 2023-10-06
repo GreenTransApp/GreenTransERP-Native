@@ -24,7 +24,6 @@ import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityHomeBinding
 import com.greensoft.greentranserpnative.ui.common.cameraX.CameraX
-import com.greensoft.greentranserpnative.ui.common.cameraXFragment.CameraXFullscreenFragment
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.login.LoginActivity
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
@@ -236,8 +235,8 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
 //        selectImage()
 //        val intent = Intent(this, CameraX::class.java)
 //        startActivity(intent)
-        val frag = CameraXFullscreenFragment()
-        supportFragmentManager.beginTransaction().add(frag, "TEST").commit()
+//        val frag = CameraXFullscreenFragment()
+//        supportFragmentManager.beginTransaction().add(frag, "TEST").commit()
     }
     private fun setOnClicks() {
         activityBinding.testDebugging.setOnClickListener {
