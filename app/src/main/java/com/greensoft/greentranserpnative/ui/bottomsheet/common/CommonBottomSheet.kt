@@ -37,7 +37,7 @@ class CommonBottomSheet<T>: BottomSheetDialogFragment(){
             mContext: Context,
             title: String,
             bottomSheetClick: BottomSheetClick<C>,
-            rvList: ArrayList<CommonBottomSheetModel<C>>,
+            rvList: java.util.ArrayList<CommonBottomSheetModel<C>>,
             withAdapter: Boolean = false,
             index: Int = -1
         ): CommonBottomSheet<C> {
@@ -70,9 +70,9 @@ class CommonBottomSheet<T>: BottomSheetDialogFragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as AppCompatActivity?)!!.setSupportActionBar(layoutBinding.toolBar as Toolbar)
-//        (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-//        (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (activity as AppCompatActivity?)!!.setSupportActionBar(layoutBinding.toolBar.root)
+        (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         (activity as AppCompatActivity?)!!.supportActionBar?.title = title
 
         setUpRecyclerView()
