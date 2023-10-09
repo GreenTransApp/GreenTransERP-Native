@@ -35,7 +35,7 @@ class PickupReferenceActivity  @Inject constructor(): BaseActivity(), OnRowClick
         super.onCreate(savedInstanceState)
         activityBinding= ActivityPickupReferenceBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
-        setSupportActionBar(activityBinding.toolBar as Toolbar)
+        setSupportActionBar(activityBinding.toolBar.root)
         setUpToolbar("PICK UP REFERENCE")
         setObserver()
 //        loadBookingList()

@@ -90,7 +90,7 @@
                                 android:gravity="center"
                                 android:textColor="@color/black"
                                 android:background="@drawable/table_content_cell_bg"
-                                android:text="@{String.valueOf(registerList.stnname)}"
+                                android:text="@{String.valueOf(registerList.orgname)}"
                                 android:textSize="16sp" />
 
                             <TextView
@@ -100,7 +100,7 @@
                                 android:gravity="center"
                                 android:textColor="@color/black"
                                 android:background="@drawable/table_content_cell_bg"
-                                android:text="@{String.valueOf(registerList.stnname1)}"
+                                android:text="@{String.valueOf(registerList.orgname)}"
                                 android:textSize="16sp" />
 
                             <TextView

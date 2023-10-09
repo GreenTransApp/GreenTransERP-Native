@@ -61,8 +61,8 @@ RecyclerView.Adapter<CallRegisterAdapter.CallRegisterViewHolder>(),Filterable {
 //                             row.custname.lowercase().contains(charString.lowercase(Locale.getDefault()))
                              row.transactionid.toString().contains(charString.lowercase(Locale.getDefault()))
                              ||row.calldt.contains(charString.lowercase(Locale.getDefault()))
-                             ||row.stnname.lowercase().contains(charString.lowercase(Locale.getDefault()))
-                             ||row.stnname1.lowercase().contains(charString.lowercase(Locale.getDefault()))
+                             ||row.orgname.lowercase().contains(charString.lowercase(Locale.getDefault()))
+                             ||row.destname.lowercase().contains(charString.lowercase(Locale.getDefault()))
                          ){
                              filteredList.add(row)
                          }

@@ -35,7 +35,7 @@ class CallRegisterActivity @Inject constructor() : BaseActivity(), OnRowClick<An
         super.onCreate(savedInstanceState)
         activityBinding = ActivityCallRegisterBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
-        setSupportActionBar(activityBinding.toolBar as Toolbar)
+        setSupportActionBar(activityBinding.toolBar.root)
         setUpToolbar("CALL REGISTER")
         menuModel = getMenuData()
 
@@ -48,15 +48,15 @@ class CallRegisterActivity @Inject constructor() : BaseActivity(), OnRowClick<An
         super.onResume()
         refreshData()
     }
-      fun refreshData(){
+      private fun refreshData(){
           getCallRegisterList()
       }
     private fun getCallRegisterList() {
         viewModel.getCallRegisterList(
             loginDataModel?.companyid.toString(),
             "gtapp_getpendingjobs",
-            listOf("prmbranchcode", "prmusercode", "prmmenucode", "prmsessionid"),
-            arrayListOf(userDataModel?.loginbranchcode.toString(), userDataModel?.usercode.toString(), menuModel?.menucode.toString(), userDataModel?.sessionid.toString())
+            listOf("prmfromdt","prmtodt","prmbranchcode", "prmusercode", "prmmenucode", "prmsessionid"),
+            arrayListOf("2022-04-01","2023-10-09",userDataModel?.loginbranchcode.toString(), userDataModel?.usercode.toString(), menuModel?.menucode.toString(), userDataModel?.sessionid.toString())
         )
     }
 
