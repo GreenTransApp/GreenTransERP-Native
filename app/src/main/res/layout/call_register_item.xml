@@ -137,6 +137,7 @@
                                     android:layout_width="130sp"
                                     android:backgroundTint="@color/success"
                                     android:layout_marginRight="5dp"
+                                    android:radius="20dp"
                                     android:textColor="@color/white"
                                     android:text="Accept">
 
@@ -150,6 +151,7 @@
                                     android:layout_width="130sp"
                                     android:textColor="@color/white"
                                     android:layout_marginLeft="5dp"
+                                    android:radius="20dp"
                                     android:backgroundTint="@color/danger"
                                     android:text="Reject">
 
