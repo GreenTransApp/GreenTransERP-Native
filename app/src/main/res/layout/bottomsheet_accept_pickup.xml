@@ -15,38 +15,54 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolBar"
-            layout="@layout/toolbar" />
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:popupTheme="@style/Toolbar_Popup"
+            android:background="@color/colorPrimary"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ACCEPT PICKUP"
+                android:layout_gravity="center"
+                android:id="@+id/toolbar_title"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                />
+        </androidx.appcompat.widget.Toolbar>
+<!--            app:theme="@style/Toolbar"-->
 
         <TextView
             android:id="@+id/jobNoHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="JOB NO #"
             android:layout_marginTop="10dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="JOB NO #"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/toolBar"
-            android:textColor="@color/colorPrimary"
-            android:gravity="center_horizontal|center_vertical"
-            />
+            app:layout_constraintTop_toBottomOf="@id/toolBar" />
 
         <TextView
             android:id="@+id/jobNo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal|center_vertical"
             android:text="@{String.valueOf(transactionId)}"
+            android:textColor="@color/colorPrimary"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/jobNoHeader"
-            android:textColor="@color/colorPrimary"
-            android:gravity="center_horizontal|center_vertical"
-            />
+            app:layout_constraintTop_toBottomOf="@id/jobNoHeader" />
 
         <LinearLayout
             android:id="@+id/layout_dt_tm"

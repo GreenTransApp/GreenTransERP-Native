@@ -3,6 +3,7 @@ package com.greensoft.greentranserpnative.ui.bottomsheet.acceptPickup
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,10 +56,11 @@ class AcceptPickupBottomSheet: BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as AppCompatActivity?)!!.setSupportActionBar(layoutBinding.toolBar.root)
-        (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as AppCompatActivity?)!!.supportActionBar?.title = "ACCEPT PICKUP"
+//        (activity as AppCompatActivity?)!!.setSupportActionBar(layoutBinding.toolBar.root)
+//        (activity as AppCompatActivity).setSupportActionBar(layoutBinding.toolBar.root)
+//        (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+//        (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+//        (activity as AppCompatActivity?)!!.supportActionBar?.title = "ACCEPT PICKUP"
         layoutBinding.transactionId = transactionId
         layoutBinding.inputDate.setText(BaseActivity.getViewCurrentDate())
         layoutBinding.inputTime.setText(BaseActivity.getSqlCurrentTime())

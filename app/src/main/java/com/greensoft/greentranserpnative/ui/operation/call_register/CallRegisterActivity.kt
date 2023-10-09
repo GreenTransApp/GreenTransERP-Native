@@ -22,6 +22,7 @@ import com.greensoft.greentranserpnative.databinding.ActivityCallRegisterBinding
 import com.greensoft.greentranserpnative.ui.bottomsheet.acceptPickup.AcceptPickupBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.CommonBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
+import com.greensoft.greentranserpnative.ui.bottomsheet.rejectPickup.RejectPickupBottomSheet
 import com.greensoft.greentranserpnative.ui.operation.call_register.models.CallRegisterModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceActivity
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
@@ -151,12 +152,26 @@ class CallRegisterActivity @Inject constructor() : BaseActivity(), OnRowClick<An
     private fun acceptJobAlert(data: CallRegisterModel) {
         AlertDialog.Builder(this)
             .setTitle("Alert!!!")
-            .setMessage("Are you sure you want to accept this job?")
+            .setMessage("Are you sure you want to Accept this job?")
             .setPositiveButton("Yes") { _, _ ->
 //                var intent = Intent(this, PickupReferenceActivity::class.java)
 //                startActivity(intent)
                 val bottomSheetDialog = AcceptPickupBottomSheet.newInstance(mContext, data.transactionid.toString())
                 bottomSheetDialog.show(supportFragmentManager, AcceptPickupBottomSheet.TAG)
+            }
+            .setNeutralButton("No") { _, _ -> }
+            .show()
+    }
+
+    private fun rejectJobAlert(data: CallRegisterModel) {
+        AlertDialog.Builder(this)
+            .setTitle("Alert!!!")
+            .setMessage("Are you sure you want to Reject this job?")
+            .setPositiveButton("Yes") { _, _ ->
+//                var intent = Intent(this, PickupReferenceActivity::class.java)
+//                startActivity(intent)
+                val bottomSheetDialog = RejectPickupBottomSheet.newInstance(mContext, data.transactionid.toString())
+                bottomSheetDialog.show(supportFragmentManager, RejectPickupBottomSheet.TAG)
             }
             .setNeutralButton("No") { _, _ -> }
             .show()
@@ -189,7 +204,12 @@ class CallRegisterActivity @Inject constructor() : BaseActivity(), OnRowClick<An
             }
 
             "REJECT_SELECT" -> run {
-                successToast("reject btn click")
+//                successToast("reject btn click")
+                val model: CallRegisterModel = data as CallRegisterModel
+//                val intent = Intent(this, PickupReferenceActivity::class.java)
+//                startActivity(intent)
+                rejectJobAlert(model)
+
             }
         }
     }
