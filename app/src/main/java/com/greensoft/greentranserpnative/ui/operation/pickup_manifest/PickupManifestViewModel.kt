@@ -3,12 +3,8 @@ package com.greensoft.greentranserpnative.ui.operation.pickup_manifest
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.greensoft.greentranserpnative.base.BaseViewModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.gr_select.models.GrSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.DriverSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.PickupLocationModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.VehicleSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.VendorSelectionModel
+
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

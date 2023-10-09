@@ -1,5 +1,6 @@
 package com.greensoft.greentranserpnative.ui.operation.pickup_manifest
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -11,7 +12,6 @@ import com.greensoft.greentranserpnative.databinding.ActivityPickupManifestEntry
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.gr_select.GrSelectFragment
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.DriverSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.PickupLocationModel
@@ -69,8 +69,8 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
               openVehicleSelectionBottomSheet(vehicleList)
           }
           activityBinding.btnGrSelect.setOnClickListener {
-              val grSelect= GrSelectFragment()
-              .show(supportFragmentManager,"show Gr Select")
+              val intent= Intent(this,GrSelectionActivity::class.java)
+              startActivity(intent)
           }
 
      }

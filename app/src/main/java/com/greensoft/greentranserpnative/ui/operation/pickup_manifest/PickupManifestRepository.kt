@@ -7,12 +7,7 @@ import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.ui.operation.booking.models.CustomerSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.gr_select.models.GrSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.DriverSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.PickupLocationModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.VehicleSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.VendorSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

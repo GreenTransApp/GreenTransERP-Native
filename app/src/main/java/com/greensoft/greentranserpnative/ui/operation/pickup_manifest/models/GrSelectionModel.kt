@@ -1,0 +1,31 @@
+package com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models
+
+
+data class GrSelectionModel(
+    val commandstatus: Long,
+    val commandmessage: Any?,
+    val grno: String,
+    val grdt: String,
+    val picktime: String,
+    val branchcode: String,
+    val branchname: String,
+    val destcode: String,
+    val destname: String,
+    val pickuppoint: Any?,
+    val deliverypoint: Any?,
+    val custcode: String,
+    val custname: String,
+    val cngr: String,
+    val cngrname: String,
+    val cnge: String,
+    val cngename: String,
+    val packing: String,
+    val modecode: Any?,
+    val regno: Any?,
+    val allocateto: Any?,
+    val allocatedtoname: Any?,
+    val goods: String,
+    val pckgs: Double,
+    val aweight: Double,
+    val mfpckg: Double,
+)
