@@ -3,12 +3,19 @@ package com.greensoft.greentranserpnative.ui.operation.call_register
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.DatePicker
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityCallRegisterBinding
 import com.greensoft.greentranserpnative.ui.operation.call_register.models.CallRegisterModel
@@ -30,13 +37,21 @@ class CallRegisterActivity @Inject constructor() : BaseActivity(), OnRowClick<An
     private lateinit var activityBinding: ActivityCallRegisterBinding
     private lateinit var linearLayoutManager: LinearLayoutManager
     private var menuModel: UserMenuModel? = null
+    var fromDt=""
+    var toDt=""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityCallRegisterBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
-        setUpToolbar("CALL REGISTER")
+//        toolbar?.navigationIcon = ContextCompat.getDrawable(this,R.drawable.calendar)
+//        toolbar?.setNavigationOnClickListener {
+//
+//            openDatePicker()
+//        }
+
+        setUpToolbar("ACCEPT JOBS ")
         menuModel = getMenuData()
 
         setObserver()
@@ -49,14 +64,18 @@ class CallRegisterActivity @Inject constructor() : BaseActivity(), OnRowClick<An
         refreshData()
     }
       private fun refreshData(){
-          getCallRegisterList()
+          lifecycleScope.launch {
+              getCallRegisterList()
+              delay(1500)
+              activityBinding.refreshLayout.isRefreshing=false
+          }
       }
     private fun getCallRegisterList() {
         viewModel.getCallRegisterList(
             loginDataModel?.companyid.toString(),
             "gtapp_getpendingjobs",
             listOf("prmfromdt","prmtodt","prmbranchcode", "prmusercode", "prmmenucode", "prmsessionid"),
-            arrayListOf("2022-04-01","2023-10-09",userDataModel?.loginbranchcode.toString(), userDataModel?.usercode.toString(), menuModel?.menucode.toString(), userDataModel?.sessionid.toString())
+            arrayListOf(fromDt,toDt,userDataModel?.loginbranchcode.toString(), userDataModel?.usercode.toString(), menuModel?.menucode.toString(), userDataModel?.sessionid.toString())
         )
     }
 
@@ -76,13 +95,28 @@ class CallRegisterActivity @Inject constructor() : BaseActivity(), OnRowClick<An
         return true
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+          R.id.datePicker -> {
+            openDatePicker()
+          }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+
+
+
     private fun setObserver() {
         activityBinding.refreshLayout.setOnRefreshListener {
             refreshData()
-            lifecycleScope.launch {
-                delay(1500)
-                activityBinding.refreshLayout.isRefreshing=false
-            }
+
         }
         viewModel.isError.observe(this) { errMsg ->
             errorToast(errMsg)
@@ -98,6 +132,11 @@ class CallRegisterActivity @Inject constructor() : BaseActivity(), OnRowClick<An
             callRegisterList = callRegister
             setupRecyclerView()
 //            searchItem()
+        }
+        mPeriod.observe(this) { datePicker ->
+            fromDt= datePicker.viewFromDate.toString()
+            toDt=datePicker.viewToDate.toString()
+            refreshData()
         }
     }
 
