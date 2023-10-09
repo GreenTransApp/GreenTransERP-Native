@@ -104,6 +104,24 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
 
         var capturedImage: MutableLiveData<Uri> = MutableLiveData()
 
+        open fun getSqlCurrentDate(): String {
+            val formatter = SimpleDateFormat("yyyy-MM-dd")
+            val date = Date()
+            return formatter.format(date)
+        }
+
+        open fun getViewCurrentDate(): String {
+            val formatter = SimpleDateFormat("dd-MM-yyyy")
+            val date = Date()
+            return formatter.format(date)
+        }
+
+        open fun getSqlCurrentTime(): String {
+            val formatter = SimpleDateFormat("HH:mm")
+            val date = Date()
+            return formatter.format(date)
+        }
+
         fun successToast(mContext: Context, msg: String?) {
 //        Toast.makeText(mContext,msg,Toast.LENGTH_LONG).show();
 

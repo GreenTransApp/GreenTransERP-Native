@@ -61,8 +61,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     private var bookingAdapter: BookingAdapter? = null
     var serviceSelectedItems = arrayOf("SELECT", "AIR", "SURFACE", "SURFACE EXPRESS", "TRAIN")
     var pckgsTypeSelectedItems = arrayOf("SELECT", "JEENA PACKING", "PRE PACKED")
-    var pikupTypeSelectedItems =
-        arrayOf("JEENA STRAFF", "AGENT", " MARKET VEHICLE", "OFFICE/AIRPORT DROP", "CANCEL")
+    var pickupTypeSelectedItems =
+        arrayOf("JEENA STAFF", "AGENT", " MARKET VEHICLE", "OFFICE/AIRPORT DROP", "CANCEL")
 
     private val addListMuteLiveData = MutableLiveData<String>()
     val addListLiveData: LiveData<String>
@@ -122,7 +122,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             }
         }
     }
-    fun OpenEwayBillBottomSheet(){
+    private fun openEwayBillBottomSheet(){
         val bottomSheet= EwayBillBottomSheet()
         bottomSheet.show(supportFragmentManager,"Eway-Bill-BottomSheet")
     }
@@ -202,7 +202,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                 }
             }
         val pickupAdapter =
-            ArrayAdapter(this, android.R.layout.simple_list_item_1, pikupTypeSelectedItems)
+            ArrayAdapter(this, android.R.layout.simple_list_item_1, pickupTypeSelectedItems)
         activityBinding.selectedPickupType.adapter = pickupAdapter
         activityBinding.selectedPickupType.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
@@ -305,7 +305,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         }
 
    activityBinding.btnEwayBill.setOnClickListener{
-       OpenEwayBillBottomSheet()
+       openEwayBillBottomSheet()
    }
     }
 //    private fun refreshData(){

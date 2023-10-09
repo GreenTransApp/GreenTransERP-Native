@@ -1,6 +1,7 @@
 package com.greensoft.greentranserpnative.ui.operation.call_register
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -11,6 +12,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityCallRegisterBinding
+import com.greensoft.greentranserpnative.ui.bottomsheet.acceptPickup.AcceptPickupBottomSheet
+import com.greensoft.greentranserpnative.ui.bottomsheet.common.CommonBottomSheet
+import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.operation.call_register.models.CallRegisterModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceActivity
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
@@ -105,17 +109,20 @@ class CallRegisterActivity @Inject constructor() : BaseActivity(), OnRowClick<An
 
     }
 
-    private fun acceptJobs() {
+    private fun acceptJobAlert(data: CallRegisterModel) {
         AlertDialog.Builder(this)
             .setTitle("Alert!!!")
-            .setMessage("Are you sure you want to accept this job")
+            .setMessage("Are you sure you want to accept this job?")
             .setPositiveButton("Yes") { _, _ ->
-                var intent = Intent(this, PickupReferenceActivity::class.java)
-                startActivity(intent)
+//                var intent = Intent(this, PickupReferenceActivity::class.java)
+//                startActivity(intent)
+                val bottomSheetDialog = AcceptPickupBottomSheet.newInstance(mContext, data.transactionid.toString())
+                bottomSheetDialog.show(supportFragmentManager, AcceptPickupBottomSheet.TAG)
             }
             .setNeutralButton("No") { _, _ -> }
             .show()
     }
+
 
     private fun setupRecyclerView() {
         linearLayoutManager = LinearLayoutManager(this)
@@ -136,10 +143,10 @@ class CallRegisterActivity @Inject constructor() : BaseActivity(), OnRowClick<An
     override fun onCLick(data: Any, clickType: String) {
         when (clickType) {
             "ACCEPT_SELECT" -> run {
-//                val model: CallRegisterModel = data as CallRegisterModel
+                val model: CallRegisterModel = data as CallRegisterModel
 //                val intent = Intent(this, PickupReferenceActivity::class.java)
 //                startActivity(intent)
-                acceptJobs()
+                acceptJobAlert(model)
             }
 
             "REJECT_SELECT" -> run {
