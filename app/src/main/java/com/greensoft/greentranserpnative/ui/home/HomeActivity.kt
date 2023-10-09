@@ -23,12 +23,11 @@ import com.google.gson.Gson
 import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityHomeBinding
-import com.greensoft.greentranserpnative.ui.common.cameraX.CameraX
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.login.LoginActivity
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.call_register.CallRegisterActivity
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestActivity
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestEntryActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -232,7 +231,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
     }
 
     private fun testFunction() {
-        val intent=Intent(this,PickupManifestActivity::class.java)
+        val intent=Intent(this,PickupManifestEntryActivity::class.java)
         startActivity(intent)
 
 //        dispatchTakePictureIntent()

@@ -33,10 +33,11 @@
         android:theme="@style/Theme.GreenTransERPNative"
         tools:targetApi="31">
         <activity
-            android:name=".ui.operation.pickup_manifest.PickupManifestActivity"
+            android:name=".ui.operation.pickup_manifest.PickupManifestEntryActivity"
             android:exported="false"
             android:label="@string/title_activity_pickup_manifest"
             android:theme="@style/Theme.GreenTransERPNative.NoActionBar" />
+
         <activity
             android:name=".ui.common.cameraX.CameraX"
             android:exported="false" />
