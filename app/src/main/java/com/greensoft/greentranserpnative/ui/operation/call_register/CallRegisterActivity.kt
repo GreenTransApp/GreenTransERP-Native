@@ -37,10 +37,13 @@ import javax.inject.Inject
 class CallRegisterActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, BottomSheetClick<Any> {
     private var rvAdapter: CallRegisterAdapter? = null
     private val viewModel: CallRegisterViewModel by viewModels()
+    private val pickupAccRejViewModel: PickupAccRejViewModel by viewModels()
     private var callRegisterList: ArrayList<CallRegisterModel> = ArrayList()
     private lateinit var toolbar: Toolbar
     private lateinit var activityBinding: ActivityCallRegisterBinding
     private lateinit var linearLayoutManager: LinearLayoutManager
+    private var acceptBottomSheetDialog: AcceptPickupBottomSheet? = null
+    private var rejectBottomSheetDialog: RejectPickupBottomSheet? = null
     private var menuModel: UserMenuModel? = null
     var fromDt=""
     var toDt=""
@@ -143,6 +146,27 @@ class CallRegisterActivity @Inject constructor() : BaseActivity(), OnRowClick<An
             toDt=datePicker.viewToDate.toString()
             refreshData()
         }
+
+        // ------------------------------- //
+        pickupAccRejViewModel.acceptPickupLiveData.observe(this) {
+            successToast(it)
+            if(acceptBottomSheetDialog!=null) {
+                if(acceptBottomSheetDialog!!.isVisible) {
+                    acceptBottomSheetDialog!!.dismiss()
+                    refreshData()
+                }
+            }
+        }
+        pickupAccRejViewModel.rejectPickupLiveData.observe(this) {
+            successToast(it)
+            if(rejectBottomSheetDialog!=null) {
+                if(rejectBottomSheetDialog!!.isVisible) {
+                    rejectBottomSheetDialog!!.dismiss()
+                    refreshData()
+                }
+            }
+        }
+
     }
 
     private fun setOnClick() {
@@ -156,8 +180,15 @@ class CallRegisterActivity @Inject constructor() : BaseActivity(), OnRowClick<An
             .setPositiveButton("Yes") { _, _ ->
 //                var intent = Intent(this, PickupReferenceActivity::class.java)
 //                startActivity(intent)
-                val bottomSheetDialog = AcceptPickupBottomSheet.newInstance(mContext, data.transactionid.toString())
-                bottomSheetDialog.show(supportFragmentManager, AcceptPickupBottomSheet.TAG)
+                acceptBottomSheetDialog = AcceptPickupBottomSheet.newInstance(mContext,
+                    loginDataModel?.companyid.toString(),
+                    data.transactionid.toString(),
+                    pickupAccRejViewModel
+                )
+                acceptBottomSheetDialog!!.show(
+                    supportFragmentManager,
+                    AcceptPickupBottomSheet.TAG
+                )
             }
             .setNeutralButton("No") { _, _ -> }
             .show()
@@ -170,8 +201,8 @@ class CallRegisterActivity @Inject constructor() : BaseActivity(), OnRowClick<An
             .setPositiveButton("Yes") { _, _ ->
 //                var intent = Intent(this, PickupReferenceActivity::class.java)
 //                startActivity(intent)
-                val bottomSheetDialog = RejectPickupBottomSheet.newInstance(mContext, data.transactionid.toString())
-                bottomSheetDialog.show(supportFragmentManager, RejectPickupBottomSheet.TAG)
+                rejectBottomSheetDialog = RejectPickupBottomSheet.newInstance(mContext, loginDataModel?.companyid.toString(), data.transactionid.toString(), pickupAccRejViewModel)
+                rejectBottomSheetDialog!!.show(supportFragmentManager, RejectPickupBottomSheet.TAG)
             }
             .setNeutralButton("No") { _, _ -> }
             .show()

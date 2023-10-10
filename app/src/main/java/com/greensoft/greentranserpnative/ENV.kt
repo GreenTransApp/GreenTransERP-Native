@@ -20,8 +20,8 @@ class ENV {
         val APP_NAME = "GreenTransERPNative"
 //        val DEBUG_USERNAME: String = "ADMIN@GREENTRANS"
 //        val DEBUG_PASSWORD: String = "GREEN@#321"
-        val DEBUG_USERNAME: String = "ADMIN@JEENA"
-        val DEBUG_PASSWORD: String = "CRITICARE@123"
+        val DEBUG_USERNAME: String = "TESTING@JEENA"
+        val DEBUG_PASSWORD: String = "123456"
 
         val APP_VERSION = "0.0.1"
         val APP_VERSION_DATE = "2023-08-17"

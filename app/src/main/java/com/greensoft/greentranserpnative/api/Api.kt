@@ -46,6 +46,25 @@ interface Api {
         @Field("prmdeviceid") deviceId: String?
     ): Call<CommonResult>
 
+    // greentrans_pickupacceptedbyda
+    @FormUrlEncoded
+    @POST("BookingAPI/AcceptPickup")
+    fun acceptPickup(
+        @Field("prmconnstring") companyId: String?,
+        @Field("prmtransactionid") transactionId: String?,
+        @Field("prmdapickupdate") pickupDate: String?,
+        @Field("prmdapickuptime") pickupTime: String?,
+        @Field("prmdapickupremarks") pickupRemarks: String?
+    ): Call<CommonResult>
+
+    // greentrans_pickupdeniedbyda
+    @GET("BookingAPI/PickupDeniedbyda")
+    fun rejectPickup(
+        @Query("prmconnstring") companyId: String?,
+        @Query("prmtransactionid") transactionId: String?,
+        @Query("prmdacancelremarks") pickupRemarks: String?
+    ): Call<CommonResult>
+
     // Gets the UserMast User Data
     @GET("UserDataLogin")
     fun userDataLogin(

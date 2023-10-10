@@ -7,7 +7,9 @@ import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -19,15 +21,23 @@ import com.greensoft.greentranserpnative.common.TimeSelection
 import com.greensoft.greentranserpnative.databinding.BottomsheetAcceptPickupBinding
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
+import com.greensoft.greentranserpnative.ui.operation.call_register.CallRegisterViewModel
+import com.greensoft.greentranserpnative.ui.operation.call_register.PickupAccRejViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-class AcceptPickupBottomSheet: BottomSheetDialogFragment() {
+@AndroidEntryPoint
+class AcceptPickupBottomSheet @Inject constructor(): BottomSheetDialogFragment() {
 
     private lateinit var layoutBinding: BottomsheetAcceptPickupBinding
+    private var companyId: String = ""
     private var transactionId: String = ""
     private lateinit var mContext: Context
     var singleDatePicker: MaterialDatePicker<*>? = null
+    private lateinit var viewModel: PickupAccRejViewModel
+
     companion object {
         var mPeriod: MutableLiveData<PeriodSelection> = MutableLiveData()
 //        var timePeriod: MutableLiveData<TimeSelection> = MutableLiveData()
@@ -36,11 +46,15 @@ class AcceptPickupBottomSheet: BottomSheetDialogFragment() {
         var TAG = Companion::class.java.name
         fun newInstance(
             mContext: Context,
-            transactionId: String
+            companyId: String,
+            transactionId: String,
+            viewModel: PickupAccRejViewModel
         ): AcceptPickupBottomSheet {
             val instance = AcceptPickupBottomSheet()
             instance.mContext = mContext
+            instance.companyId = companyId
             instance.transactionId = transactionId
+            instance.viewModel = viewModel
             return instance
         }
     }
@@ -74,6 +88,14 @@ class AcceptPickupBottomSheet: BottomSheetDialogFragment() {
         }
         layoutBinding.inputTime.setOnClickListener {
             openTimePicker()
+        }
+        layoutBinding.btnAccept.setOnClickListener {
+            viewModel.acceptPickup(companyId,
+                transactionId,
+                layoutBinding.inputDate.text.toString(),
+                layoutBinding.inputTime.text.toString(),
+                layoutBinding.inputRemark.text.toString()
+            )
         }
     }
 
