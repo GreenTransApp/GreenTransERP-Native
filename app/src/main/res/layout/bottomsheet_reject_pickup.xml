@@ -13,7 +13,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolBar"
@@ -185,8 +185,8 @@
                 android:inputType="textMultiLine"
                 android:lines="2"
                 android:maxLines="3"
-                android:textAllCaps="true"
                 android:textColor="@color/black" />
+<!--                android:textAllCaps="true"-->
 
         </com.google.android.material.textfield.TextInputLayout>
 

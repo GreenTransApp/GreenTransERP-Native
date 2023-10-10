@@ -173,20 +173,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:hint="Enter Remarks ( Optional )"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:hint="Enter Remarks ( Optional )"
             app:layout_constraintTop_toBottomOf="@id/layout_dt_tm">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_remark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
                 android:lines="2"
-                android:maxLines="3"
-                android:textAllCaps="true"
-                android:textColor="@color/black" />
+            android:maxLines="3"
+            android:inputType="textMultiLine"
+            android:textColor="@color/black"
+
+
+                />
+<!--            android:textAllCaps="true"-->
 
         </com.google.android.material.textfield.TextInputLayout>
 
