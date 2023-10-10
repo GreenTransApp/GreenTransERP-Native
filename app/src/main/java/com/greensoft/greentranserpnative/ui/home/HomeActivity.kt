@@ -176,6 +176,11 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
             menuList = menu
             setupRecyclerView()
         }
+
+        mScanner.observe(this){data->
+            Companion.successToast(mContext,data)
+//            playSound()
+        }
     }
 
 //    fun setOnClicks() {
@@ -233,7 +238,6 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
     private fun testFunction() {
         val intent=Intent(this,PickupManifestEntryActivity::class.java)
         startActivity(intent)
-
 //        dispatchTakePictureIntent()
 //        selectImage()
 //        val intent = Intent(this, CameraX::class.java)

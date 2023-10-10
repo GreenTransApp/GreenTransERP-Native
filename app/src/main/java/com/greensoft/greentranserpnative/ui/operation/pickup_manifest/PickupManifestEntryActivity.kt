@@ -79,11 +79,18 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
            activityBinding.autoManifestCheck.setOnClickListener {
                if (activityBinding.autoManifestCheck.isChecked){
                    activityBinding.inputManifestNum.isFocusable=false
-//                   activityBinding.inputManifestNum.setBackgroundColor(ContextCompat.getColor(this, R.color.tran_light_grey))
+                   activityBinding.inputManifestNum.text!!.clear()
+                   activityBinding.inputManifestNum.setBackgroundColor(ContextCompat.getColor(this, R.color.tran_light_grey))
+
+
 
 //                   activityBinding.inputManifestNum.setOnFocusChangeListener { _, hasFocus ->
+//                       if(hasFocus){
+//                       activityBinding.inputManifestNum.setBackgroundColor(ContextCompat.getColor(this, R.color.tran_light_grey))
 //
-//                activityBinding.inputManifestNum.setBackgroundColor()
+//                       }
+//                       activityBinding.inputManifestNum.setBackgroundColor(ContextCompat.getColor(this, R.color.tran_light_grey))
+////                       activityBinding.inputManifestNum.setBackgroundColor()
 //                   }
 
 
