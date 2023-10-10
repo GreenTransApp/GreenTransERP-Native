@@ -106,6 +106,9 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
         setupUi()
         setObserver()
         setOnClicks()
+        if(!isScannerWorking()) {
+            errorToast(ENV.SCANNER_NOT_WORKING_MSG)
+        }
     }
     override fun onResume() {
         super.onResume()

@@ -321,6 +321,9 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 //    }
 
     private fun setObservers() {
+        timePeriod.observe(this) { time ->
+            activityBinding.inputTime.setText(time)
+        }
         activityBinding.refreshLayout.setOnRefreshListener {
 //            refreshData()
             lifecycleScope.launch {
