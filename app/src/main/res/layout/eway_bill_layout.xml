@@ -40,13 +40,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Eway Bill#"
+                    android:text="NO. OF E-WAY BILL#"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/danger"
-                    android:text=" "
+                    android:text=" *"
                     />
             </LinearLayout>
 
@@ -55,14 +55,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:hintTextColor="@color/black"
-                android:hint="Enter ewaybill number"
+                android:hint="Enter No. of E-WAY BILL"
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_eway_bill_no"
+                    android:id="@+id/input_no_of_eway_bill"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
+                    android:inputType="numberSigned"
                     android:textAllCaps="true" />
 
             </com.google.android.material.textfield.TextInputLayout>
