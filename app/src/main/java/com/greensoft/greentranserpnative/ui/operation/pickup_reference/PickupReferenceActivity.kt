@@ -49,15 +49,17 @@ class PickupReferenceActivity  @Inject constructor(): BaseActivity(), OnRowClick
         refreshData()
     }
     private fun refreshData(){
-        getPickupRefData()
+        pickupRefList.clear()
+        setupRecyclerView()
+        lifecycleScope.launch {
+            getPickupRefData()
+            delay(1500)
+            activityBinding.refreshLayout.isRefreshing=false
+        }
      }
   private fun setObserver(){
       activityBinding.refreshLayout.setOnRefreshListener {
           refreshData()
-          lifecycleScope.launch {
-              delay(1500)
-              activityBinding.refreshLayout.isRefreshing=false
-          }
       }
       viewModel.isError.observe(this) { errMsg ->
           errorToast(errMsg)
@@ -126,19 +128,24 @@ class PickupReferenceActivity  @Inject constructor(): BaseActivity(), OnRowClick
     private fun getPickupRefData(){
         viewModel.getPickupRefList(
             loginDataModel?.companyid.toString(),
-            "logix_weblovjobforbooking_v2",
-            listOf("prmbranchcode"),
-            arrayListOf(userDataModel?.loginbranchcode.toString())
+//            "logix_weblovjobforbooking_v2",
+            "gtapp_lovjobforbooking_nv",
+            listOf("prmbranchcode","prmusercode","prmmenucode","prmsessionid"),
+            arrayListOf(userDataModel?.loginbranchcode.toString(),
+                userDataModel?.usercode.toString(),
+                getMenuData()?.menucode.toString(),
+                userDataModel?.sessionid.toString()
+            )
 //            arrayListOf(userDataModel?.loginbranchcode.toString())
         )
     }
 
-    private fun getSingleRefData(transationId:Int){
+    private fun getSingleRefData(){
         viewModel.getSingleRefData(
             loginDataModel?.companyid.toString(),
             "greentransweb_jeenabooking_getpickupforbooking",
             listOf("prmtransactionid"),
-            arrayListOf(transactionId.toString())
+            arrayListOf(transactionId)
         )
     }
 
@@ -152,13 +159,11 @@ class PickupReferenceActivity  @Inject constructor(): BaseActivity(), OnRowClick
     }
 
     private fun setupRecyclerView() {
-          linearLayoutManager = LinearLayoutManager(this)
-        if (rvAdapter == null) {
-            rvAdapter = PickupReferenceAdapter(pickupRefList, this@PickupReferenceActivity)
-            activityBinding.recyclerView.apply {
-                layoutManager = linearLayoutManager
-                adapter = rvAdapter
-            }
+        linearLayoutManager = LinearLayoutManager(this)
+        rvAdapter = PickupReferenceAdapter(pickupRefList, this@PickupReferenceActivity)
+        activityBinding.recyclerView.apply {
+            layoutManager = linearLayoutManager
+            adapter = rvAdapter
         }
     }
 
@@ -167,7 +172,7 @@ class PickupReferenceActivity  @Inject constructor(): BaseActivity(), OnRowClick
             "REF_SELECT" -> run {
                 val model: PickupRefModel = data as PickupRefModel
                 transactionId=model.transactionid.toString()
-                getSingleRefData(model.transactionid)
+                getSingleRefData()
 
 //                successToast(model.custname)
             }

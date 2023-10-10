@@ -1,3 +1,3 @@
 package com.greensoft.greentranserpnative.ui.operation.eway_bill
 
-data class EwayBillModel(val ewayBillNo:String)
+data class EwayBillModel(var ewayBillNo:String = "")

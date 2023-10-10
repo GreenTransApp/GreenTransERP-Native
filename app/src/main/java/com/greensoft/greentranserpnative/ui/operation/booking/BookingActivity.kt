@@ -79,6 +79,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         activityBinding.inputDate.inputType = InputType.TYPE_NULL;
         activityBinding.inputTime.inputType = InputType.TYPE_NULL;
         setLayoutVisibility()
+        activityBinding.inputDate.setText(getViewCurrentDate())
+        activityBinding.inputTime.setText(getSqlCurrentTime())
         getIntentData()
         getCustomerList()
         getCngrList()
@@ -256,6 +258,12 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     }
 
     private fun setOnClick() {
+        activityBinding.autoGrCheck.setOnCheckedChangeListener { compoundButton, bool ->
+            if(bool) {
+                activityBinding.inputGrNo.setText("");
+            }
+            activityBinding.inputGrNo.isEnabled = !(bool)
+        }
         activityBinding.inputCustName.setOnClickListener {
             if (DEBUGGING) {
                 //            Toast.makeText(this, "testing", Toast.LENGTH_SHORT).show()

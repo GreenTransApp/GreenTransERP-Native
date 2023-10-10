@@ -72,6 +72,8 @@ class CallRegisterActivity @Inject constructor() : BaseActivity(), OnRowClick<An
         refreshData()
     }
       private fun refreshData(){
+          callRegisterList.clear()
+          setupRecyclerView()
           lifecycleScope.launch {
               getCallRegisterList()
               delay(1500)
@@ -211,13 +213,11 @@ class CallRegisterActivity @Inject constructor() : BaseActivity(), OnRowClick<An
 
     private fun setupRecyclerView() {
         linearLayoutManager = LinearLayoutManager(this)
-        if (rvAdapter == null)
-            rvAdapter = CallRegisterAdapter(callRegisterList, this@CallRegisterActivity)
+        rvAdapter = CallRegisterAdapter(callRegisterList, this@CallRegisterActivity)
         activityBinding.recyclerView.apply {
             layoutManager = linearLayoutManager
             adapter = rvAdapter
         }
-
 
     }
 

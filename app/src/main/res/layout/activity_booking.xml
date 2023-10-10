@@ -130,47 +130,126 @@
 
         </LinearLayout>
 
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginHorizontal="10dp"-->
+<!--            android:layout_marginVertical="5dp"-->
+<!--            android:orientation="vertical">-->
+<!--         <LinearLayout-->
+<!--             android:layout_width="wrap_content"-->
+<!--             android:layout_height="wrap_content"-->
+<!--             android:orientation="horizontal">-->
+<!--              <TextView-->
+<!--                  android:layout_width="wrap_content"-->
+<!--                  android:layout_height="wrap_content"-->
+<!--                  android:text="GR#"-->
+<!--                  />-->
+<!--             <TextView-->
+<!--                  android:layout_width="wrap_content"-->
+<!--                  android:layout_height="wrap_content"-->
+<!--                 android:textColor="@color/danger"-->
+<!--                  android:text=" * "-->
+<!--                  />-->
+<!--          </LinearLayout>-->
+
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/input_layout_grNo"-->
+<!--            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:hintTextColor="@color/black"-->
+<!--            android:hint="Enter gr number"-->
+<!--            >-->
+
+<!--            <com.google.android.material.textfield.TextInputEditText-->
+<!--                android:id="@+id/input_grNo"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:inputType="textEmailAddress"-->
+<!--                android:textAllCaps="true" />-->
+
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
+<!--        </LinearLayout>-->
+
+
         <LinearLayout
+            android:id="@+id/input_layout_gr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:layout_marginVertical="5dp"
-            android:orientation="vertical">
-         <LinearLayout
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:orientation="horizontal">
-              <TextView
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="GR#"
-                  />
-             <TextView
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                 android:textColor="@color/danger"
-                  android:text=" * "
-                  />
-          </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@+id/input_layout_branch"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:orientation="horizontal">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/input_layout_grNo"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:hintTextColor="@color/black"
-            android:hint="Enter gr number"
-            >
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/input_grNo"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:textAllCaps="true" />
+                android:layout_weight="1"
+                android:layout_marginRight="5dp"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="GR#"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/danger"
+                        android:text=" * "
+                        />
+                </LinearLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/input_layout_grNo"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint=""
+                    >
+                    <com.google.android.material.textfield.TextInputEditText
 
-        </com.google.android.material.textfield.TextInputLayout>
+                        android:id="@+id/input_grNo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+<!--                        android:textAllCaps="true"-->
+<!--                        android:inputType=  "number"-->
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="5dp"
+                android:orientation="horizontal">
+                <CheckBox
+                    android:id="@+id/auto_gr_check"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text=" Auto"
+                    />
+
+            </LinearLayout>
+
         </LinearLayout>
+
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_eway_bill"
             android:layout_height="match_parent"

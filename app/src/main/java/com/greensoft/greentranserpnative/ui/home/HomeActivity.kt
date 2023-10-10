@@ -151,6 +151,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
 
     }
     private fun setObserver() {
+
         capturedImage.observe(this) { imageUri ->
             successToast("HOME_ACTIVITY ${imageUri.path}")
             activityBinding.compLogo.setImageURI(imageUri)
