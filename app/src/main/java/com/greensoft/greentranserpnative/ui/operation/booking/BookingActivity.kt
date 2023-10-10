@@ -73,7 +73,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         super.onCreate(savedInstanceState)
         activityBinding = ActivityBookingBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
-        setSupportActionBar(activityBinding.toolBar as Toolbar)
+        setSupportActionBar(activityBinding.toolBar.root)
         setUpToolbar("BOOKING ENTRY")
         menuModel = getMenuData()
         activityBinding.inputDate.inputType = InputType.TYPE_NULL;

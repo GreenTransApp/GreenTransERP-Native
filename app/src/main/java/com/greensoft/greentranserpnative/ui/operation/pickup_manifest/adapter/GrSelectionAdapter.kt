@@ -1,5 +1,6 @@
 package com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
@@ -13,6 +14,8 @@ class GrSelectionAdapter(private val grList: ArrayList<GrSelectionModel>,
                          private val onRowClick: OnRowClick<Any>
 ) : RecyclerView.Adapter<GrSelectionAdapter.GrSelectionViewHolder>() , Filterable {
     private  var filterList: ArrayList<GrSelectionModel>
+    var isCheck:Boolean=false
+
     init {
         filterList=grList
     }
@@ -21,12 +24,27 @@ class GrSelectionAdapter(private val grList: ArrayList<GrSelectionModel>,
         fun bindData(model: GrSelectionModel, onRowClick: OnRowClick<Any>) {
             binding.grModel = model
             binding.index = adapterPosition
-//            binding.btnSelect.setOnClickListener {
-//                onRowClick.onCLick(pickupRefModel, "REF_SELECT")
-//            }
+
+
+
+            binding.allCheck.setOnCheckedChangeListener{_,isChecked->
+               if(isChecked){
+                   onRowClick.onCLick(model, "CHECK_SELECTED")
+                   Log.d("test", "bindData: checkbox check")
+               }else{
+
+               }
+
+            }
+
 
         }
     }
+
+//   open fun checkAll(isAllChecked:Boolean){
+//         isCheck=isAllChecked;
+//         notifyDataSetChanged()
+//     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GrSelectionViewHolder {
         var binding: SelectedGrItemBinding =

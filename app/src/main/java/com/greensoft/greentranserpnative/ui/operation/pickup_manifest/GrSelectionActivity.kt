@@ -7,16 +7,19 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityGrSelectionBinding
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.booking.BookingActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.GrSelectionAdapter
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceViewModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.PickupRefModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -31,6 +34,7 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
     private val viewModel: PickupManifestViewModel by viewModels()
     private var rvAdapter: GrSelectionAdapter? = null
     private var grList: ArrayList<GrSelectionModel> = ArrayList()
+    private var selectedGrList: ArrayList<GrSelectionModel> = ArrayList()
     private var branchList: ArrayList<BranchSelectionModel> = ArrayList()
 
 
@@ -40,7 +44,7 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
         activityBinding=ActivityGrSelectionBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
-        setUpToolbar("Select Gr")
+        setUpToolbar("SELECT GR")
         setObserver()
         setOnClick()
 
@@ -72,8 +76,20 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
 
      private fun setOnClick(){
          activityBinding.btnContinue.setOnClickListener {
-             val intent= Intent(this,SavePickupManifestActivity::class.java)
-             startActivity(intent)
+             if(grList.size !=0){
+//                 selectedGrList.addAll(grList)
+                 hideProgressDialog()
+                 val gson = Gson()
+                 val jsonString = gson.toJson(selectedGrList)
+                 val intent = Intent(this,SavePickupManifestActivity ::class.java)
+                 intent.putExtra("ARRAY_JSON", jsonString)
+                 startActivity(intent)
+//
+             }
+             else{
+                 successToast(mContext,"data not send")
+             }
+
          }
 
 
@@ -102,6 +118,7 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
         viewModel.grLiveData.observe(this) { data ->
             grList = data
             setupRecyclerView()
+
         }
     }
     private fun setupRecyclerView() {
@@ -116,12 +133,21 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
     }
 
     override fun onItemClick(data: Any, clickType: String) {
-        when (clickType) {
 
-        }
     }
     override fun onCLick(data: Any, clickType: String) {
-        TODO("Not yet implemented")
+       when (clickType) {
+
+            "CHECK_SELECTED" -> run {
+                val model: GrSelectionModel = data as GrSelectionModel
+                selectedGrList.add(model)
+                val gson = Gson()
+                successToast("show")
+
+
+            }
+
+        }
     }
 }
 

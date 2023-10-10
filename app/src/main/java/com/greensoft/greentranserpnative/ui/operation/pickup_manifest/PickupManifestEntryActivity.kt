@@ -2,10 +2,15 @@ package com.greensoft.greentranserpnative.ui.operation.pickup_manifest
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.CalendarContract
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
+import androidx.compose.ui.graphics.Color
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 
 import com.greensoft.greentranserpnative.databinding.ActivityPickupManifestEntryBinding
@@ -52,6 +57,8 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
     }
 
 
+
+
       private fun setOnclick(){
           activityBinding.inputBranch.setOnClickListener{
               openBranchSelectionBottomSheet(branchList)
@@ -68,7 +75,46 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
           activityBinding.inputVehicleNumber.setOnClickListener{
               openVehicleSelectionBottomSheet(vehicleList)
           }
+
+           activityBinding.autoManifestCheck.setOnClickListener {
+               if (activityBinding.autoManifestCheck.isChecked){
+                   activityBinding.inputManifestNum.isFocusable=false
+//                   activityBinding.inputManifestNum.setBackgroundColor(ContextCompat.getColor(this, R.color.tran_light_grey))
+
+//                   activityBinding.inputManifestNum.setOnFocusChangeListener { _, hasFocus ->
+//
+//                activityBinding.inputManifestNum.setBackgroundColor()
+//                   }
+
+
+               }else{
+                   activityBinding.inputManifestNum.isFocusable=true
+                   successToast("not show")
+               }
+           }
           activityBinding.btnGrSelect.setOnClickListener {
+            if (activityBinding.inputBranch.text.isNullOrEmpty()) {
+                Companion.errorToast(this,"Please Select Branch")
+                return@setOnClickListener
+            }else if(activityBinding.inputManifestNum .text.isNullOrEmpty()) {
+                Companion.errorToast(this,"Please Enter Manifest Number")
+                return@setOnClickListener
+            }else if (activityBinding.inputDate.text.isNullOrEmpty()) {
+                Companion.errorToast(this,"Please Select Date")
+                return@setOnClickListener
+            }else if (activityBinding.inputTime.text.isNullOrEmpty()) {
+                Companion.errorToast(this,"Please Select Time")
+                return@setOnClickListener
+            }else if (activityBinding.inputDriverName .text.isNullOrEmpty()) {
+                Companion.errorToast(this,"Please Driver Name")
+                return@setOnClickListener
+            }else if (activityBinding.selectedVehicleType.autofillHints.isNullOrEmpty()) {
+                Companion.errorToast(this,"Please Select Vehicle Type")
+                return@setOnClickListener
+            }else if (activityBinding.inputVehicleNumber .text.isNullOrEmpty()) {
+                Companion.errorToast(this,"Please Select Vehicle Number")
+                return@setOnClickListener
+            }
               val intent= Intent(this,GrSelectionActivity::class.java)
               startActivity(intent)
           }
