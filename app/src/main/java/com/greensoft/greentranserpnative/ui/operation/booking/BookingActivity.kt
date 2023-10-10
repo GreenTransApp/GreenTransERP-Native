@@ -79,6 +79,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         activityBinding.inputDate.inputType = InputType.TYPE_NULL;
         activityBinding.inputTime.inputType = InputType.TYPE_NULL;
         setLayoutVisibility()
+        activityBinding.inputDate.setText(getViewCurrentDate())
+        activityBinding.inputTime.setText(getSqlCurrentTime())
         getIntentData()
         getCustomerList()
         getCngrList()
