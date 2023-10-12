@@ -230,7 +230,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="con_success">Connect success</string>
-    <string name="con_failed">Connect failed</string>
+    <string name="con_failed">Printer connection has been disabled</string>
     <string name="con_has_disconnect">connection has disconnected</string>
     <string name="send_failed">Send Failed</string>
     <string name="usb_detached">USB DETACHED</string>

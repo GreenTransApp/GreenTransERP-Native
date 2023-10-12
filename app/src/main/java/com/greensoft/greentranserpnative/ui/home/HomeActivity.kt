@@ -27,6 +27,8 @@ import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.login.LoginActivity
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.call_register.CallRegisterActivity
+
+import com.greensoft.greentranserpnative.ui.operation.grList.GrListActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestEntryActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,6 +37,7 @@ import kotlinx.coroutines.launch
 import java.io.InputStream
 import java.util.concurrent.Executors
 import javax.inject.Inject
+import kotlin.system.exitProcess
 
 
 @AndroidEntryPoint
@@ -153,6 +156,23 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
          }
 
     }
+
+    override fun onBackPressed() {
+        exitAlert()
+    }
+
+    private fun exitAlert() {
+     AlertDialog.Builder(this)
+        .setTitle("Alert!!!")
+        .setMessage("Are you sure you want to exit the app?")
+        .setPositiveButton("Yes") { _, _ ->
+            moveTaskToBack(true);
+            exitProcess(-1)
+        }
+        .setNeutralButton("No") { _, _ -> }
+        .show()
+    }
+
     private fun setObserver() {
 
         capturedImage.observe(this) { imageUri ->
@@ -297,6 +317,11 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
            }
            "GTAPP_PENDINGINDENT" -> run {
                val intent = Intent(this, PickupReferenceActivity::class.java)
+               intent.putExtra("MENU_DATA", jsonSerialized)
+               startActivity(intent)
+           }
+           "GTAPP_GRLIST" -> run {
+               val intent = Intent(this, GrListActivity::class.java)
                intent.putExtra("MENU_DATA", jsonSerialized)
                startActivity(intent)
            }

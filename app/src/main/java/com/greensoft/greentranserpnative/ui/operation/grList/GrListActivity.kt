@@ -2,13 +2,23 @@ package com.greensoft.greentranserpnative.ui.operation.grList
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.card.MaterialCardView
+import com.greensoft.greentranserpnative.ENV
+import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityGrListBinding
 import com.greensoft.greentranserpnative.databinding.BottomSheetPrintStickerConfirmationBinding
@@ -16,6 +26,7 @@ import com.greensoft.greentranserpnative.hilt.App
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.grList.models.GrListModel
 import com.greensoft.greentranserpnative.ui.operation.grList.models.PrintStickerModel
+import com.greensoft.greentranserpnative.ui.print.dcCode.activity.SelectBluetoothActivity
 import dagger.hilt.android.AndroidEntryPoint
 import net.posprinter.TSCConst
 import net.posprinter.TSCPrinter
@@ -30,23 +41,58 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
     private var grList: ArrayList<GrListModel> = ArrayList()
     private var printStickerList: ArrayList<PrintStickerModel> = ArrayList()
     private var grListAdapter: GrListAdapter? = null
-    private var fromSticker: String? = null
-    private  var toSticker:String? = null
-    private lateinit var fromDate: String
-    private lateinit var toDate:String
+    private var fromDate: String = getSqlDate()!!
+    private var toDate:String = getSqlDate()!!
+    private var bookingType: String = "M"
 //    private val printer = TSCPrinter(App.get().curConnect)
     private var printer: TSCPrinter? = null
+
+    private var btLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode === RESULT_OK) {
+            val mac: String? =
+                result.data?.getStringExtra(SelectBluetoothActivity.INTENT_MAC)
+            val name: String? =
+                result.data?.getStringExtra(SelectBluetoothActivity.INTENT_BT_NAME)
+            if (mac != null && name != null) {
+                saveStorageString(ENV.DEFAULT_BLUETOOTH_ADDRESS_PREF_TAG, mac)
+                saveStorageString(ENV.DEFAULT_BLUETOOTH_NAME_PREF_TAG, name)
+                App.get().connectBt(mac, name)
+            } else {
+                errorToast("Some Error Occured while trying to connect to bluetooth, please restart the app.")
+            }
+        }
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityGrListBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
-        printer = TSCPrinter(App.get().curConnect)
-        getGrList()
+        setSupportActionBar(activityBinding.toolBar.root)
+        (if(getMenuData() == null) getMenuData()?.displayname else "GR LIST ")?.let { menuName ->
+            var menuNameEdited = menuName
+            if(bookingType == "M") {
+                menuNameEdited += " ( Manual )"
+            } else {
+                menuNameEdited += " ( Computerize )"
+            }
+            setUpToolbar(menuNameEdited)
+        }
+        initUi()
+        getDefaultConnection()
+//        getGrList()
         setObservers()
     }
 
+    private fun getDefaultConnection() {
+        val mac = getStorageString(ENV.DEFAULT_BLUETOOTH_ADDRESS_PREF_TAG)
+        val name = getStorageString(ENV.DEFAULT_BLUETOOTH_NAME_PREF_TAG)
+        App.get().connectBt(mac, name)
+    }
     override fun onCLick(data: Any, clickType: String) {
         if (clickType == "BUTTON_CLICK") {
+            printer = TSCPrinter(App.get().curConnect)
             if (isPrinterConnected()) {
                 val model = data as GrListModel
                 printStickerBottomSheet(model)
@@ -56,19 +102,19 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
 
     private fun getGrList(){
         viewModel.getGrList(
-            "10",
+            loginDataModel?.companyid.toString(),
             "greentrans_bookingsearchlist",
             listOf("prmbranchcode","prmfromdt","prmtodt","prmdoctype","prmgrno"),
-            arrayListOf("00000","2023-09-14","2023-09-28","M","")
+            arrayListOf(userDataModel?.loginbranchcode.toString(),fromDate,toDate,bookingType,"")
         )
     }
 
-    private fun getStickerForPrint(){
+    private fun getStickerForPrint( grNo: String, from: String, to : String){
         viewModel.getStickerForPrint(
-            "10",
+            loginDataModel?.companyid.toString(),
             "printsticker",
             listOf("prmgrno","prmfromstickerno","prmtostickerno"),
-            arrayListOf("70224753","1","1")
+            arrayListOf(grNo,from,to)
         )
     }
 
@@ -105,26 +151,48 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
             }
         }
 
+        activityBinding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                // filter recycler view when query submitted
+                grListAdapter?.getFilter()?.filter(query)
+                return false
+            }
+
+            override fun onQueryTextChange(query: String): Boolean {
+                // filter recycler view when text is changed
+                grListAdapter?.getFilter()?.filter(query)
+                return false
+            }
+        })
     }
 
-//    private fun refreshData() {
-//        if (fromDate == null || toDate == null) {
-//            fromDate = getSqlDate()!!
-//            toDate = getSqlDate()!!
-//        }
-////        getGrList(fromDate, toDate)
-//    }
+    private fun initUi() {
+        mContext = this@GrListActivity
+        fromDate = getSqlDate()!!
+        toDate = getSqlDate()!!
+        activityBinding.swipeRefreshLayout.setOnRefreshListener(OnRefreshListener {
+            refreshData()
+            activityBinding.swipeRefreshLayout.isRefreshing = false
+        })
+        if (ENV.DEBUGGING) {
+            fromDate = "2023-06-01"
+            bookingType = "M"
+        }
+    }
+    private fun refreshData() {
+        getGrList()
+    }
 
-//    override fun onResume() {
-//        super.onResume()
-//        refreshData()
-//    }
+    override fun onResume() {
+        super.onResume()
+        refreshData()
+    }
 
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.main_menu, menu)
-//        return true
-//    }
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.gr_list_menu, menu)
+        return true
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
 //        val id = item.itemId
 //        if (id == R.id.datePicker) {
 //            if (!materialDatePicker?.isAdded!!) {
@@ -133,7 +201,35 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
 //            return true
 //        }
 //        return super.onOptionsItemSelected(item)
-//    }
+        return when (item.itemId) {
+            R.id.bookig_type_btn->{
+               showBookingTypeSelection()
+                true
+            }
+            R.id.datePicker -> {
+                openDatePicker()
+                true
+            }
+            R.id.datePicker -> {
+                openDatePicker()
+                true
+            }
+            R.id.printer_connection ->{
+                    btLauncher.launch(Intent(this,SelectBluetoothActivity::class.java))
+
+                true
+            }
+//            R.id.manual_booking -> {
+////
+//                true
+//            }
+//            R.id.computer_booking ->{
+//                Toast.makeText(this, "Com", Toast.LENGTH_SHORT).show()
+//                true
+//            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
 
     private fun setupRecyclerView() {
@@ -189,6 +285,7 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
     private fun isPrinterConnected(): Boolean {
         val isPrinterConnected = AtomicBoolean(false)
         if (printer != null && App.get().curConnect!= null) {
+
             printer!!.isConnect { isConnected: Int ->
                 if (isConnected == 1) {
                     isPrinterConnected.set(true)
@@ -218,13 +315,10 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
             .setMessage(msg)
             .setPositiveButton("Yes") { dialogInterface, i ->
                 if (isPrinterConnected()) {
-                    fromSticker = from
-                    toSticker = to
-                    getStickerForPrint()
+//                    fromSticker = from
+//                    toSticker = to
+                    getStickerForPrint(model.grno,from,to)
                 }
-//                fromSticker = from
-//                toSticker = to
-//                getStickerForPrint()
             }
             .setNeutralButton(
                 "Cancel"
@@ -355,16 +449,35 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
                 .print(1)
         }
     }
-//    fun getPrintSticker(grNo: String?, from: String?, to: String?) {
-//        if (isNetworkConnected() && userDataModel != null) {
-//            viewModel.getStickerForPrint(
-//                java.lang.String.valueOf(userDataModel?.companyid),
-//                grNo!!,
-//                from,
-//                to
-//            )
-//        } else {
-//            errorToast(getInternetError())
-//        }
-//    }
+
+    private fun showBookingTypeSelection() {
+        val bottomSheetDialog = BottomSheetDialog(this)
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_booking_type)
+        val manual = bottomSheetDialog.findViewById<MaterialCardView>(R.id.layout_m)
+        val computerize = bottomSheetDialog.findViewById<MaterialCardView>(R.id.layout_c)
+        manual?.setOnClickListener {
+            bookingType = "M"
+            changeMenuName()
+            getGrList()
+            bottomSheetDialog.dismiss()
+        }
+        computerize?.setOnClickListener {
+            bookingType = "C"
+            changeMenuName()
+            getGrList()
+            bottomSheetDialog.dismiss()
+//            val i = Intent(this@GrListActivity, GrListActivity::class.java)
+//            startActivity(i)
+        }
+        bottomSheetDialog.show()
+    }
+    fun changeMenuName() {
+        var menuNameEdited = getMenuData()!!.menuname
+        menuNameEdited += if(bookingType == "M") {
+            " ( Manual )"
+        } else {
+            " ( Computerize )"
+        }
+        setUpToolbar(menuNameEdited)
+    }
 }
