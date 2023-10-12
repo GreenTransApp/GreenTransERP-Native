@@ -1,11 +1,13 @@
 package com.greensoft.greentranserpnative.ui.operation.booking.models
 
-data class PickupBySelection(
-    val commandstatus: Long,
+data class PckgTypeSelectionModel(
     val commandmessage: String,
+    val commandstatus: Int,
     val text: String,
-    val value: String,
-) {
+    val value: String
+)
+
+{
     override fun toString(): String {
         return text
     }

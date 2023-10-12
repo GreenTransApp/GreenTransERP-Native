@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.ui.operation.booking.models.AgentSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.BookingVehicleSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ConsignorSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ContentSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.CustomerSelectionModel
@@ -14,10 +15,13 @@ import com.greensoft.greentranserpnative.ui.operation.booking.models.DepartmentS
 import com.greensoft.greentranserpnative.ui.operation.booking.models.DestinationSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.GelPackItemSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.OriginSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.PckgTypeSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PickupBoySelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PickupBySelection
+import com.greensoft.greentranserpnative.ui.operation.booking.models.ServiceTypeSelectionLov
 import com.greensoft.greentranserpnative.ui.operation.booking.models.TemperatureSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -70,11 +74,31 @@ class BookingRepository @Inject constructor():BaseRepository(){
     val agentLiveData: LiveData<ArrayList<AgentSelectionModel>>
         get() = agentMuteLiveData
 
+    private val vendorMuteLiveData = MutableLiveData<ArrayList<AgentSelectionModel>>()
+    val vendorLiveData: LiveData<ArrayList<AgentSelectionModel>>
+        get() = agentMuteLiveData
+
+    private val vehicleMuteLiveData = MutableLiveData<ArrayList<BookingVehicleSelectionModel>>()
+    val vehicleLiveData: LiveData<ArrayList<BookingVehicleSelectionModel>>
+        get() = vehicleMuteLiveData
+
+
     private val pickupByMuteLiveData = MutableLiveData<ArrayList<PickupBySelection>>()
     val pickupByLiveData: LiveData<ArrayList<PickupBySelection>>
         get() = pickupByMuteLiveData
 
 
+    private val serviceListMuteLiveData = MutableLiveData<ArrayList<ServiceTypeSelectionLov>>()
+    val serviceListLiveData: LiveData<ArrayList<ServiceTypeSelectionLov>>
+        get() = serviceListMuteLiveData
+
+    private val singleRefMuteLiveData = MutableLiveData<ArrayList<SinglePickupRefModel>>()
+    val singleRefLiveData: LiveData<ArrayList<SinglePickupRefModel>>
+        get() = singleRefMuteLiveData
+
+    private val pckgTypeMuteLiveData = MutableLiveData<ArrayList<PckgTypeSelectionModel>>()
+    val pckgTypeLiveData: LiveData<ArrayList<PckgTypeSelectionModel>>
+        get() = pckgTypeMuteLiveData
 
 
 
@@ -431,4 +455,213 @@ class BookingRepository @Inject constructor():BaseRepository(){
 
 
     }
+
+    fun getVendorLov(companyId: String, spname: String, param: List<String>, values: ArrayList<String>) {
+        api.commonApi(companyId, spname, param, values).enqueue(object : Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
+                if (response.body() != null) {
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if (result.CommandStatus == 1) {
+                        val jsonArray = getResult(result);
+                        if (jsonArray != null) {
+                            val listType =
+                                object : TypeToken<List<AgentSelectionModel>>() {}.type
+                            val resultList: ArrayList<AgentSelectionModel> =
+                                gson.fromJson(jsonArray.toString(), listType);
+                            vendorMuteLiveData.postValue(resultList)
+
+                        }
+                    } else {
+                        isError.postValue(result.CommandMessage.toString());
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR);
+                }
+                viewDialogMutData.postValue(false)
+            }
+
+            override fun onFailure(call: Call<CommonResult>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
+
+
+    }
+
+    fun getVehicleLov(companyId: String, spname: String, param: List<String>, values: ArrayList<String>) {
+        api.commonApi(companyId, spname, param, values).enqueue(object : Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
+                if (response.body() != null) {
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if (result.CommandStatus == 1) {
+                        val jsonArray = getResult(result);
+                        if (jsonArray != null) {
+                            val listType =
+                                object : TypeToken<List<BookingVehicleSelectionModel>>() {}.type
+                            val resultList: ArrayList<BookingVehicleSelectionModel> =
+                                gson.fromJson(jsonArray.toString(), listType);
+                            vehicleMuteLiveData.postValue(resultList)
+
+                        }
+                    } else {
+                        isError.postValue(result.CommandMessage.toString());
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR);
+                }
+                viewDialogMutData.postValue(false)
+            }
+
+            override fun onFailure(call: Call<CommonResult>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
+
+
+    }
+    fun getPickupByLov(companyId: String, spname: String, param: List<String>, values: ArrayList<String>) {
+        api.commonApi(companyId, spname, param, values).enqueue(object : Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
+                if (response.body() != null) {
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if (result.CommandStatus == 1) {
+                        val jsonArray = getResult(result);
+                        if (jsonArray != null) {
+                            val listType =
+                                object : TypeToken<List<PickupBySelection>>() {}.type
+                            val resultList: ArrayList<PickupBySelection> =
+                                gson.fromJson(jsonArray.toString(), listType);
+                            pickupByMuteLiveData.postValue(resultList)
+
+                        }
+                    } else {
+                        isError.postValue(result.CommandMessage.toString());
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR);
+                }
+                viewDialogMutData.postValue(false)
+            }
+
+            override fun onFailure(call: Call<CommonResult>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
+
+
+    }
+
+    fun getServiceType(companyId: String, spname: String, param: List<String>, values: ArrayList<String>) {
+        api.commonApi(companyId, spname, param, values).enqueue(object : Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
+                if (response.body() != null) {
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if (result.CommandStatus == 1) {
+                        val jsonArray = getResult(result);
+                        if (jsonArray != null) {
+                            val listType =
+                                object : TypeToken<List<ServiceTypeSelectionLov>>() {}.type
+                            val resultList: ArrayList<ServiceTypeSelectionLov> =
+                                gson.fromJson(jsonArray.toString(), listType);
+                            serviceListMuteLiveData.postValue(resultList)
+
+                        }
+                    } else {
+                        isError.postValue(result.CommandMessage.toString());
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR);
+                }
+                viewDialogMutData.postValue(false)
+            }
+
+            override fun onFailure(call: Call<CommonResult>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
+
+
+    }
+
+
+    fun getSingleRefData( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
+        viewDialogMutData.postValue(true)
+        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
+                if(response.body() != null){
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if(result.CommandStatus == 1){
+                        val jsonArray = getResult(result);
+                        if(jsonArray != null) {
+                            val listType = object: TypeToken<List<SinglePickupRefModel>>() {}.type
+                            val resultList: ArrayList<SinglePickupRefModel> = gson.fromJson(jsonArray.toString(), listType);
+                            singleRefMuteLiveData.postValue(resultList);
+
+                        }
+                    } else {
+                        isError.postValue(result.CommandMessage.toString());
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR);
+                }
+                viewDialogMutData.postValue(false)
+
+            }
+
+            override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
+
+    }
+
+    fun getPckgTypeLov(companyId:String, spname: String, param:List<String>, values:ArrayList<String>) {
+        viewDialogMutData.postValue(true)
+        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
+                if(response.body() != null){
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if(result.CommandStatus == 1){
+                        val jsonArray = getResult(result);
+                        if(jsonArray != null) {
+                            val listType = object: TypeToken<List<PckgTypeSelectionModel>>() {}.type
+                            val resultList: ArrayList<PckgTypeSelectionModel> = gson.fromJson(jsonArray.toString(), listType);
+                            pckgTypeMuteLiveData.postValue(resultList);
+
+                        }
+                    } else {
+                        isError.postValue(result.CommandMessage.toString());
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR);
+                }
+                viewDialogMutData.postValue(false)
+
+            }
+
+            override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
+
+    }
+
 }

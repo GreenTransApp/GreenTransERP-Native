@@ -121,6 +121,24 @@
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
+<!--                    <com.google.android.material.textfield.TextInputLayout-->
+<!--                        android:id="@+id/input_layout_datalogger_no"-->
+<!--                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--                        android:layout_width="200sp"-->
+<!--                        android:gravity="center"-->
+<!--                        android:focusable="false"-->
+<!--                        android:background="@drawable/table_content_cell_bg"-->
+<!--                        android:layout_height="wrap_content">-->
+<!--                        <Spinner-->
+<!--                            android:id="@+id/selectDatalogger"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:text="@{String.valueOf(gridData.datalogger)}"-->
+<!--                            android:layout_height="55sp"-->
+<!--                            />-->
+
+<!--                    </com.google.android.material.textfield.TextInputLayout>-->
+
+
                     <EditText
                         android:id="@+id/dataloggerNum"
                         android:layout_width="200sp"
