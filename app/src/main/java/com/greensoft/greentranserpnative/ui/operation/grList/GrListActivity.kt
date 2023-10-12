@@ -215,9 +215,7 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
                 true
             }
             R.id.printer_connection ->{
-                if (printer != null){
                     btLauncher.launch(Intent(this,SelectBluetoothActivity::class.java))
-                }
 
                 true
             }

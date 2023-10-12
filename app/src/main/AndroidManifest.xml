@@ -68,6 +68,7 @@
         <activity android:name=".ui.operation.loadingSlip.scanLoad.ScanLoadActivity"
             android:exported="false"/>
         <activity android:name=".ui.operation.grList.GrListActivity"
+            android:parentActivityName=".ui.home.HomeActivity"
             android:exported="false"/>
         <activity android:name=".ui.print.dcCode.activity.SelectBluetoothActivity"
             android:exported="false"/>

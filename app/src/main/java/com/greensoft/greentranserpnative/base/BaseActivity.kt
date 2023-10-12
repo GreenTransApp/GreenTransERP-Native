@@ -66,7 +66,7 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
 
     //    var timePeriod: MutableLiveData<TimeSelection?> = MutableLiveData<Any?>()
 val mScanner = MutableLiveData<String>()
-    private var scanManager:ScanManager? = null
+    private var scanManager: ScanManager? = null
 
 
     private var materialDatePicker: MaterialDatePicker<*>? = null
@@ -344,7 +344,7 @@ val mScanner = MutableLiveData<String>()
         prefEditor?.putString(tag, data)
         prefEditor?.apply()
     }
-    private fun getStorageString(tag: String): String {
+     fun getStorageString(tag: String): String {
         prefs = getSharedPref()
         return prefs?.getString(tag, "")!!
     }

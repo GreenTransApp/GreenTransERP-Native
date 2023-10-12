@@ -5,13 +5,13 @@ import android.os.Bundle
 import android.text.Editable
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import com.greensoft.greentranserpnative.base.BaseActivity
-import com.greensoft.greentranserpnative.ui.login.models.BranchModel
-import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.google.gson.Gson
 import com.greensoft.greentranserpnative.ENV
+import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityLoginBinding
+import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.home.HomeActivity
+import com.greensoft.greentranserpnative.ui.login.models.BranchModel
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
@@ -192,9 +192,8 @@ class LoginActivity @Inject constructor(): BaseActivity(), BottomSheetClick<Any>
 //        val intent = Intent(this, BookingActivity::class.java)
 //        val intent = Intent(this, PickupReferenceActivity::class.java)
         val intent = Intent(this, HomeActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        startActivity(intent);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 
     private fun login(){

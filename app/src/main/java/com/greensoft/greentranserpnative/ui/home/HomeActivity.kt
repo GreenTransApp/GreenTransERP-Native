@@ -37,6 +37,7 @@ import kotlinx.coroutines.launch
 import java.io.InputStream
 import java.util.concurrent.Executors
 import javax.inject.Inject
+import kotlin.system.exitProcess
 
 
 @AndroidEntryPoint
@@ -155,6 +156,23 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
          }
 
     }
+
+    override fun onBackPressed() {
+        exitAlert()
+    }
+
+    private fun exitAlert() {
+     AlertDialog.Builder(this)
+        .setTitle("Alert!!!")
+        .setMessage("Are you sure you want to exit the app?")
+        .setPositiveButton("Yes") { _, _ ->
+            moveTaskToBack(true);
+            exitProcess(-1)
+        }
+        .setNeutralButton("No") { _, _ -> }
+        .show()
+    }
+
     private fun setObserver() {
 
         capturedImage.observe(this) { imageUri ->
