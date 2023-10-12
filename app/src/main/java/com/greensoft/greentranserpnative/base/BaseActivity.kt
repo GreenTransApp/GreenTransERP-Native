@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.google.gson.Gson
@@ -681,7 +682,13 @@ val mScanner = MutableLiveData<String>()
             timePeriod.postValue(formattedTime)
         }
     }
-
+//    fun snackBar(message:String){
+//        val snackBar = Snackbar.make(activityBinding.layout, message, Snackbar.LENGTH_LONG)
+//            .setAction("Click") {
+//                Toast.makeText(this, "Snack bar action", Toast.LENGTH_SHORT).show()
+//            }
+//        snackBar.show()
+//    }
 }
 
 

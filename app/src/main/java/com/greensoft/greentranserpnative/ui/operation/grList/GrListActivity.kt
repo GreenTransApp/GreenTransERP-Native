@@ -13,7 +13,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.card.MaterialCardView
@@ -28,6 +30,8 @@ import com.greensoft.greentranserpnative.ui.operation.grList.models.GrListModel
 import com.greensoft.greentranserpnative.ui.operation.grList.models.PrintStickerModel
 import com.greensoft.greentranserpnative.ui.print.dcCode.activity.SelectBluetoothActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import net.posprinter.TSCConst
 import net.posprinter.TSCPrinter
 import java.util.concurrent.atomic.AtomicBoolean
@@ -83,6 +87,7 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
         getDefaultConnection()
 //        getGrList()
         setObservers()
+        searchItem()
     }
 
     private fun getDefaultConnection() {
@@ -125,7 +130,7 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
 //            successToast(it.getSqlToDate());
             fromDate = it.sqlFromDate.toString()
             toDate = it.sqlToDate.toString()
-//            refreshData()
+            refreshData()
         }
         viewModel.isError.observe(this){ errMsg->
             errorToast(errMsg)
@@ -151,19 +156,29 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
             }
         }
 
-        activityBinding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                // filter recycler view when query submitted
-                grListAdapter?.getFilter()?.filter(query)
-                return false
-            }
-
-            override fun onQueryTextChange(query: String): Boolean {
-                // filter recycler view when text is changed
-                grListAdapter?.getFilter()?.filter(query)
-                return false
-            }
-        })
+//        activityBinding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String): Boolean {
+//                // filter recycler view when query submitted
+//                grListAdapter?.getFilter()?.filter(query)
+//                return false
+//            }
+//
+//            override fun onQueryTextChange(query: String): Boolean {
+//                // filter recycler view when text is changed
+//                grListAdapter?.getFilter()?.filter(query)
+//                return false
+//            }
+//        })
+//        activityBinding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                super.onScrollStateChanged(recyclerView, newState)
+//            }
+//
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//                activityBinding.swipeRefreshLayout.setEnabled(manager.findFirstCompletelyVisibleItemPosition() == 0)
+//            }
+//        })
     }
 
     private fun initUi() {
@@ -172,15 +187,19 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
         toDate = getSqlDate()!!
         activityBinding.swipeRefreshLayout.setOnRefreshListener(OnRefreshListener {
             refreshData()
-            activityBinding.swipeRefreshLayout.isRefreshing = false
+
         })
-        if (ENV.DEBUGGING) {
-            fromDate = "2023-06-01"
-            bookingType = "M"
-        }
+//        if (ENV.DEBUGGING) {
+//            fromDate = "2023-06-01"
+//            bookingType = "M"
+//        }
     }
     private fun refreshData() {
         getGrList()
+        lifecycleScope.launch {
+            delay(1500)
+            activityBinding.swipeRefreshLayout.isRefreshing = false
+        }
     }
 
     override fun onResume() {
@@ -479,5 +498,20 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
             " ( Computerize )"
         }
         setUpToolbar(menuNameEdited)
+    }
+    fun searchItem(): Boolean {
+        activityBinding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                grListAdapter?.getFilter()?.filter(query)
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                grListAdapter?.getFilter()?.filter(newText)
+                return false
+            }
+
+        })
+        return true
     }
 }

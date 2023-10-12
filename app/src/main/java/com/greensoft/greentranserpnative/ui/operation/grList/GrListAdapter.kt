@@ -7,6 +7,7 @@ import androidx.compose.ui.text.toLowerCase
 import androidx.recyclerview.widget.RecyclerView
 import com.greensoft.greentranserpnative.databinding.ItemGrListBinding
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.call_register.models.CallRegisterModel
 import com.greensoft.greentranserpnative.ui.operation.grList.models.GrListModel
 import java.lang.String
 import java.util.Locale
@@ -30,11 +31,11 @@ class GrListAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: GrListViewHolder, position: Int) {
-       holder.onBind(grList[position],onRowClick)
+       holder.onBind(filterList[position],onRowClick)
     }
 
     override fun getItemCount(): Int {
-       return grList.size
+       return filterList.size
     }
 
    inner class GrListViewHolder(private val layoutBinding: ItemGrListBinding):RecyclerView.ViewHolder(layoutBinding.root){
@@ -48,33 +49,29 @@ class GrListAdapter @Inject constructor(
         }
     }
 
-    fun getFilter(): Filter? {
+     fun getFilter(): Filter {
         return object : Filter() {
-            override fun performFiltering(charSequence: CharSequence): FilterResults {
+            override fun performFiltering(charSequence: CharSequence): FilterResults? {
                 val charString = charSequence.toString()
                 if (charString.isEmpty()) {
-                  filterList   = grList
+                    filterList = grList
                 } else {
-                    val filteredList = java.util.ArrayList<GrListModel>()
+                    val filteredList: ArrayList<GrListModel> = ArrayList()
                     for (row in grList) {
-
-                        // name match condition. this might differ depending on your requirement
-                        // here we are looking for name or phone number match
-                        if (row.grno.toLowerCase()
-                                .contains(charString.lowercase(Locale.getDefault()))
-                            || row.destname.toLowerCase()
-                                .contains(charString.lowercase(Locale.getDefault()))
-                            || row.cnge.toLowerCase()
-                                .contains(charString.lowercase(Locale.getDefault()))
-                            || row.cngr.toLowerCase()
-                                .contains(charString.lowercase(Locale.getDefault()))
-                            || String.valueOf(row.custname).lowercase(Locale.getDefault())
+                        if(
+//                             row.custname.lowercase().contains(charString.lowercase(Locale.getDefault()))
+                            row.grno.contains(charString.lowercase(Locale.getDefault()))
+                            ||row.destname.contains(charString.lowercase(Locale.getDefault()))
+                            ||row.cnge.lowercase().contains(charString.lowercase(Locale.getDefault()))
+                            ||row.cngr.lowercase().contains(charString.lowercase(Locale.getDefault()))
+                            ||String.valueOf(row.custname).lowercase(Locale.getDefault())
                                 .contains(
                                     charString.lowercase(
                                         Locale.getDefault()
                                     )
                                 )
-                        ) {
+
+                        ){
                             filteredList.add(row)
                         }
                     }
@@ -85,10 +82,11 @@ class GrListAdapter @Inject constructor(
                 return filterResults
             }
 
-            override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
-                (filterResults.values as ArrayList<GrListModel>).also {data->
-                    filterList = data
-                }
+            override fun publishResults(
+                charSequence: CharSequence?,
+                filterResults: FilterResults
+            ) {
+                filterList = filterResults.values as ArrayList<GrListModel>
                 notifyDataSetChanged()
             }
         }
