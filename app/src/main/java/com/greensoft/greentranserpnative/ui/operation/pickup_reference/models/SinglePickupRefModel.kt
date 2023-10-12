@@ -44,7 +44,7 @@ data class SinglePickupRefModel(
     val dryice: String,
     val dryiceqty: Double,
     val enabledryiceqty: String,
-    val gelpack: String,
+    var gelpack: String,
     val gelpackqty: Int,
     val gelpacktype: String,
     val goods: String,

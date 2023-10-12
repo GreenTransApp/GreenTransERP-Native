@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
-import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -32,6 +31,13 @@ import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.Si
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
+import com.greensoft.greentranserpnative.ui.operation.booking.models.AgentSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.BookingVehicleSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.PckgTypeSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.PickupBySelection
+import com.greensoft.greentranserpnative.ui.operation.booking.models.ServiceTypeSelectionLov
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.VehicleSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.PickupRefModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -45,7 +51,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     lateinit var linearLayoutManager: LinearLayoutManager
     private var menuModel: UserMenuModel? = null
     private var title: String = "BOOKING"
-//    private var bookingList: List<BookingRecyclerModel> = ArrayList()
+    //    private var bookingList: List<BookingRecyclerModel> = ArrayList()
     private val viewModel: BookingViewModel by viewModels()
     private var customerList: ArrayList<CustomerSelectionModel> = ArrayList()
     private var cngrList: ArrayList<ConsignorSelectionModel> = ArrayList()
@@ -55,15 +61,23 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     private var destinationList: ArrayList<DestinationSelectionModel> = ArrayList()
     private var pickupBoylist: ArrayList<PickupBoySelectionModel> = ArrayList()
     private var temperatureList: ArrayList<TemperatureSelectionModel> = ArrayList()
+    private var packingList: ArrayList<PackingSelectionModel> = ArrayList()
     private var contentList: ArrayList<ContentSelectionModel> = ArrayList()
-    private var singlePickupDataList: ArrayList<SinglePickupRefModel> = ArrayList()
+    private var singleRefList: ArrayList<SinglePickupRefModel> = ArrayList()
+    private var pckgTypeList: ArrayList<PckgTypeSelectionModel> = ArrayList()
+    private var pickupRefData: ArrayList<PickupRefModel> = ArrayList()
+    private var serviceTypeList: ArrayList<ServiceTypeSelectionLov> = ArrayList()
+    private var pickupByTypeList: ArrayList<PickupBySelection> = ArrayList()
+    private var agentList: ArrayList<AgentSelectionModel> = ArrayList()
+    private var vehicleVendorList: ArrayList<AgentSelectionModel> = ArrayList()
+    private var vehicleList: ArrayList<BookingVehicleSelectionModel> = ArrayList()
     private var addList: ArrayList<SinglePickupRefModel> = ArrayList()
     private var bookingAdapter: BookingAdapter? = null
-    var serviceSelectedItems = arrayOf("SELECT", "AIR", "SURFACE", "SURFACE EXPRESS", "TRAIN")
+//    var serviceSelectedItems = arrayOf("SELECT", "AIR", "SURFACE", "SURFACE EXPRESS", "TRAIN")
     var pckgsTypeSelectedItems = arrayOf("SELECT", "JEENA PACKING", "PRE PACKED")
-    var pickupTypeSelectedItems =
-        arrayOf("JEENA STAFF", "AGENT", " MARKET VEHICLE", "OFFICE/AIRPORT DROP", "CANCEL")
-
+//    var pickupTypeSelectedItems =
+//        arrayOf("JEENA STAFF", "AGENT", " MARKET VEHICLE", "OFFICE/AIRPORT DROP", "CANCEL")
+    var transactionId = ""
     private val addListMuteLiveData = MutableLiveData<String>()
     val addListLiveData: LiveData<String>
         get() = addListMuteLiveData
@@ -75,13 +89,18 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
         setUpToolbar("BOOKING ENTRY")
+        setObservers()
         menuModel = getMenuData()
         activityBinding.inputDate.inputType = InputType.TYPE_NULL;
         activityBinding.inputTime.inputType = InputType.TYPE_NULL;
         setLayoutVisibility()
         activityBinding.inputDate.setText(getViewCurrentDate())
         activityBinding.inputTime.setText(getSqlCurrentTime())
+
         getIntentData()
+        getSingleRefData()
+        getServiceType()
+        getPickupBy()
         getCustomerList()
         getCngrList()
         getCngeList()
@@ -91,9 +110,11 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         getPickupBoyList()
         getTempLov()
         getpackingLov()
+        getVehicleLov()
+        getVehicleVendor()
+        getAgentLov()
+        getPckgTypeLov()
         getContentList()
-        setObservers()
-        setReferenceData()
         spinnerSetUp()
         setOnClick()
 
@@ -106,37 +127,66 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 //        refreshData()
     }
 
-//    override fun onResume() {
+    //    override fun onResume() {
 //        super.onResume()
 //        receivedDataList.clear()
 //        successToast(mContext,"resume")
 //    }
-    private fun getIntentData() {
+
+    private fun getSingleRefData(){
+        viewModel.getSingleRefData(
+            loginDataModel?.companyid.toString(),
+            "greentransweb_jeenabooking_getpickupforbooking",
+            listOf("prmtransactionid"),
+            arrayListOf(transactionId)
+        )
+    }
+    private fun getServiceType(){
+        viewModel.getServiceList(
+            loginDataModel?.companyid.toString(),
+            "gtapp_getproductmast",
+            listOf("prmusercode","prmmenucode","prmsessionid"),
+            arrayListOf(userDataModel?.usercode.toString(),menuModel?.menucode.toString(),userDataModel?.sessionid.toString())
+        )
+    }
+
+    private fun getPickupBy(){
+        viewModel.getPickupByLov(
+            loginDataModel?.companyid.toString(),
+            "gtapp_getpickupby",
+            listOf("prmbranchcode","prmusercode","prmmenucode","prmsessionid"),
+            arrayListOf(userDataModel?.loginbranchcode.toString(),userDataModel?.usercode.toString(),menuModel?.menucode.toString(),userDataModel?.sessionid.toString())
+        )
+    }
+
+        private fun getIntentData() {
         if(intent != null) {
             val jsonString = intent.getStringExtra("ARRAY_JSON")
             if(jsonString != "") {
-                val gson = Gson()
-                val listType = object : TypeToken<List<SinglePickupRefModel>>() {}.type
-                val resultList: ArrayList<SinglePickupRefModel> =
+                    val gson = Gson()
+                    val listType = object : TypeToken<List<PickupRefModel>>() {}.type
+                    val resultList: ArrayList<PickupRefModel> =
                     gson.fromJson(jsonString.toString(), listType)
-                singlePickupDataList.addAll(resultList)
-                setupRecyclerView()
-            }
+                    pickupRefData.addAll(resultList)
+                    pickupRefData.forEachIndexed { _, element ->
+                    transactionId=element.transactionid.toString()
+                }
+                }
         }
     }
     private fun openEwayBillBottomSheet(){
         val bottomSheet= EwayBillBottomSheet()
         bottomSheet.show(supportFragmentManager,"Eway-Bill-BottomSheet")
     }
-      private fun checkNullOrEmpty(value: Any?): String {
-          if(value == "" || value == null){
+    private fun checkNullOrEmpty(value: Any?): String {
+        if(value == "" || value == null){
             return "NOT AVAILABLE"
-          }
-          return value.toString()
-      }
+        }
+        return value.toString()
+    }
 
-     private fun setReferenceData(){
-         singlePickupDataList.forEachIndexed {_, element ->
+    private fun setReferenceData(){
+        singleRefList.forEachIndexed { _, element ->
 
             activityBinding.inputCustName.setText(checkNullOrEmpty(element.custname).toString())
             activityBinding.inputCngrName.setText(checkNullOrEmpty(element.cngr).toString())
@@ -157,20 +207,18 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
 
 
-         }
-     }
+        }
+    }
 
- fun setLayoutVisibility(){
-     activityBinding.inputLayoutPickBoy.visibility=View.VISIBLE
-     activityBinding.inputLayoutAgent.visibility=View.GONE
-     activityBinding.inputLayoutVehicle.visibility=View.GONE
-     activityBinding.inputLayoutVehicleVendor.visibility=View.GONE
- }
+    fun setLayoutVisibility(){
+        activityBinding.inputLayoutPickBoy.visibility=View.VISIBLE
+        activityBinding.inputLayoutAgent.visibility=View.GONE
+        activityBinding.inputLayoutVehicle.visibility=View.GONE
+        activityBinding.inputLayoutVehicleVendor.visibility=View.GONE
+    }
 
     private fun spinnerSetUp() {
-        val serviceAdapter =
-            ArrayAdapter(this, android.R.layout.simple_list_item_1, serviceSelectedItems)
-        activityBinding.selectService.adapter = serviceAdapter
+
         activityBinding.selectService.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -179,6 +227,26 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                     position: Int,
                     id: Long
                 ) {
+                     val serviceValue=serviceTypeList[position].value
+                    when(serviceValue){
+                        //AIR
+                       "A"-> run{
+
+                       }
+                        //SURFACE
+                        "S"->run{
+
+                        }
+                        //SURFACEXPRESS
+                        "SE"->run{
+
+                        }
+                        //TRAIN
+                        "T"->run{
+
+                        }
+                    }
+
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -186,9 +254,9 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                 }
             }
 
-        val pckgsAdapter =
-            ArrayAdapter(this, android.R.layout.simple_list_item_1, pckgsTypeSelectedItems)
-        activityBinding.selectedPckgsType.adapter = pckgsAdapter
+
+
+
         activityBinding.selectedPckgsType.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -203,9 +271,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                     TODO("Not yet implemented")
                 }
             }
-        val pickupAdapter =
-            ArrayAdapter(this, android.R.layout.simple_list_item_1, pickupTypeSelectedItems)
-        activityBinding.selectedPickupType.adapter = pickupAdapter
+
         activityBinding.selectedPickupType.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -214,37 +280,72 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                     position: Int,
                     id: Long
                 ) {
-                    when(position){
+                    val pickupValue=pickupByTypeList[position].value
+                    when(pickupValue){
                         //JEENA STRAFF
-                        0-> run{
-                         activityBinding.inputLayoutPickBoy.visibility=View.VISIBLE
+                        "S"-> run{
+                            activityBinding.inputLayoutPickBoy.visibility=View.VISIBLE
+                            activityBinding.inputLayoutAgent.visibility=View.GONE
+                            activityBinding.inputLayoutVehicle.visibility=View.GONE
+                            activityBinding.inputLayoutVehicleVendor.visibility=View.GONE
+
+                            activityBinding.inputPickupBoy.text?.clear()
+                            activityBinding.inputAgent.text?.clear()
+                            activityBinding.inputVehicle.text?.clear()
+                            activityBinding.inputVehicleVendor.text?.clear()
+
+
                         }
                         //AGENT
-                        1-> run{
-                          activityBinding.inputLayoutPickBoy.visibility=View.GONE
-                          activityBinding.inputLayoutAgent.visibility=View.VISIBLE
+                        "V"-> run{
+                            activityBinding.inputLayoutPickBoy.visibility=View.GONE
+                            activityBinding.inputLayoutAgent.visibility=View.VISIBLE
+                            activityBinding.inputLayoutVehicleVendor.visibility=View.GONE
+                            activityBinding.inputLayoutVehicle.visibility=View.GONE
+
+                            activityBinding.inputPickupBoy.text?.clear()
+                            activityBinding.inputAgent.text?.clear()
+                            activityBinding.inputVehicle.text?.clear()
+                            activityBinding.inputVehicleVendor.text?.clear()
                         }
                         //MARKET VEHICLE
-                        2-> run{
+                        "M"-> run{
                             activityBinding.inputLayoutPickBoy.visibility=View.VISIBLE
                             activityBinding.inputLayoutVehicle.visibility=View.VISIBLE
                             activityBinding.inputLayoutVehicleVendor.visibility=View.VISIBLE
                             activityBinding.inputLayoutAgent.visibility=View.GONE
 
+                            activityBinding.inputPickupBoy.text?.clear()
+                            activityBinding.inputAgent.text?.clear()
+                            activityBinding.inputVehicle.text?.clear()
+                            activityBinding.inputVehicleVendor.text?.clear()
+
                         }
                         //OFFICE/AIRPORT DROP
-                        3-> run{
+                        "O"-> run{
                             activityBinding.inputLayoutAgent.visibility=View.GONE
                             activityBinding.inputLayoutPickBoy.visibility=View.VISIBLE
                             activityBinding.inputLayoutVehicle.visibility=View.GONE
                             activityBinding.inputLayoutVehicleVendor.visibility=View.GONE
+
+                            activityBinding.inputPickupBoy.text?.clear()
+                            activityBinding.inputAgent.text?.clear()
+                            activityBinding.inputVehicle.text?.clear()
+                            activityBinding.inputVehicleVendor.text?.clear()
                         }
                         //CANCEL
-                        4-> run{
+                        "N"-> run{
                             activityBinding.inputLayoutAgent.visibility=View.GONE
                             activityBinding.inputLayoutVehicle.visibility=View.GONE
                             activityBinding.inputLayoutVehicleVendor.visibility=View.GONE
                             activityBinding.inputLayoutPickBoy.visibility=View.VISIBLE
+
+                            activityBinding.inputPickupBoy.text?.clear()
+                            activityBinding.inputAgent.text?.clear()
+                            activityBinding.inputVehicle.text?.clear()
+                            activityBinding.inputVehicleVendor.text?.clear()
+
+
                         }
                     }
                 }
@@ -268,28 +369,37 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             if (DEBUGGING) {
                 //            Toast.makeText(this, "testing", Toast.LENGTH_SHORT).show()
             }
-            openCustSelectionBottomSheet(customerList)
+//            openCustSelectionBottomSheet(customerList)
         }
 
         activityBinding.inputCngrName.setOnClickListener {
-            openCngrSelectionBottomSheet(cngrList)
+//            openCngrSelectionBottomSheet(cngrList)
         }
 
         activityBinding.inputCngeName.setOnClickListener {
-            openCngeSelectionBottomSheet(cngeList)
+//            openCngeSelectionBottomSheet(cngeList)
         }
         activityBinding.inputDepartment.setOnClickListener {
-            openDeptSelectionBottomSheet(deptList)
+//            openDeptSelectionBottomSheet(deptList)
         }
         activityBinding.inputOrigin.setOnClickListener {
-            openOriginSelectionBottomSheet(originList)
+//            openOriginSelectionBottomSheet(originList)
         }
         activityBinding.inputDestination.setOnClickListener {
-            openDestinationSelectionBottomSheet(destinationList)
+//            openDestinationSelectionBottomSheet(destinationList)
         }
 
         activityBinding.inputPickupBoy.setOnClickListener {
             openPickupBoySelectionBottomSheet(pickupBoylist)
+        }
+        activityBinding.inputAgent.setOnClickListener {
+            openAgentSelectionBottomSheet(agentList)
+        }
+        activityBinding.inputVehicleVendor.setOnClickListener {
+            openVehicleVendorSelectionBottomSheet(vehicleVendorList)
+        }
+        activityBinding.inputVehicle.setOnClickListener {
+            openVehicleSelectionBottomSheet(vehicleList)
         }
 
 
@@ -304,17 +414,18 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             openTimePicker()
         }
 
-        activityBinding.chekActualAWB.setOnClickListener {
-            if (activityBinding.chekActualAWB.isChecked) {
-
-            } else {
+        activityBinding.chekActualAWB.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked){
 
             }
+            else {
+            }
+
         }
 
-   activityBinding.btnEwayBill.setOnClickListener{
-       openEwayBillBottomSheet()
-   }
+        activityBinding.btnEwayBill.setOnClickListener{
+            openEwayBillBottomSheet()
+        }
     }
 //    private fun refreshData(){
 //
@@ -384,12 +495,56 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             temperatureList = tempData
 
         }
-         viewModel.contentLiveData.observe(this) { itemData ->
+        viewModel.contentLiveData.observe(this) { itemData ->
             contentList = itemData
         }
+        viewModel.agentLiveData.observe(this) { agent ->
+            agentList = agent
+        }
+        viewModel.vendorLiveData.observe(this) { vendor ->
+            vehicleVendorList = vendor
+        }
+        viewModel.vehicleLiveData.observe(this) { vehicle ->
+            vehicleList = vehicle
+        }
+        viewModel.packingLiveData.observe(this) { packing ->
+            packingList = packing
+            }
+
+        viewModel.singleRefLiveData.observe(this) { data ->
+            singleRefList = data
+            setReferenceData()
+            setupRecyclerView()
+        }
+        viewModel.pickupByLiveData.observe(this) { pickup ->
+            pickupByTypeList = pickup
+            val pickupAdapter =
+                ArrayAdapter(this, android.R.layout.simple_list_item_1, pickupByTypeList)
+            activityBinding.selectedPickupType.adapter = pickupAdapter
 
 
+        }
+        viewModel.ServiceTypeLiveData.observe(this) { service ->
+            serviceTypeList = service
+            val serviceAdapter =
+                ArrayAdapter(this, android.R.layout.simple_list_item_1,serviceTypeList )
+            activityBinding.selectService.adapter = serviceAdapter
 
+        }
+      viewModel.pckgLiveData.observe(this) { pckgType ->
+          pckgTypeList = pckgType
+          val pckgsAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, pckgTypeList)
+          activityBinding.selectedPckgsType.adapter = pckgsAdapter
+
+      }
+    }
+    private fun getPckgTypeLov() {
+        viewModel.getPckgType(
+            loginDataModel?.companyid.toString(),
+            "gtapp_getpackagetype",
+            listOf(),
+            arrayListOf()
+        )
     }
 
 
@@ -504,6 +659,59 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         openCommonBottomSheet(this, "Destination Selection", this, commonList)
     }
 
+    private fun getAgentLov() {
+        viewModel.getAgentLov(
+            loginDataModel?.companyid.toString(),
+            "greentrans_vendlist",
+            listOf("prmvendorcategory","prmmenucode"),
+            arrayListOf("PUD VENDOR",menuModel?.menucode.toString())
+        )
+    }
+
+    private fun openAgentSelectionBottomSheet(rvList: ArrayList<AgentSelectionModel>) {
+        val commonList = ArrayList<CommonBottomSheetModel<Any>>()
+        for (i in 0 until rvList.size) {
+            commonList.add(CommonBottomSheetModel(rvList[i].vendname, rvList[i]))
+
+        }
+        openCommonBottomSheet(this, "Agent Selection", this, commonList)
+    }
+
+    private fun getVehicleLov() {
+        viewModel.getVehicleLov(
+            loginDataModel?.companyid.toString(),
+            "greentrans_showmode",
+            listOf("prmorgcode","prmdestcode","prmmodetype","prmmodegroupcode","prmvendcode","prmownervendcode"),
+            arrayListOf("","","S","S","","")
+        )
+    }
+
+        private fun openVehicleSelectionBottomSheet(rvList: ArrayList<BookingVehicleSelectionModel>) {
+            val commonList = ArrayList<CommonBottomSheetModel<Any>>()
+            for (i in 0 until rvList.size) {
+                commonList.add(CommonBottomSheetModel(rvList[i].regno, rvList[i]))
+
+            }
+            openCommonBottomSheet(this, "Vehicle Selection", this, commonList)
+        }
+        private fun getVehicleVendor() {
+                viewModel.getVendorLov(
+                    loginDataModel?.companyid.toString(),
+                    "greentrans_vendlist",
+                    listOf("prmvendorcategory","prmmenucode"),
+                    arrayListOf("VEHICLE VENDOR",menuModel?.menucode.toString())
+                )
+            }
+
+    private fun openVehicleVendorSelectionBottomSheet(rvList: ArrayList<AgentSelectionModel>) {
+        val commonList = ArrayList<CommonBottomSheetModel<Any>>()
+        for (i in 0 until rvList.size) {
+            commonList.add(CommonBottomSheetModel(rvList[i].vendname, rvList[i]))
+
+        }
+        openCommonBottomSheet(this, "Vendor Selection", this, commonList)
+    }
+
 
     private fun getPickupBoyList() {
         viewModel.getPickupBoyList(
@@ -587,7 +795,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         if(bookingAdapter == null) {
             linearLayoutManager = LinearLayoutManager(this)
             activityBinding.recyclerView.layoutManager = linearLayoutManager
-            bookingAdapter = BookingAdapter(singlePickupDataList, this)
+            bookingAdapter = BookingAdapter(singleRefList, this)
         }
         activityBinding.recyclerView.adapter = bookingAdapter
 
@@ -641,6 +849,18 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             val selectedPickupBoy = data as PickupBoySelectionModel
             activityBinding.inputPickupBoy.setText(selectedPickupBoy.name)
 
+        } else if (clickType == "Agent Selection") {
+            val selectedAgent = data as AgentSelectionModel
+            activityBinding.inputAgent.setText(selectedAgent.vendname)
+
+        } else if (clickType == "Vehicle Selection") {
+            val selectedVehicle = data as BookingVehicleSelectionModel
+            activityBinding.inputVehicle.setText(selectedVehicle.regno)
+
+        } else if (clickType == "Vendor Selection") {
+            val selectedVendor = data as AgentSelectionModel
+            activityBinding.inputVehicleVendor.setText(selectedVendor.vendname)
+
         }
     }
 
@@ -667,9 +887,13 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             openContentSelectionBottomSheet(contentList, index)
 
         }else if (clickType == "TEMPERATURE_SELECT"){
-              openTemperatureSelectionBottomSheet(temperatureList,index)
+            openTemperatureSelectionBottomSheet(temperatureList,index)
 
         }else if(clickType =="GEL_PACK_SELECT"){
+
+
+        }else if(clickType =="PACKING_SELECT"){
+            openPackingSelectionBottomSheet(packingList,index)
 
         }else if(clickType == "REMOVE_SELECT"){
 //                singlePickupDataList.forEachIndexed {index, element ->

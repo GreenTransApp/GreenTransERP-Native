@@ -697,6 +697,7 @@
                      />
 
              </com.google.android.material.textfield.TextInputLayout>
+
          </LinearLayout>
 
          <LinearLayout
@@ -730,6 +731,7 @@
                      android:layout_height="wrap_content"
                      android:textAllCaps="true"
                      android:text="0"
+                     android:focusable="false"
                      android:textColor="@color/black"
                      android:inputType="number"
                      />
@@ -821,6 +823,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAllCaps="true"
+                        android:focusable="false"
                         android:text="0"
                         android:textColor="@color/black"
                         android:inputType=  "number"

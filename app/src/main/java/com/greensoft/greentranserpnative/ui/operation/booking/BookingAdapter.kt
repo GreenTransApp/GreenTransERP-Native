@@ -10,6 +10,7 @@ import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSele
 import com.greensoft.greentranserpnative.ui.operation.booking.models.TemperatureSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.booking.models.GelPackItemSelectionModel
 import javax.inject.Inject
 
 class BookingAdapter @Inject constructor(
@@ -28,7 +29,7 @@ class BookingAdapter @Inject constructor(
                 onRowClick.onCLick(singlePickupRefModel, "PACKING_SELECT")
             }
             binding.gelPackItem.setOnClickListener{
-                onRowClick.onCLick(singlePickupRefModel, "GEL_PACK_SELECT")
+                onRowClick.onRowClick(singlePickupRefModel, "GEL_PACK_SELECT",adapterPosition)
             }
             binding.content.setOnClickListener{
                 onRowClick.onRowClick(singlePickupRefModel, "CONTENT_SELECT", adapterPosition)
@@ -38,9 +39,15 @@ class BookingAdapter @Inject constructor(
             binding.temperature.setOnClickListener{
                 onRowClick.onRowClick(singlePickupRefModel, "TEMPERATURE_SELECT",adapterPosition)
             }
+            binding.packing.setOnClickListener{
+                onRowClick.onRowClick(singlePickupRefModel, "PACKING_SELECT",adapterPosition)
+            }
             binding.btnRemove.setOnClickListener{
                  removeItem(adapterPosition)
                 onRowClick.onCLick(singlePickupRefModel, "REMOVE_SELECT")
+            }
+            binding.selectDatalogger.setOnClickListener {
+                onRowClick.onRowClick(singlePickupRefModel, "DATALOGGER_SELECT",adapterPosition)
             }
         }
 
@@ -71,6 +78,10 @@ class BookingAdapter @Inject constructor(
     }
     fun setPacking(pckgModel: PackingSelectionModel, adapterPosition: Int) {
         bookingList[adapterPosition].packing = pckgModel.packingname
+        notifyItemChanged(adapterPosition)
+    }
+    fun setGelPack(Model: GelPackItemSelectionModel, adapterPosition: Int) {
+        bookingList[adapterPosition].gelpack = Model.itemname
         notifyItemChanged(adapterPosition)
     }
 
