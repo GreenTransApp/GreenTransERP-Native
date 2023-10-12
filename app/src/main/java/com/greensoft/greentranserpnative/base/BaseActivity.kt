@@ -54,7 +54,7 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
     var mPeriod: MutableLiveData<PeriodSelection> = MutableLiveData()
     var timePeriod: MutableLiveData<TimeSelection> = MutableLiveData()
 //    var timePeriod: MutableLiveData<TimeSelection?> = MutableLiveData<Any?>()
-    private var materialDatePicker: MaterialDatePicker<*>? = null
+var materialDatePicker: MaterialDatePicker<*>? = null
     private var singleDatePicker: MaterialDatePicker<*>? = null
 //    var timePicker: TimePicker? = null
     var loginDataModel: LoginDataModel? = null
@@ -272,7 +272,7 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
         prefEditor?.putString(tag, data)
         prefEditor?.apply()
     }
-    private fun getStorageString(tag: String): String {
+    fun getStorageString(tag: String): String {
         prefs = getSharedPref()
         return prefs?.getString(tag, "")!!
     }
