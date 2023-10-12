@@ -1,12 +1,18 @@
 package com.greensoft.greentranserpnative.base
 
 import android.R
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
-
 import android.app.TimePickerDialog
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.SharedPreferences
+import android.device.ScanManager
+import android.device.scanner.configuration.PropertyID
 import android.graphics.PorterDuff
+import android.media.RingtoneManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
@@ -19,16 +25,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.common.PeriodSelection
 import com.greensoft.greentranserpnative.common.TimeSelection
+import com.greensoft.greentranserpnative.ui.bottomsheet.acceptPickup.AcceptPickupBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.CommonBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
-import com.greensoft.greentranserpnative.ui.login.LoginActivity
 import com.greensoft.greentranserpnative.ui.login.models.LoginDataModel
 import com.greensoft.greentranserpnative.ui.login.models.UserDataModel
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
@@ -39,7 +47,9 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.TimeZone
 import javax.inject.Inject
 
 
@@ -52,9 +62,14 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
     var internetError = "Internet Not Working Please Check Your Internet Connection"
 
     var mPeriod: MutableLiveData<PeriodSelection> = MutableLiveData()
-    var timePeriod: MutableLiveData<TimeSelection> = MutableLiveData()
-//    var timePeriod: MutableLiveData<TimeSelection?> = MutableLiveData<Any?>()
-var materialDatePicker: MaterialDatePicker<*>? = null
+    var timePeriod: MutableLiveData<String> = MutableLiveData()
+
+    //    var timePeriod: MutableLiveData<TimeSelection?> = MutableLiveData<Any?>()
+val mScanner = MutableLiveData<String>()
+    private var scanManager:ScanManager? = null
+
+
+    private var materialDatePicker: MaterialDatePicker<*>? = null
     private var singleDatePicker: MaterialDatePicker<*>? = null
 //    var timePicker: TimePicker? = null
     var loginDataModel: LoginDataModel? = null
@@ -74,6 +89,7 @@ var materialDatePicker: MaterialDatePicker<*>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mContext=this@BaseActivity
+        initialize()
         setObservers()
         val loginModel = getLoginData()
 
@@ -88,6 +104,61 @@ var materialDatePicker: MaterialDatePicker<*>? = null
 //        SingleDateSelector()
     }
 
+    private fun initialize() {
+        scanManager = ScanManager()
+        try {
+            if (scanManager != null) {
+                scanManager?.openScanner()
+                scanManager?.switchOutputMode(0)
+            }
+        } catch (ex: Exception) {
+//            errorToast(ex.message)
+            scanManager = null
+        }
+    }
+
+    fun isScannerWorking(): Boolean {
+        if(scanManager == null) {
+            return false
+        }
+        return true
+    }
+
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    override fun onResume() {
+        super.onResume()
+        if(scanManager != null) {
+//            errorToast("Scanner not available. All functionality may not work.")
+
+            val filter = IntentFilter()
+            val idbuf =
+                intArrayOf(
+                    PropertyID.WEDGE_INTENT_ACTION_NAME,
+                    PropertyID.WEDGE_INTENT_DATA_STRING_TAG
+                )
+            val value_buf: Array<String?>? = scanManager?.getParameterString(idbuf)
+            if (value_buf != null && value_buf[0] != null && value_buf[0] != "") {
+                filter.addAction(value_buf[0])
+            } else {
+                filter.addAction(SCAN_ACTION)
+            }
+            if (Build.VERSION.SDK_INT >= 33) {
+                registerReceiver(mScanReceiver, filter, RECEIVER_NOT_EXPORTED)
+            } else {
+                registerReceiver(mScanReceiver, filter)
+            }
+        }
+        //          33
+//        registerReceiver(mScanReceiver, filter, RECEIVER_NOT_EXPORTED)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if(scanManager !=null){
+            scanManager?.stopDecode()
+            unregisterReceiver(mScanReceiver)
+        }
+    }
     private fun setObservers() {
 //        capturedImage.observe(this) { imageUri ->
 //            successToast("BASE_ACTIVITY ${imageUri.path}")
@@ -101,6 +172,7 @@ var materialDatePicker: MaterialDatePicker<*>? = null
 //    }
 
     companion object {
+        private const val SCAN_ACTION = ScanManager.ACTION_DECODE //default action
 
         var capturedImage: MutableLiveData<Uri> = MutableLiveData()
 
@@ -272,7 +344,7 @@ var materialDatePicker: MaterialDatePicker<*>? = null
         prefEditor?.putString(tag, data)
         prefEditor?.apply()
     }
-    fun getStorageString(tag: String): String {
+    private fun getStorageString(tag: String): String {
         prefs = getSharedPref()
         return prefs?.getString(tag, "")!!
     }
@@ -487,33 +559,33 @@ var materialDatePicker: MaterialDatePicker<*>? = null
 //
 //  }
 
-    open fun openTimePicker() {
-        val c = Calendar.getInstance()
-        val hour = c[Calendar.HOUR_OF_DAY]
-        val minute = c[Calendar.MINUTE]
-        val timePickerDialog = TimePickerDialog(this,
-            { timePicker, hourOfDay, minute ->
-                var timeSelection: TimeSelection? = null
-                if (hourOfDay < 10) {
-                    val viewSingleTime = "0$hourOfDay:$minute"
-                    val sqlSingleTime = "0$hourOfDay:$minute"
-                    timeSelection = TimeSelection(
-                        viewSingleTime = viewSingleTime,
-                        sqlSingleTime = sqlSingleTime
-                    )
-                } else {
-                    val viewSingleTime = "$hourOfDay:$minute"
-                    val sqlSingleTime = "$hourOfDay:$minute"
-                    timeSelection = TimeSelection(
-                        viewSingleTime = viewSingleTime,
-                        sqlSingleTime = sqlSingleTime
-                    )
-                }
-                timePeriod.postValue(timeSelection!!)
-            }, hour, minute, false
-        )
-        timePickerDialog.show()
-    }
+//    open fun openTimePicker() {
+//        val c = Calendar.getInstance()
+//        val hour = c[Calendar.HOUR_OF_DAY]
+//        val minute = c[Calendar.MINUTE]
+//        val timePickerDialog = TimePickerDialog(this,
+//            { timePicker, hourOfDay, minute ->
+//                var timeSelection: TimeSelection? = null
+//                if (hourOfDay < 10) {
+//                    val viewSingleTime = "0$hourOfDay:$minute"
+//                    val sqlSingleTime = "0$hourOfDay:$minute"
+//                    timeSelection = TimeSelection(
+//                        viewSingleTime = viewSingleTime,
+//                        sqlSingleTime = sqlSingleTime
+//                    )
+//                } else {
+//                    val viewSingleTime = "$hourOfDay:$minute"
+//                    val sqlSingleTime = "$hourOfDay:$minute"
+//                    timeSelection = TimeSelection(
+//                        viewSingleTime = viewSingleTime,
+//                        sqlSingleTime = sqlSingleTime
+//                    )
+//                }
+//                timePeriod.postValue(timeSelection!!)
+//            }, hour, minute, false
+//        )
+//        timePickerDialog.show()
+//    }
 
 //    fun openSingleDatePicker() {
 //        Log.d("BASE ACTIVITY", "SINGLE PERIOD SELECTION")
@@ -556,7 +628,59 @@ var materialDatePicker: MaterialDatePicker<*>? = null
         dateFormat.timeZone = TimeZone.getTimeZone("Asia/Kolkata")
         return dateFormat.format(Date())
     }
+    private val mScanReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val barcode = intent.getByteArrayExtra(ScanManager.DECODE_DATA_TAG)
+            val barcodelen = intent.getIntExtra(ScanManager.BARCODE_LENGTH_TAG, 0)
+            val temp = intent.getByteExtra(ScanManager.BARCODE_TYPE_TAG, 0.toByte())
+            Log.i("debug", "----codetype--$temp")
+            val barcodeStr =String(barcode!!, 0, barcodelen)
+            mScanner.postValue(barcodeStr)
+            if(scanManager != null) {
+                scanManager?.stopDecode()
+            }
+        }
+    }
 
+    open fun playSound() {
+        try {
+            // Uri soundUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://"+ getApplicationContext().getPackageName() + "/" + R.raw.error_sound);
+            val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+            val r = RingtoneManager.getRingtone(applicationContext, notification)
+            r.play()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+//     fun isNetworkConnected(): Boolean {
+//        val cm = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+//        return cm.activeNetworkInfo != null && cm.activeNetworkInfo!!.isConnected
+//    }
+
+    open fun openTimePicker() {
+        val materialTimePicker: MaterialTimePicker = MaterialTimePicker.Builder()
+            .setTitleText("SELECT YOUR TIMING")
+            .setHour(12)
+            .setMinute(10)
+            .setTimeFormat(TimeFormat.CLOCK_24H)
+            .build()
+
+        materialTimePicker.show(supportFragmentManager, AcceptPickupBottomSheet.TAG)
+        materialTimePicker.addOnPositiveButtonClickListener {
+
+            val pickedHour: Int = materialTimePicker.hour
+            val pickedMinute: Int = materialTimePicker.minute
+            val formattedTime: String = when {
+                (pickedMinute < 10)-> {
+                    "${materialTimePicker.hour}:0${materialTimePicker.minute}"
+                }
+                else -> {
+                    "${materialTimePicker.hour}:${materialTimePicker.minute}"
+                }
+            }
+            timePeriod.postValue(formattedTime)
+        }
+    }
 
 }
 

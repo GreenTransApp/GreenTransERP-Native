@@ -108,6 +108,9 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
         setupUi()
         setObserver()
         setOnClicks()
+        if(!isScannerWorking()) {
+            errorToast(ENV.SCANNER_NOT_WORKING_MSG)
+        }
     }
     override fun onResume() {
         super.onResume()
@@ -153,6 +156,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
 
     }
     private fun setObserver() {
+
         capturedImage.observe(this) { imageUri ->
             successToast("HOME_ACTIVITY ${imageUri.path}")
             activityBinding.compLogo.setImageURI(imageUri)
@@ -177,6 +181,11 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
         viewModel.menuLiveData.observe(this) { menu ->
             menuList = menu
             setupRecyclerView()
+        }
+
+        mScanner.observe(this){data->
+            Companion.successToast(mContext,data)
+//            playSound()
         }
     }
 
@@ -235,7 +244,6 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
     private fun testFunction() {
         val intent=Intent(this,PickupManifestEntryActivity::class.java)
         startActivity(intent)
-
 //        dispatchTakePictureIntent()
 //        selectImage()
 //        val intent = Intent(this, CameraX::class.java)

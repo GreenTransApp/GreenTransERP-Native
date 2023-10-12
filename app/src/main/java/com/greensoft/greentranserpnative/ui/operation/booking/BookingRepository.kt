@@ -16,6 +16,7 @@ import com.greensoft.greentranserpnative.ui.operation.booking.models.GelPackItem
 import com.greensoft.greentranserpnative.ui.operation.booking.models.OriginSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PickupBoySelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.PickupBySelection
 import com.greensoft.greentranserpnative.ui.operation.booking.models.TemperatureSelectionModel
 import retrofit2.Call
 import retrofit2.Callback
@@ -68,6 +69,10 @@ class BookingRepository @Inject constructor():BaseRepository(){
     private val agentMuteLiveData = MutableLiveData<ArrayList<AgentSelectionModel>>()
     val agentLiveData: LiveData<ArrayList<AgentSelectionModel>>
         get() = agentMuteLiveData
+
+    private val pickupByMuteLiveData = MutableLiveData<ArrayList<PickupBySelection>>()
+    val pickupByLiveData: LiveData<ArrayList<PickupBySelection>>
+        get() = pickupByMuteLiveData
 
 
 
