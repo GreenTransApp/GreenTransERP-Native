@@ -73,6 +73,41 @@ interface Api {
         @Query(encoded = true, value = "prmusername") prmusername: String?
     ): Call<CommonResult>
 
+    @FormUrlEncoded
+    @POST("ScanAndLoadUpdate")
+    fun saveStickerScanLoad(
+        @Field("prmconnstring") companyId: String?,
+        @Field("prmloadingno") loadingNo: String?,
+        @Field("prmloadingdt") loadingDt: String?,
+        @Field("prmloadingtime") loadingTime: String?,
+        @Field("prmstncode") stnCode: String?,
+        @Field("prmbranchcode") branchCode: String?,
+        @Field("prmdestcode") destCode: String?,
+        @Field("prmmodetype") modeType: String?,
+        @Field("prmvendcode") vendCode: String?,
+        @Field("prmmodecode") modeCode: String?,
+        @Field("prmloadedby") loadedBy: String?,
+        @Field("prmdrivercode") driverCode: String?,
+        @Field("prmremarks") remarks: String?,
+        @Field("prmstickornostr") stickerNoStr: String?,
+        @Field("prmgrnostr") grNoStr: String?,
+        @Field("prmusercode") userCode: String?,
+        @Field("prmmenucode") menuCode: String?,
+        @Field("prmsessionid") sessionId: String?,
+        @Field("prmdrivertelno") driverMobileNo: String?,
+        @Field("prmdespatchtype") despatchType: String?
+    ): Call<CommonResult>
+
+    @FormUrlEncoded
+    @POST("ScanAndLoadRemove")
+    fun removeStickerScanLoad(
+        @Field("prmcompanyid") companyId: Int?,
+        @Field("prmstickerno") stickerNo: String?,
+        @Field("prmusercode") userCode: String?,
+        @Field("prmmenucode") menuCode: String?,
+        @Field("prmsessionid") sessionId: String?
+    ): Call<CommonResult>
+
 
     @FormUrlEncoded
     @POST("BookingAPI/SaveJeenaBookingErpNative")

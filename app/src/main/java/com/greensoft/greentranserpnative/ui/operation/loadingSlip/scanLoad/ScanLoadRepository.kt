@@ -7,7 +7,9 @@ import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.models.LoadingSlipHeaderDataModel
+import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.models.SaveStickerModel
 import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.models.StickerModel
+import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.models.ValidateStickerModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -16,15 +18,22 @@ import javax.inject.Inject
 class ScanLoadRepository @Inject constructor(): BaseRepository() {
     private val stickerListMutData = MutableLiveData<ArrayList<StickerModel>>()
     private val headerMutData = MutableLiveData<LoadingSlipHeaderDataModel>()
+    private val validateStickerMutData = MutableLiveData<ValidateStickerModel>()
+    private val saveStickerMutData = MutableLiveData<SaveStickerModel>()
 
     val headerLivedata : LiveData<LoadingSlipHeaderDataModel>
         get() = headerMutData
     val stickerListLivedata : LiveData<ArrayList<StickerModel>>
         get() = stickerListMutData
+    val validateStickerLivedata : LiveData<ValidateStickerModel>
+        get() = validateStickerMutData
+    val saveStickerLiveData: LiveData<SaveStickerModel>
+        get() = saveStickerMutData
 
-    fun getScanSticker(companyId:String,spname: String,param:List<String>, values:ArrayList<String>){
+
+    fun getScannedSticker(companyId: String, spName: String, param: ArrayList<String>, values: ArrayList<String>){
         viewDialogMutData.postValue(true)
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApi(companyId,spName, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -59,4 +68,75 @@ class ScanLoadRepository @Inject constructor(): BaseRepository() {
 
         })
     }
+
+    fun validateSticker(companyId: String, spName: String, param: ArrayList<String>, values: ArrayList<String>){
+        viewDialogMutData.postValue(true)
+        api.commonApi(companyId,spName, param,values).enqueue(object: Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
+                if(response.body() != null){
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if(result.CommandStatus == 1){
+                        val jsonArray = getResult(result);
+                        if(jsonArray != null) {
+                            val listType = object: TypeToken<List<ValidateStickerModel>>() {}.type
+                            val resultList: ArrayList<ValidateStickerModel> = gson.fromJson(jsonArray.toString(), listType);
+                            validateStickerMutData.postValue(resultList[0]);
+                        }
+                    } else {
+                        isError.postValue(result.CommandMessage.toString());
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR);
+                }
+                viewDialogMutData.postValue(false)
+
+            }
+
+            override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
+    }
+
+    fun updateSticker(
+        companyId: String?, loadingNo: String?, loadingDt: String?, loadingTime: String?, stnCode: String?, branchCode: String?,
+        destCode: String?, modeType: String?, vendCode: String?, modeCode: String?, loadedBy: String?, driverCode: String?, remarks: String?,
+        stickerNoStr: String?, grNoStr: String?, userCode: String?, menuCode: String?, sessionId: String?, driverMobileNo: String?, despatchType: String?
+    ) {
+        viewDialogMutData.postValue(true)
+        api.saveStickerScanLoad(companyId, loadingNo, loadingDt, loadingTime, stnCode, branchCode,
+            destCode, modeType, vendCode, modeCode, loadedBy, driverCode, remarks,
+            stickerNoStr, grNoStr, userCode, menuCode, sessionId, driverMobileNo, despatchType).enqueue(object: Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
+                if(response.body() != null){
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if(result.CommandStatus == 1){
+                        val jsonArray = getResult(result);
+                        if(jsonArray != null) {
+                            val listType = object: TypeToken<List<SaveStickerModel>>() {}.type
+                            val resultList: ArrayList<SaveStickerModel> = gson.fromJson(jsonArray.toString(), listType);
+                            saveStickerMutData.postValue(resultList[0]);
+                        }
+                    } else {
+                        isError.postValue(result.CommandMessage.toString());
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR);
+                }
+                viewDialogMutData.postValue(false)
+
+            }
+
+            override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
+    }
+
 }

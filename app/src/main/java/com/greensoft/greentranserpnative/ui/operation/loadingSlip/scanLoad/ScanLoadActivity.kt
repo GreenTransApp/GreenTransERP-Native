@@ -1,16 +1,19 @@
 package com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityScanLoadBinding
 import com.greensoft.greentranserpnative.ui.common.scanPopup.ScanPopup
+import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.models.LoadingSlipHeaderDataModel
 import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.models.StickerModel
-import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -26,13 +29,20 @@ class ScanLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>  {
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
         setUpToolbar("SCAN AND LOAD")
-        getScanSticker()
-        setObservers()
-
         onClicks()
+        setObservers()
+        getScannedSticker()
     }
 
-    fun setUi() {
+    private fun refreshData() {
+        getScannedSticker()
+        lifecycleScope.launch {
+            delay(1500)
+            activityBinding.pullDownToRefresh.isRefreshing = false
+        }
+    }
+
+    private fun setUi() {
         activityBinding.totalScanned.text = headerData.totalscanned.toString()
 //        activityBinding.totalBalance.text = headerData.totalbalance.toString()
         activityBinding.total.text = headerData.total.toString()
@@ -46,6 +56,13 @@ class ScanLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>  {
     }
 
     private fun setObservers(){
+        activityBinding.pullDownToRefresh.setOnRefreshListener {
+            refreshData()
+        }
+        mScanner.observe(this) { stickerNo ->
+            validateSticker(stickerNo)
+        }
+
         viewModel.isError.observe(this) { errMsg ->
             errorToast(errMsg)
         }
@@ -59,17 +76,103 @@ class ScanLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>  {
             stickerList = stickerData
             setupRecyclerView()
         }
+        viewModel.validateStickerLiveData.observe(this) { validateStickerModel ->
+            successToast(validateStickerModel.commandmessage.toString())
+        }
+        viewModel.saveStickerLiveData.observe(this) { saveStickerModel ->
+            Utils.loadingNo = saveStickerModel.loadingno.toString()
+            successToast(saveStickerModel.commandmessage.toString())
+            refreshData()
+        }
+
     }
 
-    private fun getScanSticker(){
-
-
-        viewModel.getScanSticker(
-            "86858483",
-            "greentransapp_getinscannedsticker",
-            listOf("prmgrnid","prmwarehouseid","prmbranchcode","prmpartid"),
-            arrayListOf("1","1","00000","11363")
+    private fun getScannedSticker(){
+        viewModel.getScannedSticker(
+            getCompanyId(),
+            "gtapp_getinscannedsticker",
+            arrayListOf("prmgrno","prmbranchcode","prmusercode","prmsessionid"),
+            arrayListOf(
+                Utils.grNo,
+                getLoginBranchCode(),
+                getUserCode(),
+                getSessionId()
+            )
         )
+    }
+
+    private fun validateSticker(stickerNo: String) {
+        viewModel.validateSticker(
+            getCompanyId(),
+            "gtapp_getstickerdetailforscanandload",
+            arrayListOf("prmgrno", "prmstickerno", "prmbranchcode", "prmdt", "prmusercode", "prmsessionid"),
+            arrayListOf(
+                Utils.grNo,
+                stickerNo,
+                getLoginBranchCode(),
+                getSqlCurrentDate(),
+                getUserCode(),
+                getSessionId()
+            )
+        )
+    }
+
+
+
+//    fun saveSticker(stickerNo: String, grNo: String) {
+//        saveStickerScanLoad(
+//            Utils.loadingNo,
+//            getSqlCurrentDate(),
+//            getSqlCurrentTime(),
+//            getLoginBranchCode(),
+//            fromBranch, // ( Origin )
+//            toBranch, // ( Destination )
+//            modeType,
+//            "",
+//            vehicleCode,
+//            getUserCode(),
+//            selectedDriver.getDrivercode(),
+//            "",
+//            "$stickerNo~",
+//            "$grNo~",
+//            getUserCode(),
+//            getSessionId(),
+//            selectedDriver.getMobileno(),
+//            despatchtype //                despatchType.equals("OUTSTATION") ? "O" : "D"
+//        )
+//    }
+
+    private fun saveStickerScanLoad(
+        loadingNo: String?,
+        loadingDt: String?,
+        loadingTime: String?,
+        stnCode: String?,
+        branchCode: String?,
+        destCode: String?,
+        modeType: String?,
+        vendCode: String?,
+        modeCode: String?,
+        loadedBy: String?,
+        driverCode: String?,
+        remarks: String?,
+        stickerNoStr: String?,
+        grNoStr: String?,
+        userCode: String?,
+        sessionId: String?,
+        driverMobileNo: String?,
+        despatchType: String?
+    ) {
+        if (isNetworkConnected()) {
+            viewModel.updateSticker(
+                getCompanyId(), loadingNo, loadingDt, loadingTime, stnCode, branchCode,
+                destCode, modeType, vendCode, modeCode, loadedBy, driverCode, remarks,
+                stickerNoStr, grNoStr, userCode,
+                "GTNATAPP_SCANANDLOAD",  // "WMSAPP_SCANLOAD"
+                sessionId, driverMobileNo, despatchType
+            )
+        } else {
+            errorToast(internetError)
+        }
     }
 
     private fun setupRecyclerView(){
