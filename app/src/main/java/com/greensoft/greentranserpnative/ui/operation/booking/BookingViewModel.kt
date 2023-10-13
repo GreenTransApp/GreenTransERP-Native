@@ -16,6 +16,7 @@ import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSele
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PckgTypeSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PickupBoySelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PickupBySelection
+import com.greensoft.greentranserpnative.ui.operation.booking.models.SaveBookingModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ServiceTypeSelectionLov
 import com.greensoft.greentranserpnative.ui.operation.booking.models.TemperatureSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
@@ -76,6 +77,9 @@ class BookingViewModel @Inject constructor(private val _repository: BookingRepos
         get() = _repository.serviceListLiveData
     val pckgLiveData: LiveData<ArrayList<PckgTypeSelectionModel>>
         get() = _repository.pckgTypeLiveData
+
+    val saveBookingLiveData: LiveData<SaveBookingModel>
+        get() = _repository.saveBookingLiveData
 
     fun getCustomerList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>){
         viewModelScope.launch(Dispatchers.IO) {
@@ -170,4 +174,20 @@ class BookingViewModel @Inject constructor(private val _repository: BookingRepos
             _repository.getPckgTypeLov(companyId,spname, param,values)
         }
     }
+
+
+     fun saveBooking(
+         companyId:String,branchCode:String, bookingDt:String, time:String, grNo:String, custCode:String, destCode:String, productCode:String, pckgs:String, aWeight:String, vWeight:String, cWeight:String, createId:String, sessionId:String,
+         refNo:String, cngr:String, cngrAddress:String, cngrCity:String, cngrZipCode:String, cngrState:String, cngrMobileNo:String, cngreMailId:String, cngrCSTNo:String, cngrLSTNo:String, cngrTINNo:String, cngrSTaxRegNo:String, cnge:String, cngeAddress:String, cngeCity:String, cngeZipCode:String, cngeState:String, cngeMobileNo:String, cngeeMailId:String, cngeCSTNo:String, cngeLSTNo:String, cngeTINNo:String,
+         cngeSTaxRegNo:String, transactionId:String, awbChargeApplicable:String, custDeptId:String, referenceNoStr:String, weightStr:String, packageTypeStr:String, tempuratureStr:String, packingStr:String, goodsStr:String, dryIceStr:String, dryIceQtyStr:String, dataLoggerStr:String, dataLoggerNoStr:String, dimLength:String, dimBreath:String, dimHeight:String, pickupBoyName:String, boyId:String, boxnoStr:String, stockItemCodeStr:String, gelPackStr:String, gelPackItemCodeStr:String, gelPackQtyStr:String, menuCode:String, invoiceNoStr:String, invoiceDtStr:String, invoiceValueStr:String, ewayBillnNoStr:String, ewayBillDtStr:String, ewbValidupToDtStr:String, vendorCode:String, packageStr:String, pickupBy:String, vehicleNo:String, vWeightStr:String, vehicleCode:String, cngrCode:String, cngeCode:String, remarks:String, cngrGstNo:String, cngeGstNo:String
+     ) {
+    viewModelScope.launch (Dispatchers.IO){
+    _repository.saveJeenaBooking(
+        companyId,branchCode,bookingDt,time,grNo,custCode,destCode,productCode,pckgs,aWeight,vWeight,cWeight,createId,sessionId,refNo,cngr,cngrAddress,cngrCity,cngrZipCode,cngrState,cngrMobileNo,cngreMailId,
+        cngrCSTNo, cngrLSTNo, cngrTINNo, cngrSTaxRegNo, cnge, cngeAddress, cngeCity, cngeZipCode, cngeState, cngeMobileNo, cngeeMailId, cngeCSTNo, cngeLSTNo, cngeTINNo,
+        cngeSTaxRegNo, transactionId, awbChargeApplicable, custDeptId, referenceNoStr, weightStr, packageTypeStr, tempuratureStr, packingStr, goodsStr, dryIceStr, dryIceQtyStr, dataLoggerStr, dataLoggerNoStr, dimLength, dimBreath, dimHeight, pickupBoyName, boyId, boxnoStr, stockItemCodeStr, gelPackStr, gelPackItemCodeStr, gelPackQtyStr, menuCode, invoiceNoStr, invoiceDtStr, invoiceValueStr, ewayBillnNoStr, ewayBillDtStr, ewbValidupToDtStr, vendorCode, packageStr, pickupBy, vehicleNo, vWeightStr, vehicleCode, cngrCode, cngeCode, remarks, cngrGstNo, cngeGstNo
+
+    )
 }
+     }
+    }

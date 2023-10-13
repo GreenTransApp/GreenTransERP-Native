@@ -1,9 +1,11 @@
 package com.greensoft.greentranserpnative.ui.common.cameraX
 
 import android.Manifest
+import android.content.ContentResolver
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -20,7 +22,9 @@ import androidx.core.content.ContextCompat
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityCameraXBinding
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.ExecutorService
@@ -172,6 +176,28 @@ class CameraX : AppCompatActivity() {
         const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val REQUEST_CODE_PERMISSIONS = 20
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+
+        private fun convertImageUriToBase64(contentResolver: ContentResolver, imageUri: Uri): String? {
+            return try {
+                val inputStream: InputStream? = contentResolver.openInputStream(imageUri)
+                val buffer = ByteArrayOutputStream()
+                val bufferSize = 1024
+                val data = ByteArray(bufferSize)
+                var bytesRead= 0
+                while (inputStream?.read(data, 0, bufferSize).also {
+                        if (it != null) {
+                            bytesRead = it
+                        }
+                    } != -1) {
+                    buffer.write(data, 0, bytesRead)
+                }
+                val byteArray: ByteArray = buffer.toByteArray()
+                Base64.encodeToString(byteArray, Base64.DEFAULT)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
     }
 
     override fun onDestroy() {

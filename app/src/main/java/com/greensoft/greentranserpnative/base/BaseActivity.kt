@@ -173,6 +173,9 @@ val mScanner = MutableLiveData<String>()
 //    }
 
     companion object {
+//        cameraSetup
+         const val CAMERA_REQUEST = 100
+         const val STORAGE_REQUEST = 200
         private const val SCAN_ACTION = ScanManager.ACTION_DECODE //default action
 
         var capturedImage: MutableLiveData<Uri> = MutableLiveData()

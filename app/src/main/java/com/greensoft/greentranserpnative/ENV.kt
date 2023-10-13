@@ -15,6 +15,7 @@ class ENV {
         val LOGIN_PASSWORD_PREF_TAG = "passWord_${PREF_TAG}"
         val DEFAULT_BLUETOOTH_NAME_PREF_TAG = "DEFAULT_BLUETOOTH_NAME_${PREF_TAG}"
         val DEFAULT_BLUETOOTH_ADDRESS_PREF_TAG = "DEFAULT_BLUETOOTH_ADDRESS_${PREF_TAG}"
+        val IMAGE_PREF_SHARE = "image_prefs${PREF_TAG}"
 
         val DEBUGGING: Boolean = true
         val LOCAL_API: Boolean = false

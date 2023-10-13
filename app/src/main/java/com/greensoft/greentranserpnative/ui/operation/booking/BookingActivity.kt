@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.ENV.Companion.DEBUGGING
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityBookingBinding
@@ -33,6 +34,7 @@ import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.operation.booking.models.AgentSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.BookingVehicleSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.GelPackItemSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PckgTypeSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PickupBySelection
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ServiceTypeSelectionLov
@@ -62,6 +64,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     private var pickupBoylist: ArrayList<PickupBoySelectionModel> = ArrayList()
     private var temperatureList: ArrayList<TemperatureSelectionModel> = ArrayList()
     private var packingList: ArrayList<PackingSelectionModel> = ArrayList()
+    private var gelPackList: ArrayList<GelPackItemSelectionModel> = ArrayList()
     private var contentList: ArrayList<ContentSelectionModel> = ArrayList()
     private var singleRefList: ArrayList<SinglePickupRefModel> = ArrayList()
     private var pckgTypeList: ArrayList<PckgTypeSelectionModel> = ArrayList()
@@ -72,15 +75,48 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     private var vehicleVendorList: ArrayList<AgentSelectionModel> = ArrayList()
     private var vehicleList: ArrayList<BookingVehicleSelectionModel> = ArrayList()
     private var addList: ArrayList<SinglePickupRefModel> = ArrayList()
+
     private var bookingAdapter: BookingAdapter? = null
 //    var serviceSelectedItems = arrayOf("SELECT", "AIR", "SURFACE", "SURFACE EXPRESS", "TRAIN")
-    var pckgsTypeSelectedItems = arrayOf("SELECT", "JEENA PACKING", "PRE PACKED")
+//    var pckgsTypeSelectedItems = arrayOf("SELECT", "JEENA PACKING", "PRE PACKED")
+    var gelPackItems = arrayOf("SELECT","YES","NO")
 //    var pickupTypeSelectedItems =
 //        arrayOf("JEENA STAFF", "AGENT", " MARKET VEHICLE", "OFFICE/AIRPORT DROP", "CANCEL")
-    var transactionId = ""
+
     private val addListMuteLiveData = MutableLiveData<String>()
     val addListLiveData: LiveData<String>
         get() = addListMuteLiveData
+    var transactionId = ""
+    var destCode = ""
+    var custCode = ""
+    var productCode = ""
+    var cngrCity = ""
+    var cngrZipCode = ""
+    var cngrState = ""
+    var cngrMobileNo = ""
+    var cngreMailId = ""
+    var cngrCSTNo = ""
+    var cngrLSTNo = ""
+    var cngrTINNo = ""
+    var cngrCode = ""
+    var cngrGstNo=""
+    var cngrSTaxRegNo = ""
+    var cngeCity = ""
+    var cngeZipCode = ""
+    var cngeState = ""
+    var cngeMobileNo = ""
+    var cngeeMailId = ""
+    var cngeCSTNo = ""
+    var cngeLSTNo = ""
+    var cngeTINNo = ""
+    var cngeCode = ""
+    var cngeGstNo=""
+    var cngeSTaxRegNo = ""
+    var custDeptId = ""
+    var boyId = ""
+    var vendorCode = ""
+    var pickupByValue = ""
+    var vehicleCode = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,6 +146,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         getPickupBoyList()
         getTempLov()
         getpackingLov()
+        getGelPackLov()
         getVehicleLov()
         getVehicleVendor()
         getAgentLov()
@@ -227,15 +264,15 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                     position: Int,
                     id: Long
                 ) {
-                     val serviceValue=serviceTypeList[position].value
-                    when(serviceValue){
+                      productCode=serviceTypeList[position].value
+                    when(productCode){
                         //AIR
                        "A"-> run{
-
+//                          errorToast(productCode)
                        }
                         //SURFACE
                         "S"->run{
-
+//                            errorToast(productCode)
                         }
                         //SURFACEXPRESS
                         "SE"->run{
@@ -280,8 +317,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                     position: Int,
                     id: Long
                 ) {
-                    val pickupValue=pickupByTypeList[position].value
-                    when(pickupValue){
+                    pickupByValue=pickupByTypeList[position].value
+                    when(pickupByValue){
                         //JEENA STRAFF
                         "S"-> run{
                             activityBinding.inputLayoutPickBoy.visibility=View.VISIBLE
@@ -453,6 +490,10 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
 //            activityBinding.inputTime.setText(timePicker.viewSingleTime)
         }
+        viewModel.saveBookingLiveData.observe(this){ data->
+
+
+        }
         viewModel.viewDialogLiveData.observe(this, Observer { show ->
 //            progressBar.visibility = if(show) View.VISIBLE else View.GONE
             if (show) {
@@ -510,6 +551,9 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         viewModel.packingLiveData.observe(this) { packing ->
             packingList = packing
             }
+        viewModel.gelPackItemLiveData.observe(this) { gelPack ->
+            gelPackList = gelPack
+            }
 
         viewModel.singleRefLiveData.observe(this) { data ->
             singleRefList = data
@@ -546,8 +590,6 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             arrayListOf()
         )
     }
-
-
     private fun getCustomerList() {
         viewModel.getCustomerList(
             loginDataModel?.companyid.toString(),
@@ -682,7 +724,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             loginDataModel?.companyid.toString(),
             "greentrans_showmode",
             listOf("prmorgcode","prmdestcode","prmmodetype","prmmodegroupcode","prmvendcode","prmownervendcode"),
-            arrayListOf("","","S","S","","")
+            arrayListOf("","","S","S","","")  // need to modify
         )
     }
 
@@ -767,7 +809,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     }
 
     private fun getpackingLov() {
-        viewModel.getContentLov(
+        viewModel.getPackingLov(
             loginDataModel?.companyid.toString(),
             "greentransweb_packinglov_forbooking",
             listOf(),
@@ -784,6 +826,24 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
     }
 
+    private fun getGelPackLov() {
+        viewModel.getGelPackLov(
+            loginDataModel?.companyid.toString(),
+            "greentrans_booking_gelpacklov",
+            listOf(),
+            arrayListOf()
+        )
+    }
+    private fun openGelPackSelectionBottomSheet(rvList: ArrayList<GelPackItemSelectionModel>, index: Int) {
+        val commonList = ArrayList<CommonBottomSheetModel<Any>>()
+        for (i in 0 until rvList.size) {
+            commonList.add(CommonBottomSheetModel(rvList[i].itemname, rvList[i]))
+
+        }
+        openCommonBottomSheet(this, "Gel Pack Selection", this, commonList, true, index)
+
+    }
+
 
 //    private fun loadBookingList() {
 //        bookingList = listOf(
@@ -795,7 +855,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         if(bookingAdapter == null) {
             linearLayoutManager = LinearLayoutManager(this)
             activityBinding.recyclerView.layoutManager = linearLayoutManager
-            bookingAdapter = BookingAdapter(singleRefList, this)
+            bookingAdapter = BookingAdapter(this, singleRefList, this)
         }
         activityBinding.recyclerView.adapter = bookingAdapter
 
@@ -819,20 +879,42 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         if (clickType == "Customer Selection") {
             val selectedCustomer = data as CustomerSelectionModel
             activityBinding.inputCustName.setText(selectedCustomer.custname)
+            custCode=selectedCustomer.custcode
 
         } else if (clickType == "Consignor Selection") {
             val selectedCngr = data as ConsignorSelectionModel
             activityBinding.inputCngrName.setText(selectedCngr.name)
             activityBinding.inputCngrAddress.setText(selectedCngr.address)
+            cngrCity = selectedCngr.city
+            cngrZipCode = selectedCngr.zipcode
+            cngrState = selectedCngr.state
+            cngrMobileNo = selectedCngr.secondarymobileno.toString()
+            cngreMailId = selectedCngr.email.toString()
+            cngrCSTNo = selectedCngr.cstno.toString()
+            cngrLSTNo = selectedCngr.lstno.toString()
+            cngrTINNo = selectedCngr.tinno.toString()
+            cngrCode=selectedCngr.code.toString()
+            cngrGstNo=selectedCngr.gstno.toString()
 
         } else if (clickType == "Consignee Selection") {
             val selectedCnge = data as ConsignorSelectionModel
             activityBinding.inputCngeName.setText(selectedCnge.name)
             activityBinding.inputCngeAddress.setText(selectedCnge.address)
-
+            cngeCity =selectedCnge.city.toString()
+            cngeZipCode =selectedCnge.zipcode.toString()
+            cngeState =selectedCnge.state.toString()
+            cngeMobileNo =selectedCnge.secondarymobileno.toString()
+            cngeeMailId =selectedCnge.email.toString()
+            cngeCSTNo =selectedCnge.cstno.toString()
+            cngeLSTNo =selectedCnge.lstno.toString()
+            cngeTINNo =selectedCnge.tinno.toString()
+            cngeCode=selectedCnge.code.toString()
+            cngeGstNo=selectedCnge.gstno.toString()
+//            cngeSTaxRegNo =selectedCnge..toString()
         } else if (clickType == "Department Selection") {
             val selectedDept = data as DepartmentSelectionModel
             activityBinding.inputDepartment.setText(selectedDept.custdeptname)
+            custDeptId=selectedDept.custdeptid.toString()
 
 
         } else if (clickType == "origin Selection") {
@@ -843,12 +925,12 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         } else if (clickType == "Destination Selection") {
             val selectedDestination = data as DestinationSelectionModel
             activityBinding.inputDestination.setText(selectedDestination.stnname)
-
+            destCode=selectedDestination.stncode.toString()
 
         } else if (clickType == "Pickup Boy Selection") {
             val selectedPickupBoy = data as PickupBoySelectionModel
             activityBinding.inputPickupBoy.setText(selectedPickupBoy.name)
-
+            boyId=selectedPickupBoy.boyid.toString()
         } else if (clickType == "Agent Selection") {
             val selectedAgent = data as AgentSelectionModel
             activityBinding.inputAgent.setText(selectedAgent.vendname)
@@ -856,10 +938,12 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         } else if (clickType == "Vehicle Selection") {
             val selectedVehicle = data as BookingVehicleSelectionModel
             activityBinding.inputVehicle.setText(selectedVehicle.regno)
+            vehicleCode=selectedVehicle.vehiclecode
 
         } else if (clickType == "Vendor Selection") {
             val selectedVendor = data as AgentSelectionModel
             activityBinding.inputVehicleVendor.setText(selectedVendor.vendname)
+            vendorCode=selectedVendor.vendcode.toString()
 
         }
     }
@@ -877,6 +961,10 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             val selectedPckg=data as PackingSelectionModel
             bookingAdapter?.setPacking(selectedPckg, index)
 
+        }else if(clickType=="Gel Pack Selection"){
+            val selectedGelPack=data as GelPackItemSelectionModel
+            bookingAdapter?.setGelPack(selectedGelPack, index)
+
         }
 
 
@@ -890,10 +978,13 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             openTemperatureSelectionBottomSheet(temperatureList,index)
 
         }else if(clickType =="GEL_PACK_SELECT"){
-
+                openGelPackSelectionBottomSheet(gelPackList,index)
 
         }else if(clickType =="PACKING_SELECT"){
             openPackingSelectionBottomSheet(packingList,index)
+
+        }else if(clickType =="DATALOGGER_SELECT"){
+
 
         }else if(clickType == "REMOVE_SELECT"){
 //                singlePickupDataList.forEachIndexed {index, element ->
@@ -907,5 +998,147 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
     override fun onCLick(data: Any, clickType: String) {
 
+    }
+
+    private fun saveBooking(){
+        var actualRefNoStr: String = ""
+        var actualWeightStr: String = ""
+        var actualPackageTypeStr: String = ""
+        var actualTempuratureStr: String = ""
+        var actualPackingStr: String = ""
+        var actualContent: String = ""
+        var actualDryIceStr: String = ""
+        var actualDryIceQtyStr: String = ""
+        var actualDataLoggerNoStr: String = ""
+        var actualDataLoggerStr: String = ""
+        var actualDimHeight: String = ""
+        var actualDimBreath: String = ""
+        var actualDimLength: String = ""
+        var actualBoxNo: String = ""
+        var actualGelPackStr: String = ""
+        var actualGelPackQtyStr: String = ""
+        var actualPackageStr: String = ""
+        var actualVWeightStr: String = ""
+
+        for(i in 0 until singleRefList.size) {
+            val refNo = singleRefList[i].referenceno
+            val weightStr=singleRefList[i].weight
+            val pckgType=singleRefList[i].packagetype
+            val tempStr=singleRefList[i].tempurature
+            val packing=singleRefList[i].packing
+            val goodsStr=singleRefList[i].contents
+            val dryIceStr=singleRefList[i].dryice
+            val dryIceQtyStr=singleRefList[i].dryiceqty
+            val dataLoggerStr=singleRefList[i].datalogger
+            val dataLoggerNoStr=singleRefList[i].dataloggerno
+            val dimHeight=singleRefList[i].pckgheight
+            val dimBreath=singleRefList[i].pckgbreath
+            val dimLength=singleRefList[i].pckglength
+            val boxNoStr=singleRefList[i].boxno
+            val gelPackStr=singleRefList[i].gelpack
+            val gelPackQtyStr=singleRefList[i].gelpackqty
+            val packageStr=singleRefList[i].packagetype
+            val vWeightStr=singleRefList[i].volfactor
+
+            actualRefNoStr += "$refNo,"
+            actualWeightStr +="$weightStr,"
+            actualPackageTypeStr +="$pckgType,"
+            actualTempuratureStr +="$tempStr,"
+            actualPackingStr +="$packing,"
+            actualContent +="$goodsStr,"
+            actualDryIceStr +="$dryIceStr,"
+            actualDryIceQtyStr +="$dryIceQtyStr,"
+            actualDataLoggerStr +="$dataLoggerStr,"
+            actualDataLoggerNoStr +="$dataLoggerNoStr,"
+            actualDimHeight +="$dimHeight,"
+            actualDimBreath +="$dimBreath,"
+            actualDimLength +="$dimLength,"
+            actualBoxNo +="$boxNoStr,"
+            actualGelPackStr +="$gelPackStr,"
+            actualGelPackQtyStr+="$gelPackQtyStr,"
+            actualPackageStr+="$packageStr,"
+            actualVWeightStr+="$vWeightStr,"
+
+        }
+        viewModel.saveBooking(
+            companyId = userDataModel?.companyid.toString(),
+            branchCode = userDataModel?.loginbranchcode.toString(),
+            bookingDt = activityBinding.inputDate.text.toString(),
+            time =activityBinding.inputTime.text.toString(),
+            grNo = activityBinding.inputGrNo.text.toString(),
+            custCode = custCode,
+            destCode = destCode,
+            productCode = productCode,
+            pckgs = activityBinding.inputPckgsNo.text.toString(),
+            aWeight = activityBinding.inputAWeight.text.toString(),
+            vWeight = activityBinding.inputVolWeight.text.toString(),
+            cWeight = activityBinding.inputCWeight.text.toString(),
+            createId = userDataModel?.usercode.toString(),
+            sessionId = userDataModel?.sessionid.toString(),
+            refNo = "",
+            cngr = activityBinding.inputCngrName.text.toString(),
+            cngrAddress = activityBinding.inputCngrAddress.text.toString(),
+            cngrCity = cngrCity,
+            cngrZipCode = cngrZipCode,
+            cngrState = cngrState,
+            cngrMobileNo = cngrMobileNo,
+            cngreMailId = cngreMailId,
+            cngrCSTNo = cngrCSTNo,
+            cngrLSTNo = cngrLSTNo,
+            cngrTINNo = cngrTINNo,
+            cngrSTaxRegNo = "",
+            cnge = activityBinding.inputCngeName.text.toString(),
+            cngeAddress = activityBinding.inputCngeAddress.text.toString(),
+            cngeCity = cngeCity,
+            cngeZipCode = cngeZipCode,
+            cngeState = cngeState,
+            cngeMobileNo = cngeMobileNo,
+            cngeeMailId = cngeeMailId,
+            cngeCSTNo = cngeCSTNo,
+            cngeLSTNo = cngeLSTNo,
+            cngeTINNo = cngeTINNo,
+            cngeSTaxRegNo = "",
+            transactionId = transactionId,
+            awbChargeApplicable = "",
+            custDeptId = custDeptId,
+            referenceNoStr = actualRefNoStr,
+            weightStr = actualWeightStr,
+            packageTypeStr = actualPackageTypeStr,
+            tempuratureStr = actualTempuratureStr,
+            packingStr = actualPackingStr,
+            goodsStr = actualContent,
+            dryIceStr = actualDryIceStr,
+            dryIceQtyStr = actualDryIceQtyStr,
+            dataLoggerStr = actualDataLoggerStr,
+            dataLoggerNoStr = actualDataLoggerNoStr,
+            dimLength =actualDimLength ,
+            dimBreath =actualDimBreath,
+            dimHeight = actualDimHeight,
+            pickupBoyName = activityBinding.inputPickupBoy.text.toString(),
+            boyId = boyId,
+            boxnoStr = actualBoxNo,
+            stockItemCodeStr = "",
+            gelPackStr = actualGelPackStr,
+            gelPackItemCodeStr = "",
+            gelPackQtyStr = actualGelPackQtyStr,
+            menuCode = menuModel?.menucode.toString(),
+            invoiceNoStr = "",
+            invoiceDtStr = "",
+            invoiceValueStr = "",
+            ewayBillnNoStr = "",
+            ewayBillDtStr = "",
+            ewbValidupToDtStr = "",
+            vendorCode = vendorCode,
+            packageStr = actualPackageStr,
+            pickupBy = pickupByValue,
+            vehicleNo = activityBinding.inputVehicle.text.toString(),
+            vWeightStr = actualVWeightStr,
+            vehicleCode = vehicleCode,
+            cngrCode = cngrCode,
+            cngeCode = cngeCode,
+            remarks = activityBinding.inputRemark.text.toString(),
+            cngrGstNo =cngrGstNo ,
+            cngeGstNo = cngeGstNo,
+        )
     }
 }

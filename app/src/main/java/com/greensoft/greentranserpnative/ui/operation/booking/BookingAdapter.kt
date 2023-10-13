@@ -1,5 +1,6 @@
 package com.greensoft.greentranserpnative.ui.operation.booking
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -12,8 +13,11 @@ import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.Si
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.booking.models.GelPackItemSelectionModel
 import javax.inject.Inject
+import kotlin.math.log
+import kotlin.math.log10
 
 class BookingAdapter @Inject constructor(
+    private val mContext: Context,
     private val bookingList: ArrayList<SinglePickupRefModel>,
     private val onRowClick: OnRowClick<Any>,
 //    context: Context
@@ -25,9 +29,6 @@ class BookingAdapter @Inject constructor(
             binding.gridData = singlePickupRefModel
             binding.index = adapterPosition
 
-            binding.packing.setOnClickListener{
-                onRowClick.onCLick(singlePickupRefModel, "PACKING_SELECT")
-            }
             binding.gelPackItem.setOnClickListener{
                 onRowClick.onRowClick(singlePickupRefModel, "GEL_PACK_SELECT",adapterPosition)
             }
@@ -43,8 +44,8 @@ class BookingAdapter @Inject constructor(
                 onRowClick.onRowClick(singlePickupRefModel, "PACKING_SELECT",adapterPosition)
             }
             binding.btnRemove.setOnClickListener{
-                 removeItem(adapterPosition)
-                onRowClick.onCLick(singlePickupRefModel, "REMOVE_SELECT")
+                 removeItem(singlePickupRefModel,adapterPosition)
+//                onRowClick.onCLick(singlePickupRefModel, "REMOVE_SELECT")
             }
             binding.selectDatalogger.setOnClickListener {
                 onRowClick.onRowClick(singlePickupRefModel, "DATALOGGER_SELECT",adapterPosition)
@@ -76,31 +77,24 @@ class BookingAdapter @Inject constructor(
         bookingList[adapterPosition].tempurature = tempModel.name
         notifyItemChanged(adapterPosition)
     }
-    fun setPacking(pckgModel: PackingSelectionModel, adapterPosition: Int) {
-        bookingList[adapterPosition].packing = pckgModel.packingname
+    fun setPacking(pckgsModel: PackingSelectionModel, adapterPosition: Int) {
+        bookingList[adapterPosition].packing = pckgsModel.packingname
         notifyItemChanged(adapterPosition)
     }
-    fun setGelPack(Model: GelPackItemSelectionModel, adapterPosition: Int) {
-        bookingList[adapterPosition].gelpack = Model.itemname
+    fun setGelPack(model: GelPackItemSelectionModel, adapterPosition: Int) {
+        bookingList[adapterPosition].gelpack = model.itemname
         notifyItemChanged(adapterPosition)
     }
 
-
-
-    fun removeItem(position: Int) {
-//        var currentList: ArrayList<SinglePickupRefModel> = ArrayList()
-//        val currentListSize = bookingList.size
-//        currentList=bookingList
-        if(bookingList.size != 0){
-            bookingList.removeAt(position)
-            notifyItemChanged(position)
-//          currentList.addAll(bookingList)
-            notifyItemRangeRemoved(position,bookingList.size)
-        } else{
-            bookingList.clear()
-        }
-
+//     fun removeItem(model:SinglePickupRefModel,adapterPosition: Int){
 //
+//     }
+
+
+
+    fun removeItem(model:SinglePickupRefModel, index: Int) {
+        bookingList.removeAt(index)
+        notifyDataSetChanged()
     }
 
 }

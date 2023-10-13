@@ -37,6 +37,7 @@ class AcceptPickupBottomSheet @Inject constructor(): BottomSheetDialogFragment()
     private lateinit var mContext: Context
     var singleDatePicker: MaterialDatePicker<*>? = null
     private lateinit var viewModel: PickupAccRejViewModel
+    var sqlDate: String = ""
 
     companion object {
         var mPeriod: MutableLiveData<PeriodSelection> = MutableLiveData()
@@ -77,6 +78,7 @@ class AcceptPickupBottomSheet @Inject constructor(): BottomSheetDialogFragment()
 //        (activity as AppCompatActivity?)!!.supportActionBar?.title = "ACCEPT PICKUP"
         layoutBinding.transactionId = transactionId
         layoutBinding.inputDate.setText(BaseActivity.getViewCurrentDate())
+        sqlDate = BaseActivity.getSqlCurrentDate()
         layoutBinding.inputTime.setText(BaseActivity.getSqlCurrentTime())
         setOnClick()
         setObserver()
@@ -92,7 +94,7 @@ class AcceptPickupBottomSheet @Inject constructor(): BottomSheetDialogFragment()
         layoutBinding.btnAccept.setOnClickListener {
             viewModel.acceptPickup(companyId,
                 transactionId,
-                layoutBinding.inputDate.text.toString(),
+                sqlDate,
                 layoutBinding.inputTime.text.toString(),
                 layoutBinding.inputRemark.text.toString()
             )
@@ -102,6 +104,7 @@ class AcceptPickupBottomSheet @Inject constructor(): BottomSheetDialogFragment()
     private fun setObserver() {
         mPeriod.observe(this) { period ->
             layoutBinding.inputDate.setText(period.viewsingleDate)
+            sqlDate = period.sqlsingleDate.toString()
         }
         timePeriod.observe(this) { time ->
             layoutBinding.inputTime.setText(time)
@@ -129,7 +132,7 @@ class AcceptPickupBottomSheet @Inject constructor(): BottomSheetDialogFragment()
             if (singleDatePicker!!.isVisible) {
                 return;
             }
-            singleDatePicker!!.show(activity!!.supportFragmentManager, "DATE_PICKER");
+            singleDatePicker!!.show(requireActivity().supportFragmentManager, "DATE_PICKER");
         }
     }
 
@@ -141,7 +144,7 @@ class AcceptPickupBottomSheet @Inject constructor(): BottomSheetDialogFragment()
             .setTimeFormat(TimeFormat.CLOCK_24H)
             .build()
 
-        materialTimePicker.show(activity!!.supportFragmentManager, TAG)
+        materialTimePicker.show(requireActivity().supportFragmentManager, TAG)
         materialTimePicker.addOnPositiveButtonClickListener {
 
             val pickedHour: Int = materialTimePicker.hour
