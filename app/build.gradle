@@ -114,6 +114,12 @@ dependencies {
 // This library is used for loading the cropped image into ImageView.
     implementation "com.squareup.picasso:picasso:2.5.2"
 
+    //    ucrop
+    implementation 'com.github.krokyze:ucropnedit:2.2.6-2'
+    // This library is used for loading the cropped image into ImageView.
+    implementation "com.squareup.picasso:picasso:2.5.2"
+    implementation("com.vanniktech:android-image-cropper:4.5.0")
+
     //noinspection GradleCompatible
     
 //    implementation 'androidx.core:core-ktx:1.7.0'
