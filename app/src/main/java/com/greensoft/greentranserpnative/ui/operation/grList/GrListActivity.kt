@@ -28,7 +28,9 @@ import com.greensoft.greentranserpnative.hilt.App
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.grList.models.GrListModel
 import com.greensoft.greentranserpnative.ui.operation.grList.models.PrintStickerModel
+import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.ScanLoadActivity
 import com.greensoft.greentranserpnative.ui.print.dcCode.activity.SelectBluetoothActivity
+import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -96,12 +98,16 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
         App.get().connectBt(mac, name)
     }
     override fun onCLick(data: Any, clickType: String) {
-        if (clickType == "BUTTON_CLICK") {
+        val model = data as GrListModel
+        if (clickType == "PRINT_STICKER") {
             printer = TSCPrinter(App.get().curConnect)
             if (isPrinterConnected()) {
-                val model = data as GrListModel
                 printStickerBottomSheet(model)
             }
+        } else if (clickType == "SCAN_STICKER") {
+            val intent = Intent(this@GrListActivity, ScanLoadActivity::class.java)
+            Utils.grNo = model.grno
+            startActivity(intent)
         }
     }
 

@@ -43,8 +43,12 @@ class GrListAdapter @Inject constructor(
             layoutBinding.grModel = grListModel
             layoutBinding.index = adapterPosition
 
+            layoutBinding.scanBtn.setOnClickListener {
+                onRowClick.onCLick(grListModel,"SCAN_STICKER")
+            }
+
             layoutBinding.printBtn.setOnClickListener {
-                onRowClick.onCLick(grListModel,"BUTTON_CLICK")
+                onRowClick.onCLick(grListModel,"PRINT_STICKER")
             }
         }
     }
