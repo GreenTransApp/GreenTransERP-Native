@@ -1,5 +1,6 @@
 package com.greensoft.greentranserpnative.ui.operation.booking
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
@@ -17,6 +18,7 @@ import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.ENV.Companion.DEBUGGING
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityBookingBinding
+import com.greensoft.greentranserpnative.ui.bottomsheet.acceptPickup.AcceptPickupBottomSheet
 import com.greensoft.greentranserpnative.ui.operation.eway_bill.EwayBillBottomSheet
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ConsignorSelectionModel
@@ -117,6 +119,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     var vendorCode = ""
     var pickupByValue = ""
     var vehicleCode = ""
+    var selectedGelPackItenCode = ""
+    var pickupContentId = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -398,7 +402,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     private fun setOnClick() {
         activityBinding.autoGrCheck.setOnCheckedChangeListener { compoundButton, bool ->
             if(bool) {
-                activityBinding.inputGrNo.setText("");
+                activityBinding.inputGrNo.setText("")
+
             }
             activityBinding.inputGrNo.isEnabled = !(bool)
         }
@@ -453,9 +458,10 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
         activityBinding.chekActualAWB.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked){
-
+                activityBinding.chekActualAWB.text = "Y"
             }
             else {
+                activityBinding.chekActualAWB.text = "N"
             }
 
         }
@@ -463,6 +469,10 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         activityBinding.btnEwayBill.setOnClickListener{
             openEwayBillBottomSheet()
         }
+        activityBinding.btnSave.setOnClickListener {
+            checkFieldsBeforeSave()
+        }
+
     }
 //    private fun refreshData(){
 //
@@ -952,6 +962,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         if (clickType == "Content Selection") {
             val selectedContent=data as ContentSelectionModel
             bookingAdapter?.setContent(selectedContent, index)
+            pickupContentId=selectedContent.itemcode
 
         } else if(clickType=="Temperature Selection"){
             val selectedTemp=data as TemperatureSelectionModel
@@ -964,6 +975,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         }else if(clickType=="Gel Pack Selection"){
             val selectedGelPack=data as GelPackItemSelectionModel
             bookingAdapter?.setGelPack(selectedGelPack, index)
+            selectedGelPackItenCode=selectedGelPack.itemcode.toString()
 
         }
 
@@ -999,6 +1011,101 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     override fun onCLick(data: Any, clickType: String) {
 
     }
+//     private fun calculateChargeableWeight(){
+//         if(activityBinding.inputAWeight.text!!.isNotEmpty() && activityBinding.inputVolWeight.text!!.isNotEmpty()){
+//             if(ac)
+//         }
+//     }
+
+    private fun checkFieldsBeforeSave(){
+        if(activityBinding.inputDate.text.isNullOrEmpty()){
+            activityBinding.inputDate.error="Please Select Date"
+            errorToast("Please Select Date")
+
+            return
+        }else if (activityBinding.inputTime.text.isNullOrEmpty()){
+            errorToast("Please Select Date")
+            return
+        }else if (activityBinding.inputCustName.text.isNullOrEmpty()){
+            errorToast("Please Select Customer")
+            return
+        }else if (activityBinding.inputCngrName.text.isNullOrEmpty()){
+            errorToast("Please Select Consignor Name")
+            return
+        }else if (activityBinding.inputCngrAddress.text.isNullOrEmpty()){
+            errorToast("Please Select Consignor Address")
+            return
+        }else if (activityBinding.inputCngeName.text.isNullOrEmpty()){
+            errorToast("Please Select Consignee Name")
+            return
+        }else if (activityBinding.inputCngeAddress.text.isNullOrEmpty()){
+            errorToast("Please Select Consignee Address")
+            return
+        }else if (activityBinding.inputOrigin.text.isNullOrEmpty()){
+            errorToast("Please Select origin")
+            return
+        }else if (activityBinding.inputDestination.text.isNullOrEmpty()){
+            errorToast("Please Select Destination")
+            return
+        }else if (activityBinding.selectedPckgsType.autofillHints.isNullOrEmpty()){
+            errorToast("Please Select Pckgs Type")
+            return
+        }else if (activityBinding.inputAWeight.text.isNullOrEmpty()){
+            errorToast("Please Select Actual Weight")
+            return
+        }else if (activityBinding.inputAWeight.text.isNullOrEmpty()){
+            errorToast("Please Select Actual Weight")
+            return
+        }else if (activityBinding.inputCWeight.text.isNullOrEmpty()){
+            errorToast("Please Enter Chargeable Weight")
+            return
+        }else if(pickupByValue == "V"){
+            if(activityBinding.inputAgent.text.isNullOrEmpty()){
+                errorToast("Please Select Agent")
+                return
+            }
+        }else if(pickupByValue == "S"){
+            if(activityBinding.inputPickupBoy.text.isNullOrEmpty()){
+                errorToast("Please Select Pickup Boy")
+                return
+            }
+        }else if(pickupByValue == "M"){
+            if(activityBinding.inputVehicle.text.isNullOrEmpty()){
+                errorToast("Please Select Vehicle")
+                return
+            }else if(activityBinding.inputPickupBoy.text.isNullOrEmpty()) {
+                errorToast("Please Select Pickup Boy")
+                return
+            }else if(activityBinding.inputVehicleVendor.text.isNullOrEmpty()){
+                errorToast("Please Select Vendor")
+                return
+            }
+        }else if(pickupByValue =="O"){
+             if(activityBinding.inputPickupBoy.text.isNullOrEmpty()) {
+                errorToast("Please Select Pickup Boy")
+                 return
+            }
+        }else if( pickupByValue == "N"){
+            if(activityBinding.inputPickupBoy.text.isNullOrEmpty()) {
+                errorToast("Please Select Pickup Boy")
+                return
+            }
+        }else if(!activityBinding.autoGrCheck.isChecked && activityBinding.inputGrNo.text.isNullOrEmpty()){
+            errorToast("Please Enter GR Number")
+            return
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle("Alert!!!")
+            .setMessage("Are you sure you want to save this booking?")
+            .setPositiveButton("Yes") { _, _ ->
+                saveBooking()
+            }
+            .setNeutralButton("No") { _, _ -> }
+            .show()
+
+        }
+
 
     private fun saveBooking(){
         var actualRefNoStr: String = ""
@@ -1099,7 +1206,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             cngeTINNo = cngeTINNo,
             cngeSTaxRegNo = "",
             transactionId = transactionId,
-            awbChargeApplicable = "",
+            awbChargeApplicable = activityBinding.chekActualAWB.toString(),
             custDeptId = custDeptId,
             referenceNoStr = actualRefNoStr,
             weightStr = actualWeightStr,
@@ -1117,9 +1224,9 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             pickupBoyName = activityBinding.inputPickupBoy.text.toString(),
             boyId = boyId,
             boxnoStr = actualBoxNo,
-            stockItemCodeStr = "",
+            stockItemCodeStr = pickupContentId,
             gelPackStr = actualGelPackStr,
-            gelPackItemCodeStr = "",
+            gelPackItemCodeStr = selectedGelPackItenCode,
             gelPackQtyStr = actualGelPackQtyStr,
             menuCode = menuModel?.menucode.toString(),
             invoiceNoStr = "",

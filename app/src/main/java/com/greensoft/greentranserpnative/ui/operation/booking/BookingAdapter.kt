@@ -50,6 +50,18 @@ class BookingAdapter @Inject constructor(
             binding.selectDatalogger.setOnClickListener {
                 onRowClick.onRowClick(singlePickupRefModel, "DATALOGGER_SELECT",adapterPosition)
             }
+
+            binding.chekGelPack.setOnCheckedChangeListener { _, isChecked ->
+                if(isChecked){
+                    binding.gelPackItem.isEnabled = true
+                }else{
+                    binding.gelPackItem.isEnabled=false
+                    binding.gelPackItem.text.clear()
+                }
+
+
+
+            }
         }
 
     }
