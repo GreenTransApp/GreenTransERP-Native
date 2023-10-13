@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.DatePicker
@@ -144,11 +145,13 @@ class CallRegisterActivity @Inject constructor() : BaseActivity(), OnRowClick<An
 //            searchItem()
         }
         mPeriod.observe(this) { datePicker ->
-            fromDt= datePicker.viewFromDate.toString()
-            toDt=datePicker.viewToDate.toString()
+            fromDt= datePicker.sqlFromDate.toString()
+            toDt=datePicker.sqlToDate.toString()
             refreshData()
         }
-
+        pickupAccRejViewModel.isError.observe(this) { errMsg ->
+            errorToast(errMsg)
+        }
         // ------------------------------- //
         pickupAccRejViewModel.acceptPickupLiveData.observe(this) {
             successToast(it)

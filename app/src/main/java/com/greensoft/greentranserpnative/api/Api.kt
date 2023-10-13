@@ -57,6 +57,7 @@ interface Api {
         @Field("prmdapickupremarks") pickupRemarks: String?
     ): Call<CommonResult>
 
+
     // greentrans_pickupdeniedbyda
     @GET("BookingAPI/PickupDeniedbyda")
     fun rejectPickup(
@@ -71,4 +72,93 @@ interface Api {
         @Query("prmcompanyid") prmcompanyid: String?,
         @Query(encoded = true, value = "prmusername") prmusername: String?
     ): Call<CommonResult>
+
+
+    @FormUrlEncoded
+    @POST("BookingAPI/SaveJeenaBookingErpNative")
+    fun saveJeenaBooking(
+        @Field("companyId") companyId: String,
+        @Field ("prmbranchcode") prmbranchcode: String,
+        @Field ("prmbookingdt") prmbookingdt: String,
+        @Field ("prmtime") prmtime: String,
+        @Field ("prmegrno") prmegrno: String,
+        @Field ("prmcustcode") prmcustcode: String,
+        @Field ("prmdestcode") prmdestcode: String,
+        @Field ("prmproductcode") prmproductcode: String,
+        @Field ("prmpckgs") prmpckgs: String,
+        @Field ("prmaweight") prmaweight: String,
+        @Field ("prmvweight") prmvweight: String,
+        @Field ("prmcweight") prmcweight: String,
+        @Field ("prmcreateid") prmcreateid: String,
+        @Field ("prmsessionid") prmsessionid: String,
+        @Field ("prmrefno") prmrefno: String,
+        @Field ("prmcngr") prmcngr: String,
+        @Field ("prmcngraddress") prmcngraddress: String,
+        @Field ("prmcngrcity") prmcngrcity: String,
+        @Field ("prmcngrzipcode") prmcngrzipcode: String,
+        @Field ("prmcngrstate") prmcngrstate: String,
+        @Field ("prmcngrmobileno") prmcngrmobileno: String,
+        @Field ("prmcngremailid") prmcngremailid: String,
+        @Field ("prmcngrCSTNo") prmcngrCSTNo: String,
+        @Field ("prmcngrLSTNo") prmcngrLSTNo: String,
+        @Field ("prmcngrTINNo") prmcngrTINNo: String,
+        @Field ("prmcngrSTaxRegNo") prmcngrSTaxRegNo: String,
+        @Field ("prmcnge") prmcnge: String,
+        @Field ("prmcngeaddress") prmcngeaddress: String,
+        @Field ("prmcngecity") prmcngecity: String,
+        @Field ("prmcngezipcode") prmcngezipcode: String,
+        @Field ("prmcngestate") prmcngestate: String,
+        @Field ("prmcngemobileno") prmcngemobileno: String,
+        @Field ("prmcngeemailid") prmcngeemailid: String,
+        @Field ("prmcngeCSTNo") prmcngeCSTNo: String,
+        @Field ("prmcngeLSTNo") prmcngeLSTNo: String,
+        @Field ("prmcngeTINNo") prmcngeTINNo: String,
+        @Field ("prmcngeSTaxRegNo") prmcngeSTaxRegNo: String,
+        @Field ("prmtransactionid") prmtransactionid: String,
+        @Field ("prmmawbchargeapplicable") prmmawbchargeapplicable: String,
+        @Field ("prmcustdeptid") prmcustdeptid: String,
+        @Field ("prmreferencenostr") prmreferencenostr: String,
+        @Field ("prmweightstr") prmweightstr: String,
+        @Field ("prmpackagetypestr") prmpackagetypestr: String,
+        @Field ("prmtempuraturestr") prmtempuraturestr: String,
+        @Field ("prmpackingstr") prmpackingstr: String,
+        @Field ("prmgoodsstr") prmgoodsstr: String,
+        @Field ("prmdryicestr") prmdryicestr: String,
+        @Field ("prmdryiceqtystr") prmdryiceqtystr: String,
+        @Field ("prmdataloggerstr") prmdataloggerstr: String,
+        @Field ("prmdataloggernostr") prmdataloggernostr: String,
+        @Field ("prmdimlength") prmdimlength: String,
+        @Field ("prmdimbreath") prmdimbreath: String,
+        @Field ("prmdimheight") prmdimheight: String,
+        @Field ("prmpickupboyname") prmpickupboyname: String,
+        @Field ("prmboyid") prmboyid: String,
+        @Field ("prmboxnostr") prmboxnostr: String,
+        @Field ("prmstockitemcodestr") prmstockitemcodestr: String,
+        @Field ("prmgelpackstr") prmgelpackstr: String,
+        @Field ("prmgelpackitemcodestr") prmgelpackitemcodestr: String,
+        @Field ("prmgelpackqtystr") prmgelpackqtystr: String,
+        @Field ("prmmenucode") prmmenucode: String,
+        @Field ("prminvoicenostr") prminvoicenostr: String,
+        @Field ("prminvoicedtstr") prminvoicedtstr: String,
+        @Field ("prminvoicevaluestr") prminvoicevaluestr: String,
+        @Field ("prmewaybillnostr") prmewaybillnostr: String,
+        @Field ("prmewaybilldtstr") prmewaybilldtstr: String,
+        @Field ("prmewbvaliduptodtstr") prmewbvaliduptodtstr: String,
+        @Field ("prmvendorcode") prmvendorcode: String,
+        @Field ("prmpackagestr") prmpackagestr: String,
+        @Field ("prmpickupby") prmpickupby: String,
+        @Field ("prmvehicleno") prmvehicleno: String,
+        @Field ("prmvweightstr") prmvweightstr: String,
+        @Field ("prmvehiclecode") prmvehiclecode: String,
+        @Field ("prmcngrcode") prmcngrcode: String,
+        @Field ("prmcngecode") prmcngecode: String,
+        @Field ("prmremarks") prmremarks: String,
+        @Field ("prmcngrgstno") prmcngrgstno: String,
+        @Field ("prmcngegstno") prmcngegstno: String
+    ): Call<CommonResult>
+
+
+
+
+
 }
