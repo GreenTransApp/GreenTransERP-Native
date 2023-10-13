@@ -18,7 +18,7 @@ class ENV {
         val IMAGE_PREF_SHARE = "image_prefs${PREF_TAG}"
 
         val DEBUGGING: Boolean = true
-        val LOCAL_API: Boolean = false
+        val LOCAL_API: Boolean = true
 
         val APP_NAME = "GreenTransERPNative"
 //        val DEBUG_USERNAME: String = "ADMIN@GREENTRANS"
@@ -31,7 +31,7 @@ class ENV {
         val DEVICE_ID = ""
 //        val LIVE_BASE_URL: String = "https://greentrans.in:444/API/Printer/";
         val LIVE_BASE_URL: String = "https://greentrans.in:444/API/";
-        val DEBUG_BASE_URL: String = "http://192.168.1.252:45455/API/Printer/";
+        val DEBUG_BASE_URL: String = "http://192.168.1.226:45457/API/";
 
 
         fun getBaseUrl(): String {

@@ -211,12 +211,15 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+
                     android:hint=""
                     >
                     <com.google.android.material.textfield.TextInputEditText
 
                         android:id="@+id/input_grNo"
                         android:layout_width="match_parent"
+                        android:inputType="number"
+                        android:maxLength="20"
                         android:layout_height="wrap_content"
                         />
 <!--                        android:textAllCaps="true"-->
@@ -297,6 +300,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="false"
+
                 android:textAllCaps="true"
                 android:textColor="@color/black"
 
@@ -476,6 +480,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textMultiLine"
+                    android:focusable="false"
                     android:maxLines="3"
                     android:lines="2"
                     android:textColor="@color/black"
@@ -484,6 +489,8 @@
                     />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+
         </LinearLayout>
 
 
@@ -686,6 +693,7 @@
                  android:id="@+id/input_layout_pckgsType"
                  style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                  android:layout_width="match_parent"
+                 android:focusable="false"
                  android:background="@drawable/spinner_background"
                  android:layout_height="wrap_content"
                  >
@@ -782,6 +790,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAllCaps="true"
+                        android:focusable="false"
                         android:inputType=  "number"
                         />
 
@@ -877,6 +886,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAllCaps="true"
+                        android:focusable="false"
                         android:inputType=  "number"
                         />
 
@@ -941,7 +951,7 @@
                     android:layout_height="wrap_content"
                     >
                     <Spinner
-
+                        android:focusable="false"
                         android:id="@+id/selectedPickupType"
                         android:layout_width="match_parent"
                         android:layout_height="55sp"
