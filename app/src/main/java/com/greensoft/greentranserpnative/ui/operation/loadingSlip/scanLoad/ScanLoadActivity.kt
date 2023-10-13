@@ -24,6 +24,8 @@ class ScanLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>  {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityScanLoadBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
+        setSupportActionBar(activityBinding.toolBar.root)
+        setUpToolbar("SCAN AND LOAD")
         getScanSticker()
         setObservers()
 
@@ -32,10 +34,8 @@ class ScanLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>  {
 
     fun setUi() {
         activityBinding.totalScanned.text = headerData.totalscanned.toString()
-        activityBinding.totalBalance.text = headerData.totalbalance.toString()
+//        activityBinding.totalBalance.text = headerData.totalbalance.toString()
         activityBinding.total.text = headerData.total.toString()
-        activityBinding.partCode.text = headerData.partcode.toString()
-        activityBinding.partQty.text = headerData.partqty.toString()
     }
 
     override fun onCLick(data: Any, clickType: String) {
@@ -79,14 +79,12 @@ class ScanLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>  {
             layoutManager = manager
         }
     }
-    fun onClicks(){
-        activityBinding.openPallet.setOnClickListener {
-//            val popupIntent = Intent(this, ScanPopup::class.java)
-//            startActivity(popupIntent)
-            openPopup()
-        }
+    private fun onClicks(){
+//        activityBinding.openPallet.setOnClickListener {
+//            openPopup()
+//        }
     }
-    fun openPopup(){
+    private fun openPopup(){
         val dialogFragment = ScanPopup()
         dialogFragment.show(supportFragmentManager, "My  Fragment")
     }

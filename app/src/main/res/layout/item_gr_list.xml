@@ -205,6 +205,25 @@
             android:text="@{String.valueOf(grModel.ewaybillno)}"
             />
 
+        <RelativeLayout
+            android:layout_width="150sp"
+            android:background="@drawable/table_content_cell_bg"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/scanBtn"
+                android:text="Scan &amp; Load"
+                android:textSize="10sp"
+                android:textAllCaps="false"
+                app:cornerRadius="10sp"
+                android:layout_centerInParent="true"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                />
+
+        </RelativeLayout>
+
 
         <RelativeLayout
             android:layout_width="150sp"

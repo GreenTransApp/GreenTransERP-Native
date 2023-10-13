@@ -3,6 +3,17 @@
 
     <data>
 
+        <variable
+            name="totalGrStickers"
+            type="String" />
+
+        <variable
+            name="scannedGrStickers"
+            type="String" />
+
+        <variable
+            name="grNo"
+            type="String" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -32,34 +43,34 @@
                 android:background="@color/colorPrimary"
                 android:layout_height="wrap_content">
 
+<!--                <LinearLayout-->
+<!--                    android:layout_width="0sp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:orientation="vertical"-->
+<!--                    android:layout_height="wrap_content">-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/totalBalanceLabel"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:gravity="center_horizontal"-->
+<!--                        android:textSize="12sp"-->
+<!--                        android:text="Pending"-->
+<!--                        android:textColor="@color/white"-->
+<!--                        android:layout_height="wrap_content" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/totalBalance"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:gravity="center_horizontal"-->
+<!--                        android:textSize="16sp"                       -->
+<!--                        android:textColor="@color/white"-->
+<!--                        android:layout_height="wrap_content" />-->
+<!--                </LinearLayout>-->
+
+
                 <LinearLayout
                     android:layout_width="0sp"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/totalBalanceLabel"
-                        android:layout_width="match_parent"
-                        android:gravity="center_horizontal"
-                        android:textSize="12sp"
-                        android:text="Pending"
-                        android:textColor="@color/white"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:id="@+id/totalBalance"
-                        android:layout_width="match_parent"
-                        android:gravity="center_horizontal"
-                        android:textSize="16sp"
-                        android:textColor="@color/white"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:layout_width="0sp"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     android:orientation="vertical"
                     android:layout_height="wrap_content">
 
@@ -77,6 +88,7 @@
                         android:layout_width="match_parent"
                         android:gravity="center_horizontal"
                         android:textSize="16sp"
+                        android:text="@{totalGrStickers}"
                         android:textColor="@color/white"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
@@ -84,7 +96,7 @@
 
                 <LinearLayout
                     android:layout_width="0sp"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     android:orientation="vertical"
                     android:layout_height="wrap_content">
 
@@ -102,6 +114,7 @@
                         android:layout_width="match_parent"
                         android:gravity="center_horizontal"
                         android:textSize="16sp"
+                        android:text="@{scannedGrStickers}"
                         android:textColor="@color/white"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
@@ -164,21 +177,29 @@
                     android:padding="5dp">
 
                     <TextView
-                        android:id="@+id/part_code"
+                        android:id="@+id/headerGrNo"
                         android:layout_marginHorizontal="5dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Part Code: "
+                        android:text="@{`GR #`+ grNo}"
                         android:textColor="@color/white" />
 
-                    <TextView
-                        android:id="@+id/part_qty"
-                        android:layout_marginHorizontal="5dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:text="Part Qty: "
-                        android:textColor="@color/white" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/part_code"-->
+<!--                        android:layout_marginHorizontal="5dp"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Part Code: "-->
+<!--                        android:textColor="@color/white" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/part_qty"-->
+<!--                        android:layout_marginHorizontal="5dp"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_margin="5dp"-->
+<!--                        android:text="Part Qty: "-->
+<!--                        android:textColor="@color/white" />-->
                 </LinearLayout>
 
 
@@ -210,7 +231,7 @@
 
                             <TextView
                                 android:id="@+id/StickerNo"
-                                android:layout_width="130sp"
+                                android:layout_width="280sp"
 
                                 android:layout_height="match_parent"
                                 android:gravity="center_horizontal"
@@ -231,26 +252,26 @@
                             <!--                    android:textSize="12sp" />-->
 
 
-                            <TextView
-                                android:id="@+id/partName"
-                                android:layout_width="250sp"
-                                android:layout_height="match_parent"
-                                android:gravity="center_horizontal"
-                                android:textColor="@color/white"
-                                android:background="@drawable/table_header_cell_bg"
-                                android:text="Part Name"
-                                android:textSize="12sp" />
+<!--                            <TextView-->
+<!--                                android:id="@+id/partName"-->
+<!--                                android:layout_width="250sp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:gravity="center_horizontal"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:background="@drawable/table_header_cell_bg"-->
+<!--                                android:text="Part Name"-->
+<!--                                android:textSize="12sp" />-->
 
-                            <TextView
-                                android:id="@+id/grNo"
-                                android:layout_width="100sp"
+<!--                            <TextView-->
+<!--                                android:id="@+id/grNo"-->
+<!--                                android:layout_width="100sp"-->
 
-                                android:layout_height="match_parent"
-                                android:gravity="center_horizontal"
-                                android:textColor="@color/white"
-                                android:background="@drawable/table_header_cell_bg"
-                                android:text="GRN#"
-                                android:textSize="12sp" />
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:gravity="center_horizontal"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:background="@drawable/table_header_cell_bg"-->
+<!--                                android:text="GR#"-->
+<!--                                android:textSize="12sp" />-->
 
 
                         </LinearLayout>
@@ -272,32 +293,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_alignParentBottom="true">
+                android:weightSum="3"
+                android:layout_alignParentBottom="true"
+                >
 
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/openPallet"
-                    android:text="Open Pallet"
+                    android:id="@+id/openSummary"
+                    android:text="Summary"
                     android:textAllCaps="false"
                     android:layout_height="60sp"
                     android:layout_margin="6dp"
                     app:cornerRadius="10sp"
+                    android:backgroundTint="#568358"
+                    android:textColor="@color/black"
                     android:layout_weight="1"
                     android:layout_width="0sp"
-                    style="@style/Widget.MaterialComponents.Button" />
+                    style="@style/Widget.MaterialComponents.Button"
+                    />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/closePallet"
-                    android:text="Close Pallet"
+                    android:id="@+id/loadingComplete"
+                    android:text="Loading Complete"
                     android:textAllCaps="false"
                     android:layout_height="60sp"
                     android:layout_margin="6dp"
-                    android:layout_weight="1"
-
+                    android:layout_weight="2"
                     android:layout_width="0sp"
                     app:cornerRadius="10sp"
-                    style="@style/Widget.MaterialComponents.Button" />
+                    style="@style/Widget.MaterialComponents.Button"
+                    />
 
             </LinearLayout>
 

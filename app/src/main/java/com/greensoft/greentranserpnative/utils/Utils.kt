@@ -3,6 +3,7 @@ package com.greensoft.greentranserpnative.utils
 import android.util.Log
 
 object Utils {
+    var grNo = ""
     var custCode = ""
     var fromDate = ""
     var toDate = ""
