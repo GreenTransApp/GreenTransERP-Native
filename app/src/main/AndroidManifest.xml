@@ -35,6 +35,10 @@
             android:name=".ui.operation.pickup_manifest.SavePickupManifestActivity"
             android:parentActivityName=".ui.operation.pickup_manifest.GrSelectionActivity"
             android:exported="false" />
+        <activity android:name=".ui.common.cameraX.Cropper"
+            android:exported="false"/>
+        <activity android:name=".ui.common.cameraX.CropImageActivity"
+            android:exported="false"/>
         <activity
             android:name=".ui.operation.pickup_manifest.GrSelectionActivity"
             android:exported="false"
@@ -84,6 +88,19 @@
         <activity
             android:name=".ui.update.UpdateActivity"
             android:exported="false" />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
     </application>
 
 </manifest>
