@@ -71,8 +71,11 @@
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-        <activity android:name=".ui.operation.loadingSlip.scanLoad.ScanLoadActivity"
-            android:exported="false"/>
+        <activity
+            android:name=".ui.operation.loadingSlip.scanLoad.ScanLoadActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.operation.grList.GrListActivity"
+            />
         <activity android:name=".ui.operation.grList.GrListActivity"
             android:parentActivityName=".ui.home.HomeActivity"
             android:exported="false"/>

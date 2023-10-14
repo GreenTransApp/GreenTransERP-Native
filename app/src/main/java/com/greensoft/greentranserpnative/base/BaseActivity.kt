@@ -66,7 +66,7 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
     var timePeriod: MutableLiveData<String> = MutableLiveData()
 
     //    var timePeriod: MutableLiveData<TimeSelection?> = MutableLiveData<Any?>()
-val mScanner = MutableLiveData<String>()
+    val mScanner = MutableLiveData<String>()
     private var scanManager: ScanManager? = null
 
 
@@ -684,6 +684,19 @@ val mScanner = MutableLiveData<String>()
             }
             timePeriod.postValue(formattedTime)
         }
+    }
+
+    fun getCompanyId(): String {
+        return userDataModel?.companyid.toString()
+    }
+    fun getLoginBranchCode(): String {
+        return userDataModel?.loginbranchcode.toString()
+    }
+    fun getUserCode(): String {
+        return userDataModel?.usercode.toString()
+    }
+    fun getSessionId(): String {
+        return userDataModel?.sessionid.toString()
     }
 //    fun snackBar(message:String){
 //        val snackBar = Snackbar.make(activityBinding.layout, message, Snackbar.LENGTH_LONG)
