@@ -47,7 +47,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:layout_margin="1dp"
-                        android:text="@{String.valueOf(gridData.pckgs)}"
+                        android:text="@{String.valueOf(gridData.pcs)}"
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
@@ -110,33 +110,37 @@
 
 
 
-                    <EditText
-                        android:id="@+id/selectDatalogger"
-                        android:layout_width="200sp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:focusable="false"
-                        android:layout_margin="1dp"
-                        android:text="@{String.valueOf(gridData.datalogger)}"
-                        android:background="@drawable/table_content_cell_bg"
-                        android:textSize="16sp" />
-
-<!--                    <com.google.android.material.textfield.TextInputLayout-->
-<!--                        android:id="@+id/input_layout_datalogger_no"-->
-<!--                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--                    <EditText-->
+<!--                        android:id="@+id/selectDatalogger"-->
 <!--                        android:layout_width="200sp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:gravity="center"-->
+<!--                        android:focusable="false"-->
+<!--                        android:layout_margin="1dp"-->
+<!--                        android:text="@{String.valueOf(gridData.datalogger)}"-->
+<!--                        android:background="@drawable/table_content_cell_bg"-->
+<!--                        android:textSize="16sp" />-->
+
+<!--                    <EditText-->
+<!--                       -->
+<!--                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--                       -->
 <!--                        android:gravity="center"-->
 <!--                        android:focusable="false"-->
 <!--                        android:background="@drawable/table_content_cell_bg"-->
 <!--                        android:layout_height="wrap_content">-->
-<!--                        <Spinner-->
-<!--                            android:id="@+id/selectDatalogger"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:text="@{String.valueOf(gridData.datalogger)}"-->
-<!--                            android:layout_height="55sp"-->
-<!--                            />-->
-
-<!--                    </com.google.android.material.textfield.TextInputLayout>-->
+                    <LinearLayout
+                        android:id="@+id/input_layout_datalogger"
+                        android:layout_width="200sp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/table_content_cell_bg">
+                        <Spinner
+                            android:id="@+id/selectDatalogger"
+                            android:layout_width="200sp"
+                            android:layout_height="55sp"
+                            />
+                    </LinearLayout>
+<!--                    </EditText>-->
 
 
                     <EditText

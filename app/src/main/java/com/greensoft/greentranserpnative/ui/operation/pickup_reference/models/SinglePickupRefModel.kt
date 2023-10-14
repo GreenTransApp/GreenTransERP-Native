@@ -63,6 +63,6 @@ data class SinglePickupRefModel(
     val stockitemcode: String,
     var tempurature: String,
     val transactionid: Int,
-    val volfactor: Int,
+    var volfactor: Float,
     val weight: Double
 )

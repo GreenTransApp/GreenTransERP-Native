@@ -2,7 +2,9 @@ package com.greensoft.greentranserpnative.ui.operation.booking
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.text.Editable
 import android.text.InputType
+import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -14,11 +16,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.ENV.Companion.DEBUGGING
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityBookingBinding
-import com.greensoft.greentranserpnative.ui.bottomsheet.acceptPickup.AcceptPickupBottomSheet
 import com.greensoft.greentranserpnative.ui.operation.eway_bill.EwayBillBottomSheet
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ConsignorSelectionModel
@@ -40,7 +40,6 @@ import com.greensoft.greentranserpnative.ui.operation.booking.models.GelPackItem
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PckgTypeSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PickupBySelection
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ServiceTypeSelectionLov
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.VehicleSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.PickupRefModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -81,7 +80,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     private var bookingAdapter: BookingAdapter? = null
 //    var serviceSelectedItems = arrayOf("SELECT", "AIR", "SURFACE", "SURFACE EXPRESS", "TRAIN")
 //    var pckgsTypeSelectedItems = arrayOf("SELECT", "JEENA PACKING", "PRE PACKED")
-    var gelPackItems = arrayOf("SELECT","YES","NO")
+
 //    var pickupTypeSelectedItems =
 //        arrayOf("JEENA STAFF", "AGENT", " MARKET VEHICLE", "OFFICE/AIRPORT DROP", "CANCEL")
 
@@ -121,6 +120,11 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     var vehicleCode = ""
     var selectedGelPackItenCode = ""
     var pickupContentId = ""
+    var aWeight = ""
+    var volWeight = ""
+//    var actualAWeight = ""
+    var actualAWeight:Float=0f
+    var actualVWeight = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -242,6 +246,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             activityBinding.inputPckgsNo.setText(checkNullOrEmpty(element.pckgs).toString())
             activityBinding.inputAWeight.setText(checkNullOrEmpty(element.aweight).toString())
             activityBinding.inputVolWeight.setText(checkNullOrEmpty(element.volfactor).toString())
+            aWeight=activityBinding.inputAWeight.toString()
+            volWeight=activityBinding.inputVolWeight.toString()
 //            addListMuteLiveData.postValue(activityBinding.inputPckgsNo.text.toString())
             addListMuteLiveData.postValue(element.pckgs.toString())
 //            activityBinding.selectedPickupType.setAutofillHints(checkNullOrEmpty(element.gelpacktype).toString())
@@ -257,7 +263,21 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         activityBinding.inputLayoutVehicle.visibility=View.GONE
         activityBinding.inputLayoutVehicleVendor.visibility=View.GONE
     }
-
+//      fun resetCalculation() {
+//          activityBinding.selectService.text.addTextChangedListener(object : TextWatcher {
+//              override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+//                  TODO("Not yet implemented")
+//              }
+//
+//              override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//                  TODO("Not yet implemented")
+//              }
+//
+//              override fun afterTextChanged(s: Editable?) {
+//                  TODO("Not yet implemented")
+//              }
+//          })
+//      }
     private fun spinnerSetUp() {
 
         activityBinding.selectService.onItemSelectedListener =
@@ -272,7 +292,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                     when(productCode){
                         //AIR
                        "A"-> run{
-//                          errorToast(productCode)
+
                        }
                         //SURFACE
                         "S"->run{
@@ -865,7 +885,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         if(bookingAdapter == null) {
             linearLayoutManager = LinearLayoutManager(this)
             activityBinding.recyclerView.layoutManager = linearLayoutManager
-            bookingAdapter = BookingAdapter(this, singleRefList, this)
+            bookingAdapter = BookingAdapter(this, this, singleRefList, this)
         }
         activityBinding.recyclerView.adapter = bookingAdapter
 
@@ -983,6 +1003,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     }
 
     override fun onRowClick(data: Any, clickType: String, index: Int) {
+
         if (clickType == "CONTENT_SELECT") {
             openContentSelectionBottomSheet(contentList, index)
 
@@ -995,8 +1016,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         }else if(clickType =="PACKING_SELECT"){
             openPackingSelectionBottomSheet(packingList,index)
 
-        }else if(clickType =="DATALOGGER_SELECT"){
-
+        }else if(clickType =="LENGTH_SELECT"){
+//           errorToast("length select")
 
         }else if(clickType == "REMOVE_SELECT"){
 //                singlePickupDataList.forEachIndexed {index, element ->
@@ -1011,9 +1032,65 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     override fun onCLick(data: Any, clickType: String) {
 
     }
+    fun setVWeight(vWeight: Float) {
+        activityBinding.inputVolWeight.setText(vWeight.toString())
+    }
+
+    fun setAWeight(aWeight: Int) {
+        activityBinding.inputAWeight.setText(aWeight.toString())
+    }
+    fun setCWeight(cWeight: Int) {
+        activityBinding.inputCWeight.setText(cWeight.toString())
+    }
+//    private  fun calculateVWeight(index: Int, layoutBinding: BookingItemViewBinding){
+//        if(singleRefList[index].pckglength.toString().isNotEmpty() && singleRefList[index].pckgbreath.toString().isNotEmpty()&& singleRefList[index].pckgheight.toString().isNotEmpty() ){
+//           if(productCode =="A"){
+//               singleRefList[index].volfactor= (singleRefList[index].pckglength * singleRefList[index].pckgbreath * singleRefList[index].pckgheight).toFloat()/6000
+//           }else{
+////               singleRefList[index].volfactor= (singleRefList[index].pckglength * singleRefList[index].pckgbreath * singleRefList[index].pckgheight).toFloat()/5000
+////               singleRefList[index].volfactor= (.pckglength * singleRefList[index].pckgbreath * singleRefList[index].pckgheight).toFloat()/5000
+//           }
+//
+//        }else if(singleRefList[index].volfactor.isNaN()){
+//            singleRefList[index].volfactor = 0f
+//
+//        }else{
+//            singleRefList[index].volfactor = Math.ceil(singleRefList[index].volfactor.toFloat() * singleRefList[index].pcs.toDouble()).toFloat()
+//        }
+//        calculateTotalVWeight()
+//    }
+
+
+//    private  fun calculateTotalVWeight(){
+//        val  num=0
+//        actualVWeight=num.toString()
+//        singleRefList.forEachIndexed { _, element ->
+//            actualVWeight=volWeight+element.volfactor.toFloat()
+//        }
+//        calculateChargeableWeight()
+//
+//    }
+
+//     private  fun calculateTotalAWeight(){
+////              val num=0
+////              actualAWeight=num.toString()
+//              singleRefList.forEachIndexed { _, element ->
+//                   actualAWeight=aWeight.toFloat()+element.aweight.toFloat()
+//              }
+//              if(actualAWeight.isNaN()){
+//                  actualAWeight=0f
+//              }
+//             calculateChargeableWeight()
+//
+//     }
 //     private fun calculateChargeableWeight(){
-//         if(activityBinding.inputAWeight.text!!.isNotEmpty() && activityBinding.inputVolWeight.text!!.isNotEmpty()){
-//             if(ac)
+//
+//         if((actualAWeight.toString() != "") && volWeight!!.isNotEmpty()){
+//             if(volWeight.toFloat() > aWeight.toFloat()){
+//              activityBinding.inputCWeight.setText(volWeight)
+//             } else if(volWeight.toFloat() <= actualAWeight.toFloat()){
+//                 activityBinding.inputCWeight.setText(actualAWeight.toString())
+//             }
 //         }
 //     }
 
@@ -1127,6 +1204,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         var actualPackageStr: String = ""
         var actualVWeightStr: String = ""
 
+
         for(i in 0 until singleRefList.size) {
             val refNo = singleRefList[i].referenceno
             val weightStr=singleRefList[i].weight
@@ -1165,6 +1243,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             actualGelPackQtyStr+="$gelPackQtyStr,"
             actualPackageStr+="$packageStr,"
             actualVWeightStr+="$vWeightStr,"
+
 
         }
         viewModel.saveBooking(
