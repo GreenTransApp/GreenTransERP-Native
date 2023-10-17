@@ -47,7 +47,8 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:layout_margin="1dp"
-                        android:text="@{String.valueOf(gridData.pckgs)}"
+                        android:inputType="number"
+                        android:text='@{String.valueOf(gridData.pcs)?? "" }'
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
@@ -57,8 +58,9 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:focusable="false"
+                        android:inputType="number"
                         android:layout_margin="1dp"
-                        android:text="@{String.valueOf(gridData.referenceno)}"
+                        android:text="@{gridData.referenceno ==null ?``:String.valueOf(gridData.referenceno)}"
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
@@ -67,10 +69,11 @@
                         android:layout_width="250sp"
                         android:layout_height="match_parent"
                         android:gravity="center"
+                        android:inputType="number"
                         android:layout_margin="1dp"
                         android:textColor="@color/black"
                         android:focusable="false"
-                        android:text="@{String.valueOf(gridData.packing)}"
+                        android:text="@{gridData.packing ==null ?``:String.valueOf(gridData.packing)}"
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
@@ -79,9 +82,10 @@
                         android:layout_width="150sp"
                         android:layout_height="match_parent"
                         android:gravity="center"
+                        android:inputType="number"
                         android:layout_margin="1dp"
                         android:focusable="false"
-                        android:text="@{String.valueOf(gridData.boxno)}"
+                        android:text="@{gridData.boxno ==null ?``:String.valueOf(gridData.boxno)}"
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
@@ -92,8 +96,9 @@
                         android:gravity="center"
                         android:textColor="@color/black"
                         android:layout_margin="1dp"
+                        android:inputType="number"
                         android:focusable="false"
-                        android:text="@{String.valueOf(gridData.contents)}"
+                        android:text="@{gridData.contents ==null ?``:String.valueOf(gridData.contents)}"
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
@@ -103,40 +108,45 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:focusable="false"
+                        android:inputType="number"
                         android:layout_margin="1dp"
-                        android:text="@{String.valueOf(gridData.tempurature)}"
+                        android:text="@{gridData.tempurature ==null ?``:String.valueOf(gridData.tempurature)}"
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
 
 
-                    <EditText
-                        android:id="@+id/selectDatalogger"
-                        android:layout_width="200sp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:focusable="false"
-                        android:layout_margin="1dp"
-                        android:text="@{String.valueOf(gridData.datalogger)}"
-                        android:background="@drawable/table_content_cell_bg"
-                        android:textSize="16sp" />
-
-<!--                    <com.google.android.material.textfield.TextInputLayout-->
-<!--                        android:id="@+id/input_layout_datalogger_no"-->
-<!--                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--                    <EditText-->
+<!--                        android:id="@+id/selectDatalogger"-->
 <!--                        android:layout_width="200sp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:gravity="center"-->
+<!--                        android:focusable="false"-->
+<!--                        android:layout_margin="1dp"-->
+<!--                        android:text="@{String.valueOf(gridData.datalogger)}"-->
+<!--                        android:background="@drawable/table_content_cell_bg"-->
+<!--                        android:textSize="16sp" />-->
+
+<!--                    <EditText-->
+<!--                       -->
+<!--                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--                       -->
 <!--                        android:gravity="center"-->
 <!--                        android:focusable="false"-->
 <!--                        android:background="@drawable/table_content_cell_bg"-->
 <!--                        android:layout_height="wrap_content">-->
-<!--                        <Spinner-->
-<!--                            android:id="@+id/selectDatalogger"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:text="@{String.valueOf(gridData.datalogger)}"-->
-<!--                            android:layout_height="55sp"-->
-<!--                            />-->
-
-<!--                    </com.google.android.material.textfield.TextInputLayout>-->
+                    <LinearLayout
+                        android:id="@+id/input_layout_datalogger"
+                        android:layout_width="200sp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/table_content_cell_bg">
+                        <Spinner
+                            android:id="@+id/selectDatalogger"
+                            android:layout_width="200sp"
+                            android:layout_height="55sp"
+                            />
+                    </LinearLayout>
+<!--                    </EditText>-->
 
 
                     <EditText
@@ -144,9 +154,10 @@
                         android:layout_width="200sp"
                         android:layout_height="match_parent"
                         android:gravity="center"
+                        android:inputType="number"
                         android:focusable="false"
                         android:layout_margin="1dp"
-                        android:text="@{String.valueOf(gridData.dataloggerno)}"
+                        android:text="@{gridData.dataloggerno ==null ?``:String.valueOf(gridData.dataloggerno)}"
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
@@ -156,6 +167,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:layout_margin="1dp"
+                        android:inputType="number"
                         android:text="@{String.valueOf(gridData.weight)}"
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp"/>
@@ -166,6 +178,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:layout_margin="1dp"
+                       android:inputType="number"
                         android:text="@{String.valueOf(gridData.pckglength)}"
                         android:background="@drawable/table_content_cell_bg"
                        android:textSize="16sp" />
@@ -177,6 +190,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:layout_margin="1dp"
+                        android:inputType="number"
                         android:text="@{String.valueOf(gridData.pckgbreath)}"
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
@@ -187,6 +201,7 @@
                         android:layout_width="150sp"
                         android:layout_height="match_parent"
                         android:gravity="center"
+                        android:inputType="number"
                         android:layout_margin="1dp"
                         android:text="@{String.valueOf(gridData.pckgheight)}"
                         android:background="@drawable/table_content_cell_bg"
@@ -196,6 +211,7 @@
                        android:layout_width="150sp"
                        android:layout_height="match_parent"
                         android:layout_margin="1sp"
+                        android:inputType="number"
                        android:background="@drawable/table_content_cell_bg"
                        android:gravity="center">
                        <CheckBox
@@ -214,9 +230,10 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:layout_margin="1dp"
+                        android:inputType="number"
                         android:focusable="false"
                         android:enabled="false"
-                        android:text="@{String.valueOf(gridData.gelpack)}"
+                        android:text='@{String.valueOf(gridData.gelpack)?? ""}'
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
@@ -227,7 +244,8 @@
                         android:gravity="center"
                         android:layout_margin="1dp"
                         android:focusable="false"
-                        android:text="@{String.valueOf(gridData.gelpackqty)}"
+                        android:inputType="number"
+                        android:text='@{String.valueOf(gridData.gelpackqty)?? ""}'
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
@@ -236,8 +254,9 @@
                         android:layout_width="148sp"
                         android:layout_height="match_parent"
                         android:gravity="center"
+                        android:inputType="number"
                         android:layout_margin="1dp"
-                        android:text="@{String.valueOf(gridData.dryice)}"
+                        android:text='@{String.valueOf(gridData.dryice)?? ""}'
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
