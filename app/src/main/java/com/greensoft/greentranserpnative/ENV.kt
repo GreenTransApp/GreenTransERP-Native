@@ -32,7 +32,7 @@ class ENV {
 //        val LIVE_BASE_URL: String = "https://greentrans.in:444/API/Printer/";
         val LIVE_BASE_URL: String = "https://greentrans.in:444/API/";
 //        val DEBUG_BASE_URL: String = "http://192.168.1.226:45457/API/";
-        val DEBUG_BASE_URL: String = "http://192.168.1.226:45457/API/";
+        val DEBUG_BASE_URL: String = "http://192.168.1.226:45459/API/";
 
 
         fun getBaseUrl(): String {

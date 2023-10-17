@@ -76,8 +76,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     private var vehicleVendorList: ArrayList<AgentSelectionModel> = ArrayList()
     private var vehicleList: ArrayList<BookingVehicleSelectionModel> = ArrayList()
     private var addList: ArrayList<SinglePickupRefModel> = ArrayList()
-
     private var bookingAdapter: BookingAdapter? = null
+    private val menuCode: String = "GTAPP_GRBOOKING"
 //    var serviceSelectedItems = arrayOf("SELECT", "AIR", "SURFACE", "SURFACE EXPRESS", "TRAIN")
 //    var pckgsTypeSelectedItems = arrayOf("SELECT", "JEENA PACKING", "PRE PACKED")
 
@@ -122,6 +122,9 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     var pickupContentId = ""
     var aWeight = ""
     var volWeight = ""
+    var awbCheck = ""
+    private var sqlDate: String? = null
+
 //    var actualAWeight = ""
     var actualAWeight:Float=0f
     var actualVWeight = ""
@@ -139,6 +142,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         activityBinding.inputTime.inputType = InputType.TYPE_NULL;
         setLayoutVisibility()
         activityBinding.inputDate.setText(getViewCurrentDate())
+        sqlDate = getSqlCurrentDate()
         activityBinding.inputTime.setText(getSqlCurrentTime())
 
         getIntentData()
@@ -158,7 +162,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         getVehicleLov()
         getVehicleVendor()
         getAgentLov()
-        getPckgTypeLov()
+//        getPckgTypeLov()
         getContentList()
         spinnerSetUp()
         setOnClick()
@@ -242,16 +246,21 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             activityBinding.inputOrigin.setText(checkNullOrEmpty(element.Origin).toString())
             activityBinding.inputDestination.setText(checkNullOrEmpty(element.destname).toString())
             activityBinding.selectService.setAutofillHints(checkNullOrEmpty(element.servicetype).toString())
-            activityBinding.selectedPckgsType.setAutofillHints(checkNullOrEmpty(element.packagetype).toString())
+            activityBinding.selectedPckgsType.setText(checkNullOrEmpty(element.packagetype).toString())
             activityBinding.inputPckgsNo.setText(checkNullOrEmpty(element.pckgs).toString())
             activityBinding.inputAWeight.setText(checkNullOrEmpty(element.aweight).toString())
             activityBinding.inputVolWeight.setText(checkNullOrEmpty(element.volfactor).toString())
             aWeight=activityBinding.inputAWeight.toString()
             volWeight=activityBinding.inputVolWeight.toString()
+//             activityBinding.selectedPckgsType.isEnabled=false
+            custCode=element.custcode.toString()
+            cngrCode=element.cngrcode.toString()
+            cngeCode=element.cngecode.toString()
+            destCode=element.destcode.toString()
 //            addListMuteLiveData.postValue(activityBinding.inputPckgsNo.text.toString())
             addListMuteLiveData.postValue(element.pckgs.toString())
 //            activityBinding.selectedPickupType.setAutofillHints(checkNullOrEmpty(element.gelpacktype).toString())
-
+           errorToast(activityBinding.selectedPckgsType.toString())
 
 
         }
@@ -289,22 +298,23 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                     id: Long
                 ) {
                       productCode=serviceTypeList[position].value
+                    bookingAdapter?.serviceTypeChanged()
                     when(productCode){
                         //AIR
                        "A"-> run{
-
+//                           bookingAdapter?.calculateTotalVWeight()
                        }
                         //SURFACE
                         "S"->run{
-//                            errorToast(productCode)
+//                           bookingAdapter?.calculateTotalVWeight()
                         }
                         //SURFACEXPRESS
                         "SE"->run{
-
+//                            bookingAdapter?.calculateTotalVWeight()
                         }
                         //TRAIN
                         "T"->run{
-
+//                            bookingAdapter?.calculateTotalVWeight()
                         }
                     }
 
@@ -318,20 +328,25 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
 
 
-        activityBinding.selectedPckgsType.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                    TODO("Not yet implemented")
-                }
-            }
+//        activityBinding.selectedPckgsType.onItemSelectedListener =
+//            object : AdapterView.OnItemSelectedListener {
+//                override fun onItemSelected(
+//                    parent: AdapterView<*>?,
+//                    view: View?,
+//                    position: Int,
+//                    id: Long
+//                ) {
+//                    when(position){
+//                        1-> run{
+//
+//                        }
+//                    }
+//                }
+//
+//                override fun onNothingSelected(parent: AdapterView<*>?) {
+//                    TODO("Not yet implemented")
+//                }
+//            }
 
         activityBinding.selectedPickupType.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
@@ -478,10 +493,10 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
         activityBinding.chekActualAWB.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked){
-                activityBinding.chekActualAWB.text = "Y"
+                awbCheck= "Y"
             }
             else {
-                activityBinding.chekActualAWB.text = "N"
+               awbCheck="N"
             }
 
         }
@@ -501,6 +516,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     private fun setObservers() {
         timePeriod.observe(this) { time ->
             activityBinding.inputTime.setText(time)
+
         }
         activityBinding.refreshLayout.setOnRefreshListener {
 //            refreshData()
@@ -514,6 +530,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         }
         mPeriod.observe(this) { datePicker ->
             activityBinding.inputDate.setText(datePicker.viewsingleDate)
+            sqlDate=datePicker.sqlsingleDate.toString()
         }
 
         timePeriod.observe(this){ timePicker->
@@ -608,7 +625,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
       viewModel.pckgLiveData.observe(this) { pckgType ->
           pckgTypeList = pckgType
           val pckgsAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, pckgTypeList)
-          activityBinding.selectedPckgsType.adapter = pckgsAdapter
+//          activityBinding.selectedPckgsType.adapter = pckgsAdapter
+
 
       }
     }
@@ -885,7 +903,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         if(bookingAdapter == null) {
             linearLayoutManager = LinearLayoutManager(this)
             activityBinding.recyclerView.layoutManager = linearLayoutManager
-            bookingAdapter = BookingAdapter(this, this, singleRefList, this)
+            bookingAdapter = BookingAdapter(this, productCode,this, singleRefList, this)
         }
         activityBinding.recyclerView.adapter = bookingAdapter
 
@@ -923,7 +941,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             cngrCSTNo = selectedCngr.cstno.toString()
             cngrLSTNo = selectedCngr.lstno.toString()
             cngrTINNo = selectedCngr.tinno.toString()
-            cngrCode=selectedCngr.code.toString()
+//            cngrCode=selectedCngr.code.toString()
             cngrGstNo=selectedCngr.gstno.toString()
 
         } else if (clickType == "Consignee Selection") {
@@ -938,7 +956,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             cngeCSTNo =selectedCnge.cstno.toString()
             cngeLSTNo =selectedCnge.lstno.toString()
             cngeTINNo =selectedCnge.tinno.toString()
-            cngeCode=selectedCnge.code.toString()
+//            cngeCode=selectedCnge.code.toString()
             cngeGstNo=selectedCnge.gstno.toString()
 //            cngeSTaxRegNo =selectedCnge..toString()
         } else if (clickType == "Department Selection") {
@@ -1032,6 +1050,11 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     override fun onCLick(data: Any, clickType: String) {
 
     }
+//    fun getCurrentServiceType(serviceType:String,vWeight: Float,aWeight: Int,cWeight: Int){
+//        activityBinding.inputVolWeight.setText(vWeight.toString())
+//        activityBinding.inputAWeight.setText(aWeight.toString())
+//        activityBinding.inputCWeight.setText(cWeight.toString())
+//    }
     fun setVWeight(vWeight: Float) {
         activityBinding.inputVolWeight.setText(vWeight.toString())
     }
@@ -1124,9 +1147,10 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         }else if (activityBinding.inputDestination.text.isNullOrEmpty()){
             errorToast("Please Select Destination")
             return
-        }else if (activityBinding.selectedPckgsType.autofillHints.isNullOrEmpty()){
-            errorToast("Please Select Pckgs Type")
-            return
+//        }
+//        else if (activityBinding.selectedPckgsType.autofillHints.isNullOrEmpty()){
+//            errorToast("Please Select Pckgs Type")
+//            return
         }else if (activityBinding.inputAWeight.text.isNullOrEmpty()){
             errorToast("Please Select Actual Weight")
             return
@@ -1213,16 +1237,16 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             val packing=singleRefList[i].packing
             val goodsStr=singleRefList[i].contents
             val dryIceStr=singleRefList[i].dryice
-            val dryIceQtyStr=singleRefList[i].dryiceqty
+            val dryIceQtyStr=singleRefList[i].dryiceqty ?: ""
             val dataLoggerStr=singleRefList[i].datalogger
             val dataLoggerNoStr=singleRefList[i].dataloggerno
-            val dimHeight=singleRefList[i].pckgheight
-            val dimBreath=singleRefList[i].pckgbreath
-            val dimLength=singleRefList[i].pckglength
-            val boxNoStr=singleRefList[i].boxno
-            val gelPackStr=singleRefList[i].gelpack
+            val dimHeight=singleRefList[i].localHeight
+            val dimBreath=singleRefList[i].localBreath
+            val dimLength=singleRefList[i].localLength
+            val boxNoStr=singleRefList[i].boxno ?: ""
+            val gelPackStr=singleRefList[i].gelpack ?: ""
             val gelPackQtyStr=singleRefList[i].gelpackqty
-            val packageStr=singleRefList[i].packagetype
+            val packageStr=singleRefList[i].pcs
             val vWeightStr=singleRefList[i].volfactor
 
             actualRefNoStr += "$refNo,"
@@ -1249,13 +1273,16 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         viewModel.saveBooking(
             companyId = userDataModel?.companyid.toString(),
             branchCode = userDataModel?.loginbranchcode.toString(),
-            bookingDt = activityBinding.inputDate.text.toString(),
+            bookingDt = sqlDate!!,
+//            bookingDt = activityBinding.inputDate.text.toString(),
             time =activityBinding.inputTime.text.toString(),
             grNo = activityBinding.inputGrNo.text.toString(),
             custCode = custCode,
             destCode = destCode,
             productCode = productCode,
-            pckgs = activityBinding.inputPckgsNo.text.toString(),
+            pckgs = activityBinding.inputPckgsNo.text.toString().toIntOrNull() ?: 0,
+//            pckgs = actualPackageStr.toInt(),
+
             aWeight = activityBinding.inputAWeight.text.toString(),
             vWeight = activityBinding.inputVolWeight.text.toString(),
             cWeight = activityBinding.inputCWeight.text.toString(),
@@ -1285,7 +1312,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             cngeTINNo = cngeTINNo,
             cngeSTaxRegNo = "",
             transactionId = transactionId,
-            awbChargeApplicable = activityBinding.chekActualAWB.toString(),
+            awbChargeApplicable = awbCheck,
             custDeptId = custDeptId,
             referenceNoStr = actualRefNoStr,
             weightStr = actualWeightStr,
@@ -1297,7 +1324,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             dryIceQtyStr = actualDryIceQtyStr,
             dataLoggerStr = actualDataLoggerStr,
             dataLoggerNoStr = actualDataLoggerNoStr,
-            dimLength =actualDimLength ,
+            dimLength =actualDimLength,
             dimBreath =actualDimBreath,
             dimHeight = actualDimHeight,
             pickupBoyName = activityBinding.inputPickupBoy.text.toString(),
@@ -1307,7 +1334,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             gelPackStr = actualGelPackStr,
             gelPackItemCodeStr = selectedGelPackItenCode,
             gelPackQtyStr = actualGelPackQtyStr,
-            menuCode = menuModel?.menucode.toString(),
+//            menuCode = menuModel?.menucode.toString(),
+            menuCode = menuCode,
             invoiceNoStr = "",
             invoiceDtStr = "",
             invoiceValueStr = "",

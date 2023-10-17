@@ -693,17 +693,24 @@
                  android:id="@+id/input_layout_pckgsType"
                  style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                  android:layout_width="match_parent"
-                 android:focusable="false"
-                 android:background="@drawable/spinner_background"
+
                  android:layout_height="wrap_content"
                  >
-                 <Spinner
-
+<!--                 <Spinner-->
+<!--                     android:id="@+id/selectedPckgsType"-->
+<!--                     android:layout_width="match_parent"-->
+<!--                     android:layout_height="55sp"-->
+<!--                     />-->
+                 <com.google.android.material.textfield.TextInputEditText
                      android:id="@+id/selectedPckgsType"
                      android:layout_width="match_parent"
-                     android:layout_height="55sp"
+                     android:layout_height="wrap_content"
+                     android:textAllCaps="true"
+                     android:text="0"
+                     android:focusable="false"
+                     android:textColor="@color/black"
+                     android:inputType="number"
                      />
-
              </com.google.android.material.textfield.TextInputLayout>
 
          </LinearLayout>

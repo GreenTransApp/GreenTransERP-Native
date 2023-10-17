@@ -17,19 +17,21 @@ import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.Si
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.booking.models.GelPackItemSelectionModel
 import javax.inject.Inject
+import kotlin.math.ceil
 
 class BookingAdapter @Inject constructor(
     private val mContext: Context,
+    private var serviceType: String,
     private val activity: BookingActivity,
     private val bookingList: ArrayList<SinglePickupRefModel>,
     private val onRowClick: OnRowClick<Any>,
 //    context: Context
 ): RecyclerView.Adapter<BookingAdapter.BookingViewHolder>() {
-
+    var actualVWeight:Float=0f
+    var actualWeight:Int=0
    inner class BookingViewHolder ( val binding:BookingItemViewBinding):RecyclerView.ViewHolder(binding.root) {
        private var dataLoggerItems = arrayOf("SELECT", "YES", "NO")
-       var actualVWeight:Float=0f
-       var actualWeight:Int=0
+
        fun setOnClicks(singlePickupRefModel: SinglePickupRefModel) {
            binding.gelPackItem.setOnClickListener {
                onRowClick.onRowClick(singlePickupRefModel, "GEL_PACK_SELECT", adapterPosition)
@@ -56,6 +58,7 @@ class BookingAdapter @Inject constructor(
                override fun afterTextChanged(s: Editable?) {
 //                   onRowClick.onRowClick(singlePickupRefModel, "LENGTH_SELECT", adapterPosition)
 //                   Log.d("test", "afterTextChanged:  length of  obj")
+                   bookingList[adapterPosition].localLength = s.toString().toDoubleOrNull() ?: "0".toDouble()
                    calculateVWeight(adapterPosition, binding)
                    Log.d("actualVWeight", " data  -----${actualVWeight}")
                }
@@ -67,6 +70,7 @@ class BookingAdapter @Inject constructor(
                override fun afterTextChanged(s: Editable?) {
 //                   onRowClick.onRowClick(singlePickupRefModel, "LENGTH_SELECT", adapterPosition)
 //                   Log.d("test", "afterTextChanged:  length of  obj")
+                   bookingList[adapterPosition].localBreath = s.toString().toDoubleOrNull() ?: "0".toDouble()
                    calculateVWeight(adapterPosition, binding)
 
                }
@@ -77,6 +81,7 @@ class BookingAdapter @Inject constructor(
                override fun afterTextChanged(s: Editable?) {
 //                   onRowClick.onRowClick(singlePickupRefModel, "LENGTH_SELECT", adapterPosition)
 //                   Log.d("test", "afterTextChanged:  length of  obj")
+                   bookingList[adapterPosition].localHeight = s.toString().toDoubleOrNull() ?: "0".toDouble()
                    calculateVWeight(adapterPosition, binding)
                }
            })
@@ -128,79 +133,8 @@ class BookingAdapter @Inject constructor(
 
 
        }
-         fun calculateVWeight(index: Int, layoutBinding: BookingItemViewBinding){
-           if(layoutBinding.length.text.toString().isNotEmpty() && layoutBinding.breadth.toString().isNotEmpty() && layoutBinding.height.toString().isNotEmpty() ) {
-               Log.d("CALC VWEIGHT", "Data in wrong format: LENGTH: ${layoutBinding.length.text}, BREADTH: ${layoutBinding.breadth.text}, HEIGHT: ${layoutBinding.height.text}")
-           }
-           val length: Double? = layoutBinding.length.text.toString().toDoubleOrNull()
-           val breadth: Double? = layoutBinding.breadth.text.toString().toDoubleOrNull()
-           val height: Double? = layoutBinding.height.text.toString().toDoubleOrNull()
-
-           if(length == null) {
-//               activity.errorToast("Length in wrong format.")
-               return;
-           } else if(breadth == null) {
-//               activity.errorToast("Breadth in wrong format.")
-               return
-           } else if(height == null) {
-//               activity.errorToast("Height in wrong format.")
-               return;
-           }
-
-           if(length > 0 && breadth > 0 && height > 0){
-               Log.d("TEST", "length:${ bookingList[index].pckglength.toString()}")
-               if(bookingList[index].servicetype =="A"){
-//                   actualVWeight= (bookingList[index].pckglength * bookingList[index].pckgbreath * bookingList[index].pckgheight).toFloat()/6000
-                   actualVWeight= (layoutBinding.length.toString().toInt() * layoutBinding.breadth.toString().toInt() * layoutBinding.height.toString().toInt()).toFloat()/6000
-               }else{
-//                   actualVWeight= (bookingList[index].pckglength * bookingList[index].pckgbreath * bookingList[index].pckgheight).toFloat()/5000
-                   actualVWeight= (layoutBinding.length.text.toString().toDouble() * layoutBinding.breadth.text.toString().toDouble() * layoutBinding.height.text.toString().toDouble()).toFloat()/5000
-               }
-
-           }else if(bookingList[index].volfactor.isNaN()){
-               actualVWeight = 0f
-
-           }else{
-               actualVWeight= Math.ceil(bookingList[index].volfactor.toFloat() * bookingList[index].pcs.toDouble()).toFloat()
-           }
-           activity.setVWeight(actualVWeight)
-//           Log.d("test", "calculateVWeight: vol weight${actualVWeight} ")
-           calculateChargeableWeight()
-
-       }
-
-         fun calculateTotalAWeight(index: Int, layoutBinding: BookingItemViewBinding){
-           var aWeight: Int? = layoutBinding.weight.text.toString().toIntOrNull()
-            if(aWeight == null) {
-//               activity.errorToast("Weight in wrong format.")
-               return;
-           }
-           if(aWeight > 0)
-               actualWeight =layoutBinding.weight.text.toString().toInt()
-
-           if(actualWeight.toFloat().isNaN()){
-               actualWeight=0
-           }
-          activity.setAWeight(actualWeight)
-           calculateChargeableWeight()
-       }
 
 
-        fun calculateChargeableWeight(){
-
-           if((actualWeight.toString().isNotEmpty()) && actualVWeight.toString().isNotEmpty()){
-               if(actualVWeight > actualWeight){
-                   activity.setCWeight(actualVWeight.toInt())
-
-               } else if(actualVWeight<= actualWeight.toFloat()){
-                   activity.setCWeight(actualWeight.toInt())
-               }
-           }
-       }
-     fun resetCalculation(productCode:String){
-         calculateVWeight(adapterPosition, binding)
-         calculateTotalAWeight(adapterPosition, binding)
-     }
 
        fun bindData(singlePickupRefModel: SinglePickupRefModel, onRowClick: OnRowClick<Any>) {
            binding.gridData = singlePickupRefModel
@@ -216,6 +150,99 @@ class BookingAdapter @Inject constructor(
 
    }
 
+    fun calculateVWeight(index: Int, layoutBinding: BookingItemViewBinding){
+        if(layoutBinding.length.text.toString().isNotEmpty() && layoutBinding.breadth.toString().isNotEmpty() && layoutBinding.height.toString().isNotEmpty() ) {
+            Log.d("CALC VWEIGHT", "Data in wrong format: LENGTH: ${layoutBinding.length.text}, BREADTH: ${layoutBinding.breadth.text}, HEIGHT: ${layoutBinding.height.text}")
+        }
+        val length: Double? = layoutBinding.length.text.toString().toDoubleOrNull()
+        val breadth: Double? = layoutBinding.breadth.text.toString().toDoubleOrNull()
+        val height: Double? = layoutBinding.height.text.toString().toDoubleOrNull()
+
+        if(length == null) {
+//               activity.errorToast("Length in wrong format.")
+            return;
+        } else if(breadth == null) {
+//               activity.errorToast("Breadth in wrong format.")
+            return
+        } else if(height == null) {
+//               activity.errorToast("Height in wrong format.")
+            return;
+        }
+
+        if(length > 0 && breadth > 0 && height > 0){
+            Log.d("TEST", "length:${ bookingList[index].pckglength.toString()}")
+            if(activity.productCode =="A"){
+//                   actualVWeight= (bookingList[index].pckglength * bookingList[index].pckgbreath * bookingList[index].pckgheight).toFloat()/6000
+//                actualVWeight= (layoutBinding.length.toString().toInt() * layoutBinding.breadth.toString().toInt() * layoutBinding.height.toString().toInt()).toFloat()/6000
+                bookingList[index].localVWeight= (layoutBinding.length.text.toString().toInt() * layoutBinding.breadth.text.toString().toInt() * layoutBinding.height.text.toString().toInt()).toFloat()/6000
+            }else{
+//                   actualVWeight= (bookingList[index].pckglength * bookingList[index].pckgbreath * bookingList[index].pckgheight).toFloat()/5000
+//                   actualVWeight= (layoutBinding.length.text.toString().toDouble() * layoutBinding.breadth.text.toString().toDouble() * layoutBinding.height.text.toString().toDouble()).toFloat()/5000
+                bookingList[index].localVWeight= (layoutBinding.length.text.toString().toDouble() * layoutBinding.breadth.text.toString().toDouble() * layoutBinding.height.text.toString().toDouble()).toFloat()/5000
+            }
+
+        }else if(bookingList[index].volfactor.isNaN()){
+//            actualVWeight = 0f
+
+        }else{
+//            actualVWeight= ceil(bookingList[index].volfactor.toFloat() * bookingList[index].pcs.toDouble()).toFloat()
+            bookingList[index].localVWeight= ceil(bookingList[index].volfactor.toFloat() * bookingList[index].pcs.toDouble()).toFloat()
+        }
+        calculateTotalVWeight()
+
+    }
+
+    fun serviceTypeChanged() {
+        if(activity.productCode =="A"){
+            bookingList.forEachIndexed { index, singlePickupRefModel ->
+                singlePickupRefModel.localVWeight = ( singlePickupRefModel.localLength * singlePickupRefModel.localBreath * singlePickupRefModel.localHeight ).toFloat() / 6000
+            }
+        }else{
+            bookingList.forEachIndexed { index, singlePickupRefModel ->
+                singlePickupRefModel.localVWeight = ( singlePickupRefModel.localLength * singlePickupRefModel.localBreath * singlePickupRefModel.localHeight ).toFloat() / 5000
+            }
+        }
+        calculateTotalVWeight()
+    }
+   fun calculateTotalVWeight(){
+       actualVWeight=0f
+      bookingList.forEachIndexed {index, element ->
+          actualVWeight += element.localVWeight
+      }
+       activity.setVWeight(actualVWeight)
+       calculateChargeableWeight()
+   }
+    fun calculateTotalAWeight(index: Int, layoutBinding: BookingItemViewBinding){
+        var aWeight: Int? = layoutBinding.weight.text.toString().toIntOrNull()
+        if(aWeight == null) {
+//               activity.errorToast("Weight in wrong format.")
+            return
+        }
+        if(aWeight > 0){
+            bookingList.forEachIndexed {index, element ->
+                actualWeight= (actualWeight+element.weight).toInt()
+            }
+        }
+        if(actualWeight.toFloat().isNaN()){
+            actualWeight=0
+        }
+        activity.setAWeight(actualWeight)
+        calculateChargeableWeight()
+    }
+
+
+    fun calculateChargeableWeight(){
+
+        if((actualWeight.toString().isNotEmpty()) && actualVWeight.toString().isNotEmpty()){
+            if(actualVWeight > actualWeight){
+                activity.setCWeight(actualVWeight.toInt())
+
+            } else if(actualVWeight<= actualWeight.toFloat()){
+                activity.setCWeight(actualWeight.toInt())
+            }
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookingViewHolder {
         val binding= BookingItemViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val viewHolder = BookingViewHolder(binding)
@@ -228,7 +255,6 @@ class BookingAdapter @Inject constructor(
         val gridData = bookingList[holder.adapterPosition]
         holder.bindData(gridData,onRowClick)
     }
-
 
     fun setContent(contentModel: ContentSelectionModel, adapterPosition: Int) {
         Log.d("TEST_TEST", contentModel.itemname.toString())

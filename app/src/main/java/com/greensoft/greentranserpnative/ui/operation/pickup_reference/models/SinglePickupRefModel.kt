@@ -1,5 +1,7 @@
 package com.greensoft.greentranserpnative.ui.operation.pickup_reference.models
 
+import androidx.compose.ui.text.font.FontWeight
+
 data class SinglePickupRefModel(
     val Departmentcode: Int,
     val Origin: String,
@@ -56,6 +58,9 @@ data class SinglePickupRefModel(
     val pckgbreath: Double,
     val pckgheight: Double,
     val pckglength: Double,
+    var localBreath: Double,
+    var localHeight: Double,
+    var localLength: Double,
     val pckgs: Int,
     val pcs: Int,
     val referenceno: Any,
@@ -64,5 +69,6 @@ data class SinglePickupRefModel(
     var tempurature: String,
     val transactionid: Int,
     var volfactor: Float,
-    val weight: Double
+    val weight: Double,
+    var localVWeight: Float
 )
