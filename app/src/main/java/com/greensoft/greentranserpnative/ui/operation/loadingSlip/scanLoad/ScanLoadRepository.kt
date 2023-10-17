@@ -6,10 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
-import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.models.LoadingSlipHeaderDataModel
-import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.models.SaveStickerModel
-import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.models.StickerModel
-import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.models.ValidateStickerModel
+import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.models.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,6 +17,7 @@ class ScanLoadRepository @Inject constructor(): BaseRepository() {
     private val headerMutData = MutableLiveData<LoadingSlipHeaderDataModel>()
     private val validateStickerMutData = MutableLiveData<ValidateStickerModel>()
     private val saveStickerMutData = MutableLiveData<SaveStickerModel>()
+    private val removeStickerMutData = MutableLiveData<RemoveStickerModel>()
 
     val headerLivedata : LiveData<LoadingSlipHeaderDataModel>
         get() = headerMutData
@@ -29,7 +27,8 @@ class ScanLoadRepository @Inject constructor(): BaseRepository() {
         get() = validateStickerMutData
     val saveStickerLiveData: LiveData<SaveStickerModel>
         get() = saveStickerMutData
-
+    val removeStickerLiveData: LiveData<RemoveStickerModel>
+        get() = removeStickerMutData
 
     fun getScannedSticker(companyId: String, spName: String, param: ArrayList<String>, values: ArrayList<String>){
         viewDialogMutData.postValue(true)
@@ -120,6 +119,40 @@ class ScanLoadRepository @Inject constructor(): BaseRepository() {
                             val listType = object: TypeToken<List<SaveStickerModel>>() {}.type
                             val resultList: ArrayList<SaveStickerModel> = gson.fromJson(jsonArray.toString(), listType);
                             saveStickerMutData.postValue(resultList[0]);
+                        }
+                    } else {
+                        isError.postValue(result.CommandMessage.toString());
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR);
+                }
+                viewDialogMutData.postValue(false)
+
+            }
+
+            override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
+    }
+
+    fun removeSticker(
+        companyId: String?, stickerNo: String?, userCode: String?, menuCode: String?, sessionId: String?
+    ) {
+        viewDialogMutData.postValue(true)
+        api.removeStickerScanLoad(companyId, stickerNo, userCode, menuCode, sessionId).enqueue(object: Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
+                if(response.body() != null){
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if(result.CommandStatus == 1){
+                        val jsonArray = getResult(result);
+                        if(jsonArray != null) {
+                            val listType = object: TypeToken<List<RemoveStickerModel>>() {}.type
+                            val resultList: ArrayList<RemoveStickerModel> = gson.fromJson(jsonArray.toString(), listType);
+                            removeStickerMutData.postValue(resultList[0]);
                         }
                     } else {
                         isError.postValue(result.CommandMessage.toString());

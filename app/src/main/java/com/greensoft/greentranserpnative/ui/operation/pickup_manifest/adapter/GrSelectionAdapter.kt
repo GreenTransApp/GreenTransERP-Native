@@ -29,7 +29,7 @@ class GrSelectionAdapter(private val grList: ArrayList<GrSelectionModel>,
 
             binding.allCheck.setOnCheckedChangeListener{_,isChecked->
                if(isChecked){
-                   onRowClick.onCLick(model, "CHECK_SELECTED")
+                   onRowClick.onClick(model, "CHECK_SELECTED")
                    Log.d("test", "bindData: checkbox check")
                }else{
 

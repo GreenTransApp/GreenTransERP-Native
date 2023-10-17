@@ -294,7 +294,7 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
         openCommonBottomSheet(this, "Vehicle Selection", this, commonList)
     }
 
-    override fun onCLick(data: Any, clickType: String) {
+    override fun onClick(data: Any, clickType: String) {
         TODO("Not yet implemented")
     }
 

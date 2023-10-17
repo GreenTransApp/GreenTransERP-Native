@@ -3,10 +3,7 @@ package com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.greensoft.greentranserpnative.base.BaseViewModel
-import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.models.LoadingSlipHeaderDataModel
-import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.models.SaveStickerModel
-import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.models.StickerModel
-import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.models.ValidateStickerModel
+import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.models.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,6 +23,8 @@ class ScanLoadViewModel @Inject constructor( private val _repo: ScanLoadReposito
         get() = _repo.validateStickerLivedata
     val saveStickerLiveData: LiveData<SaveStickerModel>
         get() = _repo.saveStickerLiveData
+    val removeStickerLiveData: LiveData<RemoveStickerModel>
+        get() = _repo.removeStickerLiveData
 
     fun getScannedSticker(companyId: String, spName: String, param: ArrayList<String>, values: ArrayList<String>){
         viewModelScope.launch(Dispatchers.IO) {
@@ -48,6 +47,12 @@ class ScanLoadViewModel @Inject constructor( private val _repo: ScanLoadReposito
             _repo.updateSticker(companyId, loadingNo, loadingDt, loadingTime, stnCode, branchCode,
                 destCode, modeType, vendCode, modeCode, loadedBy, driverCode, remarks,
                 stickerNoStr, grNoStr, userCode, menuCode, sessionId, driverMobileNo, despatchType)
+        }
+    }
+
+    fun removeSticker(companyId: String?, stickerNo: String?, userCode: String?, menuCode: String?, sessionId: String?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _repo.removeSticker(companyId, stickerNo, userCode, menuCode, sessionId)
         }
     }
 

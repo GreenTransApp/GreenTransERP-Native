@@ -436,6 +436,7 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
     }
 
     open fun errorToast(msg: String?) {
+        playSound()
         //        Toast.makeText(mContext,msg,Toast.LENGTH_LONG).show();
         if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.Q) {
             val toast = Toast.makeText(mContext, msg, Toast.LENGTH_LONG)

@@ -135,7 +135,7 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
     override fun onItemClick(data: Any, clickType: String) {
 
     }
-    override fun onCLick(data: Any, clickType: String) {
+    override fun onClick(data: Any, clickType: String) {
        when (clickType) {
 
             "CHECK_SELECTED" -> run {

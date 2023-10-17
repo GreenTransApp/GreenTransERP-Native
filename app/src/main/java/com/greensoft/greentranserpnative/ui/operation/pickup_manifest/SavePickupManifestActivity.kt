@@ -65,7 +65,7 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
         TODO("Not yet implemented")
     }
 
-    override fun onCLick(data: Any, clickType: String) {
+    override fun onClick(data: Any, clickType: String) {
         TODO("Not yet implemented")
     }
 }

@@ -27,5 +27,10 @@ data class GrListModel(
     val origin: String,
     val pckgs: Int,
     val sno: Int,
-    val tamount: Double
+    val tamount: Double,
+    val modecode: String,
+    val modetype: String,
+    val drivercode: String,
+    val drivermobile: String,
+    val loadingno: String?
 )

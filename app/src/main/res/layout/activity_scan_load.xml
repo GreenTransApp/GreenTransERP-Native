@@ -181,7 +181,7 @@
                         android:layout_marginHorizontal="5dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{`GR #`+ grNo}"
+                        android:text="@{`GR # `+ grNo}"
                         android:textColor="@color/white" />
 
 <!--                    <TextView-->
@@ -220,7 +220,7 @@
 
                             <TextView
                                 android:id="@+id/sNo"
-                                android:layout_width="50sp"
+                                android:layout_width="60sp"
                                 android:layout_height="match_parent"
                                 android:gravity="center_horizontal"
                                 android:textColor="@color/white"
@@ -231,13 +231,24 @@
 
                             <TextView
                                 android:id="@+id/StickerNo"
-                                android:layout_width="280sp"
+                                android:layout_width="300sp"
 
                                 android:layout_height="match_parent"
                                 android:gravity="center_horizontal"
                                 android:textColor="@color/white"
                                 android:background="@drawable/table_header_cell_bg"
                                 android:text="Sticker#"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/removeAction"
+                                android:layout_width="150sp"
+
+                                android:layout_height="match_parent"
+                                android:gravity="center_horizontal"
+                                android:textColor="@color/white"
+                                android:background="@drawable/table_header_cell_bg"
+                                android:text="Action"
                                 android:textSize="12sp" />
 
                             <!--                <TextView-->

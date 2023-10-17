@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -17,9 +18,9 @@
 
         <TextView
             android:id="@+id/sNo"
-            android:layout_width="50sp"
+            android:layout_width="60sp"
             android:layout_height="match_parent"
-            android:gravity="center_horizontal"
+            android:gravity="center_horizontal|center_vertical"
             android:background="@drawable/table_content_cell_bg"
             android:textColor="@color/black"
             android:padding="6sp"
@@ -30,24 +31,46 @@
 
         <TextView
             android:id="@+id/stickerNo"
-            android:layout_width="280sp"
+            android:layout_width="300sp"
             android:layout_height="match_parent"
-            android:gravity="center_horizontal"
+            android:gravity="center_horizontal|center_vertical"
             android:textColor="@color/black"
             android:padding="6sp"
             android:background="@drawable/table_content_cell_bg"
             android:text="@{String.valueOf(stickerModel.stickerno)}"
             android:textSize="12sp" />
 
-        <!--    <TextView-->
-        <!--        android:id="@+id/batchNo"-->
-        <!--        android:layout_width="100sp"-->
-        <!--        android:layout_height="match_parent"-->
-        <!--        android:gravity="center_horizontal"-->
-        <!--        android:textColor="@color/black"-->
-        <!--        android:padding="6sp"-->
-        <!--        android:background="@drawable/table_content_cell_bg"-->
-        <!--        android:textSize="12sp" />-->
+        <RelativeLayout
+            android:layout_width="150sp"
+            android:background="@drawable/table_content_cell_bg"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/removeBtn"
+                app:icon="@drawable/delete"
+                android:text="Remove"
+                android:textSize="10sp"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/danger"
+                android:textColor="@color/white"
+                app:cornerRadius="10sp"
+                android:layout_centerInParent="true"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                />
+
+        </RelativeLayout>
+
+<!--        <TextView-->
+<!--            android:id="@+id/batchNo"-->
+<!--            android:layout_width="100sp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:gravity="center_horizontal"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:padding="6sp"-->
+<!--            android:background="@drawable/table_content_cell_bg"-->
+<!--            android:textSize="12sp" />-->
 
 <!--        <TextView-->
 <!--            android:id="@+id/partName"-->

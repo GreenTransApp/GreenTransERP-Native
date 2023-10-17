@@ -2,10 +2,12 @@ package com.greensoft.kgs_printer.hilt
 
 import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.api.Api
+import com.greensoft.greentranserpnative.hilt.App
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import net.posprinter.TSCPrinter
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -32,5 +34,11 @@ object AppModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(Api::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun getTSCPrinter(): TSCPrinter {
+        return TSCPrinter(App.get().curConnect)
     }
 }

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:theme="@style/Theme.GTERPNATIVE"
+    >
+
+    <TextView
+        android:id="@+id/sNo"
+        android:layout_width="50sp"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:background="@drawable/table_content_cell_bg"
+        android:textColor="@color/black"
+        android:padding="6sp"
+        android:textSize="12sp" />
+
+
+
+    <TextView
+        android:id="@+id/stickerNo"
+        android:layout_width="150sp"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:textColor="@color/black"
+        android:padding="6sp"
+        android:background="@drawable/bgwhite"
+        android:textSize="12sp" />
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/batchNo"-->
+    <!--        android:layout_width="100sp"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:gravity="center_horizontal"-->
+    <!--        android:textColor="@color/black"-->
+    <!--        android:padding="6sp"-->
+    <!--        android:background="@drawable/table_content_cell_bg"-->
+    <!--        android:textSize="12sp" />-->
+
+
+    <TextView
+        android:id="@+id/grNo"
+        android:layout_width="120sp"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:textColor="@color/black"
+        android:padding="6sp"
+        android:background="@drawable/table_content_cell_bg"
+        android:textSize="12sp" />
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="100sp"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:textColor="@color/black"
+        android:padding="6sp"
+        android:background="@drawable/table_content_cell_bg"
+        android:textSize="12sp" />
+    <TextView
+        android:id="@+id/origin"
+        android:layout_width="200sp"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:textColor="@color/black"
+        android:padding="6sp"
+        android:background="@drawable/table_content_cell_bg"
+        android:textSize="12sp" />
+    <TextView
+        android:id="@+id/destination"
+        android:layout_width="200sp"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:textColor="@color/black"
+        android:padding="6sp"
+        android:background="@drawable/table_content_cell_bg"
+        android:textSize="12sp" />
+    <TextView
+        android:id="@+id/consignor"
+        android:layout_width="200sp"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:textColor="@color/black"
+        android:padding="6sp"
+        android:background="@drawable/table_content_cell_bg"
+        android:textSize="12sp" />
+    <TextView
+        android:id="@+id/consignee"
+        android:layout_width="200sp"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:textColor="@color/black"
+        android:padding="6sp"
+        android:background="@drawable/table_content_cell_bg"
+        android:textSize="12sp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/action_btn"
+        android:text="Remove"
+        android:backgroundTint="@color/red"
+        android:textAllCaps="false"
+        android:layout_height="50dp"
+        android:layout_margin="6sp"
+        android:layout_weight="1.5"
+        android:layout_width="0dp"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        />
+
+
+</LinearLayout>

@@ -31,7 +31,7 @@ private  var filterList: ArrayList<PickupRefModel>
             binding.pickupRefData = pickupRefModel
             binding.index = adapterPosition
             binding.btnSelect.setOnClickListener {
-                onRowClick.onCLick(pickupRefModel, "REF_SELECT")
+                onRowClick.onClick(pickupRefModel, "REF_SELECT")
             }
 
         }

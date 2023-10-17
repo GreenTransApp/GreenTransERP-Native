@@ -74,7 +74,7 @@ interface Api {
     ): Call<CommonResult>
 
     @FormUrlEncoded
-    @POST("ScanAndLoadUpdate")
+    @POST("WMS/ScanAndLoadUpdate")
     fun saveStickerScanLoad(
         @Field("prmconnstring") companyId: String?,
         @Field("prmloadingno") loadingNo: String?,
@@ -99,9 +99,9 @@ interface Api {
     ): Call<CommonResult>
 
     @FormUrlEncoded
-    @POST("ScanAndLoadRemove")
+    @POST("WMS/ScanAndLoadRemove")
     fun removeStickerScanLoad(
-        @Field("prmcompanyid") companyId: Int?,
+        @Field("prmcompanyid") companyId: String?,
         @Field("prmstickerno") stickerNo: String?,
         @Field("prmusercode") userCode: String?,
         @Field("prmmenucode") menuCode: String?,
@@ -192,8 +192,15 @@ interface Api {
         @Field ("prmcngegstno") prmcngegstno: String
     ): Call<CommonResult>
 
-
-
-
+    @GET("WMS/ScanLoadSummary")
+    fun scanLoadSummary(
+        @Query("prmconnstring") companyId: String?,
+        @Query("prmbranchcode") branchCode: String?,
+        @Query("prmloadingno") loadingNo: String?,
+        @Query("prmcloseloading") closeLoading: String?,
+        @Query("prmusercode") userCode: String?,
+        @Query("prmmenucode") menuCode: String?,
+        @Query("prmsessionid") sessionId: String?
+    ): Call<CommonResult>
 
 }

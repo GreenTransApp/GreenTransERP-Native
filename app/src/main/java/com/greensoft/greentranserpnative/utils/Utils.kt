@@ -1,9 +1,12 @@
 package com.greensoft.greentranserpnative.utils
 
 import android.util.Log
+import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
+import com.greensoft.greentranserpnative.ui.operation.grList.models.GrListModel
 
 object Utils {
-    var grNo = ""
+    var grModel: GrListModel? = null
+    var menuModel: UserMenuModel? = null
     var custCode = ""
     var fromDate = ""
     var toDate = ""

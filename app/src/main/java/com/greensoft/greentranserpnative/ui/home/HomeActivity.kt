@@ -31,6 +31,7 @@ import com.greensoft.greentranserpnative.ui.operation.call_register.CallRegister
 import com.greensoft.greentranserpnative.ui.operation.grList.GrListActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestEntryActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceActivity
+import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -302,9 +303,11 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
     }
 
 
-    override fun onCLick(data: Any, clickType: String) {
+    override fun onClick(data: Any, clickType: String) {
         val gson = Gson()
         val jsonSerialized = gson.toJson(data)
+        val menuModel: UserMenuModel = data as UserMenuModel
+        Utils.menuModel = menuModel
        when(clickType){
 //           "SELECTED_MENU"-> run{
 //               val model: UserMenuModel = data as UserMenuModel

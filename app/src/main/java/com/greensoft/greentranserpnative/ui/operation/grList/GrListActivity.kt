@@ -15,7 +15,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.card.MaterialCardView
@@ -25,11 +24,14 @@ import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityGrListBinding
 import com.greensoft.greentranserpnative.databinding.BottomSheetPrintStickerConfirmationBinding
 import com.greensoft.greentranserpnative.hilt.App
+import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.grList.models.GrListModel
 import com.greensoft.greentranserpnative.ui.operation.grList.models.PrintStickerModel
 import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.ScanLoadActivity
+import com.greensoft.greentranserpnative.ui.operation.loadingSlip.summary.SummaryScanLoadActivity
 import com.greensoft.greentranserpnative.ui.print.dcCode.activity.SelectBluetoothActivity
+import com.greensoft.greentranserpnative.ui.print.printManager.PrintManager
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -38,6 +40,7 @@ import net.posprinter.TSCConst
 import net.posprinter.TSCPrinter
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
@@ -51,7 +54,9 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
     private var toDate:String = getSqlDate()!!
     private var bookingType: String = "M"
 //    private val printer = TSCPrinter(App.get().curConnect)
-    private var printer: TSCPrinter? = null
+    @Inject
+    lateinit var printer: TSCPrinter
+    private var userMenuModel: UserMenuModel? = null
 
     private var btLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()) { result ->
@@ -76,45 +81,49 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
         activityBinding = ActivityGrListBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
-        (if(getMenuData() == null) getMenuData()?.displayname else "GR LIST ")?.let { menuName ->
-            var menuNameEdited = menuName
-            if(bookingType == "M") {
-                menuNameEdited += " ( Manual )"
-            } else {
-                menuNameEdited += " ( Computerize )"
-            }
-            setUpToolbar(menuNameEdited)
-        }
         initUi()
         getDefaultConnection()
 //        getGrList()
         setObservers()
         searchItem()
+
     }
+
 
     private fun getDefaultConnection() {
         val mac = getStorageString(ENV.DEFAULT_BLUETOOTH_ADDRESS_PREF_TAG)
         val name = getStorageString(ENV.DEFAULT_BLUETOOTH_NAME_PREF_TAG)
         App.get().connectBt(mac, name)
     }
-    override fun onCLick(data: Any, clickType: String) {
+    override fun onClick(data: Any, clickType: String) {
         val model = data as GrListModel
         if (clickType == "PRINT_STICKER") {
-            printer = TSCPrinter(App.get().curConnect)
+//            printer = TSCPrinter(App.get().curConnect)
             if (isPrinterConnected()) {
                 printStickerBottomSheet(model)
             }
         } else if (clickType == "SCAN_STICKER") {
-            val intent = Intent(this@GrListActivity, ScanLoadActivity::class.java)
-            Utils.grNo = model.grno
-            startActivity(intent)
+            val i = Intent(this@GrListActivity, ScanLoadActivity::class.java)
+            if(model.grno.isNullOrEmpty()) {
+                errorToast("GR# not Available or Valid. Please Check.")
+                return;
+            } else if(model.orgcode.isNullOrEmpty()) {
+                errorToast("GR Origin not available, Cannot proceed for Loading.")
+                return;
+            } else if(model.destcode.isNullOrEmpty()) {
+                errorToast("GR Destination not available, Cannot Proceed for Loading.")
+                return;
+            }
+            Utils.grModel = model
+            Utils.loadingNo = model.loadingno ?: ""
+            startActivity(i)
         }
     }
 
     private fun getGrList(){
         viewModel.getGrList(
             loginDataModel?.companyid.toString(),
-            "greentrans_bookingsearchlist",
+            "gtapp_bookingsearchlist",
             listOf("prmbranchcode","prmfromdt","prmtodt","prmdoctype","prmgrno"),
             arrayListOf(userDataModel?.loginbranchcode.toString(),fromDate,toDate,bookingType,"")
         )
@@ -158,7 +167,7 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
         viewModel.printStickerLiveData.observe(this){ printStickerResponse->
             printStickerList = printStickerResponse
             if (isPrinterConnected()) {
-                printStickers(getUserData()?.compname, printStickerList)
+                PrintManager(tscPrinter = this.printer).printStickers(getUserData()?.compname, printStickerList)
             }
         }
 
@@ -191,6 +200,7 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
         mContext = this@GrListActivity
         fromDate = getSqlDate()!!
         toDate = getSqlDate()!!
+        userMenuModel = getMenuData()
         activityBinding.swipeRefreshLayout.setOnRefreshListener(OnRefreshListener {
             refreshData()
 
@@ -211,6 +221,14 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
     override fun onResume() {
         super.onResume()
         refreshData()
+        userMenuModel = Utils.menuModel
+        var menuNameEdited = userMenuModel?.menuname
+        menuNameEdited += if(bookingType == "M") {
+            " ( Manual )"
+        } else {
+            " ( Computerize )"
+        }
+        setUpToolbar(menuNameEdited ?: "GR LIST")
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -276,7 +294,7 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
         BottomSheetPrintStickerConfirmationBinding.inflate(
             layoutInflater
         )
-    bsDialog.setContentView(bottomSheetBinding.getRoot())
+    bsDialog.setContentView(bottomSheetBinding.root)
     var fromSticker: EditText
     var toSticker: EditText
     var confirm: Button
@@ -351,130 +369,6 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
         dialog.show()
     }
 
-    fun printStickers(compName: String?, stickerList: java.util.ArrayList<PrintStickerModel>) {
-        val defaultStartX = 20
-        val defaultStartY = 20
-        val defaultBarHeight = 2
-        val defaultBarWidth = 580
-        val defaultBarAndVarGap = 15
-        val compNameX = defaultStartX + 10
-        val barAfterCompX = defaultStartX - 10
-        val barAfterCompY = defaultStartY + 30
-        val barCodeX = defaultStartX + 10
-        val barCodeY = defaultStartY + 45
-        val barCodeHeight = 120
-        val barAfterBarCodeX = defaultStartX - 10
-        val barAfterBarCodeY = barCodeHeight + 105
-        val grY = barAfterBarCodeY + 15
-        val dtX = 300
-        val barAfterGrX = defaultStartX - 10
-        val barAfterGrY = grY + defaultBarAndVarGap + 10
-        val originY = barAfterGrY + defaultBarAndVarGap
-        val barAfterOrgX = defaultStartX - 10
-        val barAfterOrgY = originY + defaultBarAndVarGap + 10
-        val destY = barAfterOrgY + defaultBarAndVarGap
-        val barAfterDestX = defaultStartX - 10
-        val barAfterDestY = destY + defaultBarAndVarGap + 10
-        val pckgsY = barAfterDestY + defaultBarAndVarGap
-        val weightX = 300
-        for (i in stickerList.indices) {
-            val model = stickerList[i]
-            printer!!.sizeMm(120.0, 60.0)
-                .gapInch(0.0, 0.0)
-                .offsetInch(0.0)
-                .speed(5.0)
-                .density(10)
-                .direction(TSCConst.DIRECTION_FORWARD)
-                .reference(5, 2)
-                .cls()
-                .box(4, 6, 568, 390, 3) //                .box(16, 16, 540, 380, 3)
-                .text(
-                    compNameX,
-                    defaultStartY,
-                    TSCConst.FNT_16_24,
-                    TSCConst.ROTATION_0,
-                    1,
-                    1,
-                    compName
-                )
-                .bar(barAfterCompX, barAfterCompY, defaultBarWidth, defaultBarHeight)
-                .barcode(
-                    barCodeX,
-                    barCodeY,
-                    TSCConst.CODE_TYPE_128,
-                    barCodeHeight,
-                    TSCConst.ALIGNMENT_CENTER,
-                    TSCConst.ROTATION_0,
-                    3,
-                    3,
-                    model.stickerno
-                )
-                .bar(barAfterBarCodeX, barAfterBarCodeY, defaultBarWidth, defaultBarHeight)
-                .text(
-                    defaultStartX,
-                    grY,
-                    TSCConst.FNT_16_24,
-                    TSCConst.ROTATION_0,
-                    1,
-                    1,
-                    "GR | " + model.grno
-                )
-                .text(
-                    dtX,
-                    grY,
-                    TSCConst.FNT_16_24,
-                    TSCConst.ROTATION_0,
-                    1,
-                    1,
-                    "DT | " + model.grdt
-                )
-                .bar(barAfterGrX, barAfterGrY, defaultBarWidth, defaultBarHeight)
-                .text(
-                    defaultStartX,
-                    originY,
-                    TSCConst.FNT_16_24,
-                    TSCConst.ROTATION_0,
-                    1,
-                    1,
-                    "ORG   | " + model.originname
-                )
-                .bar(barAfterOrgX, barAfterOrgY, defaultBarWidth, defaultBarHeight)
-                .text(
-                    defaultStartX,
-                    destY,
-                    TSCConst.FNT_16_24,
-                    TSCConst.ROTATION_0,
-                    1,
-                    1,
-                    "DEST  | " + model.destinationname
-                )
-                .bar(barAfterDestX, barAfterDestY, defaultBarWidth, defaultBarHeight)
-                .text(
-                    defaultStartX,
-                    pckgsY,
-                    TSCConst.FNT_16_24,
-                    TSCConst.ROTATION_0,
-                    1,
-                    1,
-                    "PCKGS | " + model.packageid + "/" + model.pckgs
-                )
-                .text(
-                    weightX,
-                    pckgsY,
-                    TSCConst.FNT_16_24,
-                    TSCConst.ROTATION_0,
-                    1,
-                    1,
-                    "WEIGHT | " + model.weight
-                ) //                .qrcode(265, 30, TSCConst.EC_LEVEL_H, 4, TSCConst.QRCODE_MODE_MANUAL, TSCConst.ROTATION_0, "test qrcode")
-                //                .text(200, 144, TSCConst.FNT_16_24, TSCConst.ROTATION_0, 1, 1, "Test EN")
-                //                .text(38, 165, TSCConst.FNT_16_24, TSCConst.ROTATION_0, 1, 2, "HELLO")
-                //                .bar(200, 183, 166, 30)
-                //                .bar(334, 145, 30, 30)
-                .print(1)
-        }
-    }
-
     private fun showBookingTypeSelection() {
         val bottomSheetDialog = BottomSheetDialog(this)
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_booking_type)
@@ -497,7 +391,7 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
         bottomSheetDialog.show()
     }
     fun changeMenuName() {
-        var menuNameEdited = getMenuData()!!.menuname
+        var menuNameEdited = Utils.menuModel!!.menuname
         menuNameEdited += if(bookingType == "M") {
             " ( Manual )"
         } else {
@@ -520,4 +414,6 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
         })
         return true
     }
+
+
 }

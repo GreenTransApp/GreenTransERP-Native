@@ -18,7 +18,7 @@ class UserMenuAdapter (private val menuList: ArrayList<UserMenuModel>,
          fun bindData(model: UserMenuModel, onRowClick: OnRowClick<Any>) {
              binding.userMenu = model
              binding.itemLayout.setOnClickListener{
-                 onRowClick.onCLick(model, model.menucode)
+                 onRowClick.onClick(model, model.menucode)
              }
          }
 

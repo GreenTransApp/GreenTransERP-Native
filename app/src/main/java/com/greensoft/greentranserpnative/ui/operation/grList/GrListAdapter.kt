@@ -3,11 +3,9 @@ package com.greensoft.greentranserpnative.ui.operation.grList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
-import androidx.compose.ui.text.toLowerCase
 import androidx.recyclerview.widget.RecyclerView
 import com.greensoft.greentranserpnative.databinding.ItemGrListBinding
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import com.greensoft.greentranserpnative.ui.operation.call_register.models.CallRegisterModel
 import com.greensoft.greentranserpnative.ui.operation.grList.models.GrListModel
 import java.lang.String
 import java.util.Locale
@@ -44,11 +42,11 @@ class GrListAdapter @Inject constructor(
             layoutBinding.index = adapterPosition
 
             layoutBinding.scanBtn.setOnClickListener {
-                onRowClick.onCLick(grListModel,"SCAN_STICKER")
+                onRowClick.onClick(grListModel,"SCAN_STICKER")
             }
 
             layoutBinding.printBtn.setOnClickListener {
-                onRowClick.onCLick(grListModel,"PRINT_STICKER")
+                onRowClick.onClick(grListModel,"PRINT_STICKER")
             }
         }
     }

@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import com.greensoft.greentranserpnative.databinding.FragmentScanPopupBinding
 
 
-class ScanPopup  : androidx.fragment.app.DialogFragment() {
+class ScanPopup(private val titleMessage: String)  : androidx.fragment.app.DialogFragment() {
     private lateinit var layoutBinding:FragmentScanPopupBinding
     override fun onCreateView(
          inflater: LayoutInflater,
@@ -30,6 +30,7 @@ class ScanPopup  : androidx.fragment.app.DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         layoutBinding = FragmentScanPopupBinding.inflate(LayoutInflater.from(context))
+        layoutBinding.popUpTitle.text = titleMessage
         val builder = AlertDialog.Builder(requireActivity())
         isCancelable = false
         builder.setView(layoutBinding.root)

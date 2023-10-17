@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/pullDownToRefresh">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:theme="@style/Theme.GTERPNATIVE"
+            tools:context="com.greensoft.sugamwms.ui.loadmanifest.pendingmanifest.PendingManifesActivity">
+
+            <include
+                layout="@layout/toolbar"
+                android:id="@+id/toolBar" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_below="@+id/toolBar"
+                android:id="@+id/search_layout"
+                android:layout_width="match_parent"
+                android:layout_height="45sp"
+                android:layout_margin="6sp"
+                app:cardCornerRadius="30dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/black"
+                >
+
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/search_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:iconifiedByDefault="false"
+                    app:queryHint="Search here..." />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:id="@+id/headerData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/search_layout"
+                android:background="@color/colorPrimary"
+                android:paddingVertical="10dp"
+                android:paddingHorizontal="8dp"
+                android:orientation="vertical"
+                >
+            <LinearLayout
+                android:id="@+id/branchData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/search_layout"
+                android:background="@color/colorPrimary"
+                android:layout_marginVertical="6dp"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="BRANCH: "
+                    android:textColor="@color/white"
+                    />
+
+                <TextView
+                    android:id="@+id/branch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NOT AVAILABLE "
+                    android:textColor="@color/white"
+                    />
+
+            </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/loadingData"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:layout_marginVertical="6dp"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Loading: "
+                        android:textColor="@color/white"
+                        />
+
+                    <TextView
+                        android:id="@+id/loading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" NOT AVAILABLE "
+                        android:textColor="@color/white"
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <HorizontalScrollView
+                android:id="@+id/rvLayout"
+                android:layout_below="@id/headerData"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/footer"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="50sp"
+                            android:layout_height="match_parent"
+                            android:text="S#"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:textColor="@color/white"
+                            android:background="@drawable/table_header_cell_bg"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="120sp"
+                            android:layout_height="match_parent"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:text="GR #"
+                            android:background="@drawable/table_header_cell_bg"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="100sp"
+                            android:text="GR Date"
+                            android:layout_height="match_parent"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:textColor="@color/white"
+                            android:background="@drawable/table_header_cell_bg"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="150sp"
+                            android:layout_height="match_parent"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:text="Origin"
+                            android:textColor="@color/white"
+                            android:background="@drawable/table_header_cell_bg"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="150sp"
+                            android:layout_height="match_parent"
+                            android:text="Destination"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:textColor="@color/white"
+                            android:background="@drawable/table_header_cell_bg"
+                            android:textSize="12sp" />
+
+
+                        <TextView
+                            android:layout_width="150sp"
+                            android:layout_height="match_parent"
+                            android:text="Consignor"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:textColor="@color/white"
+                            android:background="@drawable/table_header_cell_bg"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="150sp"
+                            android:layout_height="match_parent"
+                            android:text="Consignee"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:textColor="@color/white"
+                            android:background="@drawable/table_header_cell_bg"
+                            android:textSize="12sp"
+                            />
+
+                        <TextView
+                            android:layout_width="100sp"
+                            android:layout_height="match_parent"
+                            android:text="Booked Pckgs"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:textColor="@color/white"
+                            android:background="@drawable/table_header_cell_bg"
+                            android:textSize="12sp"
+                            />
+
+                        <TextView
+                            android:layout_width="100sp"
+                            android:layout_height="match_parent"
+                            android:text="Gross Weight"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:textColor="@color/white"
+                            android:background="@drawable/table_header_cell_bg"
+                            android:textSize="12sp"
+                            />
+
+                        <TextView
+                            android:layout_width="100sp"
+                            android:layout_height="match_parent"
+                            android:text="Despatched Pckgs"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:textColor="@color/white"
+                            android:background="@drawable/table_header_cell_bg"
+                            android:textSize="12sp"
+                            />
+
+
+                        <TextView
+                            android:layout_width="100sp"
+                            android:layout_height="match_parent"
+                            android:text="Loaded Pckgs"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:textColor="@color/white"
+                            android:background="@drawable/table_header_cell_bg"
+                            android:textSize="12sp"
+                            />
+
+                        <TextView
+                            android:layout_width="100sp"
+                            android:layout_height="match_parent"
+                            android:text="Loaded Weight"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:textColor="@color/white"
+                            android:background="@drawable/table_header_cell_bg"
+                            android:textSize="12sp"
+                            />
+
+
+                        <TextView
+                            android:layout_width="100sp"
+                            android:layout_height="match_parent"
+                            android:text="Balance Pckgs"
+                            android:gravity="center_horizontal|center_vertical"
+                            android:textColor="@color/white"
+                            android:background="@drawable/table_header_cell_bg"
+                            android:textSize="12sp"
+                            />
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@+id/period"
+
+                        tools:listitem="@layout/item_summary_scanload"
+                        tools:itemCount="100"
+                        />
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+
+
+            <LinearLayout
+                android:id="@+id/footer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1"
+                android:layout_alignParentBottom="true"
+                android:visibility="gone"
+                >
+<!--                android:layout_alignParentBottom="true"-->
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_saveLoading"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="0sp"
+                    android:layout_height="60sp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#568358"
+                    android:text="Submit"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black"
+                    app:cornerRadius="10sp" />
+
+            </LinearLayout>
+        </RelativeLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</layout>

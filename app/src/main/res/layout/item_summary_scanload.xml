@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:theme="@style/Theme.GTERPNATIVE">
+
+        <TextView
+            android:id="@+id/sNo"
+            android:layout_width="50sp"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:background="@drawable/table_content_cell_bg"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+
+
+        <TextView
+            android:id="@+id/grNo"
+            android:layout_width="120sp"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="@color/black"
+            android:background="@drawable/table_content_cell_bg"
+            android:textSize="12sp" />
+
+
+        <TextView
+            android:id="@+id/grDate"
+            android:layout_width="100sp"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="@color/black"
+            android:background="@drawable/table_content_cell_bg"
+            android:textSize="12sp" />
+
+
+        <TextView
+            android:id="@+id/originName"
+            android:layout_width="150sp"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="@color/black"
+            android:background="@drawable/table_content_cell_bg"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/destName"
+            android:layout_width="150sp"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="@color/black"
+            android:background="@drawable/table_content_cell_bg"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/consignorName"
+            android:layout_width="150sp"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="@color/black"
+            android:background="@drawable/table_content_cell_bg"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/consigneeName"
+            android:layout_width="150sp"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="@color/black"
+            android:background="@drawable/table_content_cell_bg"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/bookedPckgs"
+            android:layout_width="100sp"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="@color/black"
+            android:background="@drawable/table_content_cell_bg"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/grossWeight"
+            android:layout_width="100sp"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="@color/black"
+            android:background="@drawable/table_content_cell_bg"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/despatchPckgs"
+            android:layout_width="100sp"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="@color/black"
+            android:background="@drawable/table_content_cell_bg"
+            android:textSize="12sp" />
+
+
+        <TextView
+            android:id="@+id/loadedPckgs"
+            android:layout_width="100sp"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="@color/black"
+            android:background="@drawable/table_content_cell_bg"
+            android:textSize="12sp" />
+
+
+        <TextView
+            android:id="@+id/loadedWeight"
+            android:layout_width="100sp"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="@color/black"
+            android:background="@drawable/table_content_cell_bg"
+            android:textSize="12sp" />
+
+
+        <TextView
+            android:id="@+id/balancePckgs"
+            android:layout_width="100sp"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:textColor="@color/black"
+            android:background="@drawable/table_content_cell_bg"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+</layout>

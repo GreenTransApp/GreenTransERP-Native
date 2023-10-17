@@ -97,6 +97,11 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.operation.loadingSlip.summary.SummaryScanLoadActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.operation.grList.GrListActivity"
+            />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

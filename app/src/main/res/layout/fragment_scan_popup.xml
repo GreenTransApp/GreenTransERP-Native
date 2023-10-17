@@ -16,6 +16,7 @@
         android:background="@drawable/rounded_corners"
         tools:context=".ui.common.scanPopup.ScanPopup">
         <TextView
+           android:id="@+id/popUpTitle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="This is Dialog Fragment"

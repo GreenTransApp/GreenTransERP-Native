@@ -167,7 +167,7 @@ class PickupReferenceActivity  @Inject constructor(): BaseActivity(), OnRowClick
         }
     }
 
-    override fun onCLick(data: Any, clickType: String) {
+    override fun onClick(data: Any, clickType: String) {
         when(clickType) {
             "REF_SELECT" -> run {
                 val model: PickupRefModel = data as PickupRefModel

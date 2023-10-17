@@ -228,7 +228,7 @@ class CallRegisterActivity @Inject constructor() : BaseActivity(), OnRowClick<An
         TODO("Not yet implemented")
     }
 
-    override fun onCLick(data: Any, clickType: String) {
+    override fun onClick(data: Any, clickType: String) {
         when (clickType) {
             "ACCEPT_SELECT" -> run {
                 val model: CallRegisterModel = data as CallRegisterModel

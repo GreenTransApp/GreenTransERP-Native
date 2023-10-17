@@ -24,11 +24,11 @@ RecyclerView.Adapter<CallRegisterAdapter.CallRegisterViewHolder>(),Filterable {
               adapterBinding.registerList=model
               adapterBinding.index=adapterPosition
               adapterBinding.btnAccept.setOnClickListener{
-                  onRowClick.onCLick(model,"ACCEPT_SELECT")
+                  onRowClick.onClick(model,"ACCEPT_SELECT")
 
               }
               adapterBinding.btnReject.setOnClickListener{
-                  onRowClick.onCLick(model,"REJECT_SELECT")
+                  onRowClick.onClick(model,"REJECT_SELECT")
               }
 
           }
