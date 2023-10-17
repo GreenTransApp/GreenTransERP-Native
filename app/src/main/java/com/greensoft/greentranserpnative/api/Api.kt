@@ -120,7 +120,7 @@ interface Api {
         @Field ("prmcustcode") prmcustcode: String,
         @Field ("prmdestcode") prmdestcode: String,
         @Field ("prmproductcode") prmproductcode: String,
-        @Field ("prmpckgs") prmpckgs: String,
+        @Field ("prmpckgs") prmpckgs: Int,
         @Field ("prmaweight") prmaweight: String,
         @Field ("prmvweight") prmvweight: String,
         @Field ("prmcweight") prmcweight: String,
@@ -192,6 +192,35 @@ interface Api {
         @Field ("prmcngegstno") prmcngegstno: String
     ): Call<CommonResult>
 
+
+    @FormUrlEncoded
+    @POST("ManifestAPI/SavePickupManifestERPNative")
+     fun savePickupManifest(
+        @Field("prmbranchcode")prmbranchcode :String ,
+        @Field("prmdt")prmdt :String ,
+        @Field("prmtime")prmtime :String ,
+        @Field("prmmanifestno")prmmanifestno :String ,
+        @Field("prmmodecode")prmmodecode :String ,
+        @Field("prmtost")prmtost :String ,
+        @Field("prmdrivercode")prmdrivercode :String ,
+        @Field("prmdrivermobileno")prmdrivermobileno :String ,
+        @Field("prmloadedby")prmloadedby :String ,
+        @Field("prmremarks")prmremarks :String ,
+        @Field("prmispickupmanifest")prmispickupmanifest :String ,
+        @Field("prmgrno")prmgrno :String ,
+        @Field("prmpckgs")prmpckgs :String ,
+        @Field("prmaweight")prmaweight :String ,
+        @Field("prmgoods")prmgoods :String ,
+        @Field("prmpacking")prmpacking :String ,
+        @Field("prmareacode")prmareacode :String ,
+        @Field("prmvendcoe")prmvendcoe :String ,
+        @Field("prmloadedbytype")prmloadedbytype :String ,
+        @Field("prmmenucode")prmmenucode :String ,
+        @Field("prmusercode")prmusercode :String ,
+        @Field("prmsessionid")prmsessionid :String ,
+        @Field("prmpaymentnotapplicable")prmpaymentnotapplicable :String ,
+        @Field("prmskipinscan")prmskipinscan :String ,
+    ):Call<CommonResult>
     @GET("WMS/ScanLoadSummary")
     fun scanLoadSummary(
         @Query("prmconnstring") companyId: String?,

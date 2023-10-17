@@ -1047,7 +1047,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
 
 
-    override fun onCLick(data: Any, clickType: String) {
+    override fun onClick(data: Any, clickType: String) {
 
     }
 //    fun getCurrentServiceType(serviceType:String,vWeight: Float,aWeight: Int,cWeight: Int){
