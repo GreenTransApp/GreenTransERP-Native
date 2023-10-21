@@ -10,12 +10,12 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.greensoft.greentranserpnative.databinding.BookingItemViewBinding
+import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ContentSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.GelPackItemSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.TemperatureSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
-import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import com.greensoft.greentranserpnative.ui.operation.booking.models.GelPackItemSelectionModel
 import javax.inject.Inject
 import kotlin.math.ceil
 
@@ -51,6 +51,28 @@ class BookingAdapter @Inject constructor(
                removeItem(singlePickupRefModel, adapterPosition)
 //                onRowClick.onCLick(singlePickupRefModel, "REMOVE_SELECT")
            }
+
+           binding.pckgs.addTextChangedListener (object: TextWatcher {
+               override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+               }
+
+               override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+               }
+
+               override fun afterTextChanged(p0: Editable?) {
+                   val enteredVal = p0.toString().toIntOrNull()
+                   if(enteredVal != null) {
+                       if(enteredVal <= 0) {
+                           binding.pckgs.setText("")
+                       }
+                   }
+                   if(enteredVal != null && enteredVal.toString().startsWith("0")) {
+//                       binding.pckgs.setText(trimLeadingZeros(p0.toString()))
+                   }
+               }
+
+           })
 
            binding.length.addTextChangedListener(object :TextWatcher{
                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -132,6 +154,21 @@ class BookingAdapter @Inject constructor(
 //           }
 
 
+       }
+
+       private fun trimLeadingZeros(string: String): String? {
+           var string = string
+           var startsWithZero = true
+           while (startsWithZero) {
+               if (string.startsWith("0") && string.length >= 2 && !string.substring(1, 2)
+                       .equals(".", ignoreCase = true)
+               ) {
+                   string = string.substring(1)
+               } else {
+                   startsWithZero = false
+               }
+           }
+           return string
        }
 
 

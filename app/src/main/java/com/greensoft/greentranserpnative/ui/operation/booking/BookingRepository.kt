@@ -1,33 +1,32 @@
 package com.greensoft.greentranserpnative.ui.operation.booking
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
+import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
-import com.greensoft.greentranserpnative.ui.login.models.UserDataModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.AgentSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.BookingVehicleSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.ConsignorSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.ContentSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.CustomerSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.DepartmentSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.DestinationSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.GelPackItemSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.OriginSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.PckgTypeSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.PickupBoySelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.PickupBySelection
-import com.greensoft.greentranserpnative.ui.operation.booking.models.SaveBookingModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.ServiceTypeSelectionLov
-import com.greensoft.greentranserpnative.ui.operation.booking.models.TemperatureSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.*
+import com.greensoft.greentranserpnative.ui.operation.eway_bill.ItemEwayBillModel
+import com.greensoft.greentranserpnative.ui.operation.eway_bill.models.EwayBillCredentialsModel
+import com.greensoft.greentranserpnative.ui.operation.eway_bill.models.EwayCompleteLoginResponse
+import com.greensoft.greentranserpnative.ui.operation.eway_bill.models.EwayLoginResponse
+import com.greensoft.greentranserpnative.ui.operation.eway_bill.models.EwayBillDetailStatus
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
+import kotlinx.coroutines.*
+import okhttp3.MediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.IOException
 import javax.inject.Inject
+
 
 class BookingRepository @Inject constructor():BaseRepository(){
 
@@ -105,6 +104,10 @@ class BookingRepository @Inject constructor():BaseRepository(){
     private val saveBookingMuteLiveData = MutableLiveData<SaveBookingModel>()
     val saveBookingLiveData: LiveData<SaveBookingModel>
         get() = saveBookingMuteLiveData
+
+    private val getAccParaMutData = MutableLiveData<CommonResult>()
+    val getAccParaLiveData: LiveData<CommonResult>
+        get() = getAccParaMutData
 
 
 
@@ -709,6 +712,177 @@ class BookingRepository @Inject constructor():BaseRepository(){
 
         })
 
+    }
+
+    fun getAccParaValue(keyNo: String, companyId: String) {
+        api.getAccParaValueFromKey(keyNo, companyId).enqueue(object: Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
+                if(response.body() != null) {
+                    val commonResult: CommonResult = response.body()!!
+                    if(commonResult.CommandStatus == 1) {
+                        getAccParaMutData.postValue(commonResult)
+                    } else {
+                        if(commonResult.CommandMessage.toString().isNullOrEmpty()) {
+                            isError.postValue("ENABLE GST INTEGRATION. Please contact support for assistance.")
+                        } else {
+                            isError.postValue(commonResult.CommandMessage.toString())
+                        }
+                    }
+                } else {
+                    isError.postValue("Error while fetching data from the server.")
+                }
+            }
+
+            override fun onFailure(call: Call<CommonResult>, t: Throwable) {
+                isError.postValue(t.message)
+            }
+
+        })
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    suspend fun getEwayBillCreds(companyId:String, spname: String,
+                                 param:List<String>, values:ArrayList<String>,
+                                 ewayBillList: ArrayList<ItemEwayBillModel> ) {
+        viewDialogMutData.postValue(true)
+        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
+                if(response.body() != null){
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if(result.CommandStatus == 1){
+                        val jsonArray = getResult(result);
+                        if(jsonArray != null) {
+                            val listType = object: TypeToken<List<EwayBillCredentialsModel>>() {}.type
+                            val resultList: ArrayList<EwayBillCredentialsModel> = gson.fromJson(jsonArray.toString(), listType);
+                            val credsModel: EwayBillCredentialsModel = resultList[0]
+                            if(credsModel.commandstatus == 1) {
+                                GlobalScope.launch {
+                                    ewayBillLogin(
+                                        credsModel.ewayuserid.toString(),
+                                        credsModel.ewaypassword.toString(),
+                                        ewayBillList,
+                                        credsModel.compgstin.toString()
+                                    )
+//                                    val url = "https://greentrans.in:444/API/Tracking/KGSGRTracking?GRNo=123"
+//                                    Log.d("RESP", get(url).toString())
+                                }
+                            } else {
+                                isError.postValue(credsModel.commandmessage.toString())
+                            }
+                        }
+                    } else {
+                        isError.postValue(result.CommandMessage.toString());
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR);
+                }
+                viewDialogMutData.postValue(false)
+
+            }
+
+            override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
+
+    }
+
+    suspend fun ewayBillLogin(userId: String, password: String, ewayBillNoList: ArrayList<ItemEwayBillModel>, compGstin: String) {
+//        val json = "{ userid: $userId, password: $password }"
+        var jsonObject= JsonObject()
+        jsonObject.addProperty("userid", userId)
+        jsonObject.addProperty("password", password)
+//        jsonObject.addProperty("prmcompanyid", "10")
+//        jsonObject.addProperty("spname", "test")
+//        jsonObject.addProperty("param", arrayListOf("").toString())
+//        jsonObject.addProperty("values", arrayListOf("").toString())
+        val gson = Gson()
+//        val loginResponse = post("https://greentrans.in:444/API/HomeAPI/CommonApi", jsonObject.toString())
+        val loginRespString = post(ENV.EWAY_BILL_LOGIN_URL, jsonObject.toString())
+        val loginType = object: TypeToken<EwayLoginResponse>() {}.type
+        val loginResponse: EwayLoginResponse = gson.fromJson(loginRespString, loginType)
+        var loginOrgId: String? = null
+        var loginToken: String? = null
+        if(loginResponse.status == 1) {
+            loginToken = loginResponse.response.token
+            loginOrgId = loginResponse.response.orgs[0].orgId.toString()
+        } else {
+            isError.postValue(loginResponse.message)
+            return
+        }
+        jsonObject = JsonObject()
+        jsonObject.addProperty("orgid", loginOrgId)
+        jsonObject.addProperty("token", loginToken)
+        val completeLoginRespString = post(ENV.EWAY_BILL_COMPLETE_LOGIN_URL, jsonObject.toString())
+        val loginCompleteType = object: TypeToken<EwayCompleteLoginResponse>() {}.type
+        val loginCompleteResponse: EwayCompleteLoginResponse = gson.fromJson(completeLoginRespString, loginCompleteType)
+//        Log.d("EWAY_COMPLETE_LOGIN", completeLoginRespString.toString())
+        var completeLoginToken: String? = null
+        if(loginCompleteResponse.status == 1) {
+            completeLoginToken = loginCompleteResponse.response.token
+        } else {
+            isError.postValue(loginCompleteResponse.message.toString())
+            return
+        }
+//        jsonObject = JsonObject()
+//        jsonObject.addProperty("gstin", compGstin)
+        ewayBillNoList.forEachIndexed { index, itemEwayBillModel ->
+//            jsonObject.addProperty("ewbNo", itemEwayBillModel.ewayBillNo)
+            val getEwayBillURL = "${ENV.EWAY_BILL_DETAIL_URL}?gstin=$compGstin&ewbNo=${itemEwayBillModel.ewayBillNo}"
+            val ewayBillDetailResponse = getEwayBillDetail(getEwayBillURL, completeLoginToken)
+            if(ewayBillDetailResponse.status == 1) {
+                Log.d("EWAY_BILL_DETAIL", ewayBillDetailResponse.response.toString())
+            }
+//            jsonObject.remove("ewbNo")
+        }
+    }
+    @Throws(IOException::class)
+    suspend fun getEwayBillDetail(url: String, token: String): EwayBillDetailStatus {
+        val finalResponse = EwayBillDetailStatus(
+            status = -1,
+            response = ""
+        )
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url(url)
+            .header("Authorization", "Bearer  $token")
+            .build()
+        try {
+            client.newCall(request).execute().use { response ->
+                finalResponse.status = 1
+                finalResponse.response = response.body()?.string()
+                return finalResponse
+            }
+        } catch (ex: Exception) {
+            finalResponse.status = -1
+            finalResponse.response = null
+            return finalResponse
+        }
+    }
+
+    @Throws(IOException::class)
+    suspend fun post(url: String, json: String): String {
+        val mediaType: MediaType = MediaType.get("application/json");
+        val client = OkHttpClient()
+        val body: RequestBody = RequestBody.create(mediaType, json)
+        val request: Request = Request.Builder()
+            .url(url)
+            .post(body)
+            .build()
+
+        return try {
+            val response: okhttp3.Response = client.newCall(request).execute()
+            if(response.body() != null) {
+                response.body()!!.string()
+            } else {
+                throw Exception("ERROR")
+            }
+        } catch (ex: Exception) {
+            "ERROR"
+        }
     }
 
 }

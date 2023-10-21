@@ -60,6 +60,8 @@ class CallRegisterActivity @Inject constructor() : BaseActivity(), OnRowClick<An
 //            openDatePicker()
 //        }
 
+        fromDt = getSqlCurrentDate()
+        toDt = getSqlCurrentDate()
         setUpToolbar("ACCEPT JOBS ")
         menuModel = getMenuData()
 

@@ -211,17 +211,15 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
-                    android:hint=""
                     >
                     <com.google.android.material.textfield.TextInputEditText
-
                         android:id="@+id/input_grNo"
                         android:layout_width="match_parent"
-                        android:inputType="number"
+                        android:inputType="text"
                         android:maxLength="20"
                         android:layout_height="wrap_content"
                         />
+<!--                        android:hint="ENTER GR #"-->
 <!--                        android:textAllCaps="true"-->
 <!--                        android:inputType=  "number"-->
 
