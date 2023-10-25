@@ -23,7 +23,10 @@ import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.operation.booking.BookingActivity
 import com.greensoft.greentranserpnative.ui.operation.booking.BookingViewModel
+import com.greensoft.greentranserpnative.ui.operation.eway_bill.models.EwayBillDetailResponse
+import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.internal.Util
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -93,21 +96,35 @@ class EwayBillBottomSheet @Inject constructor() : BaseFragment(), BottomSheetCli
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as AppCompatActivity?)!!.supportActionBar?.title = title
         onClickAction()
         setOnChangeListener()
     }
 
 private fun setOnChangeListener() {
     layoutBinding.inputNoOfEwayBill.addTextChangedListener(object: TextWatcher {
+        var showChangeAlert = false
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            val enteredVal = p0.toString().toIntOrNull()
+            if(enteredVal!=null) {
+                if(enteredVal > 0) {
+                    var isFilled = false
+                    ewayBillList.forEachIndexed { index, itemEwayBillModel ->
+                        if(itemEwayBillModel.ewayBillNo.isNotBlank()) {
+                            isFilled = true
+                        }
+                    }
+                    if(isFilled) showChangeAlert = true
+                }
+            }
         }
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
         }
 
         override fun afterTextChanged(p0: Editable?) {
-            dataWillBeLostAlert()
+            val enteredVal = p0.toString().toIntOrNull()
+            if(showChangeAlert && enteredVal != null && enteredVal > 0) dataWillBeLostAlert()
+            else if(enteredVal != null && enteredVal > 0) setUpRecyclerView()
         }
 
     })
@@ -121,6 +138,23 @@ private fun setOnChangeListener() {
                 arrayListOf(),
                 ewayBillList
             )
+        }
+    }
+
+    bookingViewModel.ewayBillValidationDoneLiveData.observe(this) { isDone ->
+        if(isDone) {
+            val detail: EwayBillDetailResponse? = bookingViewModel.ewayBillDetailLiveData.value
+            if(detail != null) {
+                if(detail.status == 1) {
+                    Utils.ewayBillDetailResponse = detail
+                } else {
+                    Utils.ewayBillDetailResponse = null
+                    errorToast(detail.errorList[0].message.toString())
+                }
+            } else {
+                Utils.ewayBillDetailResponse = null
+                errorToast("Some Error occurred while retrieving eway bill data.")
+            }
         }
     }
 }
@@ -146,8 +180,8 @@ private fun setOnChangeListener() {
         val noOfEwayStr: String = layoutBinding.inputNoOfEwayBill.text.toString()
         var noOfEwayBill: Int? = noOfEwayStr.toIntOrNull()
         if(noOfEwayBill == null) {
-            layoutBinding.inputNoOfEwayBill.setText("1")
-            noOfEwayBill = 1
+            layoutBinding.inputNoOfEwayBill.setText("")
+            noOfEwayBill = 0
         }
         ewayBillList.clear()
         for(i in 0 until noOfEwayBill) {

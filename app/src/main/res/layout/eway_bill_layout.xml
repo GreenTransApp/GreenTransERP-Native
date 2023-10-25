@@ -7,21 +7,52 @@
     <data>
 
     </data>
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.operation.eway_bill.EwayBillBottomSheet">
 
-        <include
-            layout="@layout/toolbar"
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolBar"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
             app:layout_constraintEnd_toEndOf="parent"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:popupTheme="@style/Toolbar_Popup"
+            android:background="@color/colorPrimary"
+            >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="EWAY BILL INFO"
+                android:layout_gravity="center"
+                android:id="@+id/toolbar_title"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                />
+        </androidx.appcompat.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/toolBar"
+        app:layout_constraintBottom_toTopOf="@id/footer"
+        android:layout_marginBottom="10dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
 
         <LinearLayout
             android:id="@+id/input_layout_ewaybill_No"
@@ -157,206 +188,209 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <LinearLayout
-            android:id="@+id/btn_layout_ewaybill"
-            android:layout_width="match_parent"
-            app:layout_constraintTop_toBottomOf="@id/recycler_layout"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginHorizontal="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.AppCompatButton
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/input_layout_cngr"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/btn_layout_ewaybill"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            android:layout_marginHorizontal="10dp"-->
+<!--            android:background="@drawable/spinner_background"-->
+<!--            android:padding="5dp"-->
+<!--            android:layout_marginVertical="5dp"-->
+<!--            android:orientation="vertical"-->
+<!--            app:layout_constraintEnd_toEndOf="parent">-->
+
+
+<!--        <LinearLayout-->
+
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical">-->
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal">-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Consignor Name"-->
+<!--                    />-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textColor="@color/danger"-->
+<!--                    android:text=" "-->
+<!--                    />-->
+<!--            </LinearLayout>-->
+
+<!--            <com.google.android.material.textfield.TextInputLayout-->
+
+<!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:hintTextColor="@color/black"-->
+<!--                android:hint="Enter Consignor Name"-->
+<!--                >-->
+
+<!--                <com.google.android.material.textfield.TextInputEditText-->
+<!--                    android:id="@+id/input_cngr_name"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:focusable="false"-->
+<!--                    android:inputType="text"-->
+<!--                    android:textAllCaps="true" />-->
+
+<!--            </com.google.android.material.textfield.TextInputLayout>-->
+<!--        </LinearLayout><LinearLayout-->
+
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical">-->
+
+
+<!--            <com.google.android.material.textfield.TextInputLayout-->
+
+<!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:hintTextColor="@color/black"-->
+<!--                android:hint="Enter Consignor GST"-->
+<!--                >-->
+
+<!--                <com.google.android.material.textfield.TextInputEditText-->
+<!--                    android:id="@+id/input_cngr_gst"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:focusable="false"-->
+<!--                    android:inputType="text"-->
+<!--                    android:textAllCaps="true" />-->
+
+<!--            </com.google.android.material.textfield.TextInputLayout>-->
+<!--        </LinearLayout>-->
+<!--        </LinearLayout>-->
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/input_layout_cngee"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/input_layout_cngr"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            android:layout_marginHorizontal="10dp"-->
+<!--            android:background="@drawable/spinner_background"-->
+<!--            android:padding="5dp"-->
+<!--            android:layout_marginVertical="5dp"-->
+<!--            android:orientation="vertical"-->
+<!--            app:layout_constraintEnd_toEndOf="parent">-->
+
+
+<!--        <LinearLayout-->
+
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical">-->
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal">-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Consignor Name"-->
+<!--                    />-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textColor="@color/danger"-->
+<!--                    android:text=" "-->
+<!--                    />-->
+<!--            </LinearLayout>-->
+
+<!--            <com.google.android.material.textfield.TextInputLayout-->
+
+<!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:hintTextColor="@color/black"-->
+<!--                android:hint="Enter Consignee Name"-->
+<!--                >-->
+
+<!--                <com.google.android.material.textfield.TextInputEditText-->
+<!--                    android:id="@+id/input_cnge_name"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:focusable="false"-->
+<!--                    android:inputType="text"-->
+<!--                    android:textAllCaps="true" />-->
+
+<!--            </com.google.android.material.textfield.TextInputLayout>-->
+<!--        </LinearLayout>-->
+
+
+
+
+<!--            <com.google.android.material.textfield.TextInputLayout-->
+
+<!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:hintTextColor="@color/black"-->
+<!--                android:hint="Enter Consignee GST"-->
+<!--                >-->
+
+<!--                <com.google.android.material.textfield.TextInputEditText-->
+<!--                    android:id="@+id/input_cnge_gst"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:focusable="false"-->
+<!--                    android:inputType="text"-->
+<!--                    android:textAllCaps="true" />-->
+
+<!--            </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--        </LinearLayout>-->
+
+        </LinearLayout>
+    </ScrollView>
+        <LinearLayout
+            android:id="@+id/footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="2dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:weightSum="4"
+            >
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/validate_eway"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:backgroundTint="@color/success"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:textColor="@color/white"
-                android:text="Validate Eway-Bill">
+                android:text="Validate Eway-Bill"
+                app:cornerRadius="10dp"
+                />
 
-            </androidx.appcompat.widget.AppCompatButton>
-
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/disable_eway"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:layout_gravity="center"
-                android:layout_weight="1"
+                android:layout_weight="2.5"
                 android:layout_width="match_parent"
                 android:textColor="@color/white"
                 android:layout_marginLeft="5dp"
                 android:backgroundTint="@color/danger"
-                android:text="Disable Eway-Bill">
+                android:text="Disable Eway-Bill"
+                app:cornerRadius="10dp"
+            />
 
-            </androidx.appcompat.widget.AppCompatButton>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/input_layout_cngr"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/btn_layout_ewaybill"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginHorizontal="10dp"
-            android:background="@drawable/spinner_background"
-            android:padding="5dp"
-            android:layout_marginVertical="5dp"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent">
-
-
-        <LinearLayout
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Consignor Name"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/danger"
-                    android:text=" "
-                    />
-            </LinearLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintTextColor="@color/black"
-                android:hint="Enter Consignor Name"
-                >
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_cngr_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:inputType="text"
-                    android:textAllCaps="true" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout><LinearLayout
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-
-            <com.google.android.material.textfield.TextInputLayout
-
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintTextColor="@color/black"
-                android:hint="Enter Consignor GST"
-                >
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_cngr_gst"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:inputType="text"
-                    android:textAllCaps="true" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/input_layout_cngee"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/input_layout_cngr"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginHorizontal="10dp"
-            android:background="@drawable/spinner_background"
-            android:padding="5dp"
-            android:layout_marginVertical="5dp"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent">
-
-
-        <LinearLayout
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Consignor Name"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/danger"
-                    android:text=" "
-                    />
-            </LinearLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintTextColor="@color/black"
-                android:hint="Enter Consignee Name"
-                >
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_cnge_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:inputType="text"
-                    android:textAllCaps="true" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-
-
-
-            <com.google.android.material.textfield.TextInputLayout
-
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintTextColor="@color/black"
-                android:hint="Enter Consignee GST"
-                >
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_cnge_gst"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:inputType="text"
-                    android:textAllCaps="true" />
-
-            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
 </layout>

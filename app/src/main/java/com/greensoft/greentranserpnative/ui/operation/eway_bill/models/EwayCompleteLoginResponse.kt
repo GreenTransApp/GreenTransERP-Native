@@ -1,10 +1,15 @@
 package com.greensoft.greentranserpnative.ui.operation.eway_bill.models
 
 data class EwayCompleteLoginResponse(
-    val errorList: List<Any>,
+    val errorList: List<CompleteLoginErrorList>,
     val message: Any,
     val response: CompleteLoginResponse,
     val status: Int
+)
+
+data class CompleteLoginErrorList(
+    val field: String?,
+    val message: String?
 )
 
 data class CompleteLoginResponse(

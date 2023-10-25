@@ -1,10 +1,15 @@
 package com.greensoft.greentranserpnative.ui.operation.eway_bill.models
 
 data class EwayBillDetailResponse(
-    val errorList: List<Any>,
+    val errorList: List<EwayBillDetailErrorList>,
     val message: String,
     val response: EwayDetailResponse,
     val status: Int
+)
+
+data class EwayBillDetailErrorList(
+    val field: String?,
+    val message: String?
 )
 
 

@@ -21,6 +21,7 @@ import com.greensoft.greentranserpnative.ui.operation.booking.models.SaveBooking
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ServiceTypeSelectionLov
 import com.greensoft.greentranserpnative.ui.operation.booking.models.TemperatureSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.eway_bill.ItemEwayBillModel
+import com.greensoft.greentranserpnative.ui.operation.eway_bill.models.EwayBillDetailResponse
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -88,6 +89,11 @@ class BookingViewModel @Inject constructor(private val _repository: BookingRepos
     val accParaLiveData: LiveData<CommonResult>
         get() = _repository.getAccParaLiveData
 
+    val ewayBillDetailLiveData: LiveData<EwayBillDetailResponse>
+        get() = _repository.ewayBillDetailLiveData
+
+    val ewayBillValidationDoneLiveData: LiveData<Boolean>
+        get() = _repository.ewayBillDetailValidationLiveData
 
     fun getCustomerList(
         companyId: String,

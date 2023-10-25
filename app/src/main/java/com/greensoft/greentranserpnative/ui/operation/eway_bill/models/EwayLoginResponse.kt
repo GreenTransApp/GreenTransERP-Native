@@ -1,12 +1,16 @@
 package com.greensoft.greentranserpnative.ui.operation.eway_bill.models
 
 data class EwayLoginResponse(
-    val errorList: List<Any>,
+    val errorList: List<EwayLoginErrorList>,
     val message: String,
     val response: LoginResponse,
     val status: Int
 )
 
+data class EwayLoginErrorList(
+    val field: String?,
+    val message: String?
+)
 
 data class LoginResponse(
     val mfaEnabled: Boolean,

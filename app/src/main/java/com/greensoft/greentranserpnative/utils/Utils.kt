@@ -2,6 +2,7 @@ package com.greensoft.greentranserpnative.utils
 
 import android.util.Log
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
+import com.greensoft.greentranserpnative.ui.operation.eway_bill.models.EwayBillDetailResponse
 import com.greensoft.greentranserpnative.ui.operation.grList.models.GrListModel
 
 object Utils {
@@ -23,6 +24,7 @@ object Utils {
     var vehicleCode = ""
     var driverCode = ""
     var fromStationCode = ""
+    var ewayBillDetailResponse: EwayBillDetailResponse? = null
     fun logger(TAG: String?, msg: String?) {
         Log.d(TAG, msg!!)
     }

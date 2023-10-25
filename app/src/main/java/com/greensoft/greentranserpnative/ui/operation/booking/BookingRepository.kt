@@ -11,10 +11,7 @@ import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.ui.operation.booking.models.*
 import com.greensoft.greentranserpnative.ui.operation.eway_bill.ItemEwayBillModel
-import com.greensoft.greentranserpnative.ui.operation.eway_bill.models.EwayBillCredentialsModel
-import com.greensoft.greentranserpnative.ui.operation.eway_bill.models.EwayCompleteLoginResponse
-import com.greensoft.greentranserpnative.ui.operation.eway_bill.models.EwayLoginResponse
-import com.greensoft.greentranserpnative.ui.operation.eway_bill.models.EwayBillDetailStatus
+import com.greensoft.greentranserpnative.ui.operation.eway_bill.models.*
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
 import kotlinx.coroutines.*
 import okhttp3.MediaType
@@ -109,6 +106,13 @@ class BookingRepository @Inject constructor():BaseRepository(){
     val getAccParaLiveData: LiveData<CommonResult>
         get() = getAccParaMutData
 
+    private val ewayBillDetailMutableLiveData = MutableLiveData<EwayBillDetailResponse>()
+    val ewayBillDetailLiveData: LiveData<EwayBillDetailResponse>
+        get() = ewayBillDetailMutableLiveData
+
+    private val ewayBillDetailValidationDoneMutableLiveData = MutableLiveData<Boolean>()
+    val ewayBillDetailValidationLiveData: LiveData<Boolean>
+        get() = ewayBillDetailValidationDoneMutableLiveData
 
 
     fun getCustomerList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
@@ -829,12 +833,27 @@ class BookingRepository @Inject constructor():BaseRepository(){
         }
 //        jsonObject = JsonObject()
 //        jsonObject.addProperty("gstin", compGstin)
+        val detailResponseType = object: TypeToken<EwayBillDetailResponse>() {}.type
         ewayBillNoList.forEachIndexed { index, itemEwayBillModel ->
 //            jsonObject.addProperty("ewbNo", itemEwayBillModel.ewayBillNo)
             val getEwayBillURL = "${ENV.EWAY_BILL_DETAIL_URL}?gstin=$compGstin&ewbNo=${itemEwayBillModel.ewayBillNo}"
             val ewayBillDetailResponse = getEwayBillDetail(getEwayBillURL, completeLoginToken)
             if(ewayBillDetailResponse.status == 1) {
                 Log.d("EWAY_BILL_DETAIL", ewayBillDetailResponse.response.toString())
+                val detailResp: EwayBillDetailResponse = gson.fromJson(ewayBillDetailResponse.response.toString(), detailResponseType)
+                if(detailResp.status == 1) {
+                    if(index == 0) {
+                        ewayBillDetailMutableLiveData.postValue(detailResp)
+                    } else if(index + 1 == ewayBillNoList.size) {
+                        ewayBillDetailValidationDoneMutableLiveData.postValue(true)
+                    }
+                } else {
+                    isError.postValue(detailResp.errorList[0].message.toString() + " : AT INPUT - ${index + 1}")
+                    return@forEachIndexed
+                }
+            } else {
+                isError.postValue("EWAY BILL VALIDATION COULD NOT BE DONE. Please try again later.")
+                return@forEachIndexed
             }
 //            jsonObject.remove("ewbNo")
         }
