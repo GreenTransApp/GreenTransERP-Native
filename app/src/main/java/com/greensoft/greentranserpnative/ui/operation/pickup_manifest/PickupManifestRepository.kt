@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.ui.operation.booking.models.CustomerSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.SaveBookingModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -40,6 +41,14 @@ class PickupManifestRepository @Inject constructor(): BaseRepository(){
     private val grMuteLiveData = MutableLiveData<ArrayList<GrSelectionModel>>()
     val grLiveData: LiveData<ArrayList<GrSelectionModel>>
         get() = grMuteLiveData
+
+    private val vehicleTypeMuteLiveData = MutableLiveData<ArrayList<VehicleTypeModel>>()
+    val vehicleTypeLiveData: LiveData<ArrayList<VehicleTypeModel>>
+        get() = vehicleTypeMuteLiveData
+
+    private val saveManifestMuteLiveData = MutableLiveData<SavePickupManifestModel>()
+    val saveManifestLiveData: LiveData<SavePickupManifestModel>
+        get() = saveManifestMuteLiveData
 
 
     fun getBranchList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
@@ -210,6 +219,40 @@ class PickupManifestRepository @Inject constructor(): BaseRepository(){
         })
 
     }
+
+    fun getVehicleTypeList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
+        viewDialogMutData.postValue(true)
+        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
+                if(response.body() != null){
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if(result.CommandStatus == 1){
+                        val jsonArray = getResult(result);
+                        if(jsonArray != null) {
+                            val listType = object: TypeToken<List<VehicleTypeModel>>() {}.type
+                            val resultList: ArrayList<VehicleTypeModel> = gson.fromJson(jsonArray.toString(), listType);
+                            vehicleTypeMuteLiveData.postValue(resultList);
+
+                        }
+                    } else {
+                        isError.postValue(result.CommandMessage.toString());
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR);
+                }
+                viewDialogMutData.postValue(false)
+
+            }
+
+            override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
+
+    }
     fun getGrList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
         viewDialogMutData.postValue(true)
         api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
@@ -243,5 +286,89 @@ class PickupManifestRepository @Inject constructor(): BaseRepository(){
         })
 
     }
+    fun savePickupManifest(
+        branchcode:String,
+        manifestdt:String,
+        time:String,
+        manifestno:String,
+        modecode:String,
+        tost:String,
+        drivercode:String,
+        drivermobileno:String,
+        loadedby:String,
+        remarks:String,
+        ispickupmanifest:String,
+        grno:String,
+        pckgs:String,
+        aweight:String,
+        goods:String,
+        packing:String,
+        areacode:String,
+        vendcoe:String,
+        loadedbytype:String,
+        menucode:String,
+        usercode:String,
+        sessionid:String,
+        paymentnotapplicable:String,
+        skipinscan:String,
+    ) {
+        viewDialogMutData.postValue(true)
+        api.savePickupManifest(
+            branchcode,
+            manifestdt,
+            time,
+            manifestno,
+            modecode,
+            tost,
+            drivercode,
+            drivermobileno,
+            loadedby,
+            remarks,
+            ispickupmanifest,
+            grno,
+            pckgs,
+            aweight,
+            goods,
+            packing,
+            areacode,
+            vendcoe,
+            loadedbytype,
+            menucode,
+            usercode,
+            sessionid,
+            paymentnotapplicable,
+            skipinscan
+        )
+            .enqueue(object: Callback<CommonResult> {
+                override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
+                    if(response.body() != null){
+                        val result = response.body()!!
+                        val gson = Gson()
+                        if(result.CommandStatus == 1){
+                            val jsonArray = getResult(result);
+                            if(jsonArray != null) {
+                                val listType = object: TypeToken<List<SavePickupManifestModel>>() {}.type
+                                val resultList: ArrayList<SavePickupManifestModel> = gson.fromJson(result.DataSet, listType);
+                                saveManifestMuteLiveData.postValue(resultList[0])
+                            }
+                        } else {
+                            isError.postValue(result.CommandMessage.toString());
+                        }
+                    } else {
+                        isError.postValue(SERVER_ERROR);
+                    }
+                    viewDialogMutData.postValue(false)
+
+                }
+
+                override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
+                    viewDialogMutData.postValue(false)
+                    isError.postValue(t.message)
+                }
+
+            })
+
+    }
+
 
 }

@@ -34,7 +34,6 @@
                         android:layout_width="50sp"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:layout_margin="1dp"
                         android:focusable="false"
                         android:text="@{String.valueOf(index + 1)}"
                         android:background="@drawable/table_content_cell_bg"
@@ -45,6 +44,7 @@
                         android:layout_width="150sp"
                         android:layout_height="match_parent"
                         android:gravity="center"
+                        android:focusable="false"
                         android:text="@{String.valueOf(grModel.grno)}"
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
@@ -109,6 +109,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:focusable="false"
+                        android:text="@{grModel.content ==null ?``:String.valueOf(grModel.content)}"
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
@@ -118,7 +119,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:focusable="false"
-                        android:text="@{String.valueOf(grModel.packing)}"
+                        android:text="@{String.valueOf(grModel.mfpckg)}"
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
@@ -127,6 +128,9 @@
                         android:layout_width="150sp"
                         android:layout_height="match_parent"
                         android:gravity="center"
+                        android:focusable="false"
+                        android:inputType="numberDecimal"
+                        android:text="@{String.valueOf(grModel.pckgs)}"
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp"/>
 
@@ -135,7 +139,8 @@
                         android:layout_width="150sp"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="@{String.valueOf(grModel.mfpckg)}"
+                        android:inputType="numberDecimal"
+                        android:text="@{String.valueOf(grModel.pckgs)}"
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
@@ -145,6 +150,7 @@
                         android:layout_width="150sp"
                         android:layout_height="match_parent"
                         android:gravity="center"
+                        android:text="@{String.valueOf(grModel.aweight)}"
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
