@@ -19,7 +19,7 @@ data class GrSelectionModel(
     val cngrname: String,
     val cnge: String,
     val cngename: String,
-    val packing: String,
+    var packing: String,
     val modecode: Any?,
     val regno: Any?,
     val allocateto: Any?,
@@ -28,4 +28,8 @@ data class GrSelectionModel(
     val pckgs: Double,
     val aweight: Double,
     val mfpckg: Double,
+    val loadingno: String,
+    val loadingdt: String,
+    val loadingviewdt: String,
+    var content: String,
 )

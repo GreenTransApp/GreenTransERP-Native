@@ -15,6 +15,9 @@ class PickupManifestViewModel @Inject constructor(private val _repo: PickupManif
     init {
         isError = _repo.isError
     }
+
+    val viewDialogLiveData: LiveData<Boolean>
+        get()= _repo.viewDialogLiveData
     val branchLiveData: LiveData<ArrayList<BranchSelectionModel>>
         get() = _repo.branchLiveData
     val pickupLocationLiveData: LiveData<ArrayList<PickupLocationModel>>
@@ -30,6 +33,11 @@ class PickupManifestViewModel @Inject constructor(private val _repo: PickupManif
 
     val grLiveData: LiveData<ArrayList<GrSelectionModel>>
         get() = _repo.grLiveData
+    val vehicleTypeLiveData: LiveData<ArrayList<VehicleTypeModel>>
+        get() = _repo.vehicleTypeLiveData
+
+    val manifestLiveData: LiveData<SavePickupManifestModel>
+        get() = _repo.saveManifestLiveData
 
     fun getBranchList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>){
         viewModelScope.launch(Dispatchers.IO) {
@@ -62,6 +70,68 @@ class PickupManifestViewModel @Inject constructor(private val _repo: PickupManif
     fun getGrList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>){
         viewModelScope.launch(Dispatchers.IO) {
             _repo.getGrList(companyId,spname, param,values)
+        }
+    }
+    fun getVehicleType( companyId:String,spname: String,param:List<String>, values:ArrayList<String>){
+        viewModelScope.launch(Dispatchers.IO) {
+            _repo.getVehicleTypeList(companyId,spname, param,values)
+        }
+    }
+
+    fun savePickupManifest(
+        branchcode :String ,
+        manifestdt :String ,
+        time :String ,
+        manifestno :String ,
+        modecode :String ,
+        tost :String ,
+        drivercode :String ,
+        drivermobileno :String ,
+        loadedby :String ,
+        remarks :String ,
+        ispickupmanifest :String ,
+        grno :String ,
+        pckgs :String ,
+        aweight :String ,
+        goods :String ,
+        packing :String ,
+        areacode :String ,
+        vendcoe :String ,
+        loadedbytype :String ,
+        menucode :String ,
+        usercode :String ,
+        sessionid :String ,
+        paymentnotapplicable :String ,
+        skipinscan :String ,
+
+        ){
+        viewModelScope.launch(Dispatchers.IO) {
+            _repo.savePickupManifest(
+                branchcode,
+                manifestdt,
+                time,
+                manifestno,
+                modecode,
+                tost,
+                drivercode,
+                drivermobileno,
+                loadedby,
+                remarks,
+                ispickupmanifest,
+                grno,
+                pckgs,
+                aweight,
+                goods,
+                packing,
+                areacode,
+                vendcoe,
+                loadedbytype,
+                menucode,
+                usercode,
+                sessionid,
+                paymentnotapplicable,
+                skipinscan,
+            )
         }
     }
 }

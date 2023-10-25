@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:noHistory="true"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -11,6 +12,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.operation.pickup_manifest.GrSelectionActivity">
+
+        <TextView
+            android:id="@+id/empty_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_continue"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="DATA NOT FOUND"
+            android:textColor="@color/success"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/layout_tool_bar">
+
+        </TextView>
 
         <LinearLayout
             android:id="@+id/layout_tool_bar"
@@ -113,6 +128,26 @@
 
                                 </LinearLayout>
 
+                                <TextView
+                                    android:id="@+id/loading_num_txt"
+                                    android:layout_width="150sp"
+                                    android:gravity="center"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:textColor="@color/white"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:text="Loading#"
+                                    android:textSize="12sp" />
+                                <TextView
+                                    android:id="@+id/loading_dt"
+                                    android:layout_width="150sp"
+                                    android:gravity="center"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:textColor="@color/white"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:text="Loading Date"
+                                    android:textSize="12sp" />
                                 <TextView
                                     android:id="@+id/gr_num_txt"
                                     android:layout_width="150sp"
