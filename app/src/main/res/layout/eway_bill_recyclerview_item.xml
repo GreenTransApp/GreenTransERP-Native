@@ -4,7 +4,7 @@
 
     <data>
      <variable name="ewayBillModel"
-         type="com.greensoft.greentranserpnative.ui.operation.eway_bill.EwayBillModel">
+         type="com.greensoft.greentranserpnative.ui.operation.eway_bill.ItemEwayBillModel">
 
      </variable>
         <variable

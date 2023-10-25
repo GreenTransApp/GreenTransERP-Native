@@ -7,6 +7,8 @@ import retrofit2.http.*
 
 interface Api {
 
+
+
     @FormUrlEncoded
     @POST("WMS/ValidateLogin")
     fun userLogin(
@@ -230,6 +232,12 @@ interface Api {
         @Query("prmusercode") userCode: String?,
         @Query("prmmenucode") menuCode: String?,
         @Query("prmsessionid") sessionId: String?
+    ): Call<CommonResult>
+
+    @GET("BookingAPI/GetKey")
+    fun getAccParaValueFromKey(
+        @Query("KeyNo") keyNo: String,
+        @Query("prmcompanyid") companyId: String
     ): Call<CommonResult>
 
 }

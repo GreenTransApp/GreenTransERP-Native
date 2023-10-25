@@ -144,7 +144,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         activityBinding.inputDate.setText(getViewCurrentDate())
         sqlDate = getSqlCurrentDate()
         activityBinding.inputTime.setText(getSqlCurrentTime())
-
+        activityBinding.inputGrNo.hint = "ENTER GR #"
         getIntentData()
         getSingleRefData()
         getServiceType()
@@ -223,8 +223,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                 }
         }
     }
-    private fun openEwayBillBottomSheet(){
-        val bottomSheet= EwayBillBottomSheet()
+    private fun openEwayBillBottomSheet(viewModel: BookingViewModel){
+        val bottomSheet= EwayBillBottomSheet.newInstance(this, "EWAY BILL", viewModel, loginDataModel, userDataModel)
         bottomSheet.show(supportFragmentManager,"Eway-Bill-BottomSheet")
     }
     private fun checkNullOrEmpty(value: Any?): String {
@@ -260,7 +260,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 //            addListMuteLiveData.postValue(activityBinding.inputPckgsNo.text.toString())
             addListMuteLiveData.postValue(element.pckgs.toString())
 //            activityBinding.selectedPickupType.setAutofillHints(checkNullOrEmpty(element.gelpacktype).toString())
-           errorToast(activityBinding.selectedPckgsType.toString())
+//           errorToast(activityBinding.selectedPckgsType.toString())
 
 
         }
@@ -321,7 +321,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
-                    TODO("Not yet implemented")
+//                    TODO("Not yet implemented")
                 }
             }
 
@@ -436,9 +436,12 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
     private fun setOnClick() {
         activityBinding.autoGrCheck.setOnCheckedChangeListener { compoundButton, bool ->
+            activityBinding.inputGrNo.setText("")
             if(bool) {
-                activityBinding.inputGrNo.setText("")
-
+                activityBinding.inputGrNo.hint = "AUTO GR #"
+//                activityBinding.inputGrNo.
+            } else {
+                activityBinding.inputGrNo.hint = "ENTER GR #"
             }
             activityBinding.inputGrNo.isEnabled = !(bool)
         }
@@ -502,7 +505,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         }
 
         activityBinding.btnEwayBill.setOnClickListener{
-            openEwayBillBottomSheet()
+            openEwayBillBottomSheet(viewModel)
         }
         activityBinding.btnSave.setOnClickListener {
             checkFieldsBeforeSave()

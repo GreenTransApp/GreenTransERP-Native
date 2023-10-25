@@ -308,7 +308,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
         val jsonSerialized = gson.toJson(data)
         val menuModel: UserMenuModel = data as UserMenuModel
         Utils.menuModel = menuModel
-       when(clickType){
+        when(clickType){
 //           "SELECTED_MENU"-> run{
 //               val model: UserMenuModel = data as UserMenuModel
 //               successToast(model.displayname)

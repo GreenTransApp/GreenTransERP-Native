@@ -15,6 +15,7 @@ import com.greensoft.greentranserpnative.ui.operation.booking.BookingActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.PickupRefModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -41,12 +42,12 @@ class PickupReferenceActivity  @Inject constructor(): BaseActivity(), OnRowClick
 //        loadBookingList()
 //        getSingleRefData()
         searchItem()
+        refreshData()
 
     }
 
     override fun onResume() {
         super.onResume()
-        refreshData()
     }
     private fun refreshData(){
         pickupRefList.clear()
@@ -133,7 +134,7 @@ class PickupReferenceActivity  @Inject constructor(): BaseActivity(), OnRowClick
             listOf("prmbranchcode","prmusercode","prmmenucode","prmsessionid"),
             arrayListOf(userDataModel?.loginbranchcode.toString(),
                 userDataModel?.usercode.toString(),
-                getMenuData()?.menucode.toString(),
+                Utils.menuModel?.menucode.toString(),
                 userDataModel?.sessionid.toString()
             )
 //            arrayListOf(userDataModel?.loginbranchcode.toString())

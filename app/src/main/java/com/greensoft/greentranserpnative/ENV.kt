@@ -18,21 +18,28 @@ class ENV {
         val IMAGE_PREF_SHARE = "image_prefs${PREF_TAG}"
 
         val DEBUGGING: Boolean = true
-        val LOCAL_API: Boolean = true
+        val LOCAL_API: Boolean = false
 
         val APP_NAME = "GreenTransERPNative"
 //        val DEBUG_USERNAME: String = "ADMIN@GREENTRANS"
 //        val DEBUG_PASSWORD: String = "GREEN@#321"
-        val DEBUG_USERNAME: String = "TESTING@JEENA"
+//        val DEBUG_USERNAME: String = "TESTING@JEENA"
+//        val DEBUG_PASSWORD: String = "123456"
+        val DEBUG_USERNAME: String = "DELHIPICKUPBOY@GREENTRANS"
         val DEBUG_PASSWORD: String = "123456"
 
         val APP_VERSION = "0.0.1"
         val APP_VERSION_DATE = "2023-08-17"
         val DEVICE_ID = ""
 //        val LIVE_BASE_URL: String = "https://greentrans.in:444/API/Printer/";
-        val LIVE_BASE_URL: String = "https://greentrans.in:444/API/";
+        private const val LIVE_BASE_URL: String = "https://greentrans.in:444/API/";
 //        val DEBUG_BASE_URL: String = "http://192.168.1.226:45457/API/";
-        val DEBUG_BASE_URL: String = "http://192.168.1.226:45459/API/";
+        private const val DEBUG_BASE_URL: String = "http://192.168.1.252:45457/API/";
+        const val EWAY_BILL_LOGIN_URL: String = "https://api.easywaybill.in/ezewb/v1/auth/initlogin"
+        const val EWAY_BILL_COMPLETE_LOGIN_URL: String = "https://api.easywaybill.in/ezewb/v1/auth/completelogin"
+        const val EWAY_BILL_DETAIL_URL: String = "https://api.easywaybill.in/ezewb/v1/ewb/data"
+
+
 
 
         fun getBaseUrl(): String {
