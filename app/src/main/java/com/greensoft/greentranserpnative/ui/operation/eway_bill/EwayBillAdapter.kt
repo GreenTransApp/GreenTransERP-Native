@@ -42,6 +42,9 @@ class EwayBillAdapter(
 
 
     fun isAllEwayBillInputsFilled(): Boolean {
+        if(EwayBillList.isEmpty()) {
+            mActivity.errorToast("At-least one Eway Bill is required to validate.")
+        }
         EwayBillList.forEachIndexed { index, itemEwayBillModel ->
             if(itemEwayBillModel.ewayBillNo.isEmpty()) {
                 mActivity.errorToast("Eway-Bill input is empty at ${index + 1}")

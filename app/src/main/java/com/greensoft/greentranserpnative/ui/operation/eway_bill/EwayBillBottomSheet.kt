@@ -3,16 +3,21 @@ package com.greensoft.greentranserpnative.ui.operation.eway_bill
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.content.res.Resources
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseFragment
 import com.greensoft.greentranserpnative.databinding.EwayBillLayoutBinding
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
@@ -39,6 +44,7 @@ class EwayBillBottomSheet @Inject constructor() : BaseFragment(), BottomSheetCli
     private var title: String = "Selection"
     private lateinit var activity: BookingActivity
     private lateinit var bookingViewModel: BookingViewModel
+    private var disableEwayBillForBooking = false
 
     companion object {
         var ITEM_CLICK_VIEW_TYPE = "EWAY_BILL_BOTTOMSHEET"
@@ -71,16 +77,19 @@ class EwayBillBottomSheet @Inject constructor() : BaseFragment(), BottomSheetCli
             "EWAY_DATA_LOST",
             ""
             )
-//        AlertDialog.Builder(context)
-//            .setTitle("Alert!!!")
-//            .setMessage("WARNING: All entered E-WAY BILLs will be lost and you will have to enter it again. Are you sure you want to change the list?")
-//            .setPositiveButton("Yes") { _, _ ->
-//                setUpRecyclerView()
-//            }
-//            .setNeutralButton("No") { _, _ -> }
-//            .show()
-
     }
+
+    private fun disableEwayAlert() {
+        CommonAlert.createAlert(
+            context!!,
+            "DISABLE ALERT!!!",
+            "WARNING: All entered E-WAY BILLs will be lost and you will have to enter it again. Are you sure you want to disable?",
+            this,
+            "DISABLE_EWAY",
+            ""
+        )
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -96,8 +105,19 @@ class EwayBillBottomSheet @Inject constructor() : BaseFragment(), BottomSheetCli
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        dialog!!.setOnShowListener { dialog ->
+            val d = dialog as BottomSheetDialog
+            val bottomSheet: FrameLayout = d.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as FrameLayout
+//                Utils.Log("COMMON_BOTTOM_SHEET", "Opened");
+            BottomSheetBehavior.from(bottomSheet).state =
+                BottomSheetBehavior.STATE_EXPANDED
+            val behavior = BottomSheetBehavior.from(bottomSheet)
+            behavior.peekHeight = BottomSheetBehavior.PEEK_HEIGHT_AUTO;
+            layoutBinding.extraSpace.minimumHeight = Resources.getSystem().displayMetrics.heightPixels / 2
+        }
         onClickAction()
         setOnChangeListener()
+        layoutBinding.inputNoOfEwayBill.setText("1")
     }
 
 private fun setOnChangeListener() {
@@ -123,7 +143,7 @@ private fun setOnChangeListener() {
 
         override fun afterTextChanged(p0: Editable?) {
             val enteredVal = p0.toString().toIntOrNull()
-            if(showChangeAlert && enteredVal != null && enteredVal > 0) dataWillBeLostAlert()
+            if(showChangeAlert && enteredVal != null && enteredVal > 0 && !disableEwayBillForBooking) dataWillBeLostAlert()
             else if(enteredVal != null && enteredVal > 0) setUpRecyclerView()
         }
 
@@ -161,10 +181,29 @@ private fun setOnChangeListener() {
 
     private fun onClickAction(){
         layoutBinding.validateEway.setOnClickListener {
-            validateEwayBillInputFields()
+            if(!disableEwayBillForBooking) {
+                validateEwayBillInputFields()
+            } else {
+                errorToast("EWAY-BILL is disabled by you. Please click on enable EWAY-BILL.")
+            }
         }
         layoutBinding.disableEway.setOnClickListener {
-
+            if(disableEwayBillForBooking) {
+                // EWAY is enabled right now, now it will be disabled.
+                layoutBinding.disableEway.background.setTint(resources.getColor(R.color.danger, null))
+                layoutBinding.disableEway.text = "DISABLE EWAY"
+                disableEwayBillForBooking = !disableEwayBillForBooking
+                layoutBinding.validateEway.isEnabled = !disableEwayBillForBooking
+                layoutBinding.inputNoOfEwayBill.isEnabled = !disableEwayBillForBooking
+            } else {
+                disableEwayAlert()
+//                layoutBinding.disableEway.background.setTint(resources.getColor(R.color.success, null))
+//                layoutBinding.disableEway.text = "ENABLE EWAY"
+            }
+//            disableEwayAlert()
+        }
+        layoutBinding.closeBottomSheet.setOnClickListener {
+            dismiss()
         }
     }
 
@@ -220,7 +259,21 @@ private fun setOnChangeListener() {
     override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {
        when(alertClick) {
            AlertClick.YES -> {
-               setUpRecyclerView()
+               if(alertCallType == "EWAY_DATA_LOST") {
+                   setUpRecyclerView()
+               } else if(alertCallType == "DISABLE_EWAY") {
+                   if(!disableEwayBillForBooking) {
+//                       layoutBinding.disableEway.background.setTint(resources.getColor(R.color.danger, null))
+//                       layoutBinding.disableEway.text = "DISABLE EWAY"
+//                   } else {
+                       layoutBinding.disableEway.background.setTint(resources.getColor(R.color.success, null))
+                       layoutBinding.disableEway.text = "ENABLE EWAY"
+                       disableEwayBillForBooking = !disableEwayBillForBooking
+                       layoutBinding.validateEway.isEnabled = !disableEwayBillForBooking
+                       layoutBinding.inputNoOfEwayBill.isEnabled = !disableEwayBillForBooking
+                       layoutBinding.inputNoOfEwayBill.setText("0")
+                   }
+               }
            }
            AlertClick.NO -> {
 
