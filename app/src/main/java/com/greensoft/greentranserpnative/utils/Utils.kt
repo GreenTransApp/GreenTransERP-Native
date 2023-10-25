@@ -4,10 +4,12 @@ import android.util.Log
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.operation.eway_bill.models.EwayBillDetailResponse
 import com.greensoft.greentranserpnative.ui.operation.grList.models.GrListModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.ManifestEnteredDataModel
 
 object Utils {
     var grModel: GrListModel? = null
     var menuModel: UserMenuModel? = null
+    var manifestModel: ManifestEnteredDataModel? = null
     var custCode = ""
     var fromDate = ""
     var toDate = ""
