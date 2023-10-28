@@ -52,7 +52,7 @@ class BookingAdapter @Inject constructor(
 //                onRowClick.onCLick(singlePickupRefModel, "REMOVE_SELECT")
            }
 
-           binding.pckgs.addTextChangedListener (object: TextWatcher {
+           binding.pckgs.addTextChangedListener(object : TextWatcher {
                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                }
 
@@ -62,54 +62,85 @@ class BookingAdapter @Inject constructor(
 
                override fun afterTextChanged(p0: Editable?) {
                    val enteredVal = p0.toString().toIntOrNull()
-                   if(enteredVal != null) {
-                       if(enteredVal <= 0) {
+                   if (enteredVal != null) {
+                       if (enteredVal <= 0) {
                            binding.pckgs.setText("")
                        }
                    }
-                   if(enteredVal != null && enteredVal.toString().startsWith("0")) {
+                   if (enteredVal != null && enteredVal.toString().startsWith("0")) {
 //                       binding.pckgs.setText(trimLeadingZeros(p0.toString()))
                    }
                }
 
            })
 
-           binding.length.addTextChangedListener(object :TextWatcher{
-               override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+           binding.length.addTextChangedListener(object : TextWatcher {
+               override fun beforeTextChanged(
+                   s: CharSequence?,
+                   start: Int,
+                   count: Int,
+                   after: Int
+               ) {
+               }
+
                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
                override fun afterTextChanged(s: Editable?) {
 //                   onRowClick.onRowClick(singlePickupRefModel, "LENGTH_SELECT", adapterPosition)
 //                   Log.d("test", "afterTextChanged:  length of  obj")
-                   bookingList[adapterPosition].localLength = s.toString().toDoubleOrNull() ?: "0".toDouble()
+                   bookingList[adapterPosition].localLength =
+                       s.toString().toDoubleOrNull() ?: "0".toDouble()
                    calculateVWeight(adapterPosition, binding)
                    Log.d("actualVWeight", " data  -----${actualVWeight}")
                }
            })
 
-           binding.breadth.addTextChangedListener(object :TextWatcher{
-               override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+           binding.breadth.addTextChangedListener(object : TextWatcher {
+               override fun beforeTextChanged(
+                   s: CharSequence?,
+                   start: Int,
+                   count: Int,
+                   after: Int
+               ) {
+               }
+
                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
                override fun afterTextChanged(s: Editable?) {
 //                   onRowClick.onRowClick(singlePickupRefModel, "LENGTH_SELECT", adapterPosition)
 //                   Log.d("test", "afterTextChanged:  length of  obj")
-                   bookingList[adapterPosition].localBreath = s.toString().toDoubleOrNull() ?: "0".toDouble()
+                   bookingList[adapterPosition].localBreath =
+                       s.toString().toDoubleOrNull() ?: "0".toDouble()
                    calculateVWeight(adapterPosition, binding)
 
                }
            })
-           binding.height.addTextChangedListener(object :TextWatcher{
-               override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+           binding.height.addTextChangedListener(object : TextWatcher {
+               override fun beforeTextChanged(
+                   s: CharSequence?,
+                   start: Int,
+                   count: Int,
+                   after: Int
+               ) {
+               }
+
                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
                override fun afterTextChanged(s: Editable?) {
 //                   onRowClick.onRowClick(singlePickupRefModel, "LENGTH_SELECT", adapterPosition)
 //                   Log.d("test", "afterTextChanged:  length of  obj")
-                   bookingList[adapterPosition].localHeight = s.toString().toDoubleOrNull() ?: "0".toDouble()
+                   bookingList[adapterPosition].localHeight =
+                       s.toString().toDoubleOrNull() ?: "0".toDouble()
                    calculateVWeight(adapterPosition, binding)
                }
            })
 
-           binding.weight.addTextChangedListener(object :TextWatcher{
-               override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+           binding.weight.addTextChangedListener(object : TextWatcher {
+               override fun beforeTextChanged(
+                   s: CharSequence?,
+                   start: Int,
+                   count: Int,
+                   after: Int
+               ) {
+               }
+
                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
                override fun afterTextChanged(s: Editable?) {
 //                   onRowClick.onRowClick(singlePickupRefModel, "LENGTH_SELECT", adapterPosition)
@@ -152,7 +183,6 @@ class BookingAdapter @Inject constructor(
 //               }
 //
 //           }
-
 
        }
 
@@ -291,6 +321,10 @@ class BookingAdapter @Inject constructor(
     override fun onBindViewHolder(holder: BookingViewHolder, position: Int) {
         val gridData = bookingList[holder.adapterPosition]
         holder.bindData(gridData,onRowClick)
+    }
+
+    fun getEnteredData(): ArrayList<SinglePickupRefModel>{
+        return bookingList
     }
 
     fun setContent(contentModel: ContentSelectionModel, adapterPosition: Int) {

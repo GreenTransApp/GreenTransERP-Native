@@ -117,7 +117,12 @@ class EwayBillBottomSheet @Inject constructor() : BaseFragment(), BottomSheetCli
         }
         onClickAction()
         setOnChangeListener()
-        layoutBinding.inputNoOfEwayBill.setText("1")
+        if(Utils.enteredValidatedEwayBillList == null) {
+            layoutBinding.inputNoOfEwayBill.setText("1")
+        } else if(Utils.enteredValidatedEwayBillList != null && Utils.enteredValidatedEwayBillList!!.isNotEmpty()) {
+//            ewayBillList = Utils.enteredValidatedEwayBillList!!
+            setUpRecyclerView()
+        }
     }
 
 private fun setOnChangeListener() {
@@ -166,13 +171,19 @@ private fun setOnChangeListener() {
             val detail: EwayBillDetailResponse? = bookingViewModel.ewayBillDetailLiveData.value
             if(detail != null) {
                 if(detail.status == 1) {
+                    Utils.ewayBillValidated = true
                     Utils.ewayBillDetailResponse = detail
+                    Utils.enteredValidatedEwayBillList = ewayBillList
                 } else {
+                    Utils.ewayBillValidated = false
                     Utils.ewayBillDetailResponse = null
+                    Utils.enteredValidatedEwayBillList = null
                     errorToast(detail.errorList[0].message.toString())
                 }
             } else {
+                Utils.ewayBillValidated = false
                 Utils.ewayBillDetailResponse = null
+                Utils.enteredValidatedEwayBillList = null
                 errorToast("Some Error occurred while retrieving eway bill data.")
             }
         }
@@ -189,11 +200,12 @@ private fun setOnChangeListener() {
         }
         layoutBinding.disableEway.setOnClickListener {
             if(disableEwayBillForBooking) {
-                // EWAY is enabled right now, now it will be disabled.
+                // EWAY is disabled right now, now it will be enabled.
                 layoutBinding.disableEway.background.setTint(resources.getColor(R.color.danger, null))
                 layoutBinding.disableEway.text = "DISABLE EWAY"
                 disableEwayBillForBooking = !disableEwayBillForBooking
                 layoutBinding.validateEway.isEnabled = !disableEwayBillForBooking
+                layoutBinding.validateEway.background.setTint(resources.getColor(R.color.success, null))
                 layoutBinding.inputNoOfEwayBill.isEnabled = !disableEwayBillForBooking
             } else {
                 disableEwayAlert()
@@ -216,15 +228,19 @@ private fun setOnChangeListener() {
     }
 
     private fun setUpRecyclerView(){
-        val noOfEwayStr: String = layoutBinding.inputNoOfEwayBill.text.toString()
-        var noOfEwayBill: Int? = noOfEwayStr.toIntOrNull()
-        if(noOfEwayBill == null) {
-            layoutBinding.inputNoOfEwayBill.setText("")
-            noOfEwayBill = 0
-        }
-        ewayBillList.clear()
-        for(i in 0 until noOfEwayBill) {
-            ewayBillList.add(ItemEwayBillModel(""))
+        if(Utils.enteredValidatedEwayBillList != null && Utils.enteredValidatedEwayBillList!!.isNotEmpty()) {
+            ewayBillList = Utils.enteredValidatedEwayBillList!!
+        } else {
+            val noOfEwayStr: String = layoutBinding.inputNoOfEwayBill.text.toString()
+            var noOfEwayBill: Int? = noOfEwayStr.toIntOrNull()
+            if (noOfEwayBill == null) {
+                layoutBinding.inputNoOfEwayBill.setText("")
+                noOfEwayBill = 0
+            }
+            ewayBillList.clear()
+            for (i in 0 until noOfEwayBill) {
+                ewayBillList.add(ItemEwayBillModel(""))
+            }
         }
         linearLayoutManager = LinearLayoutManager(activity)
         layoutBinding.recyclerView.layoutManager = linearLayoutManager
@@ -270,8 +286,9 @@ private fun setOnChangeListener() {
                        layoutBinding.disableEway.text = "ENABLE EWAY"
                        disableEwayBillForBooking = !disableEwayBillForBooking
                        layoutBinding.validateEway.isEnabled = !disableEwayBillForBooking
+                       layoutBinding.validateEway.background.setTint(resources.getColor(R.color.disabled_color, null))
                        layoutBinding.inputNoOfEwayBill.isEnabled = !disableEwayBillForBooking
-                       layoutBinding.inputNoOfEwayBill.setText("0")
+                       layoutBinding.inputNoOfEwayBill.setText("1")
                    }
                }
            }

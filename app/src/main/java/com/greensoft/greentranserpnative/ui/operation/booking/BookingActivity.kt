@@ -41,9 +41,11 @@ import com.greensoft.greentranserpnative.ui.operation.booking.models.PckgTypeSel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PickupBySelection
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ServiceTypeSelectionLov
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.PickupRefModel
+import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import okhttp3.internal.Util
 import javax.inject.Inject
 
 
@@ -185,9 +187,11 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     private fun getSingleRefData(){
         viewModel.getSingleRefData(
             loginDataModel?.companyid.toString(),
+//            "10",
             "greentransweb_jeenabooking_getpickupforbooking",
             listOf("prmtransactionid"),
             arrayListOf(transactionId)
+//            arrayListOf("804320")
         )
     }
     private fun getServiceType(){
@@ -1135,15 +1139,15 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         }else if (activityBinding.inputCngrName.text.isNullOrEmpty()){
             errorToast("Please Select Consignor Name")
             return
-        }else if (activityBinding.inputCngrAddress.text.isNullOrEmpty()){
-            errorToast("Please Select Consignor Address")
-            return
+//        }else if (activityBinding.inputCngrAddress.text.isNullOrEmpty()){
+//            errorToast("Please Select Consignor Address")
+//            return
         }else if (activityBinding.inputCngeName.text.isNullOrEmpty()){
             errorToast("Please Select Consignee Name")
             return
-        }else if (activityBinding.inputCngeAddress.text.isNullOrEmpty()){
-            errorToast("Please Select Consignee Address")
-            return
+//        }else if (activityBinding.inputCngeAddress.text.isNullOrEmpty()){
+//            errorToast("Please Select Consignee Address")
+//            return
         }else if (activityBinding.inputOrigin.text.isNullOrEmpty()){
             errorToast("Please Select origin")
             return
@@ -1155,13 +1159,13 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 //            errorToast("Please Select Pckgs Type")
 //            return
         }else if (activityBinding.inputAWeight.text.isNullOrEmpty()){
-            errorToast("Please Select Actual Weight")
+            errorToast("Please Enter Actual Weight.")
             return
         }else if (activityBinding.inputAWeight.text.isNullOrEmpty()){
-            errorToast("Please Select Actual Weight")
+            errorToast("Please Enter Volumetric Weight.")
             return
         }else if (activityBinding.inputCWeight.text.isNullOrEmpty()){
-            errorToast("Please Enter Chargeable Weight")
+            errorToast("Please Enter Chargeable Weight.")
             return
         }else if(pickupByValue == "V"){
             if(activityBinding.inputAgent.text.isNullOrEmpty()){
@@ -1199,6 +1203,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             return
         }
 
+
         AlertDialog.Builder(this)
             .setTitle("Alert!!!")
             .setMessage("Are you sure you want to save this booking?")
@@ -1231,25 +1236,30 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         var actualPackageStr: String = ""
         var actualVWeightStr: String = ""
 
+        var adapterEnteredData: ArrayList<SinglePickupRefModel>? = bookingAdapter?.getEnteredData()
 
         for(i in 0 until singleRefList.size) {
             val refNo = singleRefList[i].referenceno
             val weightStr=singleRefList[i].weight
             val pckgType=singleRefList[i].packagetype
-            val tempStr=singleRefList[i].tempurature
+            val tempStr= if (adapterEnteredData == null) singleRefList[i].tempurature else adapterEnteredData[i].tempurature
             val packing=singleRefList[i].packing
             val goodsStr=singleRefList[i].contents
             val dryIceStr=singleRefList[i].dryice
             val dryIceQtyStr=singleRefList[i].dryiceqty ?: ""
             val dataLoggerStr=singleRefList[i].datalogger
             val dataLoggerNoStr=singleRefList[i].dataloggerno
-            val dimHeight=singleRefList[i].localHeight
-            val dimBreath=singleRefList[i].localBreath
-            val dimLength=singleRefList[i].localLength
+//            val dimHeight=singleRefList[i].localHeight
+//            val dimBreath=singleRefList[i].localBreath
+//            val dimLength=singleRefList[i].localLength
+            val dimHeight= if (adapterEnteredData == null) singleRefList[i].localHeight else adapterEnteredData[i].localHeight
+            val dimBreath=  if (adapterEnteredData == null) singleRefList[i].localBreath else adapterEnteredData[i].localBreath
+            val dimLength=  if (adapterEnteredData == null) singleRefList[i].localLength else adapterEnteredData[i].localLength
+
             val boxNoStr=singleRefList[i].boxno ?: ""
             val gelPackStr=singleRefList[i].gelpack ?: ""
             val gelPackQtyStr=singleRefList[i].gelpackqty
-            val packageStr=singleRefList[i].pcs
+            val packageStr= if (adapterEnteredData == null) singleRefList[i].pcs else adapterEnteredData[i].pcs
             val vWeightStr=singleRefList[i].volfactor
 
             actualRefNoStr += "$refNo,"
@@ -1270,8 +1280,23 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             actualGelPackQtyStr+="$gelPackQtyStr,"
             actualPackageStr+="$packageStr,"
             actualVWeightStr+="$vWeightStr,"
+        }
+        var invoiceStr: String = ""
+        var invoiceDtStr: String = ""
+        var invoiceValueStr: String = ""
+        var ewbNoStr: String = ""
+        var ewbDtStr: String = ""
+        var ewbValidUptoStr: String = ""
+        if(Utils.ewayBillValidated && Utils.enteredValidatedEwayBillList != null) {
+            Utils.enteredEwayBillValidatedData.forEachIndexed { index, validatedData ->
+                invoiceStr += "${validatedData.response.docNo},"
+                invoiceDtStr += "${validatedData.response.docDate},"
+                invoiceValueStr += "${validatedData.response.totalValue},"
+                ewbNoStr += "${validatedData.response.ewbNo},"
+                ewbDtStr += "${Utils.changeDateFormatForEway(validatedData.response.ewbDate)},"
+                ewbValidUptoStr += "${Utils.changeDateFormatForEway(validatedData.response.validUpto)},"
 
-
+            }
         }
         viewModel.saveBooking(
             companyId = userDataModel?.companyid.toString(),
@@ -1339,12 +1364,12 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             gelPackQtyStr = actualGelPackQtyStr,
 //            menuCode = menuModel?.menucode.toString(),
             menuCode = menuCode,
-            invoiceNoStr = "",
-            invoiceDtStr = "",
-            invoiceValueStr = "",
-            ewayBillnNoStr = "",
-            ewayBillDtStr = "",
-            ewbValidupToDtStr = "",
+            invoiceNoStr = invoiceStr,
+            invoiceDtStr = invoiceDtStr,
+            invoiceValueStr = invoiceValueStr,
+            ewayBillNoStr = ewbNoStr,
+            ewayBillDtStr = ewbDtStr,
+            ewbValidupToDtStr = ewbValidUptoStr,
             vendorCode = vendorCode,
             packageStr = actualPackageStr,
             pickupBy = pickupByValue,
@@ -1357,5 +1382,12 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             cngrGstNo =cngrGstNo ,
             cngeGstNo = cngeGstNo,
         )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Utils.ewayBillValidated = false
+        Utils.ewayBillDetailResponse = null
+        Utils.enteredValidatedEwayBillList = null
     }
 }

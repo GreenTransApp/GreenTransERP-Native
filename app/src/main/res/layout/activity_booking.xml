@@ -14,9 +14,7 @@
        <include
            layout="@layout/toolbar"
            android:id="@+id/toolBar"
-           >
-
-       </include>
+           />
 
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
     android:id="@id/refresh_layout"
@@ -1002,6 +1000,7 @@
                         android:layout_height="wrap_content"
                         android:textAllCaps="true"
                         android:focusable="false"
+                        android:hint="Select Pickup-Boy"
                         android:textColor="@color/black"
                         android:inputType="text"
                         />
@@ -1360,13 +1359,13 @@
                     android:id="@+id/input_remark"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textMultiLine"
-                    android:maxLines="3"
+                    android:maxLines="4"
+                    android:layout_gravity="top|start"
                     android:textColor="@color/black"
-                    android:lines="2"
-                    android:textAllCaps="true"
-
+                    android:lines="3"
+                    android:inputType="textMultiLine"
                     />
+<!--                    android:textAllCaps="true"-->
 
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>

@@ -13,11 +13,13 @@ import com.greensoft.greentranserpnative.ui.operation.booking.models.*
 import com.greensoft.greentranserpnative.ui.operation.eway_bill.ItemEwayBillModel
 import com.greensoft.greentranserpnative.ui.operation.eway_bill.models.*
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
+import com.greensoft.greentranserpnative.utils.Utils
 import kotlinx.coroutines.*
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.internal.Util
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -796,6 +798,7 @@ class BookingRepository @Inject constructor():BaseRepository(){
 
     suspend fun ewayBillLogin(userId: String, password: String, ewayBillNoList: ArrayList<ItemEwayBillModel>, compGstin: String) {
 //        val json = "{ userid: $userId, password: $password }"
+        viewDialogMutData.postValue(true)
         var jsonObject= JsonObject()
         jsonObject.addProperty("userid", userId)
         jsonObject.addProperty("password", password)
@@ -814,6 +817,7 @@ class BookingRepository @Inject constructor():BaseRepository(){
             loginToken = loginResponse.response.token
             loginOrgId = loginResponse.response.orgs[0].orgId.toString()
         } else {
+            viewDialogMutData.postValue(false)
             isError.postValue(loginResponse.message)
             return
         }
@@ -828,35 +832,48 @@ class BookingRepository @Inject constructor():BaseRepository(){
         if(loginCompleteResponse.status == 1) {
             completeLoginToken = loginCompleteResponse.response.token
         } else {
+            viewDialogMutData.postValue(false)
             isError.postValue(loginCompleteResponse.message.toString())
             return
         }
 //        jsonObject = JsonObject()
 //        jsonObject.addProperty("gstin", compGstin)
         val detailResponseType = object: TypeToken<EwayBillDetailResponse>() {}.type
-        ewayBillNoList.forEachIndexed { index, itemEwayBillModel ->
+        run breakable@ {
+            ewayBillNoList.forEachIndexed { index, itemEwayBillModel ->
 //            jsonObject.addProperty("ewbNo", itemEwayBillModel.ewayBillNo)
-            val getEwayBillURL = "${ENV.EWAY_BILL_DETAIL_URL}?gstin=$compGstin&ewbNo=${itemEwayBillModel.ewayBillNo}"
-            val ewayBillDetailResponse = getEwayBillDetail(getEwayBillURL, completeLoginToken)
-            if(ewayBillDetailResponse.status == 1) {
-                Log.d("EWAY_BILL_DETAIL", ewayBillDetailResponse.response.toString())
-                val detailResp: EwayBillDetailResponse = gson.fromJson(ewayBillDetailResponse.response.toString(), detailResponseType)
-                if(detailResp.status == 1) {
-                    if(index == 0) {
-                        ewayBillDetailMutableLiveData.postValue(detailResp)
-                    } else if(index + 1 == ewayBillNoList.size) {
-                        ewayBillDetailValidationDoneMutableLiveData.postValue(true)
+                val getEwayBillURL =
+                    "${ENV.EWAY_BILL_DETAIL_URL}?gstin=$compGstin&ewbNo=${itemEwayBillModel.ewayBillNo}"
+                val ewayBillDetailResponse = getEwayBillDetail(getEwayBillURL, completeLoginToken)
+                if (ewayBillDetailResponse.status == 1) {
+                    Log.d("EWAY_BILL_DETAIL", ewayBillDetailResponse.response.toString())
+                    val detailResp: EwayBillDetailResponse = gson.fromJson(
+                        ewayBillDetailResponse.response.toString(),
+                        detailResponseType
+                    )
+                    Utils.enteredEwayBillValidatedData.add(detailResp)
+                    if (detailResp.status == 1) {
+                        if (index == 0) {
+                            ewayBillDetailMutableLiveData.postValue(detailResp)
+                        } else if (index + 1 == ewayBillNoList.size) {
+                            ewayBillDetailValidationDoneMutableLiveData.postValue(true)
+                        }
+                    } else {
+                        isError.postValue(detailResp.errorList[0].message.toString() + " : AT INPUT - ${index + 1}")
+                        Utils.enteredEwayBillValidatedData.clear()
+                        Utils.ewayBillValidated = false
+                        return@breakable
                     }
                 } else {
-                    isError.postValue(detailResp.errorList[0].message.toString() + " : AT INPUT - ${index + 1}")
-                    return@forEachIndexed
+                    isError.postValue("EWAY BILL VALIDATION COULD NOT BE DONE. Please try again later.")
+                    Utils.enteredEwayBillValidatedData.clear()
+                    Utils.ewayBillValidated = false
+                    return@breakable
                 }
-            } else {
-                isError.postValue("EWAY BILL VALIDATION COULD NOT BE DONE. Please try again later.")
-                return@forEachIndexed
-            }
 //            jsonObject.remove("ewbNo")
+            }
         }
+        viewDialogMutData.postValue(false)
     }
     @Throws(IOException::class)
     suspend fun getEwayBillDetail(url: String, token: String): EwayBillDetailStatus {

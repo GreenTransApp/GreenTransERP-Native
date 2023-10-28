@@ -261,8 +261,10 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
     }
 
     private fun testFunction() {
-        val intent=Intent(this,PickupManifestEntryActivity::class.java)
-        startActivity(intent)
+//        val intent=Intent(this,PickupManifestEntryActivity::class.java)
+//        startActivity(intent)
+        Utils.changeDateFormatForEway("28/08/2023 02:37:00 PM")
+        Utils.changeDateFormatForEway("08/08/2023 09:31:00 AM")
 //        dispatchTakePictureIntent()
 //        selectImage()
 //        val intent = Intent(this, CameraX::class.java)
