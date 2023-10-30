@@ -119,7 +119,7 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
             loginDataModel?.companyid.toString(),
             "greentranswebsg_grallocationlistforpickupmanifest",
             listOf("prmbranchcode","prmdt"),
-//            arrayListOf(userDataModel?.loginbranchcode.toString())
+//            arrayListOf(userDataModel?.loginbranchcode.toString(),grDt)
             arrayListOf("321","2023-10-09")
 //            "gtapp_loadingallocationlist_pickupmanifest",
 //            listOf("prmbranchcode","prmdt","prmusercode","prmmenucode","prmsessionid"),
@@ -140,9 +140,7 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
          activityBinding.btnContinue.setOnClickListener {
 
                  if (grList.size != 0) {
-//                 selectedGrList.addAll(grList)
                      hideProgressDialog()
-
                      activityBinding.allCheck.setOnCheckedChangeListener{_,isCheck->
                          if(!isCheck){
                              rvAdapter!!.selectAll(isCheck)
@@ -152,11 +150,11 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
                      }
                      val gson = Gson()
                      val jsonString = gson.toJson(selectedGrList)
-                     if(!rvAdapter!!.notCheck)
-                     {
-                         errorToast("Please select atleast one loading slip")
-                         return@setOnClickListener
-                     }
+//                     if(!rvAdapter!!.notCheck)
+//                     {
+//                         errorToast("Please select atleast one loading slip")
+//                         return@setOnClickListener
+//                     }
 
                      val intent = Intent(this, SavePickupManifestActivity::class.java)
                      intent.putExtra("ARRAY_JSON", jsonString)
@@ -181,7 +179,9 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
                 delay(1500)
                 activityBinding.refreshLayout.isRefreshing=false
             }
-        false}
+
+
+        }
         viewModel.isError.observe(this) { errMsg ->
             errorToast(errMsg)
         }
@@ -196,15 +196,18 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
 
 
         viewModel.grLiveData.observe(this) { data ->
-
             grList = data
-
 //            setupRecyclerView()
 
         }
         mPeriod.observe(this) { date ->
             grDt = date.sqlsingleDate.toString()
             setupRecyclerView()
+            if(!rvAdapter!!.notCheck)
+             {
+                 errorToast("Please select atleast one loading slip")
+                 return@observe
+             }
 
         }
     }

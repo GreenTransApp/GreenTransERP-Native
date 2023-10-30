@@ -168,6 +168,8 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
             data = ""
         )
     }
+
+
     private fun setupRecyclerView() {
         linearLayoutManager = LinearLayoutManager(this)
         if (rvAdapter == null) {
@@ -278,11 +280,16 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
                     if (alertCallType == "RESELECT_SLIP") {
                         val intent=Intent(this,GrSelectionActivity::class.java)
                          startActivity(intent)
+                    }else if(alertCallType =="SELECT_SAVE"){
+                        successToast("testing")
+//                        savePickupManifest()
                     }
-                }
-                AlertClick.NO -> {
 
                 }
+                AlertClick.NO -> {
+                }
+
+
             }
         } catch (ex: Exception) {
             errorToast(ex.message)
@@ -291,9 +298,20 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
      private fun setOnClick(){
 
          activityBinding.btnSave.setOnClickListener {
-             successToast("show some data")
+             showAlertOnSave()
          }
      }
+
+    private  fun showAlertOnSave(){
+        CommonAlert.createAlert(
+            context = this,
+            header = "Alert!!",
+            description = " Are You Sure You Want To Save Manifest ?",
+            callback =this,
+            alertCallType ="SELECT_SAVE",
+            data = ""
+        )
+    }
     private fun savePickupManifest(){
 
         var actualGrNo: String = ""

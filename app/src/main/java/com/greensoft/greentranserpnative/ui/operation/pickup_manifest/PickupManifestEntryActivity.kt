@@ -68,6 +68,11 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        val data=Utils.manifestModel
+        successToast(data.toString())
+    }
 
 
 
