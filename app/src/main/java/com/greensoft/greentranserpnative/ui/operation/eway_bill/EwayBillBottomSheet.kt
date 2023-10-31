@@ -32,6 +32,7 @@ import com.greensoft.greentranserpnative.ui.operation.eway_bill.models.EwayBillD
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import okhttp3.internal.Util
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -45,7 +46,7 @@ class EwayBillBottomSheet @Inject constructor() : BaseFragment(), BottomSheetCli
     private lateinit var activity: BookingActivity
     private lateinit var bookingViewModel: BookingViewModel
     private var disableEwayBillForBooking = false
-
+    var showChangeAlert = false
     companion object {
         var ITEM_CLICK_VIEW_TYPE = "EWAY_BILL_BOTTOMSHEET"
         fun  newInstance(
@@ -127,20 +128,19 @@ class EwayBillBottomSheet @Inject constructor() : BaseFragment(), BottomSheetCli
 
 private fun setOnChangeListener() {
     layoutBinding.inputNoOfEwayBill.addTextChangedListener(object: TextWatcher {
-        var showChangeAlert = false
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             val enteredVal = p0.toString().toIntOrNull()
-            if(enteredVal!=null) {
-                if(enteredVal > 0) {
+//            if(enteredVal!=null) {
+//                if(enteredVal > 0) {
                     var isFilled = false
                     ewayBillList.forEachIndexed { index, itemEwayBillModel ->
                         if(itemEwayBillModel.ewayBillNo.isNotBlank()) {
                             isFilled = true
                         }
                     }
-                    if(isFilled) showChangeAlert = true
-                }
-            }
+                    showChangeAlert = isFilled
+//                }
+//            }
         }
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -153,6 +153,15 @@ private fun setOnChangeListener() {
         }
 
     })
+
+    bookingViewModel.ewayBillViewDialogLiveData.observe(this) { show ->
+        Utils.logger("EWAY", show.toString())
+        if(show) {
+            showProgressDialog()
+        } else {
+            hideProgressDialog()
+        }
+    }
 
     bookingViewModel.accParaLiveData.observe(this) { commonResult ->
         if(commonResult.CommandStatus == 1 && commonResult.Message.toString() == "Y") {
@@ -174,6 +183,7 @@ private fun setOnChangeListener() {
                     Utils.ewayBillValidated = true
                     Utils.ewayBillDetailResponse = detail
                     Utils.enteredValidatedEwayBillList = ewayBillList
+                    successToast("Eway Bill Validated, You can continue on your booking.")
                 } else {
                     Utils.ewayBillValidated = false
                     Utils.ewayBillDetailResponse = null
@@ -214,6 +224,7 @@ private fun setOnChangeListener() {
             }
 //            disableEwayAlert()
         }
+
         layoutBinding.closeBottomSheet.setOnClickListener {
             dismiss()
         }
@@ -227,7 +238,18 @@ private fun setOnChangeListener() {
         }
     }
 
+    fun isValidatedListEmpty() {
+        var isFilled = false
+        Utils.enteredValidatedEwayBillList?.forEachIndexed { index, itemEwayBillModel ->
+            if(!itemEwayBillModel.ewayBillNo.toString().isNullOrBlank()) {
+                isFilled = true
+            }
+        }
+        if(!isFilled) clearOldEwayBillData()
+    }
+
     private fun setUpRecyclerView(){
+        isValidatedListEmpty()
         if(Utils.enteredValidatedEwayBillList != null && Utils.enteredValidatedEwayBillList!!.isNotEmpty()) {
             ewayBillList = Utils.enteredValidatedEwayBillList!!
         } else {
@@ -272,12 +294,21 @@ private fun setOnChangeListener() {
         }
     }
 
+    fun clearOldEwayBillData() {
+        Utils.ewayBillValidated = false
+        Utils.ewayBillDetailResponse = null
+        Utils.enteredValidatedEwayBillList?.clear()
+        Utils.enteredEwayBillValidatedData.clear()
+    }
+
     override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {
        when(alertClick) {
            AlertClick.YES -> {
                if(alertCallType == "EWAY_DATA_LOST") {
+                   clearOldEwayBillData()
                    setUpRecyclerView()
                } else if(alertCallType == "DISABLE_EWAY") {
+                   clearOldEwayBillData()
                    if(!disableEwayBillForBooking) {
 //                       layoutBinding.disableEway.background.setTint(resources.getColor(R.color.danger, null))
 //                       layoutBinding.disableEway.text = "DISABLE EWAY"

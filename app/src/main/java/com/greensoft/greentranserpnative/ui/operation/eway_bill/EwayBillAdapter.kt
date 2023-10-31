@@ -33,6 +33,11 @@ class EwayBillAdapter(
                 }
 
             })
+
+            binding.btnDelete.setOnClickListener {
+                EwayBillList.removeAt(adapterPosition)
+                notifyDataSetChanged()
+            }
 //          binding.btnDelete.setOnClickListener{
 //              bottomSheetClick.onItemClick(model,"DELETE_REF")
 //          }

@@ -44,10 +44,10 @@ data class EwayDetailResponse(
     val cessNonAdvolValue: Double,
     val cessValue: Double,
     val cgstValue: Double,
-    val docDate: String,
+    val docDate: String?,
     val docNo: String,
     val docType: String,
-    val ewbDate: String,
+    val ewbDate: String?,
     val ewbId: Int,
     val ewbNo: String,
     val extendedTimes: Int,
@@ -88,7 +88,7 @@ data class EwayDetailResponse(
     val transactionType: String,
     val updateDate: String,
     val userGstin: String,
-    val validUpto: String,
+    val validUpto: String?,
     val vehicleDetails: List<VehicleDetail>,
     val vehicleNo: String
 )

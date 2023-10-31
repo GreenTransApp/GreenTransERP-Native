@@ -16,6 +16,8 @@ import com.greensoft.greentranserpnative.ui.operation.booking.models.GelPackItem
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.TemperatureSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
+import com.greensoft.greentranserpnative.utils.Utils
+import okhttp3.internal.Util
 import javax.inject.Inject
 import kotlin.math.ceil
 
@@ -87,10 +89,10 @@ class BookingAdapter @Inject constructor(
                override fun afterTextChanged(s: Editable?) {
 //                   onRowClick.onRowClick(singlePickupRefModel, "LENGTH_SELECT", adapterPosition)
 //                   Log.d("test", "afterTextChanged:  length of  obj")
-                   bookingList[adapterPosition].localLength =
-                       s.toString().toDoubleOrNull() ?: "0".toDouble()
-                   calculateVWeight(adapterPosition, binding)
-                   Log.d("actualVWeight", " data  -----${actualVWeight}")
+                       bookingList[adapterPosition].localLength =
+                           s.toString().toDoubleOrNull() ?: "0".toDouble()
+                       calculateVWeight(adapterPosition, binding)
+                       Log.d("actualVWeight", " data  -----${actualVWeight}")
                }
            })
 
@@ -161,6 +163,7 @@ class BookingAdapter @Inject constructor(
                    binding.gelPackItem.isEnabled = false
                    binding.gelPackItem.text.clear()
                }
+               singlePickupRefModel.gelpack = if(binding.gelPackItem.isEnabled) "Y" else "N"
            }
 
 //                 binding.inputLayoutDatalogger.setOnClickListener {
@@ -330,18 +333,23 @@ class BookingAdapter @Inject constructor(
     fun setContent(contentModel: ContentSelectionModel, adapterPosition: Int) {
         Log.d("TEST_TEST", contentModel.itemname.toString())
         bookingList[adapterPosition].contents = contentModel.itemname
+        bookingList[adapterPosition].contentsCode = contentModel.itemcode
         notifyItemChanged(adapterPosition)
     }
     fun setTemperature(tempModel: TemperatureSelectionModel, adapterPosition: Int) {
         bookingList[adapterPosition].tempurature = tempModel.name
+        bookingList[adapterPosition].tempuratureCode = tempModel.value
         notifyItemChanged(adapterPosition)
     }
     fun setPacking(pckgsModel: PackingSelectionModel, adapterPosition: Int) {
         bookingList[adapterPosition].packing = pckgsModel.packingname
+        bookingList[adapterPosition].packingcode = pckgsModel.packingcode
         notifyItemChanged(adapterPosition)
     }
     fun setGelPack(model: GelPackItemSelectionModel, adapterPosition: Int) {
-        bookingList[adapterPosition].gelpack = model.itemname
+        bookingList[adapterPosition].gelpacktype = model.itemname
+        bookingList[adapterPosition].gelpackitemcode = model.itemcode
+
         notifyItemChanged(adapterPosition)
     }
 

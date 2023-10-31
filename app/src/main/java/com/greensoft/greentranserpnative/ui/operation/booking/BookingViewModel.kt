@@ -38,6 +38,9 @@ class BookingViewModel @Inject constructor(private val _repository: BookingRepos
     val viewDialogLiveData: LiveData<Boolean>
         get() = _repository.viewDialogMutData
 
+    val ewayBillViewDialogLiveData: LiveData<Boolean>
+        get() = _repository.ewayBillViewDialogLiveData
+
     val custLiveData: LiveData<ArrayList<CustomerSelectionModel>>
         get() = _repository.custLiveData
 
