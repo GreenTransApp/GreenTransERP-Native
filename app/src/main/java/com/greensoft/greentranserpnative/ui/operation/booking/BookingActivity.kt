@@ -2,9 +2,7 @@ package com.greensoft.greentranserpnative.ui.operation.booking
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.text.Editable
 import android.text.InputType
-import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -14,6 +12,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.ENV.Companion.DEBUGGING
@@ -41,9 +40,11 @@ import com.greensoft.greentranserpnative.ui.operation.booking.models.PckgTypeSel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PickupBySelection
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ServiceTypeSelectionLov
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.PickupRefModel
+import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import okhttp3.internal.Util
 import javax.inject.Inject
 
 
@@ -78,6 +79,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     private var addList: ArrayList<SinglePickupRefModel> = ArrayList()
     private var bookingAdapter: BookingAdapter? = null
     private val menuCode: String = "GTAPP_GRBOOKING"
+
+    var isFirstTime: Boolean = true
 //    var serviceSelectedItems = arrayOf("SELECT", "AIR", "SURFACE", "SURFACE EXPRESS", "TRAIN")
 //    var pckgsTypeSelectedItems = arrayOf("SELECT", "JEENA PACKING", "PRE PACKED")
 
@@ -185,9 +188,11 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     private fun getSingleRefData(){
         viewModel.getSingleRefData(
             loginDataModel?.companyid.toString(),
+//            "10",
             "greentransweb_jeenabooking_getpickupforbooking",
             listOf("prmtransactionid"),
             arrayListOf(transactionId)
+//            arrayListOf("804320")
         )
     }
     private fun getServiceType(){
@@ -239,9 +244,9 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
             activityBinding.inputCustName.setText(checkNullOrEmpty(element.custname).toString())
             activityBinding.inputCngrName.setText(checkNullOrEmpty(element.cngr).toString())
-            activityBinding.inputCngrAddress.setText(checkNullOrEmpty(element.cngraddress).toString())
+//            activityBinding.inputCngrAddress.setText(checkNullOrEmpty(element.cngraddress).toString())
             activityBinding.inputCngeName.setText(checkNullOrEmpty(element.cnge).toString())
-            activityBinding.inputCngeAddress.setText(checkNullOrEmpty(element.cngeaddress).toString())
+//            activityBinding.inputCngeAddress.setText(checkNullOrEmpty(element.cngeaddress).toString())
             activityBinding.inputDepartment.setText(checkNullOrEmpty(element.departmentname).toString())
             activityBinding.inputOrigin.setText(checkNullOrEmpty(element.Origin).toString())
             activityBinding.inputDestination.setText(checkNullOrEmpty(element.destname).toString())
@@ -250,7 +255,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             activityBinding.inputPckgsNo.setText(checkNullOrEmpty(element.pckgs).toString())
             activityBinding.inputAWeight.setText(checkNullOrEmpty(element.aweight).toString())
             activityBinding.inputVolWeight.setText(checkNullOrEmpty(element.volfactor).toString())
-            aWeight=activityBinding.inputAWeight.toString()
+            aWeight=activityBinding.inputAWeight.text.toString()
             volWeight=activityBinding.inputVolWeight.toString()
 //             activityBinding.selectedPckgsType.isEnabled=false
             custCode=element.custcode.toString()
@@ -541,11 +546,17 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 //            activityBinding.inputTime.setText(timePicker.viewSingleTime)
         }
         viewModel.saveBookingLiveData.observe(this){ data->
-
-
+            if(data != null) {
+                if(data.commandstatus == 1) {
+                    successToast(data.commandmessage.toString())
+                } else {
+                    errorToast(data.commandmessage.toString())
+                }
+            }
         }
         viewModel.viewDialogLiveData.observe(this, Observer { show ->
 //            progressBar.visibility = if(show) View.VISIBLE else View.GONE
+//            Utils.logger("viewDialog", show.toString())
             if (show) {
                 showProgressDialog()
             } else {
@@ -603,7 +614,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             }
         viewModel.gelPackItemLiveData.observe(this) { gelPack ->
             gelPackList = gelPack
-            }
+        }
 
         viewModel.singleRefLiveData.observe(this) { data ->
             singleRefList = data
@@ -904,7 +915,12 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
     private fun setupRecyclerView() {
         if(bookingAdapter == null) {
-            linearLayoutManager = LinearLayoutManager(this)
+            linearLayoutManager = object: LinearLayoutManager (this){
+                override fun onLayoutCompleted(state: RecyclerView.State?) {
+                    super.onLayoutCompleted(state)
+                    isFirstTime = false;
+                }
+            }
             activityBinding.recyclerView.layoutManager = linearLayoutManager
             bookingAdapter = BookingAdapter(this, productCode,this, singleRefList, this)
         }
@@ -935,7 +951,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         } else if (clickType == "Consignor Selection") {
             val selectedCngr = data as ConsignorSelectionModel
             activityBinding.inputCngrName.setText(selectedCngr.name)
-            activityBinding.inputCngrAddress.setText(selectedCngr.address)
+//            activityBinding.inputCngrAddress.setText(selectedCngr.address)
             cngrCity = selectedCngr.city
             cngrZipCode = selectedCngr.zipcode
             cngrState = selectedCngr.state
@@ -950,7 +966,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         } else if (clickType == "Consignee Selection") {
             val selectedCnge = data as ConsignorSelectionModel
             activityBinding.inputCngeName.setText(selectedCnge.name)
-            activityBinding.inputCngeAddress.setText(selectedCnge.address)
+//            activityBinding.inputCngeAddress.setText(selectedCnge.address)
             cngeCity =selectedCnge.city.toString()
             cngeZipCode =selectedCnge.zipcode.toString()
             cngeState =selectedCnge.state.toString()
@@ -1016,7 +1032,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         }else if(clickType=="Gel Pack Selection"){
             val selectedGelPack=data as GelPackItemSelectionModel
             bookingAdapter?.setGelPack(selectedGelPack, index)
-            selectedGelPackItenCode=selectedGelPack.itemcode.toString()
+//            selectedGelPackItenCode=selectedGelPack.itemcode.toString()
 
         }
 
@@ -1032,8 +1048,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             openTemperatureSelectionBottomSheet(temperatureList,index)
 
         }else if(clickType =="GEL_PACK_SELECT"){
-                openGelPackSelectionBottomSheet(gelPackList,index)
-
+             openGelPackSelectionBottomSheet(gelPackList,index)
         }else if(clickType =="PACKING_SELECT"){
             openPackingSelectionBottomSheet(packingList,index)
 
@@ -1067,6 +1082,17 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     }
     fun setCWeight(cWeight: Int) {
         activityBinding.inputCWeight.setText(cWeight.toString())
+        val aWeight = activityBinding.inputAWeight.text.toString().toDoubleOrNull()
+        val cWeight = activityBinding.inputCWeight.text.toString().toDoubleOrNull()
+        var vWeight = activityBinding.inputVolWeight.text.toString().toDoubleOrNull()
+        if(aWeight != null) {
+            if(vWeight == null) vWeight = 0.0
+            val higherValue = Math.max(aWeight.toInt() ?: 0, vWeight.toInt() ?: 0)
+            activityBinding.inputCWeight.setText(higherValue.toString())
+        }
+//        if(isFirstTime) {
+//            activityBinding.inputCWeight.setText(activityBinding.inputAWeight.text.toString())
+//        }
     }
 //    private  fun calculateVWeight(index: Int, layoutBinding: BookingItemViewBinding){
 //        if(singleRefList[index].pckglength.toString().isNotEmpty() && singleRefList[index].pckgbreath.toString().isNotEmpty()&& singleRefList[index].pckgheight.toString().isNotEmpty() ){
@@ -1135,15 +1161,15 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         }else if (activityBinding.inputCngrName.text.isNullOrEmpty()){
             errorToast("Please Select Consignor Name")
             return
-        }else if (activityBinding.inputCngrAddress.text.isNullOrEmpty()){
-            errorToast("Please Select Consignor Address")
-            return
+//        }else if (activityBinding.inputCngrAddress.text.isNullOrEmpty()){
+//            errorToast("Please Select Consignor Address")
+//            return
         }else if (activityBinding.inputCngeName.text.isNullOrEmpty()){
             errorToast("Please Select Consignee Name")
             return
-        }else if (activityBinding.inputCngeAddress.text.isNullOrEmpty()){
-            errorToast("Please Select Consignee Address")
-            return
+//        }else if (activityBinding.inputCngeAddress.text.isNullOrEmpty()){
+//            errorToast("Please Select Consignee Address")
+//            return
         }else if (activityBinding.inputOrigin.text.isNullOrEmpty()){
             errorToast("Please Select origin")
             return
@@ -1155,15 +1181,17 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 //            errorToast("Please Select Pckgs Type")
 //            return
         }else if (activityBinding.inputAWeight.text.isNullOrEmpty()){
-            errorToast("Please Select Actual Weight")
+            errorToast("Please Enter Actual Weight.")
             return
         }else if (activityBinding.inputAWeight.text.isNullOrEmpty()){
-            errorToast("Please Select Actual Weight")
+            errorToast("Please Enter Volumetric Weight.")
             return
         }else if (activityBinding.inputCWeight.text.isNullOrEmpty()){
-            errorToast("Please Enter Chargeable Weight")
+            errorToast("Please Enter Chargeable Weight.")
             return
-        }else if(pickupByValue == "V"){
+        }
+
+        if(pickupByValue == "V"){
             if(activityBinding.inputAgent.text.isNullOrEmpty()){
                 errorToast("Please Select Agent")
                 return
@@ -1194,10 +1222,12 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                 errorToast("Please Select Pickup Boy")
                 return
             }
-        }else if(!activityBinding.autoGrCheck.isChecked && activityBinding.inputGrNo.text.isNullOrEmpty()){
+        }
+        if(!activityBinding.autoGrCheck.isChecked && activityBinding.inputGrNo.text.isNullOrBlank()){
             errorToast("Please Enter GR Number")
             return
         }
+
 
         AlertDialog.Builder(this)
             .setTitle("Alert!!!")
@@ -1228,28 +1258,55 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         var actualBoxNo: String = ""
         var actualGelPackStr: String = ""
         var actualGelPackQtyStr: String = ""
+        var actualGelPackItemCodeStr: String = ""
         var actualPackageStr: String = ""
         var actualVWeightStr: String = ""
+
+        var adapterEnteredData: ArrayList<SinglePickupRefModel>? = bookingAdapter?.getEnteredData()
+        run enteredData@ {
+            adapterEnteredData?.forEachIndexed { index, singlePickupRefModel ->
+                if (Utils.isDecimalNotEntered(singlePickupRefModel.weight.toString())) {
+                    errorToast("Weight Not Entered at INPUT - ${index + 1}")
+                    return
+                } else if (Utils.isDecimalNotEntered(singlePickupRefModel.localLength.toString())) {
+                    errorToast("Length Not Entered at INPUT - ${index + 1}")
+                    return
+                } else if (Utils.isDecimalNotEntered(singlePickupRefModel.localBreath.toString())) {
+                    errorToast("Breadth Not Entered at INPUT - ${index + 1}")
+                    return
+                } else if (Utils.isDecimalNotEntered(singlePickupRefModel.localHeight.toString())) {
+                    errorToast("Height Not Entered at INPUT - ${index + 1}")
+                    return
+                }
+                Utils.logger("RUN_TEST", "in run")
+            }
+        }
+        Utils.logger("RUN_TEST", "out run")
 
 
         for(i in 0 until singleRefList.size) {
             val refNo = singleRefList[i].referenceno
-            val weightStr=singleRefList[i].weight
-            val pckgType=singleRefList[i].packagetype
-            val tempStr=singleRefList[i].tempurature
+            val weightStr= adapterEnteredData?.get(i)?.weight ?: singleRefList[i].weight ?: ""
+            val pckgType= singleRefList[i].packagetype ?: ""
+            val tempStr= if (adapterEnteredData == null) singleRefList[i].tempurature else adapterEnteredData[i].tempurature
             val packing=singleRefList[i].packing
             val goodsStr=singleRefList[i].contents
             val dryIceStr=singleRefList[i].dryice
-            val dryIceQtyStr=singleRefList[i].dryiceqty ?: ""
-            val dataLoggerStr=singleRefList[i].datalogger
-            val dataLoggerNoStr=singleRefList[i].dataloggerno
-            val dimHeight=singleRefList[i].localHeight
-            val dimBreath=singleRefList[i].localBreath
-            val dimLength=singleRefList[i].localLength
+            val dryIceQtyStr= adapterEnteredData?.get(i)?.dryiceqty ?: singleRefList[i].dryiceqty
+            val dataLoggerStr= adapterEnteredData?.get(i)?.datalogger ?: singleRefList[i].datalogger
+            val dataLoggerNoStr= adapterEnteredData?.get(i)?.dataloggerno ?: singleRefList[i].dataloggerno
+            val gelPackItemCodeStr = adapterEnteredData?.get(i)?.gelpackitemcode ?: singleRefList[i].gelpackitemcode ?: ""
+//            val dimHeight=singleRefList[i].localHeight
+//            val dimBreath=singleRefList[i].localBreath
+//            val dimLength=singleRefList[i].localLength
+            val dimHeight= if (adapterEnteredData == null) singleRefList[i].localHeight else adapterEnteredData[i].localHeight
+            val dimBreath=  if (adapterEnteredData == null) singleRefList[i].localBreath else adapterEnteredData[i].localBreath
+            val dimLength=  if (adapterEnteredData == null) singleRefList[i].localLength else adapterEnteredData[i].localLength
+
             val boxNoStr=singleRefList[i].boxno ?: ""
-            val gelPackStr=singleRefList[i].gelpack ?: ""
-            val gelPackQtyStr=singleRefList[i].gelpackqty
-            val packageStr=singleRefList[i].pcs
+            val gelPackStr= adapterEnteredData?.get(i)?.gelpacktype ?: singleRefList[i].gelpacktype ?: ""
+            val gelPackQtyStr= adapterEnteredData?.get(i)?.gelpackqty ?: singleRefList[i].gelpackqty
+            val packageStr= if (adapterEnteredData == null) singleRefList[i].pcs else adapterEnteredData[i].pcs
             val vWeightStr=singleRefList[i].volfactor
 
             actualRefNoStr += "$refNo,"
@@ -1268,10 +1325,40 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             actualBoxNo +="$boxNoStr,"
             actualGelPackStr +="$gelPackStr,"
             actualGelPackQtyStr+="$gelPackQtyStr,"
+            actualGelPackItemCodeStr+="$gelPackItemCodeStr,"
             actualPackageStr+="$packageStr,"
             actualVWeightStr+="$vWeightStr,"
+        }
+        var invoiceStr: String = ""
+        var invoiceDtStr: String = ""
+        var invoiceValueStr: String = ""
+        var ewbNoStr: String = ""
+        var ewbDtStr: String = ""
+        var ewbValidUptoStr: String = ""
+        var cngrAddress: String = if(Utils.ewayBillValidated && Utils.ewayBillDetailResponse != null) Utils.ewayBillDetailResponse!!.response.fromAddr1 else ""
+        var cngeAddress: String =  if(Utils.ewayBillValidated && Utils.ewayBillDetailResponse != null) Utils.ewayBillDetailResponse!!.response.fromAddr2 else ""
+        if(Utils.ewayBillValidated && Utils.enteredValidatedEwayBillList != null) {
+            Utils.enteredEwayBillValidatedData.forEachIndexed { index, validatedData ->
+                invoiceStr += "${validatedData.response.docNo},"
+                if(validatedData.response.docDate != null) {
+                    invoiceDtStr += "${Utils.changeDateFormatForEwayInvoiceDt(validatedData.response.docDate)},"
+                } else {
+                    invoiceDtStr += ","
+                }
+                invoiceValueStr += "${validatedData.response.totalValue},"
+                ewbNoStr += "${validatedData.response.ewbNo},"
+                if(validatedData.response.ewbDate != null) {
+                    ewbDtStr += "${Utils.changeDateFormatForEway(validatedData.response.ewbDate)},"
+                } else {
+                    ewbDtStr += ","
+                }
+                if(validatedData.response.validUpto != null) {
+                    ewbValidUptoStr += "${Utils.changeDateFormatForEway(validatedData.response.validUpto)},"
+                } else {
+                    ewbValidUptoStr += ","
+                }
 
-
+            }
         }
         viewModel.saveBooking(
             companyId = userDataModel?.companyid.toString(),
@@ -1293,7 +1380,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             sessionId = userDataModel?.sessionid.toString(),
             refNo = "",
             cngr = activityBinding.inputCngrName.text.toString(),
-            cngrAddress = activityBinding.inputCngrAddress.text.toString(),
+            cngrAddress = cngrAddress,
             cngrCity = cngrCity,
             cngrZipCode = cngrZipCode,
             cngrState = cngrState,
@@ -1304,7 +1391,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             cngrTINNo = cngrTINNo,
             cngrSTaxRegNo = "",
             cnge = activityBinding.inputCngeName.text.toString(),
-            cngeAddress = activityBinding.inputCngeAddress.text.toString(),
+            cngeAddress = cngeAddress,
             cngeCity = cngeCity,
             cngeZipCode = cngeZipCode,
             cngeState = cngeState,
@@ -1335,16 +1422,16 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             boxnoStr = actualBoxNo,
             stockItemCodeStr = pickupContentId,
             gelPackStr = actualGelPackStr,
-            gelPackItemCodeStr = selectedGelPackItenCode,
+            gelPackItemCodeStr = actualGelPackItemCodeStr,
             gelPackQtyStr = actualGelPackQtyStr,
 //            menuCode = menuModel?.menucode.toString(),
             menuCode = menuCode,
-            invoiceNoStr = "",
-            invoiceDtStr = "",
-            invoiceValueStr = "",
-            ewayBillnNoStr = "",
-            ewayBillDtStr = "",
-            ewbValidupToDtStr = "",
+            invoiceNoStr = invoiceStr,
+            invoiceDtStr = invoiceDtStr,
+            invoiceValueStr = invoiceValueStr,
+            ewayBillNoStr = ewbNoStr,
+            ewayBillDtStr = ewbDtStr,
+            ewbValidupToDtStr = ewbValidUptoStr,
             vendorCode = vendorCode,
             packageStr = actualPackageStr,
             pickupBy = pickupByValue,
@@ -1354,8 +1441,16 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             cngrCode = cngrCode,
             cngeCode = cngeCode,
             remarks = activityBinding.inputRemark.text.toString(),
-            cngrGstNo =cngrGstNo ,
+            cngrGstNo = cngrGstNo,
             cngeGstNo = cngeGstNo,
         )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Utils.ewayBillValidated = false
+        Utils.ewayBillDetailResponse = null
+        Utils.enteredValidatedEwayBillList = null
+        Utils.enteredEwayBillValidatedData.clear()
     }
 }

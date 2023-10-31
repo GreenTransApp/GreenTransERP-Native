@@ -70,10 +70,11 @@ class CommonBottomSheet<T>: BottomSheetDialogFragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as AppCompatActivity?)!!.setSupportActionBar(layoutBinding.toolBar.root)
-        (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        (activity as AppCompatActivity?)!!.supportActionBar?.title = title
+//        (activity as AppCompatActivity?)!!.setSupportActionBar(layoutBinding.toolBar.root)
+//        (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+//        (activity as AppCompatActivity?)!!.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+//        (activity as AppCompatActivity?)!!.supportActionBar?.title = title.
+        layoutBinding.toolbarTitle.text = title
 
         setUpRecyclerView()
         layoutBinding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
@@ -96,8 +97,12 @@ class CommonBottomSheet<T>: BottomSheetDialogFragment(){
             BottomSheetBehavior.from(bottomSheet).state =
                 BottomSheetBehavior.STATE_EXPANDED
             val behavior = BottomSheetBehavior.from(bottomSheet)
-            behavior.setPeekHeight(BottomSheetBehavior.PEEK_HEIGHT_AUTO);
+            behavior.peekHeight = BottomSheetBehavior.PEEK_HEIGHT_AUTO;
             layoutBinding.extraSpace.minimumHeight = Resources.getSystem().displayMetrics.heightPixels / 2
+        }
+
+        layoutBinding.closeBottomSheet.setOnClickListener {
+            dismiss()
         }
     }
 

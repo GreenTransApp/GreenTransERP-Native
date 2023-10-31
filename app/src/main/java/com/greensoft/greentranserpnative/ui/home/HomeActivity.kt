@@ -261,8 +261,11 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
     }
 
     private fun testFunction() {
-        val intent=Intent(this,PickupManifestEntryActivity::class.java)
-        startActivity(intent)
+//        val intent=Intent(this,PickupManifestEntryActivity::class.java)
+//        startActivity(intent)
+//        Utils.changeDateFormatForEway("28/08/2023 02:37:00 PM")
+//        Utils.changeDateFormatForEway("08/08/2023 09:31:00 AM")
+        Utils.changeDateFormatForEwayInvoiceDt("30-10-2023")
 //        dispatchTakePictureIntent()
 //        selectImage()
 //        val intent = Intent(this, CameraX::class.java)
@@ -325,6 +328,11 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
            }
            "GTAPP_GRLIST" -> run {
                val intent = Intent(this, GrListActivity::class.java)
+               intent.putExtra("MENU_DATA", jsonSerialized)
+               startActivity(intent)
+           }
+           "GTAPP_NATIVEPICKUPMANIFEST" -> run {
+               val intent = Intent(this, PickupManifestEntryActivity::class.java)
                intent.putExtra("MENU_DATA", jsonSerialized)
                startActivity(intent)
            }
