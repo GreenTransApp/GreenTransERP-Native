@@ -3,7 +3,6 @@ package com.greensoft.greentranserpnative.base
 import android.R
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
-import android.app.TimePickerDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -25,7 +24,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.google.gson.Gson
@@ -33,7 +31,6 @@ import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.common.PeriodSelection
-import com.greensoft.greentranserpnative.common.TimeSelection
 import com.greensoft.greentranserpnative.ui.bottomsheet.acceptPickup.AcceptPickupBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.CommonBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
@@ -48,7 +45,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.TimeZone
 import javax.inject.Inject
@@ -61,6 +57,7 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
 //    var prefManager: PrefManager? = null
     var serverErrorMsg = "Something Went Wrong Please Try Again Later"
     var internetError = "Internet Not Working Please Check Your Internet Connection"
+    val noLoadingGRSelectedErrMsg = "No Loading/GR # is selected for manifest. Please select at least 1 Loading/GR #."
 
     var mPeriod: MutableLiveData<PeriodSelection> = MutableLiveData()
     var timePeriod: MutableLiveData<String> = MutableLiveData()
@@ -489,7 +486,7 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
         materialDateBuilder.setTitleText("SELECT A PERIOD")
         materialDatePicker = materialDateBuilder.build()
         materialDatePicker!!.addOnPositiveButtonClickListener { selection ->
-                val viewFormat = SimpleDateFormat("MM-dd-yyyy")
+                val viewFormat = SimpleDateFormat("dd-MM-yyyy")
                 val sqlFormat = SimpleDateFormat("yyyy-MM-dd")
                 val selectedDate = selection as androidx.core.util.Pair<Long?, Long?>
                 if(selectedDate.first != null && selectedDate.second != null) {

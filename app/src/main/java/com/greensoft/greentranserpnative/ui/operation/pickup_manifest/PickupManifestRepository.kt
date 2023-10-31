@@ -287,6 +287,7 @@ class PickupManifestRepository @Inject constructor(): BaseRepository(){
 
     }
     fun savePickupManifest(
+        companyId:String,
         branchcode:String,
         manifestdt:String,
         time:String,
@@ -314,6 +315,7 @@ class PickupManifestRepository @Inject constructor(): BaseRepository(){
     ) {
         viewDialogMutData.postValue(true)
         api.savePickupManifest(
+            companyId,
             branchcode,
             manifestdt,
             time,

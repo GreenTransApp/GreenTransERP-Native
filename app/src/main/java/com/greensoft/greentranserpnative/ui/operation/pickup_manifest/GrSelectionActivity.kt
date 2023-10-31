@@ -1,43 +1,30 @@
 package com.greensoft.greentranserpnative.ui.operation.pickup_manifest
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
-import androidx.lifecycle.Observer
-import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityGrSelectionBinding
-import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
-import com.greensoft.greentranserpnative.ui.common.alert.CommonAlert
-import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import com.greensoft.greentranserpnative.ui.operation.booking.BookingActivity
-import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.models.StickerModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.GrSelectionAdapter
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.ManifestEnteredDataModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceViewModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.PickupRefModel
-import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.zip.Inflater
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -63,7 +50,7 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
 //        }
 
         setSupportActionBar(activityBinding.toolBar.root)
-        setUpToolbar("SELECT GR")
+        setUpToolbar("SELECT LOADING SLIP")
         grDt= getSqlCurrentDate()
         setObserver()
         setOnClick()
@@ -76,6 +63,14 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
 
     }
 
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        return super.onKeyUp(keyCode, event)
+        if ( event!!.isCanceled)
+        {
+           successToast("data")
+            return true
+        }
+    }
 
     override fun onResume() {
         super.onResume()
@@ -119,17 +114,14 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
             loginDataModel?.companyid.toString(),
             "greentranswebsg_grallocationlistforpickupmanifest",
             listOf("prmbranchcode","prmdt"),
-//            arrayListOf(userDataModel?.loginbranchcode.toString(),grDt)
-            arrayListOf("321","2023-10-09")
+            arrayListOf(userDataModel?.loginbranchcode.toString(),grDt)
+//            arrayListOf("321","2023-10-09")
 //            "gtapp_loadingallocationlist_pickupmanifest",
 //            listOf("prmbranchcode","prmdt","prmusercode","prmmenucode","prmsessionid"),
 ////            arrayListOf(userDataModel?.loginbranchcode.toString())
 //            arrayListOf(userDataModel?.loginbranchcode.toString(),grDt,"GTAPP_NATIVEPICKUPMANIFEST",userDataModel?.sessionid.toString())
         )
     }
-
-
-
 
     private fun refreshData(){
         getGrList()
@@ -139,33 +131,31 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
      private fun setOnClick(){
          activityBinding.btnContinue.setOnClickListener {
 
-                 if (grList.size != 0) {
-                     hideProgressDialog()
-                     activityBinding.allCheck.setOnCheckedChangeListener{_,isCheck->
-                         if(!isCheck){
-                             rvAdapter!!.selectAll(isCheck)
-                         }else{
-                             rvAdapter!!.selectAll(isCheck)
-                         }
-                     }
-                     val gson = Gson()
-                     val jsonString = gson.toJson(selectedGrList)
-//                     if(!rvAdapter!!.notCheck)
-//                     {
-//                         errorToast("Please select atleast one loading slip")
-//                         return@setOnClickListener
-//                     }
+//             Utils.selectedGrList.addAll(grList)
+             if(rvAdapter == null) {
+                 errorToast(noLoadingGRSelectedErrMsg)
+                 return@setOnClickListener
+             }
+             val selectedItems: ArrayList<GrSelectionModel> = rvAdapter!!.getSelectedItems()
+             if (selectedItems.size == 0) {
+                 errorToast(noLoadingGRSelectedErrMsg)
+                 return@setOnClickListener
+             } else {
+                 hideProgressDialog()
 
-                     val intent = Intent(this, SavePickupManifestActivity::class.java)
-                     intent.putExtra("ARRAY_JSON", jsonString)
-                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                     startActivity(intent)
-                     finish()
-                     finishAffinity()
-                 } else {
-                     errorToast(mContext, "DATA NOT FOUND")
+                 activityBinding.allCheck.setOnCheckedChangeListener{_,isCheck->
+                     rvAdapter!!.selectAll(isCheck)
                  }
-//             }
+
+                 val gson = Gson()
+                 val jsonString = gson.toJson(selectedItems)
+                 val intent = Intent(this, SavePickupManifestActivity::class.java)
+//                     val intent = Intent(this, PickupManifestEntryActivity::class.java)
+                 intent.putExtra("ARRAY_JSON", jsonString)
+                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                 startActivity(intent)
+                 finish()
+             }
          }
 
 
@@ -196,18 +186,20 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
 
 
         viewModel.grLiveData.observe(this) { data ->
-            grList = data
+           grList = data
 //            setupRecyclerView()
+
 
         }
         mPeriod.observe(this) { date ->
             grDt = date.sqlsingleDate.toString()
+            getGrList()
             setupRecyclerView()
-            if(!rvAdapter!!.notCheck)
-             {
-                 errorToast("Please select atleast one loading slip")
-                 return@observe
-             }
+//            if(!rvAdapter!!.notCheck)
+//             {
+//                 errorToast("Please select atleast one loading slip")
+//                 return@observe
+//             }
 
         }
     }
@@ -230,10 +222,13 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
     override fun onClick(data: Any, clickType: String) {
        when (clickType) {
             "CHECK_SELECTED" -> run {
+
                 val model: GrSelectionModel = data as GrSelectionModel
-                selectedGrList.add(model)
+                grList.add(model)
+
+
                 val gson = Gson()
-//                successToast("show")
+
             }
 
         }

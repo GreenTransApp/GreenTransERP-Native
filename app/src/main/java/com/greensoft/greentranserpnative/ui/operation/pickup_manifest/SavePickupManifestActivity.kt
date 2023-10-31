@@ -16,7 +16,6 @@ import com.greensoft.greentranserpnative.databinding.ActivitySavePickupManifestB
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
 import com.greensoft.greentranserpnative.ui.common.alert.CommonAlert
-import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
@@ -49,7 +48,8 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
     var enteredPckgs=""
     var enteredGWeight=""
     var enteredBalancePckg=""
-    var menuCode="GTAPP_PICKUPMANIFEST"
+    var menuCode="GTAPP_NATIVEPICKUPMANIFEST"
+    var vehicleTypeTxt=""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding=ActivitySavePickupManifestBinding.inflate(layoutInflater)
@@ -58,12 +58,11 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
         setObserver()
         setSupportActionBar(activityBinding.toolBar.root)
         setUpToolbar("SAVE PICKUP MANIFEST")
-//        setupRecyclerView()
         setOnClick()
-        getIntentData()
+        setEnteredManifestData()
         getContentList()
         getpackingLov()
-        searchItem()
+//        searchItem()
 
 //        Utils.manifestList.forEachIndexed{index, element ->
 //
@@ -74,40 +73,37 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
     }
 
 
-    override fun onRestart() {
-        super.onRestart()
-        grList.clear()
-    }
 
     override fun onResume() {
         super.onResume()
-        refreshData()
+        getIntentData()
+//        refreshData()
     }
-    private fun refreshData(){
-        grList.clear()
-        setupRecyclerView()
-        lifecycleScope.launch {
-            getIntentData()
-            delay(1000)
-            activityBinding.refreshLayout.isRefreshing=false
-        }
-    }
+//    private fun refreshData(){
+////        grList.clear()
+////        setupRecyclerView()
+//        lifecycleScope.launch {
+//            getIntentData()
+//            delay(1000)
+////            activityBinding.refreshLayout.isRefreshing=false
+//        }
+//    }
 
-    fun searchItem(): Boolean {
-        activityBinding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                rvAdapter?.filter?.filter(query)
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                rvAdapter?.filter?.filter(newText)
-                return false
-            }
-
-        })
-        return true
-    }
+//    fun searchItem(): Boolean {
+//        activityBinding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                rvAdapter?.filter?.filter(query)
+//                return false
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                rvAdapter?.filter?.filter(newText)
+//                return false
+//            }
+//
+//        })
+//        return true
+//    }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.loading_slip_list, menu)
         return super.onCreateOptionsMenu(menu)
@@ -131,6 +127,32 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
             arrayListOf()
         )
     }
+
+     private fun setEnteredManifestData(){
+         activityBinding.inputBranch.setText(model!!.branchName.toString())
+         activityBinding.inputManifestNum.setText(model!!.manifestNo.toString())
+         activityBinding.inputPickupLocation.setText(model!!.pickupLocation.toString())
+         activityBinding.inputDate.setText(model!!.manifestDt.toString())
+         activityBinding.inputTime.setText(model!!.manifestTime.toString())
+         activityBinding.inputDriverName.setText(model!!.driverName.toString())
+         activityBinding.inputDriverMobile.setText(model!!.drivermobile.toString())
+         activityBinding.inputVendorName.setText(model!!.vendorName.toString())
+         activityBinding.inputVehicleNumber.setText(model!!.vehicleNo.toString())
+         activityBinding.inputCapacity.setText(model!!.capacity.toString())
+         activityBinding.inputRemark.setText(model!!.remark.toString())
+         if(model!!.vehicleType.toString()== "O"){
+             activityBinding.selectedVehicleType.setText("OWN")
+         }else if (model!!.vehicleType.toString()== "A"){
+             activityBinding.selectedVehicleType.setText("ATTACHED")
+         }else if (model!!.vehicleType.toString()== "M"){
+             activityBinding.selectedVehicleType.setText("MARKET")
+         }else if (model!!.loadedBy.toString()=="C"){
+             activityBinding.selectedLoadedBy.setText("CUSTOMER")
+         }else if(model!!.loadedBy.toString()=="S"){
+             activityBinding.selectedLoadedBy.setText("SELF")
+         }
+
+     }
     private fun openContentSelectionBottomSheet(rvList: ArrayList<ContentSelectionModel>, index: Int) {
         val commonList = ArrayList<CommonBottomSheetModel<Any>>()
         for (i in 0 until rvList.size) {
@@ -172,21 +194,19 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
 
     private fun setupRecyclerView() {
         linearLayoutManager = LinearLayoutManager(this)
-        if (rvAdapter == null) {
-            rvAdapter = SavePickupManifestAdapter(this,this,grList, this@SavePickupManifestActivity)
-            activityBinding.recyclerView.apply {
-                layoutManager = linearLayoutManager
-                adapter = rvAdapter
-            }
+        rvAdapter = SavePickupManifestAdapter(this,this,grList, this@SavePickupManifestActivity)
+        activityBinding.recyclerView.apply {
+            layoutManager = linearLayoutManager
+            adapter = rvAdapter
         }
 
 
     }
      private fun setObserver(){
-         activityBinding.refreshLayout.setOnRefreshListener {
-             refreshData()
-
-         }
+//         activityBinding.refreshLayout.setOnRefreshListener {
+//             refreshData()
+//
+//         }
          viewModel.isError.observe(this) { errMsg ->
              errorToast(errMsg)
          }
@@ -214,6 +234,7 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
      }
 
     private fun getIntentData() {
+//        if(grList.isNotEmpty()) grList.clear()
         if(intent != null) {
             val jsonString = intent.getStringExtra("ARRAY_JSON")
             if(jsonString != "") {
@@ -255,9 +276,41 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
         }else if(clickType =="PACKING_SELECT"){
             openPackingSelectionBottomSheet(packingList,index)
 
+        }else if(clickType =="REMOVE_SELECT"){
+//            grList.clear()
+            val removingItem: GrSelectionModel = data as GrSelectionModel
+//            CommonAlert.createAlert(
+//                context = this,
+//                header = "Alert!!",
+//                description = " Are You Sure You Want To Remove GR #: ${removingItem.grno}",
+//                callback =this,
+//                alertCallType ="SELECT_REMOVE",
+//                data = ""
+//            )
+//
+            if(grList.isNotEmpty() && index <= grList.size - 1) {
+                grList.removeAt(index)
+                setupRecyclerView()
+                successToast("Successfully Removed. GR #: ${removingItem.grno}")
+            } else {
+                errorToast("Something went wrong.")
+            }
+
         }
 
     }
+
+ private  fun removeAt(index:Int){
+     if(grList.isNotEmpty() && index <= grList.size - 1) {
+                grList.removeAt(index)
+                setupRecyclerView()
+//                successToast("Successfully Removed. GR #: ${removingItem.grno}")
+            } else {
+                errorToast("Something went wrong.")
+            }
+
+     }
+
 
     override fun onItemClickWithAdapter(data: Any, clickType: String, index: Int) {
         super.onItemClickWithAdapter(data, clickType, index)
@@ -281,8 +334,10 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
                         val intent=Intent(this,GrSelectionActivity::class.java)
                          startActivity(intent)
                     }else if(alertCallType =="SELECT_SAVE"){
-                        successToast("testing")
-//                        savePickupManifest()
+//                        successToast("testing")
+                        savePickupManifest()
+                    }else if(alertCallType == "SELECT_REMOVE"){
+
                     }
 
                 }
@@ -327,6 +382,7 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
     }
 
          viewModel.savePickupManifest(
+             companyId=userDataModel!!.companyid.toString(),
              branchcode = userDataModel?.loginbranchcode.toString(),
              manifestdt =model!!.manifestDt.toString(),
              time = model!!.manifestTime.toString(),

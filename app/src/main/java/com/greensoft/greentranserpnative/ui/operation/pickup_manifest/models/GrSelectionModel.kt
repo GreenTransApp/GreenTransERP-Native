@@ -4,6 +4,7 @@ package com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models
 data class GrSelectionModel(
     val commandstatus: Long,
     val commandmessage: Any?,
+    var isSelected: Boolean = false,
     val grno: String,
     val grdt: String,
     val picktime: String,

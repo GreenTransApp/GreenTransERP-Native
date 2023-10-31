@@ -699,7 +699,9 @@
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </LinearLayout>
+
         <LinearLayout
+            android:id="@+id/input_layout_remark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
@@ -722,7 +724,7 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/input_layout_remark"
+
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:layout_constraintTop_toBottomOf="@id/input_layout_loaded_by"
             app:layout_constraintStart_toStartOf="parent"
@@ -732,27 +734,222 @@
             android:layout_height="wrap_content"
             android:hint=""
             >
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_remark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
-                android:padding="20dp"
-                android:maxLines="3"
-                android:textColor="@color/black"
                 android:lines="2"
+                android:maxLines="3"
+                android:padding="20dp"
                 android:textAllCaps="true"
+                android:textColor="@color/black"
 
                 />
-
         </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
+
+<!--        <LinearLayout-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/input_layout_remark"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:orientation="vertical">-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:background="@color/colorPrimary"-->
+<!--                android:layout_height="wrap_content">-->
+
+<!--                <androidx.cardview.widget.CardView-->
+<!--                    android:id="@+id/search_layout"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="45sp"-->
+<!--                    android:layout_margin="6sp">-->
+
+<!--                    <androidx.appcompat.widget.SearchView-->
+<!--                        android:id="@+id/search_view"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+
+<!--                        app:queryHint="Search here..." />-->
+<!--                </androidx.cardview.widget.CardView>-->
+<!--            </LinearLayout>-->
+
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent">-->
+
+<!--                <HorizontalScrollView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent">-->
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:orientation="vertical"-->
+<!--                        >-->
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:orientation="horizontal"-->
+<!--                            >-->
+
+<!--                            <TextView-->
+<!--                                android:id="@+id/sNo_txt"-->
+<!--                                android:layout_width="50sp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:gravity="center_horizontal"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:text="S#"-->
+<!--                                android:background="@drawable/table_header_cell_bg"-->
+<!--                                android:textSize="12sp" />-->
+
+
+
+<!--                            <TextView-->
+<!--                                android:id="@+id/gr_no_txt"-->
+<!--                                android:layout_width="150sp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:gravity="center_horizontal"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:background="@drawable/table_header_cell_bg"-->
+<!--                                android:text="GR#"-->
+<!--                                android:textSize="12sp" />-->
+
+<!--                            <TextView-->
+<!--                                android:id="@+id/allocated_dt_txt"-->
+<!--                                android:layout_width="150sp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:gravity="center_horizontal"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:background="@drawable/table_header_cell_bg"-->
+<!--                                android:text="Allocate Date"-->
+<!--                                android:textSize="12sp" />-->
+
+
+<!--                            <TextView-->
+<!--                                android:id="@+id/cust_txt"-->
+<!--                                android:layout_width="200sp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:gravity="center_horizontal"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:background="@drawable/table_header_cell_bg"-->
+<!--                                android:text="Customer"-->
+<!--                                android:textSize="12sp" />-->
+
+<!--                            <TextView-->
+<!--                                android:id="@+id/cngr_txt"-->
+<!--                                android:layout_width="200sp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:gravity="center_horizontal"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:background="@drawable/table_header_cell_bg"-->
+<!--                                android:text="Consignor"-->
+<!--                                android:textSize="12sp" />-->
+
+<!--                            <TextView-->
+<!--                                android:id="@+id/cnge_txt"-->
+<!--                                android:layout_width="200sp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:gravity="center_horizontal"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:background="@drawable/table_header_cell_bg"-->
+<!--                                android:text="Consignee"-->
+<!--                                android:textSize="12sp" />-->
+
+<!--                            <TextView-->
+<!--                                android:id="@+id/destination_txt"-->
+<!--                                android:layout_width="200sp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:gravity="center_horizontal"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:background="@drawable/table_header_cell_bg"-->
+<!--                                android:text="Destination"-->
+<!--                                android:textSize="12sp" />-->
+
+<!--                            <TextView-->
+<!--                                android:id="@+id/content_txt"-->
+<!--                                android:layout_width="200sp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:gravity="center_horizontal"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:background="@drawable/table_header_cell_bg"-->
+<!--                                android:text="Content"-->
+<!--                                android:textSize="12sp" />-->
+
+<!--                            <TextView-->
+<!--                                android:id="@+id/packing_txt"-->
+<!--                                android:layout_width="150sp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:gravity="center_horizontal"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:background="@drawable/table_header_cell_bg"-->
+<!--                                android:text="Packing"-->
+<!--                                android:textSize="12sp" />-->
+
+<!--                            <TextView-->
+<!--                                android:id="@+id/balance_pckgs_txt"-->
+<!--                                android:layout_width="150sp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:gravity="center_horizontal"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:background="@drawable/table_header_cell_bg"-->
+<!--                                android:text="Balance Pckgs"-->
+<!--                                android:textSize="12sp" />-->
+
+<!--                            <TextView-->
+<!--                                android:id="@+id/pckgs_txt"-->
+<!--                                android:layout_width="150sp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:gravity="center_horizontal"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:background="@drawable/table_header_cell_bg"-->
+<!--                                android:text="Pckgs"-->
+<!--                                android:textSize="12sp" />-->
+
+<!--                            <TextView-->
+<!--                                android:id="@+id/g_weight_txt"-->
+<!--                                android:layout_width="150sp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:gravity="center_horizontal"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:background="@drawable/table_header_cell_bg"-->
+<!--                                android:text="Gross Weight"-->
+<!--                                android:textSize="12sp" />-->
+
+
+
+<!--                            <TextView-->
+<!--                                android:id="@+id/action_txt"-->
+<!--                                android:layout_width="150sp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:gravity="center_horizontal"-->
+<!--                                android:textColor="@color/white"-->
+<!--                                android:background="@drawable/table_header_cell_bg"-->
+<!--                                android:text="Action"-->
+<!--                                android:textSize="12sp" />-->
+
+<!--                        </LinearLayout>-->
+
+
+<!--                        <androidx.recyclerview.widget.RecyclerView-->
+<!--                            android:id="@+id/recyclerView"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            app:layout_constraintTop_toBottomOf="@+id/period"-->
+<!--                            tools:listitem="@layout/save_pickup_manifest_item" />-->
+<!--                    </LinearLayout>-->
+<!--                </HorizontalScrollView>-->
+
+<!--            </LinearLayout>-->
+<!--        </LinearLayout>-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
   </ScrollView>
-
-
-
          <com.google.android.material.button.MaterialButton
              android:id="@+id/btn_gr_select"
              android:layout_width="match_parent"
@@ -767,6 +964,8 @@
              android:text="Select Gr"
              app:cornerRadius="10dp"
              />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

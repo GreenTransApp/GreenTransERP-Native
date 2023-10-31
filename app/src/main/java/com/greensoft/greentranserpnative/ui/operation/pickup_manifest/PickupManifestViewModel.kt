@@ -79,6 +79,7 @@ class PickupManifestViewModel @Inject constructor(private val _repo: PickupManif
     }
 
     fun savePickupManifest(
+        companyId:String,
         branchcode :String ,
         manifestdt :String ,
         time :String ,
@@ -107,6 +108,7 @@ class PickupManifestViewModel @Inject constructor(private val _repo: PickupManif
         ){
         viewModelScope.launch(Dispatchers.IO) {
             _repo.savePickupManifest(
+                companyId,
                 branchcode,
                 manifestdt,
                 time,

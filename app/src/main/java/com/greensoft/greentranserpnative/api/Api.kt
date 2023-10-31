@@ -198,6 +198,7 @@ interface Api {
     @FormUrlEncoded
     @POST("ManifestAPI/SavePickupManifestERPNative")
      fun savePickupManifest(
+        @Field("prmconnstring") companyId: String,
         @Field("prmbranchcode")prmbranchcode :String ,
         @Field("prmdt")prmdt :String ,
         @Field("prmtime")prmtime :String ,

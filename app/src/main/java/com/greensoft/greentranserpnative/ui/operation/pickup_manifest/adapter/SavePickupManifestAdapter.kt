@@ -3,7 +3,6 @@ package com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter
 import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
@@ -11,26 +10,22 @@ import android.widget.Filterable
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
-import com.greensoft.greentranserpnative.databinding.BookingItemViewBinding
 import com.greensoft.greentranserpnative.databinding.SavePickupManifestItemBinding
-import com.greensoft.greentranserpnative.databinding.SelectedGrItemBinding
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import com.greensoft.greentranserpnative.ui.operation.booking.BookingActivity
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ContentSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.call_register.models.CallRegisterModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestEntryActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.SavePickupManifestActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
 import java.util.Locale
 
-class SavePickupManifestAdapter (private val mContext: Context,
-                                 private val activity: SavePickupManifestActivity,
-                                 private val manifestList: ArrayList<GrSelectionModel>,
-                                 private val onRowClick: OnRowClick<Any>,
+class SavePickupManifestAdapter(private val mContext: Context,
+                                private val activity: SavePickupManifestActivity,
+                                private val manifestList: ArrayList<GrSelectionModel>,
+                                private val onRowClick: OnRowClick<Any>,
 
-                                 ) : RecyclerView.Adapter<SavePickupManifestAdapter.ManifestViewHolder>() , Filterable {
-    private  var filterList: ArrayList<GrSelectionModel>
+                                ) : RecyclerView.Adapter<SavePickupManifestAdapter.ManifestViewHolder>() , Filterable {
+    private  var filterList: ArrayList<GrSelectionModel> = ArrayList()
 
     init {
         filterList=manifestList
@@ -56,7 +51,8 @@ class SavePickupManifestAdapter (private val mContext: Context,
                  }
              })
              binding.btnRemove.setOnClickListener {
-                 removeItem(model, adapterPosition)
+                 onRowClick.onRowClick(model, "REMOVE_SELECT", adapterPosition)
+//                 removeItem(model, adapterPosition)
              }
 
              binding.gWeight.addTextChangedListener { object :TextWatcher{
@@ -98,18 +94,17 @@ class SavePickupManifestAdapter (private val mContext: Context,
     override fun getItemCount():Int = filterList.size
 
    fun pckgsChange(index: Int, layoutBinding: SavePickupManifestItemBinding){
-
-       val pckgs:Double?=layoutBinding.pckgs.text.toString().toDoubleOrNull()
-       val balancePckgs:Double?=layoutBinding.balancePckgs.text.toString().toDoubleOrNull()
+           val pckgs:Double?=layoutBinding.pckgs.text.toString().toDoubleOrNull()
+           val balancePckgs:Double?=layoutBinding.balancePckgs.text.toString().toDoubleOrNull()
            if (pckgs != null && balancePckgs != null) {
-               if(pckgs >= 0 && pckgs > balancePckgs){
-                   layoutBinding.pckgs.setText(balancePckgs.toString())
-                   activity.getPckgsValue(layoutBinding.pckgs.text.toString().toDouble())
-                   activity.getBalancepckg(layoutBinding.balancePckgs.text.toString().toDouble())
-                   Toast.makeText(mContext, "pckgs can not be greater then balance pckgs", Toast.LENGTH_SHORT).show()
-               }else{
+           if(pckgs >= 0 && pckgs > balancePckgs){
+               layoutBinding.pckgs.setText(balancePckgs.toString())
+               activity.getPckgsValue(layoutBinding.pckgs.text.toString().toDouble())
+               activity.getBalancepckg(layoutBinding.balancePckgs.text.toString().toDouble())
+               Toast.makeText(mContext, "pckgs can not be greater then balance pckgs", Toast.LENGTH_SHORT).show()
+           }else{
 //                   Toast.makeText(mContext, "went something wrong", Toast.LENGTH_SHORT).show()
-               }
+           }
            }
    }
     fun setContent(contentModel: ContentSelectionModel, adapterPosition: Int) {
@@ -122,10 +117,10 @@ class SavePickupManifestAdapter (private val mContext: Context,
         notifyItemChanged(adapterPosition)
     }
 
-    fun removeItem(model: GrSelectionModel, index: Int) {
-        manifestList.removeAt(index)
-        notifyDataSetChanged()
-    }
+//    fun removeItem(model: GrSelectionModel, index: Int) {
+//        manifestList.removeAt(index)
+//        notifyDataSetChanged()
+//    }
 
     override fun getFilter(): Filter {
         return object : Filter() {

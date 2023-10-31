@@ -6,15 +6,22 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
-import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseActivity
 
 import com.greensoft.greentranserpnative.databinding.ActivityPickupManifestEntryBinding
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.booking.BookingViewModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.ContentSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.SavePickupManifestAdapter
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.DriverSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.PickupLocationModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.ManifestEnteredDataModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.VehicleSelectionModel
@@ -30,6 +37,7 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
     private val viewModel: PickupManifestViewModel by viewModels()
 //    var selectedVehicleType = arrayOf("OWN", "ATTACHED", "MARKET")
     var selectedLoadedBy = arrayOf("CUSTOMER", "SELF")
+    lateinit var linearLayoutManager: LinearLayoutManager
     private var branchList: ArrayList<BranchSelectionModel> = ArrayList()
     private var locationList: ArrayList<PickupLocationModel> = ArrayList()
     private var driverList: ArrayList<DriverSelectionModel> = ArrayList()
@@ -37,16 +45,30 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
     private var vehicleList: ArrayList<VehicleSelectionModel> = ArrayList()
     private var vehicleTypeList: ArrayList<VehicleTypeModel> = ArrayList()
 
+    private val bookingViewModel: BookingViewModel by viewModels()
+    private var rvAdapter: SavePickupManifestAdapter? = null
+    private var grList: ArrayList<GrSelectionModel> = ArrayList()
+    private var contentList: ArrayList<ContentSelectionModel> = ArrayList()
+    private var packingList: ArrayList<PackingSelectionModel> = ArrayList()
+    private var model: ManifestEnteredDataModel? = null
+
+
+    var contentCode=""
+    var content=""
+    var enteredPckgs=""
+    var enteredGWeight=""
+    var enteredBalancePckg=""
+
     var vendorCode = ""
     var areaCode = ""
     var branchCode = ""
     var vehicleCode = ""
     var vehicleCategory = ""
     var loadedByType = ""
-    var manifestDt=""
+    var manifestDt= getSqlCurrentDate()
     var driverCode=""
 
-    var menuCode="GTAPP_PICKUPMANIFEST"
+    var menuCode="GTAPP_NATIVEPICKUPMANIFEST"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,26 +79,74 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
         activityBinding.inputTime.setText(getSqlCurrentTime())
         setUpToolbar("Pickup Manifest")
         setObservers()
+
         getBranchList()
         getPickupLocation()
         getDriverList()
         getVendorList()
         getVehicleTypeList()
         setOnclick()
+//        getIntentData()
         setSpinners()
+//        val data=Utils.selectedGrList
+//        getIntentData()
+
 
 
     }
 
+    override fun onRestart() {
+        super.onRestart()
+
+
+    }
     override fun onResume() {
         super.onResume()
-        val data=Utils.manifestModel
-        successToast(data.toString())
+//        val data=Utils.selectedGrList
+//        successToast(data.toString())
+//        getIntentData()
     }
 
 
+//    private fun getIntentData() {
+//        if(intent != null) {
+//            val jsonString = intent.getStringExtra("ARRAY_JSON")
+//            if(jsonString != "") {
+//                val gson = Gson()
+//                val listType = object : TypeToken<List<GrSelectionModel>>() {}.type
+//                val resultList: ArrayList<GrSelectionModel> =
+//                    gson.fromJson(jsonString.toString(), listType)
+//                grList.addAll(resultList)
+//                setupRecyclerView()
+//            }
+//        }
+//    }
 
-      private fun setOnclick(){
+//    private fun setupRecyclerView() {
+//        linearLayoutManager = LinearLayoutManager(this)
+//        if (rvAdapter == null) {
+//            rvAdapter = SavePickupManifestAdapter(this,this,grList, this@PickupManifestEntryActivity)
+//            activityBinding.recyclerView.apply {
+//                layoutManager = linearLayoutManager
+//                adapter = rvAdapter
+//            }
+//        }
+//
+//
+//    }
+
+    fun getPckgsValue(pckgs: Double){
+        enteredPckgs=pckgs.toString()
+    }
+
+    fun getBalancepckg(balancePckg:Double){
+        enteredBalancePckg=balancePckg.toString()
+    }
+    fun getGWeightValue(gWeight:Double){
+        enteredGWeight=gWeight.toString()
+    }
+
+    private fun setOnclick(){
           activityBinding.inputBranch.setOnClickListener{
               openBranchSelectionBottomSheet(branchList)
           }
@@ -88,6 +158,7 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
           }
           activityBinding.inputVendorName.setOnClickListener{
               openVendorSelectionBottomSheet(vendorList)
+              getVehicleList()
           }
 
               activityBinding.inputVehicleNumber.setOnClickListener{
@@ -126,30 +197,30 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
 //               }
 //           }
           activityBinding.btnGrSelect.setOnClickListener {
-//            if (activityBinding.inputBranch.text.isNullOrEmpty()) {
-//                Companion.errorToast(this,"Please Select Branch")
+            if (activityBinding.inputBranch.text.isNullOrEmpty()) {
+                Companion.errorToast(this,"Please Select Branch")
+                return@setOnClickListener
+            }else if(!activityBinding.autoManifestCheck.isChecked){
+                if(activityBinding.inputManifestNum .text.isNullOrEmpty()) {
+                    Companion.errorToast(this,"Please Enter Manifest Number")
+                    return@setOnClickListener
+            }
+            }else if (activityBinding.inputDate.text.isNullOrEmpty()) {
+                Companion.errorToast(this,"Please Select Date")
+                return@setOnClickListener
+            }else if (activityBinding.inputTime.text.isNullOrEmpty()) {
+                Companion.errorToast(this,"Please Select Time")
+                return@setOnClickListener
+            }else if (activityBinding.inputDriverName .text.isNullOrEmpty()) {
+                Companion.errorToast(this,"Please Driver Name")
+                return@setOnClickListener
+            }else if (vehicleCategory.isNullOrEmpty()) {
+                Companion.errorToast(this,"Please Select Vehicle Type")
+                return@setOnClickListener
+//            }else if (activityBinding.inputVehicleNumber .text.isNullOrEmpty()) {
+//                Companion.errorToast(this,"Please Select Vehicle Number")
 //                return@setOnClickListener
-//            }else if(!activityBinding.autoManifestCheck.isChecked){
-//                if(activityBinding.inputManifestNum .text.isNullOrEmpty()) {
-//                    Companion.errorToast(this,"Please Enter Manifest Number")
-//                    return@setOnClickListener
-//            }
-//            }else if (activityBinding.inputDate.text.isNullOrEmpty()) {
-//                Companion.errorToast(this,"Please Select Date")
-//                return@setOnClickListener
-//            }else if (activityBinding.inputTime.text.isNullOrEmpty()) {
-//                Companion.errorToast(this,"Please Select Time")
-//                return@setOnClickListener
-//            }else if (activityBinding.inputDriverName .text.isNullOrEmpty()) {
-//                Companion.errorToast(this,"Please Driver Name")
-//                return@setOnClickListener
-//            }else if (vehicleCategory.isNullOrEmpty()) {
-//                Companion.errorToast(this,"Please Select Vehicle Type")
-//                return@setOnClickListener
-////            }else if (activityBinding.inputVehicleNumber .text.isNullOrEmpty()) {
-////                Companion.errorToast(this,"Please Select Vehicle Number")
-////                return@setOnClickListener
-//            }
+            }
               val intent= Intent(this,GrSelectionActivity::class.java)
               getManifestData()
 
@@ -175,7 +246,7 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
           }
           viewModel.vendorLiveData.observe(this) { vendData ->
               vendorList = vendData
-              getVehicleList()
+
           }
           viewModel.vehicleLiveData.observe(this) { vehicleData ->
               vehicleList = vehicleData
@@ -242,6 +313,7 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
                                   //customer
                                   loadedByType="C"
                               }
+                              // self
                               2 -> kotlin.run {
                                   loadedByType="S"
                               }
@@ -364,7 +436,7 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
              manifestNo = activityBinding.inputManifestNum.text.toString(),
              pickupLocation = activityBinding.inputPickupLocation.text.toString(),
              driverCode = driverCode,
-             manifestDt = activityBinding.inputDate.text.toString(),
+             manifestDt = manifestDt,
              manifestTime = activityBinding.inputTime.text.toString(),
              driverName = activityBinding.inputDriverName.text.toString(),
              drivermobile = activityBinding.inputDriverMobile.text.toString(),
