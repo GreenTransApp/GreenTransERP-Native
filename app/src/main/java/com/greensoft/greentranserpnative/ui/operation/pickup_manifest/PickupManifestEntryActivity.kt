@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -158,15 +159,16 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
           }
           activityBinding.inputVendorName.setOnClickListener{
               openVendorSelectionBottomSheet(vendorList)
-              getVehicleList()
+//              getVehicleList()
           }
 
               activityBinding.inputVehicleNumber.setOnClickListener{
-                  if (activityBinding.inputVendorName.text!!.isNullOrEmpty()){
-                      errorToast("Please Select Vendor First")
-                      return@setOnClickListener
-                  }
-                  openVehicleSelectionBottomSheet(vehicleList)
+//                  if (activityBinding.inputVendorName.text!!.isNullOrEmpty()){
+//                      errorToast("Please Select Vendor First")
+//                      return@setOnClickListener
+//                  }
+                  getVehicleList()
+
 
           }
 
@@ -214,16 +216,13 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
             }else if (activityBinding.inputDriverName .text.isNullOrEmpty()) {
                 Companion.errorToast(this,"Please Driver Name")
                 return@setOnClickListener
-            }else if (vehicleCategory.isNullOrEmpty()) {
-                Companion.errorToast(this,"Please Select Vehicle Type")
+
+            }else if (activityBinding.inputVehicleNumber .text.isNullOrEmpty()) {
+                Companion.errorToast(this,"Please Select Vehicle Number")
                 return@setOnClickListener
-//            }else if (activityBinding.inputVehicleNumber .text.isNullOrEmpty()) {
-//                Companion.errorToast(this,"Please Select Vehicle Number")
-//                return@setOnClickListener
             }
               val intent= Intent(this,GrSelectionActivity::class.java)
               getManifestData()
-
               startActivity(intent)
 
           }
@@ -234,6 +233,15 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
           viewModel.isError.observe(this) { errMsg ->
               errorToast(errMsg)
           }
+          viewModel.viewDialogLiveData.observe(this, Observer { show ->
+//            progressBar.visibility = if(show) View.VISIBLE else View.GONE
+              if(show) {
+                  showProgressDialog()
+              } else {
+                  hideProgressDialog()
+              }
+          })
+
           viewModel.branchLiveData.observe(this) { branchData ->
               branchList = branchData
           }
@@ -249,7 +257,13 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
 
           }
           viewModel.vehicleLiveData.observe(this) { vehicleData ->
-              vehicleList = vehicleData
+              if(vehicleData.elementAt(0).commandstatus== 1){
+                  vehicleList = vehicleData
+                  openVehicleSelectionBottomSheet(vehicleList)
+              }else{
+                 errorToast(vehicleData.elementAt(0).commandmessage.toString())
+              }
+
           }
           viewModel.vehicleTypeLiveData.observe(this) { type ->
               vehicleTypeList = type
@@ -280,14 +294,22 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
                           when(vehicleCategory){
                               //OWN
                               "O"-> run{
-
+                                  activityBinding.inputVendorName.text!!.clear()
+                                  activityBinding.inputVendorName.isEnabled= false
+                                  activityBinding.inputVehicleNumber.text!!.clear()
+                                  vendorCode=""
                               }
                               //ATTACHED
                               "A"-> run{
+                                  activityBinding.inputVendorName.isEnabled= true
+                                  activityBinding.inputVehicleNumber.text!!.clear()
 
                               }
                               "M"-> run{
-
+                                  vendorCode=""
+                                  activityBinding.inputVendorName.text!!.clear()
+                                  activityBinding.inputVendorName.isEnabled= false
+                                  activityBinding.inputVehicleNumber.text!!.clear()
                               }
 
                           }
@@ -309,12 +331,13 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
                           id: Long
                       ) {
                           when(position){
-                              1-> run{
+                              0-> run{
                                   //customer
+
                                   loadedByType="C"
                               }
                               // self
-                              2 -> kotlin.run {
+                              1 -> kotlin.run {
                                   loadedByType="S"
                               }
                           }
@@ -395,7 +418,7 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
         val commonList = ArrayList<CommonBottomSheetModel<Any>>()
         for (i in 0 until rvList.size) {
             commonList.add(CommonBottomSheetModel(rvList[i].vendname, rvList[i]))
-
+//            getVehicleList()
         }
         openCommonBottomSheet(this, "Vendor Selection", this, commonList)
     }
@@ -476,6 +499,7 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
               val selectedVendor = data as VendorSelectionModel
               activityBinding.inputVendorName.setText(selectedVendor.vendname)
               vendorCode=selectedVendor.vendcode
+//              getVehicleList()
 
 
           }

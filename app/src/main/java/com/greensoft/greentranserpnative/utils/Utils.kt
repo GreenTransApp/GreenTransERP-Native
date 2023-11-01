@@ -69,6 +69,14 @@ object Utils {
         }
         return false
     }
+    fun isStringNotEntered(number: String?): Boolean {
+        val enteredNum = number.toString()
+        if(number.isNullOrBlank() || enteredNum == null || enteredNum <= "") {
+            return true
+        }
+        return false
+    }
+
 //    fun changeDateFormatForEway(date: String?): String {
 //        if(date == null) return BaseActivity.getSqlCurrentDate()
 ////        var dateSplittedVal: List<String> = date.split(Pattern().split("/"),0)

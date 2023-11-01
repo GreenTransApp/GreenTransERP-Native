@@ -15,7 +15,7 @@ data class GrSelectionModel(
     val pickuppoint: Any?,
     val deliverypoint: Any?,
     val custcode: String,
-    val custname: String,
+    val custname: String?,
     val cngr: String,
     val cngrname: String,
     val cnge: String,
@@ -25,12 +25,12 @@ data class GrSelectionModel(
     val regno: Any?,
     val allocateto: Any?,
     val allocatedtoname: Any?,
-    val goods: String,
-    val pckgs: Double,
-    val aweight: Double,
-    val mfpckg: Double,
+    var goods: String,
+    var pckgs: Any?,
+    val aweight: Any?,
+    var mfpckg: Any?,
     val loadingno: String,
     val loadingdt: String,
     val loadingviewdt: String,
-    var content: String,
-)
+
+    )

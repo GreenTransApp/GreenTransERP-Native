@@ -17,7 +17,9 @@ import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSele
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestEntryActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.SavePickupManifestActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
 import java.util.Locale
+import kotlin.math.roundToInt
 
 class SavePickupManifestAdapter(private val mContext: Context,
                                 private val activity: SavePickupManifestActivity,
@@ -47,6 +49,8 @@ class SavePickupManifestAdapter(private val mContext: Context,
                  override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
                  override fun afterTextChanged(s: Editable?) {
                      pckgsChange(adapterPosition,binding)
+                     val pckgs:Int=binding.pckgs.text.toString().toDouble().toInt()
+                     activity.getPckgsValue(pckgs)
 
                  }
              })
@@ -55,22 +59,26 @@ class SavePickupManifestAdapter(private val mContext: Context,
 //                 removeItem(model, adapterPosition)
              }
 
-             binding.gWeight.addTextChangedListener { object :TextWatcher{
+             binding.gWeight.addTextChangedListener ( object :TextWatcher{
                  override fun beforeTextChanged(
                      s: CharSequence?,
                      start: Int,
                      count: Int,
-                     after: Int
-                 ) {}
+                     after: Int) {}
                  override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
                  override fun afterTextChanged(s: Editable?) {
-                     activity.getGWeightValue(binding.gWeight.text.toString().toDouble())
+                         activity.getGWeightValue(binding.gWeight.text.toString().toDouble())
+
+
+
                  }
 
-             } }
+             } )
 
          }
         fun bindData(model: GrSelectionModel, onRowClick: OnRowClick<Any>) {
+           model.pckgs = model.pckgs.toString().toDouble().roundToInt()
+           model.mfpckg = model.mfpckg.toString().toDouble().roundToInt()
             binding.grModel = model
             binding.index = adapterPosition
             setOnClick(model)
@@ -94,26 +102,40 @@ class SavePickupManifestAdapter(private val mContext: Context,
     override fun getItemCount():Int = filterList.size
 
    fun pckgsChange(index: Int, layoutBinding: SavePickupManifestItemBinding){
-           val pckgs:Double?=layoutBinding.pckgs.text.toString().toDoubleOrNull()
-           val balancePckgs:Double?=layoutBinding.balancePckgs.text.toString().toDoubleOrNull()
+           val pckgs:Int?=layoutBinding.pckgs.text.toString().toIntOrNull()
+           val balancePckgs:Int?=layoutBinding.balancePckgs.text.toString().toIntOrNull()
            if (pckgs != null && balancePckgs != null) {
            if(pckgs >= 0 && pckgs > balancePckgs){
-               layoutBinding.pckgs.setText(balancePckgs.toString())
-               activity.getPckgsValue(layoutBinding.pckgs.text.toString().toDouble())
-               activity.getBalancepckg(layoutBinding.balancePckgs.text.toString().toDouble())
-               Toast.makeText(mContext, "pckgs can not be greater then balance pckgs", Toast.LENGTH_SHORT).show()
-           }else{
+//               layoutBinding.pckgs.text= layoutBinding.balancePckgs.text
+               if(balancePckgs.toString() != layoutBinding.pckgs.text.toString()) {
+                   layoutBinding.pckgs.setText(balancePckgs.toString())
+                   Toast.makeText(mContext, "pckgs can not be greater then balance pckgs", Toast.LENGTH_SHORT).show()
+               }
+               activity.getBalancepckg(layoutBinding.balancePckgs.text.toString().toInt())
+
+           }
+           else if( pckgs == 0){
+               layoutBinding.pckgs.setText(layoutBinding.balancePckgs.text.toString())
 //                   Toast.makeText(mContext, "went something wrong", Toast.LENGTH_SHORT).show()
            }
            }
    }
-    fun setContent(contentModel: ContentSelectionModel, adapterPosition: Int) {
 
-        manifestList[adapterPosition].content = contentModel.itemname
+    fun getEnteredData(): ArrayList<GrSelectionModel>{
+        return manifestList
+    }
+    fun setContent(contentModel: ContentSelectionModel, adapterPosition: Int) {
+        manifestList[adapterPosition].goods = contentModel.itemname
         notifyItemChanged(adapterPosition)
     }
     fun setPacking(pckgsModel: PackingSelectionModel, adapterPosition: Int) {
-        manifestList[adapterPosition].packing = pckgsModel.packingname
+//        manifestList[adapterPosition].packing = pckgsModel.packingname
+        filterList[adapterPosition].packing = pckgsModel.packingname
+        manifestList.forEachIndexed { index, grSelectionModel ->
+            if(grSelectionModel.grno == filterList[adapterPosition].grno) {
+                grSelectionModel.packing = pckgsModel.packingname
+            }
+        }
         notifyItemChanged(adapterPosition)
     }
 
@@ -135,7 +157,7 @@ class SavePickupManifestAdapter(private val mContext: Context,
 //                             row.custname.lowercase().contains(charString.lowercase(Locale.getDefault()))
                             row.grno.toString().contains(charString.lowercase(Locale.getDefault()))
                             ||row.grdt.contains(charString.lowercase(Locale.getDefault()))
-                            ||row.custname.lowercase().contains(charString.lowercase(Locale.getDefault()))
+                            ||row.custname!!.lowercase().contains(charString.lowercase(Locale.getDefault()))
                             ||row.destname.lowercase().contains(charString.lowercase(Locale.getDefault()))
                         ){
                             filteredList.add(row)

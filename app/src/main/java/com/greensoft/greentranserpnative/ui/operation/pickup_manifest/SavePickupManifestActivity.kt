@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
-import androidx.appcompat.widget.SearchView
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -28,8 +26,6 @@ import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.Man
 import com.greensoft.greentranserpnative.utils.Utils
 
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -129,6 +125,11 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
     }
 
      private fun setEnteredManifestData(){
+         if (model!!.loadedBy.toString()=="C"){
+             activityBinding.selectedLoadedBy.setText("CUSTOMER")
+         }else if(model!!.loadedBy.toString()=="S"){
+             activityBinding.selectedLoadedBy.setText("SELF")
+         }
          activityBinding.inputBranch.setText(model!!.branchName.toString())
          activityBinding.inputManifestNum.setText(model!!.manifestNo.toString())
          activityBinding.inputPickupLocation.setText(model!!.pickupLocation.toString())
@@ -146,10 +147,6 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
              activityBinding.selectedVehicleType.setText("ATTACHED")
          }else if (model!!.vehicleType.toString()== "M"){
              activityBinding.selectedVehicleType.setText("MARKET")
-         }else if (model!!.loadedBy.toString()=="C"){
-             activityBinding.selectedLoadedBy.setText("CUSTOMER")
-         }else if(model!!.loadedBy.toString()=="S"){
-             activityBinding.selectedLoadedBy.setText("SELF")
          }
 
      }
@@ -248,11 +245,11 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
         }
     }
 
-    fun getPckgsValue(pckgs: Double){
+    fun getPckgsValue(pckgs: Int){
         enteredPckgs=pckgs.toString()
     }
 
-   fun getBalancepckg(balancePckg:Double){
+   fun getBalancepckg(balancePckg:Int){
        enteredBalancePckg=balancePckg.toString()
    }
     fun getGWeightValue(gWeight:Double){
@@ -371,14 +368,33 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
 
         var actualGrNo: String = ""
         var actualPacking: String = ""
-
-
+        var actualAWeight: String = ""
+        var actualContent: String = ""
+        var adapterEnteredData: ArrayList<GrSelectionModel>? = rvAdapter?.getEnteredData()
+        run enteredData@{
+            adapterEnteredData?.forEachIndexed { index, model ->
+                if (Utils.isDecimalNotEntered(model.aweight.toString())) {
+                    errorToast("GWeight Not Entered at INPUT - ${index + 1}")
+                    return
+                } else if (Utils.isDecimalNotEntered(model.pckgs.toString())) {
+                    errorToast("Pckgs Not Entered at INPUT - ${index + 1}")
+                    return
+                }else if (Utils.isStringNotEntered(model.goods.toString())) {
+                    errorToast("Content Not Entered at INPUT - ${index + 1}")
+                    return
+                }
+            }
+        }
     for(i in 0 until grList.size){
         val grNo = grList[i].grno.toString()
         val packing = grList[i].packing.toString()
+        val content = grList[i].goods.toString()
+        val aWeight = grList[i].aweight.toString()
 
-        actualGrNo += "$grNo,"
-        actualPacking += "$packing,"
+        actualGrNo += "$grNo~"
+        actualPacking += "$packing~"
+        actualContent += "$content~"
+        actualAWeight += "$aWeight~"
     }
 
          viewModel.savePickupManifest(
@@ -396,8 +412,8 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
              ispickupmanifest = "Y",
              grno = actualGrNo,
              pckgs = enteredPckgs,
-             aweight = enteredGWeight,
-             goods =content,
+             aweight = enteredGWeight ,
+             goods = actualContent,
              packing =actualPacking,
              areacode = model!!.areaCode.toString(),
              vendcoe = model!!.vendorCode.toString(),

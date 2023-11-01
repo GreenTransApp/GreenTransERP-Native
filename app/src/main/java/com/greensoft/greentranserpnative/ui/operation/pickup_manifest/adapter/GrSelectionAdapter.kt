@@ -99,10 +99,8 @@ class GrSelectionAdapter(private val grList: ArrayList<GrSelectionModel>,
                     val filteredList: ArrayList<GrSelectionModel> = ArrayList()
                     for (row in grList) {
                         if(
-                            row.grno.toString().contains(charString.lowercase(Locale.getDefault()))
-                            ||row.loadingno.toString().contains(charString.lowercase(Locale.getDefault()))
-                            ||row.loadingdt.toString().contains(charString.lowercase(Locale.getDefault()))
-                            ||row.custname.contains(charString.lowercase(Locale.getDefault()))
+                            row.grno.contains(charString.lowercase(Locale.getDefault()))
+                            || row.custname?.contains(charString.lowercase(Locale.getDefault())) == true
                             ||row.picktime.lowercase().contains(charString.lowercase(Locale.getDefault()))
                             ||row.destname.lowercase().contains(charString.lowercase(Locale.getDefault()))
                         ){

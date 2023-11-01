@@ -16,7 +16,7 @@ data class ManifestEnteredDataModel(
     var vehicleCode:String,
     var vehicleNo:String,
     var capacity:String,
-    var loadedBy:String,
+    var loadedBy:String?,
     var areaCode:String,
     var remark:String,
 
