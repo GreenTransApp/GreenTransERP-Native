@@ -20,6 +20,7 @@ import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrS
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
 import java.util.Locale
 import kotlin.math.roundToInt
+import kotlin.properties.Delegates
 
 class SavePickupManifestAdapter(private val mContext: Context,
                                 private val activity: SavePickupManifestActivity,
@@ -43,14 +44,36 @@ class SavePickupManifestAdapter(private val mContext: Context,
              }
              binding.packing.setOnClickListener {
                  onRowClick.onRowClick(model, "PACKING_SELECT", adapterPosition)
+
              }
              binding.pckgs.addTextChangedListener(object : TextWatcher {
                  override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                  override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
                  override fun afterTextChanged(s: Editable?) {
-                     pckgsChange(adapterPosition,binding)
-                     val pckgs:Int=binding.pckgs.text.toString().toDouble().toInt()
-                     activity.getPckgsValue(pckgs)
+
+                     var pckgsValue=""
+                      if(binding.pckgs.text.isNotEmpty()){
+                          pckgsChange(adapterPosition,binding)
+                          pckgsValue=binding.pckgs.text.toString()
+                      }else{
+                          pckgsValue=binding.balancePckgs.text.toString()
+                      }
+                     activity.getPckgsValue(pckgsValue.toInt())
+
+
+//                     if(binding.pckgs.text.){
+//                       var pckgsValue=""
+////                         val pckgs:Int=binding.pckgs.text.toString().toInt()
+//                         if(binding.pckgs.text.isNotEmpty()){
+//                             pckgsValue=binding.pckgs.text.toString()
+//                         }else{
+//                             pckgsValue="0"
+//                         }
+//
+//                         activity.getPckgsValue(pckgsValue.toInt())
+//                     }
+//                     val pckgs:Int=binding.pckgs.text.toString().toInt()
+//                     activity.getPckgsValue(pckgs)
 
                  }
              })
@@ -109,7 +132,7 @@ class SavePickupManifestAdapter(private val mContext: Context,
 //               layoutBinding.pckgs.text= layoutBinding.balancePckgs.text
                if(balancePckgs.toString() != layoutBinding.pckgs.text.toString()) {
                    layoutBinding.pckgs.setText(balancePckgs.toString())
-                   Toast.makeText(mContext, "pckgs can not be greater then balance pckgs", Toast.LENGTH_SHORT).show()
+                   Toast.makeText(mContext, "pckgs can not be greater than balance pckgs", Toast.LENGTH_SHORT).show()
                }
                activity.getBalancepckg(layoutBinding.balancePckgs.text.toString().toInt())
 
@@ -125,15 +148,22 @@ class SavePickupManifestAdapter(private val mContext: Context,
         return manifestList
     }
     fun setContent(contentModel: ContentSelectionModel, adapterPosition: Int) {
-        manifestList[adapterPosition].goods = contentModel.itemname
+//        manifestList[adapterPosition].goods = contentModel.itemname
+        manifestList.forEachIndexed { index, grSelectionModel ->
+            if(grSelectionModel.grno == filterList[adapterPosition].grno) {
+                grSelectionModel.goods = contentModel.itemname
+                filterList[adapterPosition].goods = contentModel.itemname
+            }
+        }
         notifyItemChanged(adapterPosition)
     }
     fun setPacking(pckgsModel: PackingSelectionModel, adapterPosition: Int) {
 //        manifestList[adapterPosition].packing = pckgsModel.packingname
-        filterList[adapterPosition].packing = pckgsModel.packingname
+
         manifestList.forEachIndexed { index, grSelectionModel ->
             if(grSelectionModel.grno == filterList[adapterPosition].grno) {
                 grSelectionModel.packing = pckgsModel.packingname
+                filterList[adapterPosition].packing = pckgsModel.packingname
             }
         }
         notifyItemChanged(adapterPosition)

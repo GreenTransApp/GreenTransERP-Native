@@ -14,6 +14,7 @@ import com.greensoft.greentranserpnative.databinding.ActivitySavePickupManifestB
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
 import com.greensoft.greentranserpnative.ui.common.alert.CommonAlert
+import com.greensoft.greentranserpnative.ui.home.HomeActivity
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
@@ -223,11 +224,21 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
              packingList = packing
          }
          viewModel.manifestLiveData.observe(this){manifest->
+             if(manifest.commandstatus==1){
+                 goToHomeActivity()
+             }else{
+                 errorToast(manifest.commandmessage.toString())
+             }
 
          }
 //         manifestLiveData.observe(this){data->
 //             successToast(data.toString())
 //         }
+     }
+     private fun goToHomeActivity(){
+         val intent = Intent(this, HomeActivity::class.java)
+         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+         startActivity(intent)
      }
 
     private fun getIntentData() {

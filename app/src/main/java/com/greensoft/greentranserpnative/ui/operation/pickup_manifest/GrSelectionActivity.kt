@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
@@ -175,13 +176,13 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
         viewModel.isError.observe(this) { errMsg ->
             errorToast(errMsg)
         }
-//        viewModel.viewDialogLiveData.observe(this, Observer { show ->
-//            if(show) {
-//                showProgressDialog()
-//            } else {
-//                hideProgressDialog()
-//            }
-//        })
+        viewModel.viewDialogLiveData.observe(this, Observer { show ->
+            if(show) {
+                showProgressDialog()
+            } else {
+                hideProgressDialog()
+            }
+        })
 
 
 

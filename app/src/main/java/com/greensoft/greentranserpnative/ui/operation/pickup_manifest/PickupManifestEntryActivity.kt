@@ -81,10 +81,10 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
         setUpToolbar("Pickup Manifest")
         setObservers()
 
-        getBranchList()
-        getPickupLocation()
-        getDriverList()
-        getVendorList()
+
+//        getPickupLocation()
+//        getDriverList()
+//        getVendorList()
         getVehicleTypeList()
         setOnclick()
 //        getIntentData()
@@ -149,20 +149,21 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
 
     private fun setOnclick(){
           activityBinding.inputBranch.setOnClickListener{
-              openBranchSelectionBottomSheet(branchList)
+              getBranchList()
           }
           activityBinding.inputPickupLocation.setOnClickListener{
-              openPickupLocationSelectionBottomSheet(locationList)
+              getPickupLocation()
+//              openPickupLocationSelectionBottomSheet(locationList)
           }
           activityBinding.inputDriverName.setOnClickListener{
-              openDriverSelectionBottomSheet(driverList)
+              getDriverList()
+//              openDriverSelectionBottomSheet(driverList)
           }
           activityBinding.inputVendorName.setOnClickListener{
-              openVendorSelectionBottomSheet(vendorList)
-//              getVehicleList()
+//              openVendorSelectionBottomSheet(vendorList)
+              getVendorList()
           }
-
-              activityBinding.inputVehicleNumber.setOnClickListener{
+          activityBinding.inputVehicleNumber.setOnClickListener{
 //                  if (activityBinding.inputVendorName.text!!.isNullOrEmpty()){
 //                      errorToast("Please Select Vendor First")
 //                      return@setOnClickListener
@@ -243,17 +244,33 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
           })
 
           viewModel.branchLiveData.observe(this) { branchData ->
-              branchList = branchData
+              if (branchData.elementAt(0).commandstatus ==1){
+                    branchList = branchData
+                    openBranchSelectionBottomSheet(branchList)
+              }else{
+                  errorToast(branchData.elementAt(0).commandmessage.toString())
+              }
           }
 
           viewModel.pickupLocationLiveData.observe(this) { locationData ->
+              if(locationData.elementAt(0).commandstatus ==1){
               locationList = locationData
+                  openPickupLocationSelectionBottomSheet(locationList)
+              }else{
+
+              }
           }
           viewModel.driverLiveData.observe(this) { driverData ->
+              if(driverData.elementAt(0).commandstatus ==1){
               driverList = driverData
+                  openDriverSelectionBottomSheet(driverList)
+              }
           }
           viewModel.vendorLiveData.observe(this) { vendData ->
+              if(vendData.elementAt(0).commandstatus ==1){
               vendorList = vendData
+                  openVendorSelectionBottomSheet(vendorList)
+              }
 
           }
           viewModel.vehicleLiveData.observe(this) { vehicleData ->
@@ -271,6 +288,7 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
                   ArrayAdapter(this, android.R.layout.simple_list_item_1, vehicleTypeList)
               activityBinding.selectedVehicleType.adapter = vehicleAdapter
           }
+
          mPeriod.observe(this){date->
              activityBinding.inputDate.setText(date.viewsingleDate)
              manifestDt=date.sqlsingleDate.toString()

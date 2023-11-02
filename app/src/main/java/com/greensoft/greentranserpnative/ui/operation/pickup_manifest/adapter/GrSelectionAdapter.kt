@@ -30,8 +30,7 @@ class GrSelectionAdapter(private val grList: ArrayList<GrSelectionModel>,
         fun bindData(model: GrSelectionModel, onRowClick: OnRowClick<Any>) {
             binding.grModel = model
             binding.index = adapterPosition
-
-            binding.selectCheck.isChecked = isAllCheck
+//            binding.selectCheck.isChecked = isAllCheck
             binding.selectCheck.setOnCheckedChangeListener{_,isChecked->
 //               if(!isChecked){
 //                   notCheck=false
@@ -39,6 +38,7 @@ class GrSelectionAdapter(private val grList: ArrayList<GrSelectionModel>,
 //               }else{
 //                   onRowClick.onClick(model, "CHECK_SELECTED")
 //               }
+
                 model.isSelected = isChecked
                 binding.grModel = model
 

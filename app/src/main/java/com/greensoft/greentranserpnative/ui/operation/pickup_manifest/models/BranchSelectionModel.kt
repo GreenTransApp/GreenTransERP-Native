@@ -4,6 +4,7 @@ data class BranchSelectionModel(
     val address: String,
     val allowbidding: Any,
     val commandstatus: Int,
+    val commandmessage: Int,
     val country: String,
     val statename: String,
     val stncode: String,
