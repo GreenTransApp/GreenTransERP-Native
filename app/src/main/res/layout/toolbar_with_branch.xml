@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="?attr/actionBarSize"
+        app:theme="@style/Toolbar"
+        android:background="@color/colorPrimary"
+        app:popupTheme="@style/Toolbar_Popup"
+        >
+<!--        <ImageButton-->
+<!--            android:id="@+id/toolbar_button"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:src="@drawable/baseline_menu_24"-->
+<!--            style="@style/Widget.AppCompat.Button.Borderless"-->
+<!--            android:layout_alignParentEnd="true"/>-->
+    </androidx.appcompat.widget.Toolbar>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/success"
+        >
+    <TextView
+        android:id="@+id/login_branch_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Login Branch: "
+        android:layout_marginStart="10dp"
+        android:textColor="@color/white"
+       />
+        <TextView
+            android:id="@+id/branch_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text=""
+       />
+</LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>

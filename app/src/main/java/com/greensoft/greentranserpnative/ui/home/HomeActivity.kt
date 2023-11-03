@@ -10,22 +10,28 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
+import android.view.Gravity
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.navigation.NavigationView
 import com.google.gson.Gson
 import com.greensoft.greentranserpnative.ENV
+import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityHomeBinding
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.login.LoginActivity
+import com.greensoft.greentranserpnative.ui.navDrawer.ProfileActivity
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.call_register.CallRegisterActivity
 
@@ -43,7 +49,7 @@ import kotlin.system.exitProcess
 
 
 @AndroidEntryPoint
-class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
+class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, NavigationView.OnNavigationItemSelectedListener {
 
     lateinit var activityBinding: ActivityHomeBinding
     private val viewModel: HomeViewModel by viewModels()
@@ -107,8 +113,10 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
+         activityBinding.branchName.text = userDataModel!!.loginbranchname.toString()
+//
         if(ENV.DEBUGGING) {
-            activityBinding.testDebugging.visibility = View.VISIBLE
+//            activityBinding.testDebugging.visibility = View.VISIBLE
         }
         setupUi()
         setObserver()
@@ -280,9 +288,16 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
 //        supportFragmentManager.beginTransaction().add(frag, "TEST").commit()
     }
     private fun setOnClicks() {
-        activityBinding.testDebugging.setOnClickListener {
-            testFunction()
+        activityBinding.toolbar.setNavigationOnClickListener {
+            if(activityBinding.myDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                activityBinding.myDrawerLayout.closeDrawer(GravityCompat.START)
+            } else {
+                activityBinding.myDrawerLayout.openDrawer(GravityCompat.START)
+            }
         }
+//        activityBinding.testDebugging.setOnClickListener {
+//            testFunction()
+//        }
 //        activityBinding.btnLogOut.setOnClickListener {
 //           logOut()
 //        }
@@ -340,5 +355,21 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
                startActivity(intent)
            }
        }
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.nav_account -> run{
+                var intent = Intent(this, ProfileActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.nav_settings -> run{
+
+            }
+            R.id.nav_logout-> run{
+                logOut()
+            }
+        }
+        return  true
     }
 }
