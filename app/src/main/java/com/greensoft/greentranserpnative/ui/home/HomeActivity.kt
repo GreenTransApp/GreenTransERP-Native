@@ -18,6 +18,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.greensoft.greentranserpnative.ENV
@@ -47,7 +48,8 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
     lateinit var activityBinding: ActivityHomeBinding
     private val viewModel: HomeViewModel by viewModels()
     private var  menuList: ArrayList<UserMenuModel> = ArrayList()
-    lateinit var linearLayoutManager: LinearLayoutManager
+//    lateinit var layoutManager: LinearLayoutManager
+    lateinit var layoutManager: GridLayoutManager
     lateinit var adapter: UserMenuAdapter
     val executor = Executors.newSingleThreadExecutor()
     val handler = Handler(Looper.getMainLooper())
@@ -67,8 +69,9 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
                     try {
                         val inputStream: InputStream? =
                             contentResolver.openInputStream(dataString)
+//                        --------- compLogo ----------
                         val bitmap = BitmapFactory.decodeStream(inputStream)
-                        activityBinding.compLogo.setImageBitmap(bitmap)
+//                        activityBinding.compLogo.setImageBitmap(bitmap)
                         val selectedImagePath = getPathFormatUri(dataString)
                     } catch (e: java.lang.Exception) {
                         Toast.makeText(this, e.message, Toast.LENGTH_SHORT)
@@ -133,28 +136,28 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
     }
 
      private fun setupUi(){
-         activityBinding.compName.text = loginDataModel!!.compname.toString()
-         activityBinding.loginBranch.text = userDataModel!!.loginbranchname.toString()
-
-         executor.execute {
-
-             val imageURL = loginDataModel!!.logoimage.toString()
-             if(imageURL == null){
-                 showProgressDialog()
-             }
-             try {
-                 val `in` = java.net.URL(imageURL).openStream()
-                 image = BitmapFactory.decodeStream(`in`)
-
-                 handler.post {
-                     activityBinding.compLogo.setImageBitmap(image)
-                 }
-             }
-
-             catch (e: Exception) {
-                 e.printStackTrace()
-             }
-         }
+//         activityBinding.compName.text = loginDataModel!!.compname.toString()
+//         activityBinding.loginBranch.text = userDataModel!!.loginbranchname.toString()
+//
+//         executor.execute {
+//
+//             val imageURL = loginDataModel!!.logoimage.toString()
+//             if(imageURL == null){
+//                 showProgressDialog()
+//             }
+//             try {
+//                 val `in` = java.net.URL(imageURL).openStream()
+//                 image = BitmapFactory.decodeStream(`in`)
+//
+//                 handler.post {
+//                     activityBinding.compLogo.setImageBitmap(image)
+//                 }
+//             }
+//
+//             catch (e: Exception) {
+//                 e.printStackTrace()
+//             }
+//         }
 
     }
 
@@ -177,8 +180,8 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
     private fun setObserver() {
 
         capturedImage.observe(this) { imageUri ->
-            successToast("HOME_ACTIVITY ${imageUri.path}")
-            activityBinding.compLogo.setImageURI(imageUri)
+//            successToast("HOME_ACTIVITY ${imageUri.path}")
+//            activityBinding.compLogo.setImageURI(imageUri)
         }
         activityBinding.refreshLayout.setOnRefreshListener {
             refreshData()
@@ -219,12 +222,15 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
 //    }
 
       private fun setupRecyclerView(){
-          linearLayoutManager = LinearLayoutManager(this)
-          activityBinding.recyclerView.apply {
-              layoutManager = linearLayoutManager
-              adapter = UserMenuAdapter(menuList, this@HomeActivity)
-
-          }
+//          layoutManager = LinearLayoutManager(this)
+        layoutManager = GridLayoutManager(this, 2)
+          activityBinding.recyclerView.layoutManager = this.layoutManager
+          activityBinding.recyclerView.adapter = UserMenuAdapter(menuList, this@HomeActivity)
+//              .apply {
+//              layoutManager = layoutManager
+//              adapter = UserMenuAdapter(menuList, this@HomeActivity)
+//
+//          }
 
      }
 
@@ -275,15 +281,12 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any> {
     }
     private fun setOnClicks() {
         activityBinding.testDebugging.setOnClickListener {
-        //    successToast("Test")
             testFunction()
         }
-        activityBinding.btnLogOut.setOnClickListener {
-//            successToast(packageName)
-           logOut()
-        }
+//        activityBinding.btnLogOut.setOnClickListener {
+//           logOut()
+//        }
 //        activityBinding.booking.setOnClickListener {
-////            successToast(packageName)
 ////            val intent = Intent(this, CallRegisterActivity::class.java)
 //            val intent = Intent(this, PickupReferenceActivity::class.java)
 //            startActivity(intent)

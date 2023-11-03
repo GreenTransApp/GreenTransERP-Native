@@ -18,7 +18,7 @@ class ENV {
         val IMAGE_PREF_SHARE = "image_prefs${PREF_TAG}"
 
         val DEBUGGING: Boolean = true
-        val LOCAL_API: Boolean = true
+        val LOCAL_API: Boolean = false
 
         val APP_NAME = "GreenTransERPNative"
 //        val DEBUG_USERNAME: String = "ADMIN@GREENTRANS"
