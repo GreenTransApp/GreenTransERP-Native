@@ -1,62 +1,84 @@
 package com.greensoft.greentranserpnative.ui.operation.booking
 
 import android.app.AlertDialog
+import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.ENV.Companion.DEBUGGING
+import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityBookingBinding
-import com.greensoft.greentranserpnative.ui.operation.eway_bill.EwayBillBottomSheet
+import com.greensoft.greentranserpnative.model.ImageUtil
+import com.greensoft.greentranserpnative.ui.bottomsheet.attachedImages.AttachedImageBottomSheet
+import com.greensoft.greentranserpnative.ui.bottomsheet.attachedImages.OnAddImageClickListener
+import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
+import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
+import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.booking.models.AgentSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.BookingVehicleSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ConsignorSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ContentSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.CustomerSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.DepartmentSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.DestinationSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.GelPackItemSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.OriginSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.PickupBoySelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.TemperatureSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
-import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
-import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
-import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
-import com.greensoft.greentranserpnative.ui.operation.booking.models.AgentSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.BookingVehicleSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.GelPackItemSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PckgTypeSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.PickupBoySelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PickupBySelection
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ServiceTypeSelectionLov
+import com.greensoft.greentranserpnative.ui.operation.booking.models.TemperatureSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.eway_bill.EwayBillBottomSheet
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.PickupRefModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import okhttp3.internal.Util
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, BottomSheetClick<Any> {
+class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, BottomSheetClick<Any> , OnAddImageClickListener{
 
     lateinit var activityBinding: ActivityBookingBinding
     lateinit var linearLayoutManager: LinearLayoutManager
+    lateinit var bottomSheetAdapter: AttachedImageBottomSheet
+    lateinit var rvImages: RecyclerView
     private var menuModel: UserMenuModel? = null
     private var title: String = "BOOKING"
+    lateinit var palletWiseRemarks: String;
+    lateinit var bottomSheetDialog: BottomSheetDialog;
+    lateinit var palletName: String
     //    private var bookingList: List<BookingRecyclerModel> = ArrayList()
     private val viewModel: BookingViewModel by viewModels()
+    private var imagesBase64List: ArrayList<String> = ArrayList()
+    private var imagesBitmapList: ArrayList<Bitmap> = ArrayList()
+    private var imageURIList: ArrayList<Uri> = ArrayList()
     private var customerList: ArrayList<CustomerSelectionModel> = ArrayList()
     private var cngrList: ArrayList<ConsignorSelectionModel> = ArrayList()
     private var cngeList: ArrayList<ConsignorSelectionModel> = ArrayList()
@@ -73,6 +95,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     private var pickupRefData: ArrayList<PickupRefModel> = ArrayList()
     private var serviceTypeList: ArrayList<ServiceTypeSelectionLov> = ArrayList()
     private var pickupByTypeList: ArrayList<PickupBySelection> = ArrayList()
+    private lateinit var JeenaStaff: PickupBySelection
     private var agentList: ArrayList<AgentSelectionModel> = ArrayList()
     private var vehicleVendorList: ArrayList<AgentSelectionModel> = ArrayList()
     private var vehicleList: ArrayList<BookingVehicleSelectionModel> = ArrayList()
@@ -128,7 +151,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     var awbCheck = ""
     private var sqlDate: String? = null
 
-//    var actualAWeight = ""
+    //    var actualAWeight = ""
     var actualAWeight:Float=0f
     var actualVWeight = ""
 
@@ -152,13 +175,14 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         getSingleRefData()
         getServiceType()
         getPickupBy()
-        getCustomerList()
-        getCngrList()
-        getCngeList()
-        getDeptList()
-        getOriginList()
-        getDestinationList()
-        getPickupBoyList()
+
+//        getCustomerList()
+//        getCngrList()
+//        getCngeList()
+//        getDeptList()
+//        getOriginList()
+//        getDestinationList()
+//        getPickupBoyList()
         getTempLov()
         getpackingLov()
         getGelPackLov()
@@ -213,19 +237,19 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         )
     }
 
-        private fun getIntentData() {
+    private fun getIntentData() {
         if(intent != null) {
             val jsonString = intent.getStringExtra("ARRAY_JSON")
             if(jsonString != "") {
-                    val gson = Gson()
-                    val listType = object : TypeToken<List<PickupRefModel>>() {}.type
-                    val resultList: ArrayList<PickupRefModel> =
+                val gson = Gson()
+                val listType = object : TypeToken<List<PickupRefModel>>() {}.type
+                val resultList: ArrayList<PickupRefModel> =
                     gson.fromJson(jsonString.toString(), listType)
-                    pickupRefData.addAll(resultList)
-                    pickupRefData.forEachIndexed { _, element ->
+                pickupRefData.addAll(resultList)
+                pickupRefData.forEachIndexed { _, element ->
                     transactionId=element.transactionid.toString()
                 }
-                }
+            }
         }
     }
     private fun openEwayBillBottomSheet(viewModel: BookingViewModel){
@@ -277,7 +301,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         activityBinding.inputLayoutVehicle.visibility=View.GONE
         activityBinding.inputLayoutVehicleVendor.visibility=View.GONE
     }
-//      fun resetCalculation() {
+    //      fun resetCalculation() {
 //          activityBinding.selectService.text.addTextChangedListener(object : TextWatcher {
 //              override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 //                  TODO("Not yet implemented")
@@ -302,13 +326,13 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                     position: Int,
                     id: Long
                 ) {
-                      productCode=serviceTypeList[position].value
+                    productCode=serviceTypeList[position].value
                     bookingAdapter?.serviceTypeChanged()
                     when(productCode){
                         //AIR
-                       "A"-> run{
+                        "A"-> run{
 //                           bookingAdapter?.calculateTotalVWeight()
-                       }
+                        }
                         //SURFACE
                         "S"->run{
 //                           bookingAdapter?.calculateTotalVWeight()
@@ -363,6 +387,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                 ) {
                     pickupByValue=pickupByTypeList[position].value
                     when(pickupByValue){
+
                         //JEENA STRAFF
                         "S"-> run{
                             activityBinding.inputLayoutPickBoy.visibility=View.VISIBLE
@@ -377,57 +402,57 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
 
                         }
-                        //AGENT
-                        "V"-> run{
-                            activityBinding.inputLayoutPickBoy.visibility=View.GONE
-                            activityBinding.inputLayoutAgent.visibility=View.VISIBLE
-                            activityBinding.inputLayoutVehicleVendor.visibility=View.GONE
-                            activityBinding.inputLayoutVehicle.visibility=View.GONE
-
-                            activityBinding.inputPickupBoy.text?.clear()
-                            activityBinding.inputAgent.text?.clear()
-                            activityBinding.inputVehicle.text?.clear()
-                            activityBinding.inputVehicleVendor.text?.clear()
-                        }
-                        //MARKET VEHICLE
-                        "M"-> run{
-                            activityBinding.inputLayoutPickBoy.visibility=View.VISIBLE
-                            activityBinding.inputLayoutVehicle.visibility=View.VISIBLE
-                            activityBinding.inputLayoutVehicleVendor.visibility=View.VISIBLE
-                            activityBinding.inputLayoutAgent.visibility=View.GONE
-
-                            activityBinding.inputPickupBoy.text?.clear()
-                            activityBinding.inputAgent.text?.clear()
-                            activityBinding.inputVehicle.text?.clear()
-                            activityBinding.inputVehicleVendor.text?.clear()
-
-                        }
-                        //OFFICE/AIRPORT DROP
-                        "O"-> run{
-                            activityBinding.inputLayoutAgent.visibility=View.GONE
-                            activityBinding.inputLayoutPickBoy.visibility=View.VISIBLE
-                            activityBinding.inputLayoutVehicle.visibility=View.GONE
-                            activityBinding.inputLayoutVehicleVendor.visibility=View.GONE
-
-                            activityBinding.inputPickupBoy.text?.clear()
-                            activityBinding.inputAgent.text?.clear()
-                            activityBinding.inputVehicle.text?.clear()
-                            activityBinding.inputVehicleVendor.text?.clear()
-                        }
-                        //CANCEL
-                        "N"-> run{
-                            activityBinding.inputLayoutAgent.visibility=View.GONE
-                            activityBinding.inputLayoutVehicle.visibility=View.GONE
-                            activityBinding.inputLayoutVehicleVendor.visibility=View.GONE
-                            activityBinding.inputLayoutPickBoy.visibility=View.VISIBLE
-
-                            activityBinding.inputPickupBoy.text?.clear()
-                            activityBinding.inputAgent.text?.clear()
-                            activityBinding.inputVehicle.text?.clear()
-                            activityBinding.inputVehicleVendor.text?.clear()
-
-
-                        }
+//                        //AGENT
+//                        "V"-> run{
+//                            activityBinding.inputLayoutPickBoy.visibility=View.GONE
+//                            activityBinding.inputLayoutAgent.visibility=View.VISIBLE
+//                            activityBinding.inputLayoutVehicleVendor.visibility=View.GONE
+//                            activityBinding.inputLayoutVehicle.visibility=View.GONE
+//
+//                            activityBinding.inputPickupBoy.text?.clear()
+//                            activityBinding.inputAgent.text?.clear()
+//                            activityBinding.inputVehicle.text?.clear()
+//                            activityBinding.inputVehicleVendor.text?.clear()
+//                        }
+//                        //MARKET VEHICLE
+//                        "M"-> run{
+//                            activityBinding.inputLayoutPickBoy.visibility=View.VISIBLE
+//                            activityBinding.inputLayoutVehicle.visibility=View.VISIBLE
+//                            activityBinding.inputLayoutVehicleVendor.visibility=View.VISIBLE
+//                            activityBinding.inputLayoutAgent.visibility=View.GONE
+//
+//                            activityBinding.inputPickupBoy.text?.clear()
+//                            activityBinding.inputAgent.text?.clear()
+//                            activityBinding.inputVehicle.text?.clear()
+//                            activityBinding.inputVehicleVendor.text?.clear()
+//
+//                        }
+//                        //OFFICE/AIRPORT DROP
+//                        "O"-> run{
+//                            activityBinding.inputLayoutAgent.visibility=View.GONE
+//                            activityBinding.inputLayoutPickBoy.visibility=View.VISIBLE
+//                            activityBinding.inputLayoutVehicle.visibility=View.GONE
+//                            activityBinding.inputLayoutVehicleVendor.visibility=View.GONE
+//
+//                            activityBinding.inputPickupBoy.text?.clear()
+//                            activityBinding.inputAgent.text?.clear()
+//                            activityBinding.inputVehicle.text?.clear()
+//                            activityBinding.inputVehicleVendor.text?.clear()
+//                        }
+//                        //CANCEL
+//                        "N"-> run{
+//                            activityBinding.inputLayoutAgent.visibility=View.GONE
+//                            activityBinding.inputLayoutVehicle.visibility=View.GONE
+//                            activityBinding.inputLayoutVehicleVendor.visibility=View.GONE
+//                            activityBinding.inputLayoutPickBoy.visibility=View.VISIBLE
+//
+//                            activityBinding.inputPickupBoy.text?.clear()
+//                            activityBinding.inputAgent.text?.clear()
+//                            activityBinding.inputVehicle.text?.clear()
+//                            activityBinding.inputVehicleVendor.text?.clear()
+//
+//
+//                        }
                     }
                 }
 
@@ -440,6 +465,10 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     }
 
     private fun setOnClick() {
+        activityBinding.attachedImages.setOnClickListener {
+//            Toast.makeText(mContext, "Attached file is clicked", Toast.LENGTH_SHORT).show()
+            showBottomSheet();
+        }
         activityBinding.autoGrCheck.setOnCheckedChangeListener { compoundButton, bool ->
             activityBinding.inputGrNo.setText("")
             if(bool) {
@@ -454,31 +483,32 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             if (DEBUGGING) {
                 //            Toast.makeText(this, "testing", Toast.LENGTH_SHORT).show()
             }
-//            openCustSelectionBottomSheet(customerList)
+//            getCustomerList()
         }
 
         activityBinding.inputCngrName.setOnClickListener {
-//            openCngrSelectionBottomSheet(cngrList)
+//            getCngrList()
         }
 
         activityBinding.inputCngeName.setOnClickListener {
-//            openCngeSelectionBottomSheet(cngeList)
+//            getCngeList()
         }
         activityBinding.inputDepartment.setOnClickListener {
-//            openDeptSelectionBottomSheet(deptList)
+//            getDeptList()
         }
         activityBinding.inputOrigin.setOnClickListener {
-//            openOriginSelectionBottomSheet(originList)
+//            getOriginList()
         }
         activityBinding.inputDestination.setOnClickListener {
-//            openDestinationSelectionBottomSheet(destinationList)
+//            getDestinationList()
         }
 
         activityBinding.inputPickupBoy.setOnClickListener {
-            openPickupBoySelectionBottomSheet(pickupBoylist)
+            getPickupBoyList()
+
         }
         activityBinding.inputAgent.setOnClickListener {
-            openAgentSelectionBottomSheet(agentList)
+            getAgentLov()
         }
         activityBinding.inputVehicleVendor.setOnClickListener {
             openVehicleVendorSelectionBottomSheet(vehicleVendorList)
@@ -504,7 +534,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                 awbCheck= "Y"
             }
             else {
-               awbCheck="N"
+                awbCheck="N"
             }
 
         }
@@ -566,31 +596,36 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
         viewModel.custLiveData.observe(this) { custData ->
             customerList = custData
+            openCustSelectionBottomSheet(customerList)
         }
 
         viewModel.cngrLiveData.observe(this) { cngrData ->
             cngrList = cngrData
+            openCngrSelectionBottomSheet(cngrList)
         }
 
         viewModel.cngrLiveData.observe(this) { cngeData ->
             cngeList = cngeData
+            openCngeSelectionBottomSheet(cngeList)
         }
 
         viewModel.deptLiveData.observe(this) { deptData ->
             deptList = deptData
+            openDeptSelectionBottomSheet(deptList)
         }
         viewModel.originLiveData.observe(this) { originData ->
             originList = originData
+            openOriginSelectionBottomSheet(originList)
         }
 
         viewModel.destinationLiveData.observe(this) { destData ->
             destinationList = destData
+            openDestinationSelectionBottomSheet(destinationList)
         }
+
         viewModel.pickupBoyLiveData.observe(this) { boyData ->
             pickupBoylist = boyData
-        }
-        viewModel.pickupBoyLiveData.observe(this) { boyData ->
-            pickupBoylist = boyData
+            openPickupBoySelectionBottomSheet(pickupBoylist)
         }
 
         viewModel.tempLiveData.observe(this) { tempData ->
@@ -602,6 +637,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         }
         viewModel.agentLiveData.observe(this) { agent ->
             agentList = agent
+            openAgentSelectionBottomSheet(agentList)
         }
         viewModel.vendorLiveData.observe(this) { vendor ->
             vehicleVendorList = vendor
@@ -611,7 +647,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         }
         viewModel.packingLiveData.observe(this) { packing ->
             packingList = packing
-            }
+        }
         viewModel.gelPackItemLiveData.observe(this) { gelPack ->
             gelPackList = gelPack
         }
@@ -624,7 +660,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         viewModel.pickupByLiveData.observe(this) { pickup ->
             pickupByTypeList = pickup
             val pickupAdapter =
-                ArrayAdapter(this, android.R.layout.simple_list_item_1, pickupByTypeList)
+                ArrayAdapter(this, android.R.layout.simple_list_item_1,pickupByTypeList)
             activityBinding.selectedPickupType.adapter = pickupAdapter
 
 
@@ -636,14 +672,15 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             activityBinding.selectService.adapter = serviceAdapter
 
         }
-      viewModel.pckgLiveData.observe(this) { pckgType ->
-          pckgTypeList = pckgType
-          val pckgsAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, pckgTypeList)
+        viewModel.pckgLiveData.observe(this) { pckgType ->
+            pckgTypeList = pckgType
+            val pckgsAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, pckgTypeList)
 //          activityBinding.selectedPckgsType.adapter = pckgsAdapter
 
 
-      }
+        }
     }
+
     private fun getPckgTypeLov() {
         viewModel.getPckgType(
             loginDataModel?.companyid.toString(),
@@ -790,22 +827,22 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         )
     }
 
-        private fun openVehicleSelectionBottomSheet(rvList: ArrayList<BookingVehicleSelectionModel>) {
-            val commonList = ArrayList<CommonBottomSheetModel<Any>>()
-            for (i in 0 until rvList.size) {
-                commonList.add(CommonBottomSheetModel(rvList[i].regno, rvList[i]))
+    private fun openVehicleSelectionBottomSheet(rvList: ArrayList<BookingVehicleSelectionModel>) {
+        val commonList = ArrayList<CommonBottomSheetModel<Any>>()
+        for (i in 0 until rvList.size) {
+            commonList.add(CommonBottomSheetModel(rvList[i].regno, rvList[i]))
 
-            }
-            openCommonBottomSheet(this, "Vehicle Selection", this, commonList)
         }
-        private fun getVehicleVendor() {
-                viewModel.getVendorLov(
-                    loginDataModel?.companyid.toString(),
-                    "greentrans_vendlist",
-                    listOf("prmvendorcategory","prmmenucode"),
-                    arrayListOf("VEHICLE VENDOR",menuModel?.menucode.toString())
-                )
-            }
+        openCommonBottomSheet(this, "Vehicle Selection", this, commonList)
+    }
+    private fun getVehicleVendor() {
+        viewModel.getVendorLov(
+            loginDataModel?.companyid.toString(),
+            "greentrans_vendlist",
+            listOf("prmvendorcategory","prmmenucode"),
+            arrayListOf("VEHICLE VENDOR",menuModel?.menucode.toString())
+        )
+    }
 
     private fun openVehicleVendorSelectionBottomSheet(rvList: ArrayList<AgentSelectionModel>) {
         val commonList = ArrayList<CommonBottomSheetModel<Any>>()
@@ -1048,7 +1085,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             openTemperatureSelectionBottomSheet(temperatureList,index)
 
         }else if(clickType =="GEL_PACK_SELECT"){
-             openGelPackSelectionBottomSheet(gelPackList,index)
+            openGelPackSelectionBottomSheet(gelPackList,index)
         }else if(clickType =="PACKING_SELECT"){
             openPackingSelectionBottomSheet(packingList,index)
 
@@ -1068,7 +1105,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     override fun onClick(data: Any, clickType: String) {
 
     }
-//    fun getCurrentServiceType(serviceType:String,vWeight: Float,aWeight: Int,cWeight: Int){
+    //    fun getCurrentServiceType(serviceType:String,vWeight: Float,aWeight: Int,cWeight: Int){
 //        activityBinding.inputVolWeight.setText(vWeight.toString())
 //        activityBinding.inputAWeight.setText(aWeight.toString())
 //        activityBinding.inputCWeight.setText(cWeight.toString())
@@ -1213,9 +1250,9 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                 return
             }
         }else if(pickupByValue =="O"){
-             if(activityBinding.inputPickupBoy.text.isNullOrEmpty()) {
+            if(activityBinding.inputPickupBoy.text.isNullOrEmpty()) {
                 errorToast("Please Select Pickup Boy")
-                 return
+                return
             }
         }else if( pickupByValue == "N"){
             if(activityBinding.inputPickupBoy.text.isNullOrEmpty()) {
@@ -1238,8 +1275,87 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             .setNeutralButton("No") { _, _ -> }
             .show()
 
-        }
+    }
 
+    private fun setBottomSheetRecyclerView() {
+        bottomSheetAdapter =
+            AttachedImageBottomSheet(mContext, imagesBase64List, imagesBitmapList, this)
+        //        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
+//        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        val gridLayoutManager = GridLayoutManager(mContext, 3)
+        gridLayoutManager.orientation = GridLayoutManager.VERTICAL
+        rvImages.layoutManager = gridLayoutManager
+        rvImages.adapter = bottomSheetAdapter
+        rvImages.itemAnimator = DefaultItemAnimator()
+        rvImages.isNestedScrollingEnabled = false
+    }
+
+    private fun updateImageToRV(data: Bitmap) {
+        imagesBase64List.remove("EMPTY")
+        imagesBitmapList.add(data)
+        //        imagesBase64List.add(Common.encodeImage(data));
+        imagesBase64List.add(ImageUtil.convert(data))
+        imagesBase64List.add("EMPTY")
+        setBottomSheetRecyclerView()
+    }
+
+    private fun showBottomSheet() {
+        val header: TextView?
+        val saveYes: Button?
+        val saveNo: Button?
+        imagesBase64List.clear()
+        imagesBitmapList.clear()
+        imageURIList.clear()
+        imagesBase64List.add("EMPTY")
+        bottomSheetDialog = BottomSheetDialog(mContext)
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_pallet_wise_remarks)
+        bottomSheetDialog.dismissWithAnimation = true
+        header = bottomSheetDialog.findViewById<TextView>(R.id.HEADER)
+        rvImages = bottomSheetDialog.findViewById<RecyclerView>(R.id.rv_put_away_closing_images)!!
+        val closeRemarks: TextInputEditText? = bottomSheetDialog.findViewById<View>(R.id.inputSticker) as TextInputEditText?
+        saveYes = bottomSheetDialog.findViewById<Button>(R.id.yes_close)
+        saveNo = bottomSheetDialog.findViewById<Button>(R.id.no_close)
+        val headerText = "PALLET REMARKS "
+        header!!.text = headerText
+        bottomSheetAdapter =
+            AttachedImageBottomSheet(mContext, imagesBase64List, imagesBitmapList, this)
+        saveNo!!.setOnClickListener { view: View? -> bottomSheetDialog.dismiss() }
+        saveYes!!.setOnClickListener { view: View? ->
+//            successToast("Yes Clicked");
+            if (closeRemarks!!.text.toString() == "" && imagesBase64List.size == 1) {
+                errorToast("Please Enter Remarks or Click Pictures")
+            } else {
+                palletWiseRemarks = closeRemarks.text.toString()
+                bottomSheetDialog.dismiss()
+                savePalletWiseRemarks()
+            }
+        }
+        setBottomSheetRecyclerView()
+        bottomSheetDialog.show()
+    }
+    private fun savePalletWiseRemarks() {
+        for (s in imagesBase64List) {
+            if (s == "EMPTY") {
+                imagesBase64List.remove(s)
+            }
+        }
+//        if (isNetworkConnected()) {
+//            inScanStickerViewModel.PutAwayPalletWiseRemarks(
+//                getCompanyId(),
+//                getBranchCode(),
+//                getWarehouseID(),
+//                putAwayListId,
+//                imagesBase64List,
+//                palletWiseRemarks,
+//                palletId,
+//                getUserCode(),
+//                getSessionID()
+//            )
+//        }
+//        else {
+//            errorToast(internetError)
+//        }
+    }
 
     private fun saveBooking(){
         var actualRefNoStr: String = ""
@@ -1453,4 +1569,13 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         Utils.enteredValidatedEwayBillList = null
         Utils.enteredEwayBillValidatedData.clear()
     }
+
+    override fun addImage(clickType: String) {
+        if (clickType== "Open Dialog"){
+            showImageDialog()
+        }
+
+    }
+
+
 }

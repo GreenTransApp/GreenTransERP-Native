@@ -31,7 +31,7 @@ class AttachedImageBottomSheet(
             holder.imageView.setImageBitmap(imagesBitmap[holder.adapterPosition])
         }
         holder.imageView.setOnClickListener{
-            listener.addImage()
+            listener.addImage(clickType = "Open Dialog" )
         }
     }
 

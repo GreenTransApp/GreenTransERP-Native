@@ -1,13 +1,18 @@
 package com.greensoft.greentranserpnative.base
 
+import android.Manifest
 import android.R
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.BroadcastReceiver
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.device.ScanManager
 import android.device.scanner.configuration.PropertyID
 import android.graphics.PorterDuff
@@ -17,11 +22,17 @@ import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Base64
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -34,6 +45,8 @@ import com.greensoft.greentranserpnative.common.PeriodSelection
 import com.greensoft.greentranserpnative.ui.bottomsheet.acceptPickup.AcceptPickupBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.CommonBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
+import com.greensoft.greentranserpnative.ui.common.cameraX.CropImageActivity
+import com.greensoft.greentranserpnative.ui.common.cameraX.Cropper
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.login.models.LoginDataModel
 import com.greensoft.greentranserpnative.ui.login.models.UserDataModel
@@ -43,6 +56,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.InputStream
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -61,6 +77,13 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
 
     var mPeriod: MutableLiveData<PeriodSelection> = MutableLiveData()
     var timePeriod: MutableLiveData<String> = MutableLiveData()
+    private lateinit var storagePermission: Array<String>
+    private lateinit var cameraPermission: Array<String>
+    private lateinit var uri: Uri
+    private lateinit var file : File
+    private lateinit var camIntent: Intent
+    private lateinit var cameraLauncher: ActivityResultLauncher<Intent>
+    private lateinit var galleryLauncher: ActivityResultLauncher<String>
 
     //    var timePeriod: MutableLiveData<TimeSelection?> = MutableLiveData<Any?>()
     val mScanner = MutableLiveData<String>()
@@ -76,6 +99,7 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
     var progressDialog: ProgressDialog? = null
     private var prefs: SharedPreferences? = null
 
+    private lateinit var imageLauncher: ActivityResultLauncher<Intent>
 
     fun setUpToolbar(title: String) {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -100,6 +124,39 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
         }
 //        openDatePicker()
 //        SingleDateSelector()
+        cameraPermission = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        storagePermission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                // Handle the result from the camera
+                val intent = Intent(this@BaseActivity, CropImageActivity::class.java)
+                intent.putExtra("DATA", uri.toString()) // Pass the captured image's Uri to CropImageActivity
+                imageLauncher.launch(intent)
+//                startActivity(intent)
+            }
+        }
+
+        galleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { result ->
+            if (result != null) {
+                val intent = Intent(this@BaseActivity, CropImageActivity::class.java)
+                intent.putExtra("DATA", result.toString()) // Pass the gallery image's Uri to CropImageActivity
+                startActivity(intent)
+            }
+        }
+        imageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if(result.resultCode == Activity.RESULT_OK) {
+                var data = result.data
+                if(data != null) {
+                    if (data.hasExtra("IMAGE_RESULT_BACK")) {
+                        var imageUri = data.getStringExtra("IMAGE_RESULT_BACK")
+                        Toast.makeText(
+                            this, data.getStringExtra("IMAGE_RESULT_BACK"),
+                            Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                }
+            }
+        }
     }
 
     private fun initialize() {
@@ -703,6 +760,90 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
 //            }
 //        snackBar.show()
 //    }
+
+     fun showImageDialog() {
+        val options = arrayOf("Camera", "Gallery")
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Pick Image From")
+        builder.setItems(options) { dialog, which ->
+            if (which == 0) {
+                if (!checkCameraPermission()) {
+                    requestCameraPermission()
+                } else {
+//                    pickFromGallery()
+                    pickFromCamera()
+                }
+            } else if (which == 1) {
+                if (!checkStoragePermission()) {
+                    requestStoragePermission()
+                } else {
+                    pickFromGallery()
+                }
+            }
+        }
+        builder.create().show()
+    }
+    //    Checking permission
+    private fun checkStoragePermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+    // Requesting gallery permission
+    private fun requestStoragePermission() {
+        requestPermissions(storagePermission, BaseActivity.STORAGE_REQUEST)
+    }
+    // checking camera permissions
+    private fun checkCameraPermission(): Boolean {
+        val result = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
+        val result1 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        return result && result1
+    }
+    private fun requestCameraPermission() {
+        requestPermissions(cameraPermission, BaseActivity.CAMERA_REQUEST)
+    }
+
+    private fun pickFromGallery() {
+        galleryLauncher.launch("image/*")
+    }
+    private fun pickFromCamera() {
+
+        val imageFileName = "file" + System.currentTimeMillis().toString() + ".jpg"
+        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        file = File(storageDir, imageFileName)
+        uri = FileProvider.getUriForFile(this, "${packageName}.fileprovider", file)
+        camIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        camIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
+        camIntent.putExtra("return-Data", true)
+//        camIntent.putExtra(ENV.IMAGE_PREF_SHARE,true)
+        cameraLauncher.launch(camIntent)
+    }
+
+     fun convertImageUriToBase64(contentResolver: ContentResolver, imageUri: Uri): String? {
+        return try {
+            val inputStream: InputStream? = contentResolver.openInputStream(imageUri)
+            val buffer = ByteArrayOutputStream()
+            val bufferSize = 1024
+            val data = ByteArray(bufferSize)
+            var bytesRead= 0
+            while (inputStream?.read(data, 0, bufferSize).also {
+                    if (it != null) {
+                        bytesRead = it
+                    }
+                } != -1) {
+                buffer.write(data, 0, bytesRead)
+            }
+            val byteArray: ByteArray = buffer.toByteArray()
+            Base64.encodeToString(byteArray, Base64.DEFAULT)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
 }
 
 

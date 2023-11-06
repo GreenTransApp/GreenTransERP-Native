@@ -42,10 +42,10 @@ class CropImageActivity : AppCompatActivity() {
                     val resultUri = UCrop.getOutput(data)
                     // Save the resultUri in SharedPreferences
 //                    val sharedPref = getSharedPreferences("image_prefs", Context.MODE_PRIVATE)
-                    val sharedPref = getSharedPreferences(ENV.IMAGE_PREF_SHARE, Context.MODE_PRIVATE)
-                    sharedPref.edit().putString("image_uri", resultUri.toString()).apply()
+//                    val sharedPref = getSharedPreferences(ENV.IMAGE_PREF_SHARE, Context.MODE_PRIVATE)
+//                    sharedPref.edit().putString("image_uri", resultUri.toString()).apply()
                     val returnIntent = Intent()
-                    returnIntent.putExtra("RESULT", resultUri.toString())
+                    returnIntent.putExtra("IMAGE_RESULT_BACK", resultUri.toString())
                     setResult(RESULT_OK, returnIntent)
                 }
             }
