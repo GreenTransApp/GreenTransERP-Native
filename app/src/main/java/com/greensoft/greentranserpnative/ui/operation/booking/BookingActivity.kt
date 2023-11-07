@@ -1,8 +1,11 @@
 package com.greensoft.greentranserpnative.ui.operation.booking
 
+//import com.google.android.material.floatingactionbutton.FloatingActionButton
+
 import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
@@ -10,9 +13,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -30,10 +32,11 @@ import com.greensoft.greentranserpnative.ENV.Companion.DEBUGGING
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityBookingBinding
-import com.greensoft.greentranserpnative.model.ImageUtil
-import com.greensoft.greentranserpnative.ui.bottomsheet.attachedImages.AttachedImageBottomSheet
+import com.greensoft.greentranserpnative.ui.bottomsheet.attachedImages.AttachedImagesBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.attachedImages.OnAddImageClickListener
+import com.greensoft.greentranserpnative.ui.bottomsheet.common.CommonBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
+import com.greensoft.greentranserpnative.ui.common.viewImage.ViewImage
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
@@ -67,7 +70,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
     lateinit var activityBinding: ActivityBookingBinding
     lateinit var linearLayoutManager: LinearLayoutManager
-    lateinit var bottomSheetAdapter: AttachedImageBottomSheet
+    lateinit var bottomSheetAdapter: AttachedImagesBottomSheet
     lateinit var rvImages: RecyclerView
     private var menuModel: UserMenuModel? = null
     private var title: String = "BOOKING"
@@ -76,9 +79,6 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     lateinit var palletName: String
     //    private var bookingList: List<BookingRecyclerModel> = ArrayList()
     private val viewModel: BookingViewModel by viewModels()
-    private var imagesBase64List: ArrayList<String> = ArrayList()
-    private var imagesBitmapList: ArrayList<Bitmap> = ArrayList()
-    private var imageURIList: ArrayList<Uri> = ArrayList()
     private var customerList: ArrayList<CustomerSelectionModel> = ArrayList()
     private var cngrList: ArrayList<ConsignorSelectionModel> = ArrayList()
     private var cngeList: ArrayList<ConsignorSelectionModel> = ArrayList()
@@ -465,9 +465,9 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     }
 
     private fun setOnClick() {
-        activityBinding.attachedImages.setOnClickListener {
+        activityBinding.attachedImageLayout.setOnClickListener {
 //            Toast.makeText(mContext, "Attached file is clicked", Toast.LENGTH_SHORT).show()
-            showBottomSheet();
+            showImageBottomSheet();
         }
         activityBinding.autoGrCheck.setOnCheckedChangeListener { compoundButton, bool ->
             activityBinding.inputGrNo.setText("")
@@ -552,6 +552,11 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 //    }
 
     private fun setObservers() {
+        imageClicked.observe(this) { clicked ->
+            if(clicked) {
+                setBottomSheetRecyclerView()
+            }
+        }
         timePeriod.observe(this) { time ->
             activityBinding.inputTime.setText(time)
 
@@ -1278,8 +1283,30 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     }
 
     private fun setBottomSheetRecyclerView() {
+        if(imageBase64List.isEmpty() && imageBitmapList.isEmpty()) {
+            imageBase64List.add("EMPTY")
+            imageBitmapList.add(BitmapFactory.decodeResource(mContext.resources,
+                R.drawable.baseline_add_a_photo_24))
+        }
         bottomSheetAdapter =
-            AttachedImageBottomSheet(mContext, imagesBase64List, imagesBitmapList, this)
+            AttachedImagesBottomSheet(mContext, imageBase64List, imageBitmapList, imageUriList,this)
+        //        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
+//        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        val gridLayoutManager = GridLayoutManager(mContext, 3)
+        gridLayoutManager.orientation = GridLayoutManager.VERTICAL
+        rvImages.layoutManager = gridLayoutManager
+        rvImages.adapter = bottomSheetAdapter
+        rvImages.itemAnimator = DefaultItemAnimator()
+        rvImages.isNestedScrollingEnabled = false
+    }
+    private fun setBottomSheetRV() {
+//        if(imageBase64List.isEmpty() && imageBitmapList.isEmpty()) {
+//            imageBase64List.add("EMPTY")
+//            imageBitmapList.add(BitmapFactory.decodeResource(mContext.resources,
+//                R.drawable.baseline_add_a_photo_24))
+//        }
+        bottomSheetAdapter =
+            AttachedImagesBottomSheet(mContext, imageBase64List, imageBitmapList, imageUriList,this)
         //        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
 //        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         val gridLayoutManager = GridLayoutManager(mContext, 3)
@@ -1290,23 +1317,23 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         rvImages.isNestedScrollingEnabled = false
     }
 
-    private fun updateImageToRV(data: Bitmap) {
-        imagesBase64List.remove("EMPTY")
-        imagesBitmapList.add(data)
-        //        imagesBase64List.add(Common.encodeImage(data));
-        imagesBase64List.add(ImageUtil.convert(data))
-        imagesBase64List.add("EMPTY")
-        setBottomSheetRecyclerView()
-    }
+//    private fun updateImageToRV(data: Bitmap) {
+//        imagesBase64List.remove("EMPTY")
+//        imagesBitmapList.add(data)
+//        //        imagesBase64List.add(Common.encodeImage(data));
+//        imagesBase64List.add(ImageUtil.convert(data))
+//        imagesBase64List.add("EMPTY")
+//        setBottomSheetRecyclerView()
+//    }
 
     private fun showBottomSheet() {
         val header: TextView?
         val saveYes: Button?
         val saveNo: Button?
-        imagesBase64List.clear()
-        imagesBitmapList.clear()
-        imageURIList.clear()
-        imagesBase64List.add("EMPTY")
+//        imagesBase64List.clear()
+//        imagesBitmapList.clear()
+//        imageURIList.clear()
+//        imagesBase64List.add("EMPTY")
         bottomSheetDialog = BottomSheetDialog(mContext)
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_pallet_wise_remarks)
         bottomSheetDialog.dismissWithAnimation = true
@@ -1317,45 +1344,47 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         saveNo = bottomSheetDialog.findViewById<Button>(R.id.no_close)
         val headerText = "PALLET REMARKS "
         header!!.text = headerText
-        bottomSheetAdapter =
-            AttachedImageBottomSheet(mContext, imagesBase64List, imagesBitmapList, this)
+//        bottomSheetAdapter =
+//            AttachedImageBottomSheet(mContext, imagesBase64List, imagesBitmapList, this)
+
+//        setBottomSheetRecyclerView()
         saveNo!!.setOnClickListener { view: View? -> bottomSheetDialog.dismiss() }
         saveYes!!.setOnClickListener { view: View? ->
 //            successToast("Yes Clicked");
-            if (closeRemarks!!.text.toString() == "" && imagesBase64List.size == 1) {
+            if (closeRemarks!!.text.toString() == "" && imageBase64List.size == 1) {
                 errorToast("Please Enter Remarks or Click Pictures")
             } else {
                 palletWiseRemarks = closeRemarks.text.toString()
                 bottomSheetDialog.dismiss()
-                savePalletWiseRemarks()
             }
         }
         setBottomSheetRecyclerView()
         bottomSheetDialog.show()
     }
-    private fun savePalletWiseRemarks() {
-        for (s in imagesBase64List) {
-            if (s == "EMPTY") {
-                imagesBase64List.remove(s)
-            }
+
+
+    private fun showImageBottomSheet() {
+        val header: TextView?
+        val done: Button?
+        var addImage: ExtendedFloatingActionButton?
+        bottomSheetDialog = BottomSheetDialog(mContext)
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_add_images)
+        bottomSheetDialog.dismissWithAnimation = true
+        header = bottomSheetDialog.findViewById<TextView>(R.id.HEADER)
+        rvImages = bottomSheetDialog.findViewById<RecyclerView>(R.id.rv_put_away_closing_images)!!
+        done = bottomSheetDialog.findViewById<Button>(R.id.done_btn)
+        addImage = bottomSheetDialog.findViewById<ExtendedFloatingActionButton>(R.id.add_image)
+        done?.setOnClickListener {
+            bottomSheetDialog.dismiss()
         }
-//        if (isNetworkConnected()) {
-//            inScanStickerViewModel.PutAwayPalletWiseRemarks(
-//                getCompanyId(),
-//                getBranchCode(),
-//                getWarehouseID(),
-//                putAwayListId,
-//                imagesBase64List,
-//                palletWiseRemarks,
-//                palletId,
-//                getUserCode(),
-//                getSessionID()
-//            )
-//        }
-//        else {
-//            errorToast(internetError)
-//        }
+        addImage?.setOnClickListener {
+            showImageDialog()
+        }
+        setBottomSheetRV()
+        bottomSheetDialog.show()
     }
+
+
 
     private fun saveBooking(){
         var actualRefNoStr: String = ""
@@ -1570,12 +1599,26 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         Utils.enteredEwayBillValidatedData.clear()
     }
 
-    override fun addImage(clickType: String) {
-        if (clickType== "Open Dialog"){
-            showImageDialog()
+    override fun addImage(clickType: String, imageBitmap: Bitmap) {
+        if (clickType== "VIEW_IMAGE"){
+//            viewImage(imageBitmap, imageBase64, imageUri)
+            viewImage(imageBitmap)
+//            for (i in 0..imageBase64List.size){
+//                startActivity(Intent
+//                (Intent.ACTION_VIEW, Uri.parse(imageBase64List.elementAt(i))))
+//            }
+//            viewImage()
+//            startActivity(Intent
+//                (Intent.ACTION_VIEW, Uri.parse()))
+            /** replace with your own uri */
+
         }
 
     }
-
-
+    private fun viewImage(imageBitmap: Bitmap){
+        Utils.imageBitmap = imageBitmap
+//        val dialogFragment = ViewImage.newInstance(this, this, "View Image" ,imageBitmap, imageBase64, imageUri)
+        val dialogFragment = ViewImage.newInstance(this, this, "View Image" ,imageBitmap)
+        dialogFragment.show(supportFragmentManager, ViewImage.TAG)
+    }
 }

@@ -15,6 +15,8 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.device.ScanManager
 import android.device.scanner.configuration.PropertyID
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.PorterDuff
 import android.media.RingtoneManager
 import android.net.ConnectivityManager
@@ -46,7 +48,6 @@ import com.greensoft.greentranserpnative.ui.bottomsheet.acceptPickup.AcceptPicku
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.CommonBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.common.cameraX.CropImageActivity
-import com.greensoft.greentranserpnative.ui.common.cameraX.Cropper
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.login.models.LoginDataModel
 import com.greensoft.greentranserpnative.ui.login.models.UserDataModel
@@ -77,6 +78,7 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
 
     var mPeriod: MutableLiveData<PeriodSelection> = MutableLiveData()
     var timePeriod: MutableLiveData<String> = MutableLiveData()
+    var imageClicked: MutableLiveData<Boolean> = MutableLiveData()
     private lateinit var storagePermission: Array<String>
     private lateinit var cameraPermission: Array<String>
     private lateinit var uri: Uri
@@ -100,6 +102,9 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
     private var prefs: SharedPreferences? = null
 
     private lateinit var imageLauncher: ActivityResultLauncher<Intent>
+    var imageBase64List = ArrayList<String>()
+    var imageBitmapList = ArrayList<Bitmap>()
+    var imageUriList = ArrayList<Uri>()
 
     fun setUpToolbar(title: String) {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -140,24 +145,47 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
             if (result != null) {
                 val intent = Intent(this@BaseActivity, CropImageActivity::class.java)
                 intent.putExtra("DATA", result.toString()) // Pass the gallery image's Uri to CropImageActivity
-                startActivity(intent)
+                imageLauncher.launch(intent)
+//                startActivity(intent)
             }
         }
         imageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if(result.resultCode == Activity.RESULT_OK) {
-                var data = result.data
-                if(data != null) {
-                    if (data.hasExtra("IMAGE_RESULT_BACK")) {
-                        var imageUri = data.getStringExtra("IMAGE_RESULT_BACK")
-                        Toast.makeText(
-                            this, data.getStringExtra("IMAGE_RESULT_BACK"),
-                            Toast.LENGTH_SHORT
-                        ).show();
+            try {
+                if (result.resultCode == Activity.RESULT_OK) {
+                    var data = result.data
+                    if (data != null) {
+                        if (data.hasExtra("IMAGE_RESULT_BACK")) {
+                            var imageUri = data.getStringExtra("IMAGE_RESULT_BACK")
+                            if (!imageUri.isNullOrBlank()) {
+                                var imageConvertedToUri: Uri? = Uri.parse(imageUri)
+                                if(imageConvertedToUri != null) {
+                                    var base64 = convertImageUriToBase64(
+                                        contentResolver = contentResolver,
+                                        imageUri = imageConvertedToUri
+                                    )
+                                    var bitmap: Bitmap? = null
+                                    if (base64 != null) {
+                                        bitmap = getBitmapFromBase64(base64 = base64)
+                                        if (bitmap != null) {
+                                            imageBase64List.add(base64)
+                                            imageBitmapList.add(bitmap)
+                                            imageUriList.add(imageConvertedToUri)
+//                                            imageBase64List.add(imageBase64List.size - 1, base64)
+//                                            imageBitmapList.add(imageBitmapList.size - 1, bitmap)
+                                            imageClicked.postValue(true)
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
+            } catch (ex: Exception) {
+                errorToast(ex.message)
             }
         }
     }
+
 
     private fun initialize() {
         scanManager = ScanManager()
@@ -822,7 +850,7 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
         cameraLauncher.launch(camIntent)
     }
 
-     fun convertImageUriToBase64(contentResolver: ContentResolver, imageUri: Uri): String? {
+     private fun convertImageUriToBase64(contentResolver: ContentResolver, imageUri: Uri): String? {
         return try {
             val inputStream: InputStream? = contentResolver.openInputStream(imageUri)
             val buffer = ByteArrayOutputStream()
@@ -842,6 +870,25 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
             e.printStackTrace()
             null
         }
+    }
+
+    private fun getBitmapFromBase64(base64: String): Bitmap? {
+//        val base64Image = Cropper.convertImageUriToBase64(contentResolver, uri)
+//        Toast.makeText(this, "bse", Toast.LENGTH_SHORT).show()
+        // Decode the Base64 string into a byte array
+        try {
+            val decodedBytes: ByteArray = Base64.decode(base64, Base64.DEFAULT)
+            return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+        } catch (ex: Exception) {
+            errorToast(ex.message)
+        }
+        return null
+    }
+
+     fun viewImageFullScreen(){
+         startActivity(Intent
+             (Intent.ACTION_VIEW, Uri.parse(imageBase64List.elementAt(0)))
+         )
     }
 
 }

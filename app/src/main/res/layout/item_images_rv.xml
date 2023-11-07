@@ -12,13 +12,12 @@
         android:id="@+id/img"
         android:layout_width="match_parent"
         android:layout_height="70dp"
+        android:scaleType="fitXY"
         android:src="@drawable/baseline_add_a_photo_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_margin="2dp"
         />
 
 <!--    <View-->

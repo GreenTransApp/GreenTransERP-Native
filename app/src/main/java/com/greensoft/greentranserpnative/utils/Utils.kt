@@ -1,5 +1,7 @@
 package com.greensoft.greentranserpnative.utils
 
+import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Log
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.operation.eway_bill.ItemEwayBillModel
@@ -33,6 +35,9 @@ object Utils {
     var ewayBillDetailResponse: EwayBillDetailResponse? = null
     var enteredValidatedEwayBillList: ArrayList<ItemEwayBillModel>? = null
     var enteredEwayBillValidatedData: ArrayList<EwayBillDetailResponse> = ArrayList()
+
+    var imageBitmap: Bitmap? = null
+    var imageUri: Uri? = null
     fun logger(TAG: String?, msg: String?) {
         Log.d(TAG, msg!!)
     }
