@@ -10,19 +10,20 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
-import android.view.Gravity
 import android.view.MenuItem
-import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.cardview.widget.CardView
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.Gson
 import com.greensoft.greentranserpnative.ENV
@@ -34,6 +35,8 @@ import com.greensoft.greentranserpnative.ui.login.LoginActivity
 import com.greensoft.greentranserpnative.ui.navDrawer.ProfileActivity
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.call_register.CallRegisterActivity
+import com.greensoft.greentranserpnative.ui.operation.communicationList.CommunicationListActivity
+import com.greensoft.greentranserpnative.ui.operation.communicationList.models.CommunicationListModel
 
 import com.greensoft.greentranserpnative.ui.operation.grList.GrListActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestEntryActivity
@@ -52,7 +55,9 @@ import kotlin.system.exitProcess
 class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, NavigationView.OnNavigationItemSelectedListener {
 
     lateinit var activityBinding: ActivityHomeBinding
+    private var communicationCardList: ArrayList<CommunicationListModel> = ArrayList()
     private val viewModel: HomeViewModel by viewModels()
+    lateinit var bottomSheetDialog: BottomSheetDialog;
     private var  menuList: ArrayList<UserMenuModel> = ArrayList()
 //    lateinit var layoutManager: LinearLayoutManager
     lateinit var layoutManager: GridLayoutManager
@@ -213,6 +218,10 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
             setupRecyclerView()
         }
 
+        viewModel.notificationLiveData.observe(this) { notificationData ->
+            successToast(notificationData.totalnoti.toString())
+        }
+
         mScanner.observe(this){data->
             Companion.successToast(mContext,data)
 //            playSound()
@@ -288,6 +297,9 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
 //        supportFragmentManager.beginTransaction().add(frag, "TEST").commit()
     }
     private fun setOnClicks() {
+        activityBinding.notificationBtn.setOnClickListener {
+            showNotificationModelBottomSheet()
+        }
         activityBinding.toolbar.setNavigationOnClickListener {
             if(activityBinding.myDrawerLayout.isDrawerOpen(GravityCompat.START)) {
                 activityBinding.myDrawerLayout.closeDrawer(GravityCompat.START)
@@ -371,5 +383,30 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
             }
         }
         return  true
+    }
+
+    private fun showNotificationModelBottomSheet() {
+        val communication: TextView?
+        val communicationListData: TextView?
+        val countersCard: CardView?
+//        val done: Button?
+        var addImage: ExtendedFloatingActionButton?
+        bottomSheetDialog = BottomSheetDialog(mContext)
+        bottomSheetDialog.setContentView(R.layout.notification_model_bottomsheet)
+        bottomSheetDialog.dismissWithAnimation = true
+        communication = bottomSheetDialog.findViewById<TextView>(R.id.communication_tv)
+        communicationListData = bottomSheetDialog.findViewById<TextView>(R.id.communication_data)
+        countersCard = bottomSheetDialog.findViewById<CardView>(R.id.counters_card)
+
+//        communicationListData?.setText(communicationCardList.size)
+        countersCard?.setOnClickListener {
+            val intent = Intent(this, CommunicationListActivity::class.java)
+            startActivity(intent)
+        }
+//        addImage?.setOnClickListener {
+//           bottomSheetDialog.dismiss()
+//        }
+//        setBottomSheetRV()
+        bottomSheetDialog.show()
     }
 }

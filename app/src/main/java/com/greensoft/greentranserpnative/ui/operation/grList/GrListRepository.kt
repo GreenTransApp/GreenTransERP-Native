@@ -26,7 +26,7 @@ class GrListRepository @Inject constructor() : BaseRepository() {
 
     fun getGrList(companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
         viewDialogMutData.postValue(true)
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -59,7 +59,7 @@ class GrListRepository @Inject constructor() : BaseRepository() {
 
     fun getStickerForPrint(companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
         viewDialogMutData.postValue(true)
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!

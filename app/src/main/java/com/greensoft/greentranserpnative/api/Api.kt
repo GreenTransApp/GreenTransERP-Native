@@ -20,9 +20,19 @@ interface Api {
         @Field("prmdeviceid") prmdeviceid: String?
     ): Call<CommonResult>
 
+
+    @FormUrlEncoded
+    @POST("HomeAPI/CommonApi")
+    fun commonApiHome(
+        @Field("prmcompanyid") companyId: String?,
+        @Field("spname") spName: String?,
+        @Field("param") params: List<String>,
+        @Field("values") values: ArrayList<String>
+    ): Call<CommonResult>
+
     @FormUrlEncoded
     @POST("WMS/CommonApi")
-    fun commonApi(
+    fun commonApiWMS(
         @Field("prmcompanyid") companyId: String?,
         @Field("spname") spName: String?,
         @Field("param") params: List<String>,

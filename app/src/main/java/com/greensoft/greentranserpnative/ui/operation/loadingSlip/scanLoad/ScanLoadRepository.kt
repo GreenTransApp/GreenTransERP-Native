@@ -32,7 +32,7 @@ class ScanLoadRepository @Inject constructor(): BaseRepository() {
 
     fun getScannedSticker(companyId: String, spName: String, param: ArrayList<String>, values: ArrayList<String>){
         viewDialogMutData.postValue(true)
-        api.commonApi(companyId,spName, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spName, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -70,7 +70,7 @@ class ScanLoadRepository @Inject constructor(): BaseRepository() {
 
     fun validateSticker(companyId: String, spName: String, param: ArrayList<String>, values: ArrayList<String>){
         viewDialogMutData.postValue(true)
-        api.commonApi(companyId,spName, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spName, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!

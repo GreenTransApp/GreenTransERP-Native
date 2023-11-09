@@ -6,8 +6,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
-import com.greensoft.greentranserpnative.ui.operation.booking.models.CustomerSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.SaveBookingModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -53,7 +51,7 @@ class PickupManifestRepository @Inject constructor(): BaseRepository(){
 
     fun getBranchList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
         viewDialogMutData.postValue(true)
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -87,7 +85,7 @@ class PickupManifestRepository @Inject constructor(): BaseRepository(){
 
     fun getPickupLocation( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
         viewDialogMutData.postValue(true)
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -120,7 +118,7 @@ class PickupManifestRepository @Inject constructor(): BaseRepository(){
     }
  fun getDriverList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
         viewDialogMutData.postValue(true)
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -154,7 +152,7 @@ class PickupManifestRepository @Inject constructor(): BaseRepository(){
 
     fun getVendorList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
         viewDialogMutData.postValue(true)
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -188,7 +186,7 @@ class PickupManifestRepository @Inject constructor(): BaseRepository(){
 
     fun getVehicleList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
         viewDialogMutData.postValue(true)
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -222,7 +220,7 @@ class PickupManifestRepository @Inject constructor(): BaseRepository(){
 
     fun getVehicleTypeList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
         viewDialogMutData.postValue(true)
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -255,7 +253,7 @@ class PickupManifestRepository @Inject constructor(): BaseRepository(){
     }
     fun getGrList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
         viewDialogMutData.postValue(true)
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!

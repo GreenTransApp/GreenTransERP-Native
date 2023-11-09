@@ -19,7 +19,6 @@ import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
-import okhttp3.internal.Util
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -122,7 +121,7 @@ class BookingRepository @Inject constructor():BaseRepository(){
 
     fun getCustomerList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
         viewDialogMutData.postValue(true)
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -156,7 +155,7 @@ class BookingRepository @Inject constructor():BaseRepository(){
 
 
     fun getConsignorDetails(companyId: String, spname: String, param: List<String>, values: ArrayList<String>){
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -188,7 +187,7 @@ class BookingRepository @Inject constructor():BaseRepository(){
 
 
     fun getDepartmentDetails(companyId: String, spname: String, param: List<String>, values: ArrayList<String>){
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -219,7 +218,7 @@ class BookingRepository @Inject constructor():BaseRepository(){
     }
 
     fun getOriginData(companyId: String, spname: String, param: List<String>, values: ArrayList<String>){
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -250,7 +249,7 @@ class BookingRepository @Inject constructor():BaseRepository(){
     }
 
     fun getDestinationData(companyId: String, spname: String, param: List<String>, values: ArrayList<String>){
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -281,7 +280,7 @@ class BookingRepository @Inject constructor():BaseRepository(){
     }
 
     fun getPickupBoyDetail(companyId: String, spname: String, param: List<String>, values: ArrayList<String>){
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -312,7 +311,7 @@ class BookingRepository @Inject constructor():BaseRepository(){
     }
 
     fun getTemperatureLov(companyId: String, spname: String, param: List<String>, values: ArrayList<String>){
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -343,7 +342,7 @@ class BookingRepository @Inject constructor():BaseRepository(){
     }
 
     fun getPackingLov(companyId: String, spname: String, param: List<String>, values: ArrayList<String>){
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -374,7 +373,7 @@ class BookingRepository @Inject constructor():BaseRepository(){
     }
 
     fun getContentLov(companyId: String, spname: String, param: List<String>, values: ArrayList<String>){
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -405,7 +404,7 @@ class BookingRepository @Inject constructor():BaseRepository(){
     }
 
     fun getGelPackLov(companyId: String, spname: String, param: List<String>, values: ArrayList<String>) {
-        api.commonApi(companyId, spname, param, values).enqueue(object : Callback<CommonResult> {
+        api.commonApiWMS(companyId, spname, param, values).enqueue(object : Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
                 if (response.body() != null) {
                     val result = response.body()!!
@@ -440,7 +439,7 @@ class BookingRepository @Inject constructor():BaseRepository(){
     }
 
     fun getAgentLov(companyId: String, spname: String, param: List<String>, values: ArrayList<String>) {
-        api.commonApi(companyId, spname, param, values).enqueue(object : Callback<CommonResult> {
+        api.commonApiWMS(companyId, spname, param, values).enqueue(object : Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
                 if (response.body() != null) {
                     val result = response.body()!!
@@ -475,7 +474,7 @@ class BookingRepository @Inject constructor():BaseRepository(){
     }
 
     fun getVendorLov(companyId: String, spname: String, param: List<String>, values: ArrayList<String>) {
-        api.commonApi(companyId, spname, param, values).enqueue(object : Callback<CommonResult> {
+        api.commonApiWMS(companyId, spname, param, values).enqueue(object : Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
                 if (response.body() != null) {
                     val result = response.body()!!
@@ -510,7 +509,7 @@ class BookingRepository @Inject constructor():BaseRepository(){
     }
 
     fun getVehicleLov(companyId: String, spname: String, param: List<String>, values: ArrayList<String>) {
-        api.commonApi(companyId, spname, param, values).enqueue(object : Callback<CommonResult> {
+        api.commonApiWMS(companyId, spname, param, values).enqueue(object : Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
                 if (response.body() != null) {
                     val result = response.body()!!
@@ -544,7 +543,7 @@ class BookingRepository @Inject constructor():BaseRepository(){
 
     }
     fun getPickupByLov(companyId: String, spname: String, param: List<String>, values: ArrayList<String>) {
-        api.commonApi(companyId, spname, param, values).enqueue(object : Callback<CommonResult> {
+        api.commonApiWMS(companyId, spname, param, values).enqueue(object : Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
                 if (response.body() != null) {
                     val result = response.body()!!
@@ -579,7 +578,7 @@ class BookingRepository @Inject constructor():BaseRepository(){
     }
 
     fun getServiceType(companyId: String, spname: String, param: List<String>, values: ArrayList<String>) {
-        api.commonApi(companyId, spname, param, values).enqueue(object : Callback<CommonResult> {
+        api.commonApiWMS(companyId, spname, param, values).enqueue(object : Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
                 if (response.body() != null) {
                     val result = response.body()!!
@@ -616,7 +615,7 @@ class BookingRepository @Inject constructor():BaseRepository(){
 
     fun getSingleRefData( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
         viewDialogMutData.postValue(true)
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -650,7 +649,7 @@ class BookingRepository @Inject constructor():BaseRepository(){
 
     fun getPckgTypeLov(companyId:String, spname: String, param:List<String>, values:ArrayList<String>) {
         viewDialogMutData.postValue(true)
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -754,7 +753,7 @@ class BookingRepository @Inject constructor():BaseRepository(){
                                  param:List<String>, values:ArrayList<String>,
                                  ewayBillList: ArrayList<ItemEwayBillModel> ) {
         viewDialogMutData.postValue(true)
-        api.commonApi(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
