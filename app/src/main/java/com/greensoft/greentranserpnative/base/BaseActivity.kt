@@ -52,6 +52,9 @@ import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.login.models.LoginDataModel
 import com.greensoft.greentranserpnative.ui.login.models.UserDataModel
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
+import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.counterDetail.NotificationPanelBottomSheet
+import com.greensoft.greentranserpnative.ui.operation.counterDetail.model.NotificationPanelBottomSheetModel
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONArray
@@ -343,6 +346,12 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
         val bottomSheetDialog = CommonBottomSheet.newInstance(mContext, title, bottomSheetClick, commonList, withAdapter, index)
 //        hideProgressDialog()
         bottomSheetDialog.show(supportFragmentManager, CommonBottomSheet.TAG)
+    }
+    open fun openCounterBottomSheet(mContext: Context, title: String, bottomSheetClick: OnRowClick<Any>, commonList: ArrayList<NotificationPanelBottomSheetModel>, withAdapter: Boolean = false, index: Int = -1) {
+//        showProgressDialog()
+        val bottomSheetDialog = NotificationPanelBottomSheet.newInstance(mContext, title, bottomSheetClick, commonList, withAdapter, index)
+//        hideProgressDialog()
+        bottomSheetDialog.show(supportFragmentManager, NotificationPanelBottomSheet.TAG)
     }
 
 

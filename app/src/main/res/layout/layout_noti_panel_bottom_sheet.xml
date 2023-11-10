@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/cardView_SearchLayout"
 
-                tools:listitem="@layout/item_common_bottom_sheet"
+                tools:listitem="@layout/item_noti_panel_bottom_sheet"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

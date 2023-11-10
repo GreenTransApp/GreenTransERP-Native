@@ -30,15 +30,24 @@ class ChatScreenActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>
            successToast("Send clicked")
        }
     }
-    override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {
+    override fun onLongClick(data: Any, clickType: String) {
+        super.onLongClick(data, clickType)
+        if (clickType=="DELETE"){
 
+        }
+    }
+
+    override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {
+        TODO("Not yet implemented")
     }
 
     override fun onItemClick(data: Any, clickType: String) {
-
+        TODO("Not yet implemented")
     }
 
     override fun onClick(data: Any, clickType: String) {
-
+        TODO("Not yet implemented")
     }
+
+
 }

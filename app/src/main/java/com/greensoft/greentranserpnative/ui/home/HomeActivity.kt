@@ -37,6 +37,7 @@ import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.call_register.CallRegisterActivity
 import com.greensoft.greentranserpnative.ui.operation.communicationList.CommunicationListActivity
 import com.greensoft.greentranserpnative.ui.operation.communicationList.models.CommunicationListModel
+import com.greensoft.greentranserpnative.ui.operation.counterDetail.model.NotificationPanelBottomSheetModel
 
 import com.greensoft.greentranserpnative.ui.operation.grList.GrListActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestEntryActivity
@@ -59,6 +60,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
     private val viewModel: HomeViewModel by viewModels()
     lateinit var bottomSheetDialog: BottomSheetDialog;
     private var  menuList: ArrayList<UserMenuModel> = ArrayList()
+    private var notificationDetailList: ArrayList<NotificationPanelBottomSheetModel> = ArrayList()
 //    lateinit var layoutManager: LinearLayoutManager
     lateinit var layoutManager: GridLayoutManager
     lateinit var adapter: UserMenuAdapter
@@ -119,6 +121,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
         activityBinding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
          activityBinding.branchName.text = userDataModel!!.loginbranchname.toString()
+        notificationDetailList = generateSimpleList()
 //
         if(ENV.DEBUGGING) {
 //            activityBinding.testDebugging.visibility = View.VISIBLE
@@ -298,7 +301,8 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
     }
     private fun setOnClicks() {
         activityBinding.notificationBtn.setOnClickListener {
-            showNotificationModelBottomSheet()
+//            showNotificationModelBottomSheet()
+            openNotificationBottomSheet(notificationDetailList)
         }
         activityBinding.toolbar.setNavigationOnClickListener {
             if(activityBinding.myDrawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -337,36 +341,42 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
 
 
     override fun onClick(data: Any, clickType: String) {
-        val gson = Gson()
-        val jsonSerialized = gson.toJson(data)
-        val menuModel: UserMenuModel = data as UserMenuModel
-        Utils.menuModel = menuModel
-        when(clickType){
+        if (clickType=="OPEN_DETAIL"){
+            val intent = Intent(this, CommunicationListActivity::class.java)
+            startActivity(intent)
+        }
+        else{
+            val gson = Gson()
+            val jsonSerialized = gson.toJson(data)
+            val menuModel: UserMenuModel = data as UserMenuModel
+            Utils.menuModel = menuModel
+            when(clickType){
 //           "SELECTED_MENU"-> run{
 //               val model: UserMenuModel = data as UserMenuModel
 //               successToast(model.displayname)
 //           }
-           "GTAPP_ACCEPTJOBS" -> run {
-               val intent = Intent(this, CallRegisterActivity::class.java)
-               intent.putExtra("MENU_DATA", jsonSerialized)
-               startActivity(intent)
-           }
-           "GTAPP_PENDINGINDENT" -> run {
-               val intent = Intent(this, PickupReferenceActivity::class.java)
-               intent.putExtra("MENU_DATA", jsonSerialized)
-               startActivity(intent)
-           }
-           "GTAPP_GRLIST" -> run {
-               val intent = Intent(this, GrListActivity::class.java)
-               intent.putExtra("MENU_DATA", jsonSerialized)
-               startActivity(intent)
-           }
-           "GTAPP_NATIVEPICKUPMANIFEST" -> run {
-               val intent = Intent(this, PickupManifestEntryActivity::class.java)
-               intent.putExtra("MENU_DATA", jsonSerialized)
-               startActivity(intent)
-           }
-       }
+                "GTAPP_ACCEPTJOBS" -> run {
+                    val intent = Intent(this, CallRegisterActivity::class.java)
+                    intent.putExtra("MENU_DATA", jsonSerialized)
+                    startActivity(intent)
+                }
+                "GTAPP_PENDINGINDENT" -> run {
+                    val intent = Intent(this, PickupReferenceActivity::class.java)
+                    intent.putExtra("MENU_DATA", jsonSerialized)
+                    startActivity(intent)
+                }
+                "GTAPP_GRLIST" -> run {
+                    val intent = Intent(this, GrListActivity::class.java)
+                    intent.putExtra("MENU_DATA", jsonSerialized)
+                    startActivity(intent)
+                }
+                "GTAPP_NATIVEPICKUPMANIFEST" -> run {
+                    val intent = Intent(this, PickupManifestEntryActivity::class.java)
+                    intent.putExtra("MENU_DATA", jsonSerialized)
+                    startActivity(intent)
+                }
+            }
+        }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -408,5 +418,21 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
 //        }
 //        setBottomSheetRV()
         bottomSheetDialog.show()
+    }
+    private fun openNotificationBottomSheet(rvList: ArrayList<NotificationPanelBottomSheetModel>) {
+        val commonList = ArrayList<NotificationPanelBottomSheetModel>()
+        for (i in 0 until rvList.size) {
+            commonList.add(NotificationPanelBottomSheetModel(rvList[i].notiname, i.toString()))
+
+        }
+        openCounterBottomSheet(this, "Notification Detail", this, commonList)
+    }
+    private fun generateSimpleList(): ArrayList<NotificationPanelBottomSheetModel> {
+        val dataList: ArrayList<NotificationPanelBottomSheetModel> =
+            java.util.ArrayList<NotificationPanelBottomSheetModel>()
+        for (i in 0..99) {
+            dataList.add(NotificationPanelBottomSheetModel("Test",i.toString()))
+        }
+        return dataList
     }
 }
