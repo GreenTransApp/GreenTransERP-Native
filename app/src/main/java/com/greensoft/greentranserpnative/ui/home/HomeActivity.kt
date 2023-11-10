@@ -9,8 +9,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.provider.MediaStore
 import android.view.MenuItem
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -22,6 +22,9 @@ import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.badge.BadgeDrawable
+import com.google.android.material.badge.BadgeUtils
+import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.navigation.NavigationView
@@ -38,7 +41,6 @@ import com.greensoft.greentranserpnative.ui.operation.call_register.CallRegister
 import com.greensoft.greentranserpnative.ui.operation.communicationList.CommunicationListActivity
 import com.greensoft.greentranserpnative.ui.operation.communicationList.models.CommunicationListModel
 import com.greensoft.greentranserpnative.ui.operation.counterDetail.model.NotificationPanelBottomSheetModel
-
 import com.greensoft.greentranserpnative.ui.operation.grList.GrListActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestEntryActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceActivity
@@ -68,6 +70,9 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
     val handler = Handler(Looper.getMainLooper())
     var image: Bitmap? = null
     val CAMERA_REQUEST_CODE: Int = 10001
+    val fromDt: String = "2023-09-11"
+    val toDt: String = "2023-10-11"
+    lateinit var badgeDrawable: BadgeDrawable
 
     var resultLauncher: ActivityResultLauncher<Intent>
     = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -140,18 +145,36 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
 
      private fun refreshData(){
          getUserMenu()
-         setupUi()
      }
     private fun getUserMenu(){
+//            "greentransapp_usermenu_native_WMS",
+//            listOf("prmusercode","prmapp"),
         viewModel.getUserMenu(
             loginDataModel?.companyid.toString(),
-            "greentransapp_usermenu_native_WMS",
-            listOf("prmusercode","prmapp"),
-            arrayListOf(userDataModel?.usercode.toString(), ENV.APP_NAME)
+            "gtapp_erpnative_jeenadashboard",
+            listOf("prmusercode","prmloginbranchcode","prmfromdt","prmtodt","prmappversion"),
+            arrayListOf(userDataModel?.usercode.toString(), userDataModel?.loginbranchcode.toString(), fromDt, toDt ,ENV.APP_VERSION)
         )
     }
 
+    private fun setNotificationCounter(counter: Int) {
+        activityBinding.notificationBtn.viewTreeObserver
+            .addOnGlobalLayoutListener(@ExperimentalBadgeUtils object : OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    badgeDrawable.number = counter
+                    BadgeUtils.attachBadgeDrawable(badgeDrawable, activityBinding.notificationBtn, null)
+                    activityBinding.notificationBtn.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+            })
+    }
      private fun setupUi(){
+         badgeDrawable = BadgeDrawable.create(this@HomeActivity)
+         //Important to change the position of the Badge
+         badgeDrawable.horizontalOffset = 60
+         badgeDrawable.verticalOffset = 30
+         setNotificationCounter(0)
+
+
 //         activityBinding.compName.text = loginDataModel!!.compname.toString()
 //         activityBinding.loginBranch.text = userDataModel!!.loginbranchname.toString()
 //
@@ -222,7 +245,10 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
         }
 
         viewModel.notificationLiveData.observe(this) { notificationData ->
-            successToast(notificationData.totalnoti.toString())
+//            successToast(notificationData.totalnoti.toString())
+            if(notificationData.commandstatus == 1) {
+                setNotificationCounter(notificationData.totalnoti)
+            }
         }
 
         mScanner.observe(this){data->
@@ -254,37 +280,6 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
 
      }
 
-    private fun selectImage() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        resultLauncher.launch(intent)
-    }
-
-    private fun dispatchTakePictureIntent() {
-//        Intent(Intent.ACTION_,MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            // Ensure that there's a camera activity to handle the intent
-//            takePictureIntent.resolveActivity(packageManager)?.also {
-//                // Create the File where the photo should go
-//                val photoFile: File? = try {
-//                    createImageFile()
-//                } catch (ex: IOException) {
-//                    // Error occurred while creating the File
-//                    ...
-//                    null
-//                }
-//                // Continue only if the File was successfully created
-//                photoFile?.also {
-//                    val photoURI: Uri = FileProvider.getUriForFile(
-//                        this,
-//                        "com.example.android.fileprovider",
-//                        it
-//                    )
-//                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-//                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-//                }
-//            }
-//            resultLauncher.launch(takePictureIntent)
-//        }
-    }
 
     private fun testFunction() {
 //        val intent=Intent(this,PickupManifestEntryActivity::class.java)

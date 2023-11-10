@@ -457,7 +457,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
-                    TODO("Not yet implemented")
+//                    TODO("Not yet implemented")
                 }
             }
 

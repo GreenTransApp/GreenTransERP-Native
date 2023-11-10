@@ -31,8 +31,14 @@ class BookingAdapter @Inject constructor(
 ): RecyclerView.Adapter<BookingAdapter.BookingViewHolder>() {
     var actualVWeight:Float=0f
     var actualWeight:Int=0
+
+    init {
+        setObservers()
+    }
    inner class BookingViewHolder ( val binding:BookingItemViewBinding):RecyclerView.ViewHolder(binding.root) {
        private var dataLoggerItems = arrayOf("SELECT", "YES", "NO")
+
+
 
        fun setOnClicks(singlePickupRefModel: SinglePickupRefModel) {
            binding.gelPackItem.setOnClickListener {
@@ -219,6 +225,12 @@ class BookingAdapter @Inject constructor(
        }
 
    }
+
+    fun setObservers() {
+        activity.mScanner.observe(activity) {
+            activity.errorToast(it)
+        }
+    }
 
     fun calculateVWeight(index: Int, layoutBinding: BookingItemViewBinding){
         if(layoutBinding.length.text.toString().isNotEmpty() && layoutBinding.breadth.toString().isNotEmpty() && layoutBinding.height.toString().isNotEmpty() ) {
