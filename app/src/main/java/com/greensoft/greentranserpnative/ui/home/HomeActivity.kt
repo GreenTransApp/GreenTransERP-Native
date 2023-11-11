@@ -160,14 +160,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
     }
 
     private fun setNotificationCounter(counter: Int) {
-        activityBinding.notificationBtn.viewTreeObserver
-            .addOnGlobalLayoutListener(@ExperimentalBadgeUtils object : OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    badgeDrawable.number = counter
-                    BadgeUtils.attachBadgeDrawable(badgeDrawable, activityBinding.notificationBtn, null)
-                    activityBinding.notificationBtn.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                }
-            })
+        badgeDrawable.number = counter
     }
      private fun setupUi(){
          badgeDrawable = BadgeDrawable.create(this@HomeActivity)
@@ -176,6 +169,13 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
          badgeDrawable.verticalOffset = 30
          activityBinding.navigationView.setNavigationItemSelectedListener(this)
          setNotificationCounter(0)
+         activityBinding.notificationBtn.viewTreeObserver
+             .addOnGlobalLayoutListener(@ExperimentalBadgeUtils object : OnGlobalLayoutListener {
+                 override fun onGlobalLayout() {
+                     BadgeUtils.attachBadgeDrawable(badgeDrawable, activityBinding.notificationBtn, null)
+                     activityBinding.notificationBtn.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                 }
+             })
 
          //set header of nav drawer
          val navigationView=activityBinding.navigationView
