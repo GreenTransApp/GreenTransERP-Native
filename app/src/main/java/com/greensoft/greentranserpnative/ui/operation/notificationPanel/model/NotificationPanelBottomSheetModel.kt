@@ -1,4 +1,4 @@
-package com.greensoft.greentranserpnative.ui.operation.counterDetail.model
+package com.greensoft.greentranserpnative.ui.operation.notificationPanel.model
 
 data class NotificationPanelBottomSheetModel(
     val notiname: String,

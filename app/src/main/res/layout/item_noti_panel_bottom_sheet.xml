@@ -5,7 +5,7 @@
     <data>
         <variable
             name="counterBottomSheetModel"
-            type="com.greensoft.greentranserpnative.ui.operation.counterDetail.model.NotificationPanelBottomSheetModel" />
+            type="com.greensoft.greentranserpnative.ui.operation.notificationPanel.model.NotificationPanelBottomSheetModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

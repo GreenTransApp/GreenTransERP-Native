@@ -1,9 +1,14 @@
 package com.greensoft.greentranserpnative.ui.operation.chatScreen
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityChatScreenBinding
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
@@ -12,7 +17,11 @@ import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.chatScreen.models.ChatScreenModel
+import com.greensoft.greentranserpnative.ui.operation.notificationPanel.model.NotificationPanelBottomSheetModel
+import com.greensoft.greentranserpnative.ui.print.dcCode.activity.SelectBluetoothActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -29,8 +38,9 @@ class ChatScreenActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
         setUpToolbar("Communication Details")
+        initUi()
         onClick()
-        getChats()
+        refreshData()
         setObservers()
     }
 
@@ -45,6 +55,29 @@ class ChatScreenActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>
            }
 //           successToast("Send clicked")
        }
+    }
+
+    private fun initUi(){
+        activityBinding.refreshLayout.setOnRefreshListener {
+            refreshData()
+        }
+    }
+    private fun refreshData() {
+        getChats()
+        lifecycleScope.launch {
+            delay(1500)
+            activityBinding.refreshLayout.isRefreshing = false
+        }
+    }
+
+
+    private fun openCommunicationDetailBottomSheet(rvList: ArrayList<NotificationPanelBottomSheetModel>) {
+        val commonList = ArrayList<NotificationPanelBottomSheetModel>()
+        for (i in 0 until rvList.size) {
+            commonList.add(NotificationPanelBottomSheetModel(rvList[i].notiname, i.toString()))
+
+        }
+        openCounterBottomSheet(this, "Chat Detail", this, commonList)
     }
 
     private fun setObservers(){
