@@ -53,8 +53,8 @@ import com.greensoft.greentranserpnative.ui.login.models.LoginDataModel
 import com.greensoft.greentranserpnative.ui.login.models.UserDataModel
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import com.greensoft.greentranserpnative.ui.operation.counterDetail.NotificationPanelBottomSheet
-import com.greensoft.greentranserpnative.ui.operation.counterDetail.model.NotificationPanelBottomSheetModel
+import com.greensoft.greentranserpnative.ui.operation.notificationPanel.NotificationPanelBottomSheet
+import com.greensoft.greentranserpnative.ui.operation.notificationPanel.model.NotificationPanelBottomSheetModel
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONArray

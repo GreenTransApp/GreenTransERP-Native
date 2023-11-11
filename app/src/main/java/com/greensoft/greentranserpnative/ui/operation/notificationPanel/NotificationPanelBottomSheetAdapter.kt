@@ -1,4 +1,4 @@
-package com.greensoft.greentranserpnative.ui.operation.counterDetail
+package com.greensoft.greentranserpnative.ui.operation.notificationPanel
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import com.greensoft.greentranserpnative.databinding.ItemNotiPanelBottomSheetBinding
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import com.greensoft.greentranserpnative.ui.operation.counterDetail.model.NotificationPanelBottomSheetModel
+import com.greensoft.greentranserpnative.ui.operation.notificationPanel.model.NotificationPanelBottomSheetModel
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -89,7 +89,8 @@ open class NotificationPanelBottomSheetAdapter(
     class CommonBottomSheetViewHolder(private val itemBinding: ItemNotiPanelBottomSheetBinding): RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(counterBottomSheetModel: NotificationPanelBottomSheetModel, onRowClick: OnRowClick<Any>) {
             itemBinding.counterBottomSheetModel = counterBottomSheetModel
-            itemBinding.itemName.setOnClickListener {
+//            itemBinding.itemName.setOnClickListener {
+            itemBinding.root.setOnClickListener {
                 onRowClick.onClick(counterBottomSheetModel,"OPEN_DETAIL")
             }
         }

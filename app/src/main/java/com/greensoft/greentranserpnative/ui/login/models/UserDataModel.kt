@@ -23,7 +23,7 @@ data class UserDataModel
     val empdob: String,
     val employeeid: Int,
     val empname: String,
-    val executiveid: Any,
+    val executiveid: Int,
     val genablemodegroup: String,
     val ledcode: Any,
     val ledname: Any,

@@ -48,7 +48,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{String.valueOf(communicationListModel.tansactionId)}"
+                        android:text="@{String.valueOf(communicationListModel.transactionid)}"
                         android:layout_gravity="center"
                         android:layout_marginStart="10dp"
                         android:textStyle="bold"
@@ -70,7 +70,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{String.valueOf(communicationListModel.customername)}"
+                        android:text="@{String.valueOf(communicationListModel.custname)}"
                         android:layout_gravity="center"
                         android:layout_marginStart="10dp"
                         android:textStyle="bold"
@@ -116,7 +116,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{String.valueOf(communicationListModel.destination)}"
+                        android:text="@{String.valueOf(communicationListModel.dest)}"
                         android:layout_gravity="center"
                         android:layout_marginStart="10dp"
                         android:textStyle="bold"

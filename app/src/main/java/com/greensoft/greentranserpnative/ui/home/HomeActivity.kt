@@ -42,7 +42,7 @@ import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.call_register.CallRegisterActivity
 import com.greensoft.greentranserpnative.ui.operation.communicationList.CommunicationListActivity
 import com.greensoft.greentranserpnative.ui.operation.communicationList.models.CommunicationListModel
-import com.greensoft.greentranserpnative.ui.operation.counterDetail.model.NotificationPanelBottomSheetModel
+import com.greensoft.greentranserpnative.ui.operation.notificationPanel.model.NotificationPanelBottomSheetModel
 import com.greensoft.greentranserpnative.ui.operation.grList.GrListActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestEntryActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceActivity

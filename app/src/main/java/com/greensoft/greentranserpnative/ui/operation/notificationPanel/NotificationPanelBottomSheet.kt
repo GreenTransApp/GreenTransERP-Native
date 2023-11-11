@@ -1,4 +1,4 @@
-package com.greensoft.greentranserpnative.ui.operation.counterDetail
+package com.greensoft.greentranserpnative.ui.operation.notificationPanel
 
 import android.content.Context
 import android.content.res.Resources
@@ -15,7 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.greensoft.greentranserpnative.databinding.LayoutNotiPanelBottomSheetBinding
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import com.greensoft.greentranserpnative.ui.operation.counterDetail.model.NotificationPanelBottomSheetModel
+import com.greensoft.greentranserpnative.ui.operation.notificationPanel.model.NotificationPanelBottomSheetModel
 
 
 class NotificationPanelBottomSheet: BottomSheetDialogFragment() {

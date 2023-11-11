@@ -18,7 +18,7 @@ open class BaseRepository @Inject constructor() {
     val isError: MutableLiveData<String> = MutableLiveData()
     val viewDialogMutData: MutableLiveData<Boolean> = MutableLiveData()
 
-    open fun getResult(response: CommonResult): JSONArray? {
+    open fun    getResult(response: CommonResult): JSONArray? {
         var Obj: JSONObject? = null
         var JsonArray: JSONArray? = null
         var JsonResult: JSONArray? = null
@@ -46,6 +46,31 @@ open class BaseRepository @Inject constructor() {
         return JsonResult
     }
     open fun getResult1(response: CommonResult): JSONArray? {
+        var Obj: JSONObject? = null
+        var JsonArray: JSONArray? = null
+        var JsonResult: JSONArray? = null
+        val Data: String
+        try {
+            Data = response.DataSet
+            Obj = JSONObject(Data)
+            JsonArray = Obj.getJSONArray("Table1")
+            JsonResult = if (JsonArray.length() != 0) {
+                val jObj = JsonArray.getJSONObject(0)
+                if (jObj["commandstatus"].toString() == "1") {
+                    JsonArray
+                } else {
+                    isError.postValue(jObj["commandmessage"].toString())
+                    null
+                }
+            } else {
+                null
+            }
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+        return JsonResult
+    }
+    open fun getResult2(response: CommonResult): JSONArray? {
         var Obj: JSONObject? = null
         var JsonArray: JSONArray? = null
         var JsonResult: JSONArray? = null
