@@ -10,7 +10,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -172,33 +174,47 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
          //Important to change the position of the Badge
          badgeDrawable.horizontalOffset = 60
          badgeDrawable.verticalOffset = 30
+         activityBinding.navigationView.setNavigationItemSelectedListener(this)
          setNotificationCounter(0)
 
+         //set header of nav drawer
+         val navigationView=activityBinding.navigationView
+         val headerView : View = navigationView.getHeaderView(0)
+         val companyName=headerView.findViewById<TextView>(R.id.company_name)
+         val branchName=headerView.findViewById<TextView>(R.id.loginBranch)
+         val compLogo=headerView.findViewById<ImageView>(R.id.company_logo)
+         companyName.setText(loginDataModel?.compname.toString())
+         branchName.setText(userDataModel?.loginbranchname.toString())
 
 //         activityBinding.compName.text = loginDataModel!!.compname.toString()
 //         activityBinding.loginBranch.text = userDataModel!!.loginbranchname.toString()
-//
-//         executor.execute {
-//
-//             val imageURL = loginDataModel!!.logoimage.toString()
-//             if(imageURL == null){
-//                 showProgressDialog()
-//             }
-//             try {
-//                 val `in` = java.net.URL(imageURL).openStream()
-//                 image = BitmapFactory.decodeStream(`in`)
-//
-//                 handler.post {
+
+         executor.execute {
+
+             val imageURL = loginDataModel!!.logoimage.toString()
+             if(imageURL == null){
+                 showProgressDialog()
+             }
+             try {
+                 val `in` = java.net.URL(imageURL).openStream()
+                 image = BitmapFactory.decodeStream(`in`)
+
+                 handler.post {
 //                     activityBinding.compLogo.setImageBitmap(image)
-//                 }
-//             }
-//
-//             catch (e: Exception) {
-//                 e.printStackTrace()
-//             }
-//         }
+                     compLogo.setImageBitmap(image)
+
+                 }
+             }
+
+             catch (e: Exception) {
+                 e.printStackTrace()
+             }
+         }
 
     }
+
+
+
 
     override fun onBackPressed() {
         exitAlert()
