@@ -6,6 +6,7 @@
         <variable
             name="chatsData"
             type="com.greensoft.greentranserpnative.ui.operation.chatScreen.models.ChatScreenModel" />
+            />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,7 +31,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="25dp"
-                android:text="Abhi"/>
+                android:text="@{String.valueOf(chatsData.message)}"
+                />
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

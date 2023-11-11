@@ -89,7 +89,8 @@ open class NotificationPanelBottomSheetAdapter(
     class CommonBottomSheetViewHolder(private val itemBinding: ItemNotiPanelBottomSheetBinding): RecyclerView.ViewHolder(itemBinding.root) {
         fun bind(counterBottomSheetModel: NotificationPanelBottomSheetModel, onRowClick: OnRowClick<Any>) {
             itemBinding.counterBottomSheetModel = counterBottomSheetModel
-            itemBinding.itemName.setOnClickListener {
+//            itemBinding.itemName.setOnClickListener {
+            itemBinding.root.setOnClickListener {
                 onRowClick.onClick(counterBottomSheetModel,"OPEN_DETAIL")
             }
         }
