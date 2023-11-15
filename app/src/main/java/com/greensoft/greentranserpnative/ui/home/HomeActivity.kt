@@ -64,7 +64,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
     private val viewModel: HomeViewModel by viewModels()
     lateinit var bottomSheetDialog: BottomSheetDialog;
     private var  menuList: ArrayList<UserMenuModel> = ArrayList()
-    private var notificationDetailList: ArrayList<NotificationPanelBottomSheetModel> = ArrayList()
+//    private var notificationDetailList: ArrayList<NotificationPanelBottomSheetModel> = ArrayList()
 //    lateinit var layoutManager: LinearLayoutManager
     lateinit var layoutManager: GridLayoutManager
     lateinit var adapter: UserMenuAdapter
@@ -128,7 +128,6 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
         activityBinding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
          activityBinding.branchName.text = userDataModel!!.loginbranchname.toString()
-        notificationDetailList = generateSimpleList()
 //
         if(ENV.DEBUGGING) {
 //            activityBinding.testDebugging.visibility = View.VISIBLE
@@ -143,6 +142,15 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
     override fun onResume() {
         super.onResume()
         refreshData()
+    }
+
+    private fun getNotificationPanelList() {
+        viewModel.getNotificationPanelList(
+            loginDataModel?.companyid.toString(),
+            "gtapp_getnotificationpanel",
+            listOf("prmusercode","prmsessionid"),
+            arrayListOf(userDataModel?.usercode.toString(), userDataModel?.sessionid.toString())
+        )
     }
 
      private fun refreshData(){
@@ -267,6 +275,14 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
             }
         }
 
+        viewModel.notificationPanelListLiveData.observe(this) { panelList ->
+            if (panelList.isNotEmpty()) {
+                if(panelList[0].commandstatus == 1) {
+                    openNotificationBottomSheet(panelList)
+                }
+            }
+        }
+
         mScanner.observe(this){data->
             Companion.successToast(mContext,data)
 //            playSound()
@@ -313,7 +329,8 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
     private fun setOnClicks() {
         activityBinding.notificationBtn.setOnClickListener {
 //            showNotificationModelBottomSheet()
-            openNotificationBottomSheet(notificationDetailList)
+//            openNotificationBottomSheet(notificationDetailList)
+            getNotificationPanelList()
         }
         activityBinding.toolbar.setNavigationOnClickListener {
             if(activityBinding.myDrawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -352,40 +369,34 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
 
 
     override fun onClick(data: Any, clickType: String) {
-        if (clickType=="OPEN_DETAIL"){
-            val intent = Intent(this, CommunicationListActivity::class.java)
-            startActivity(intent)
-        }
-        else{
-            val gson = Gson()
-            val jsonSerialized = gson.toJson(data)
-            val menuModel: UserMenuModel = data as UserMenuModel
-            Utils.menuModel = menuModel
-            when(clickType){
+        val gson = Gson()
+        val jsonSerialized = gson.toJson(data)
+        val menuModel: UserMenuModel = data as UserMenuModel
+        Utils.menuModel = menuModel
+        when(clickType){
 //           "SELECTED_MENU"-> run{
 //               val model: UserMenuModel = data as UserMenuModel
 //               successToast(model.displayname)
 //           }
-                "GTAPP_ACCEPTJOBS" -> run {
-                    val intent = Intent(this, CallRegisterActivity::class.java)
-                    intent.putExtra("MENU_DATA", jsonSerialized)
-                    startActivity(intent)
-                }
-                "GTAPP_PENDINGINDENT" -> run {
-                    val intent = Intent(this, PickupReferenceActivity::class.java)
-                    intent.putExtra("MENU_DATA", jsonSerialized)
-                    startActivity(intent)
-                }
-                "GTAPP_GRLIST" -> run {
-                    val intent = Intent(this, GrListActivity::class.java)
-                    intent.putExtra("MENU_DATA", jsonSerialized)
-                    startActivity(intent)
-                }
-                "GTAPP_NATIVEPICKUPMANIFEST" -> run {
-                    val intent = Intent(this, PickupManifestEntryActivity::class.java)
-                    intent.putExtra("MENU_DATA", jsonSerialized)
-                    startActivity(intent)
-                }
+            "GTAPP_ACCEPTJOBS" -> run {
+                val intent = Intent(this, CallRegisterActivity::class.java)
+                intent.putExtra("MENU_DATA", jsonSerialized)
+                startActivity(intent)
+            }
+            "GTAPP_PENDINGINDENT" -> run {
+                val intent = Intent(this, PickupReferenceActivity::class.java)
+                intent.putExtra("MENU_DATA", jsonSerialized)
+                startActivity(intent)
+            }
+            "GTAPP_GRLIST" -> run {
+                val intent = Intent(this, GrListActivity::class.java)
+                intent.putExtra("MENU_DATA", jsonSerialized)
+                startActivity(intent)
+            }
+            "GTAPP_NATIVEPICKUPMANIFEST" -> run {
+                val intent = Intent(this, PickupManifestEntryActivity::class.java)
+                intent.putExtra("MENU_DATA", jsonSerialized)
+                startActivity(intent)
             }
         }
     }
@@ -431,19 +442,20 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
         bottomSheetDialog.show()
     }
     private fun openNotificationBottomSheet(rvList: ArrayList<NotificationPanelBottomSheetModel>) {
-        val commonList = ArrayList<NotificationPanelBottomSheetModel>()
-        for (i in 0 until rvList.size) {
-            commonList.add(NotificationPanelBottomSheetModel(rvList[i].notiname, i.toString()))
-
-        }
-        openCounterBottomSheet(this, "Notification Detail", this, commonList)
+//        val commonList = ArrayList<NotificationPanelBottomSheetModel>()
+//        for (i in 0 until rvList.size) {
+//            commonList.add(NotificationPanelBottomSheetModel(rvList[i].notiname, i.toString()))
+//
+//        }
+//        openCounterBottomSheet(this, "Notification Detail", this, commonList)
+        openCounterBottomSheet(this, "Notification Panel", this, rvList)
     }
-    private fun generateSimpleList(): ArrayList<NotificationPanelBottomSheetModel> {
-        val dataList: ArrayList<NotificationPanelBottomSheetModel> =
-            java.util.ArrayList<NotificationPanelBottomSheetModel>()
-        for (i in 0..99) {
-            dataList.add(NotificationPanelBottomSheetModel("Test",i.toString()))
-        }
-        return dataList
-    }
+//    private fun generateSimpleList(): ArrayList<NotificationPanelBottomSheetModel> {
+//        val dataList: ArrayList<NotificationPanelBottomSheetModel> =
+//            java.util.ArrayList<NotificationPanelBottomSheetModel>()
+//        for (i in 0..99) {
+//            dataList.add(NotificationPanelBottomSheetModel("Test",i.toString()))
+//        }
+//        return dataList
+//    }
 }

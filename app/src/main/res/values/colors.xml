@@ -31,4 +31,16 @@
     <color name="red">#FA0000</color>
     <color name="enabled_color">#797978</color>
     <color name="disabled_color">#806D6D</color>
+
+<!--    <color name="customerChat">#A9CCEF</color>-->
+    <color name="customerChat">#4CAF50</color>
+    <color name="customerChatNameColor">#FFFFFF</color>
+    <color name="customerChatMessageColor">#FFFFFF</color>
+    <color name="customerChatTimeColor">#FFFFFF</color>
+
+    <color name="driverChat">#3E5E70</color>
+    <color name="driverChatNameColor">#FFFFFF</color>
+    <color name="driverChatMessageColor">#FFFFFF</color>
+    <color name="driverChatTimeColor">#FFFFFF</color>
+
 </resources>

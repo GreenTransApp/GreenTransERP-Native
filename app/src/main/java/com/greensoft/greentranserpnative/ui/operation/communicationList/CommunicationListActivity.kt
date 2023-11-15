@@ -3,14 +3,17 @@ package com.greensoft.greentranserpnative.ui.operation.communicationList
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityCommunicatonListBinding
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.chatScreen.ChatScreenActivity
-import com.greensoft.greentranserpnative.ui.operation.chatScreen.models.ChatScreenModel
 import com.greensoft.greentranserpnative.ui.operation.communicationList.models.CommunicationListModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -18,62 +21,81 @@ class CommunicationListActivity @Inject constructor() : BaseActivity(), OnRowCli
     private lateinit var activityBinding: ActivityCommunicatonListBinding
     private var communicationListAdapter: CommunicationListAdapter? = null
     private lateinit var manager: LinearLayoutManager
-    private var communicatonList: ArrayList<CommunicationListModel> = ArrayList()
-    private var communicationCardList: ArrayList<CommunicationListModel> = ArrayList()
+    private var communicationList: ArrayList<CommunicationListModel> = ArrayList()
+//    private var communicationCardList: ArrayList<CommunicationListModel> = ArrayList()
     private val viewModel: CommunicatonListViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityCommunicatonListBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
-        communicationCardList = generateSimpleList()
-        setupRecyclerView()
         setSupportActionBar(activityBinding.toolBar.root)
-        setUpToolbar("Communication List"+userDataModel?.custname.toString())
-        getCommunicationList()
+        setUpToolbar("Customer Communication")
         setObservers()
+        getCommunicationList()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshData()
+    }
+
+    private fun refreshData() {
+        getCommunicationList()
     }
 
     override fun onClick(data: Any, clickType: String) {
-        if (clickType == "OPEN_DETAIL") {
+        val gson = Gson()
+        if (clickType == "OPEN_CHAT") {
             val intent = Intent(mContext, ChatScreenActivity::class.java)
+            var parsedData = data as CommunicationListModel
+            intent.putExtra("communication_data", gson.toJson(parsedData))
             startActivity(intent)
 //            Toast.makeText(mContext, "Card Clicked", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun setObservers(){
+        activityBinding.swipeRefreshLayout.setOnRefreshListener {
+            refreshData()
+            lifecycleScope.launch {
+                delay(1500)
+                activityBinding.swipeRefreshLayout.isRefreshing = false
+            }
+        }
         viewModel.isError.observe(this){ errMsg->
             errorToast(errMsg)
         }
 
         viewModel.communicationListLiveData.observe(this){ commuListData->
-            communicatonList = commuListData
+            communicationList = commuListData
+            setupRecyclerView()
         }
     }
     private fun getCommunicationList(){
         viewModel.getCommunicationList(
             loginDataModel?.companyid.toString(),
-            "",
-            listOf("prmtransactionid","prmboyid","prmcustcode","prmcomment"),
-            arrayListOf("10050","","","")
+            "gtapp_getjobforchat",
+            listOf("prmusercode","prmsessionid"),
+            arrayListOf(userDataModel?.usercode.toString(), userDataModel?.sessionid.toString())
         )
     }
 
     private fun setupRecyclerView() {
         if (communicationListAdapter == null) {
-        manager = LinearLayoutManager(this)
-        activityBinding.recyclerView.layoutManager = manager
-        communicationListAdapter = CommunicationListAdapter(communicationCardList, this)
+            manager = LinearLayoutManager(this)
+            activityBinding.recyclerView.layoutManager = manager
+        }
+        communicationListAdapter = CommunicationListAdapter(communicationList, this)
         activityBinding.recyclerView.adapter = communicationListAdapter
-    }
+//    }
     }
 
     private fun generateSimpleList(): ArrayList<CommunicationListModel> {
         val dataList: ArrayList<CommunicationListModel> =
             java.util.ArrayList<CommunicationListModel>()
         for (i in 0..99) {
-            dataList.add(CommunicationListModel("",1,i+100 ,"",
-            "","","","",""))
+            dataList.add(CommunicationListModel(1,"",i+100 ,"",
+            "","","","","", 0))
         }
         return dataList
     }

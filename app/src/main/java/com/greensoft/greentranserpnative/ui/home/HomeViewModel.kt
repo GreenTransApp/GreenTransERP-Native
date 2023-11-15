@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.greensoft.greentranserpnative.base.BaseViewModel
 import com.greensoft.greentranserpnative.ui.home.models.NotificationModel
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
+import com.greensoft.greentranserpnative.ui.operation.notificationPanel.model.NotificationPanelBottomSheetModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,9 +26,18 @@ class HomeViewModel @Inject constructor(private val _repository: HomeRepository)
     val notificationLiveData: LiveData<NotificationModel>
         get() = _repository.notificationLiveData
 
+    val notificationPanelListLiveData: LiveData<ArrayList<NotificationPanelBottomSheetModel>>
+        get() = _repository.notificationPanelListLiveData
+
     fun getUserMenu(companyId:String, spname: String, param:List<String>, values:ArrayList<String>){
         viewModelScope.launch(Dispatchers.IO) {
             _repository.getUserMenu(companyId,spname, param,values)
+        }
+    }
+
+    fun getNotificationPanelList(companyId:String, spname: String, param:List<String>, values:ArrayList<String>){
+        viewModelScope.launch(Dispatchers.IO) {
+            _repository.getNotificationPanelList(companyId,spname, param,values)
         }
     }
 }

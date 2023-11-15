@@ -1,13 +1,20 @@
 package com.greensoft.greentranserpnative.ui.operation.notificationPanel
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.Filter
 import android.widget.Filterable
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.badge.BadgeDrawable
+import com.google.android.material.badge.BadgeUtils
+import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.greensoft.greentranserpnative.databinding.ItemNotiPanelBottomSheetBinding
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.communicationList.CommunicationListActivity
 import com.greensoft.greentranserpnative.ui.operation.notificationPanel.model.NotificationPanelBottomSheetModel
 import java.util.*
 import kotlin.collections.ArrayList
@@ -34,7 +41,7 @@ open class NotificationPanelBottomSheetAdapter(
         val itemCommonBottomSheetBinding = ItemNotiPanelBottomSheetBinding.inflate(
             LayoutInflater.from(parent.context), null, false
         )
-        val viewHolder = CommonBottomSheetViewHolder(itemCommonBottomSheetBinding)
+        val viewHolder = CommonBottomSheetViewHolder(itemCommonBottomSheetBinding, mContext)
         return viewHolder
     }
 
@@ -86,13 +93,40 @@ open class NotificationPanelBottomSheetAdapter(
         }
     }
 
-    class CommonBottomSheetViewHolder(private val itemBinding: ItemNotiPanelBottomSheetBinding): RecyclerView.ViewHolder(itemBinding.root) {
+    class CommonBottomSheetViewHolder(private val itemBinding: ItemNotiPanelBottomSheetBinding,
+        private val context: Context): RecyclerView.ViewHolder(itemBinding.root) {
+
+        lateinit var badgeDrawable: BadgeDrawable
         fun bind(counterBottomSheetModel: NotificationPanelBottomSheetModel, onRowClick: OnRowClick<Any>) {
             itemBinding.counterBottomSheetModel = counterBottomSheetModel
 //            itemBinding.itemName.setOnClickListener {
             itemBinding.root.setOnClickListener {
-                onRowClick.onClick(counterBottomSheetModel,"OPEN_DETAIL")
+//                onRowClick.onClick(counterBottomSheetModel,counterBottomSheetModel.page)
+                when(counterBottomSheetModel.page) {
+                    "COMM" -> {
+                        val intent = Intent(context, CommunicationListActivity::class.java)
+                        context.startActivity(intent)
+                    }
+                    else -> {
+                        Toast.makeText(context, "Not yet implemented. Please contact system admin.", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
+            itemBinding.itemName.text = counterBottomSheetModel.notiname
+            badgeDrawable = BadgeDrawable.create(context)
+            //Important to change the position of the Badge
+            badgeDrawable.number = counterBottomSheetModel.noticount
+            badgeDrawable.horizontalOffset = 5
+            badgeDrawable.verticalOffset = 5
+            itemBinding.itemName.viewTreeObserver
+                .addOnGlobalLayoutListener(@ExperimentalBadgeUtils object :
+                    ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        BadgeUtils.attachBadgeDrawable(badgeDrawable, itemBinding.itemName, null)
+                        itemBinding.itemName.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    }
+                })
+
         }
     }
 }

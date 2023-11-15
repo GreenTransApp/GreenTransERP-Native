@@ -1,24 +1,19 @@
 package com.greensoft.greentranserpnative.ui.operation.chatScreen
 
 import android.app.AlertDialog
-import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.greensoft.greentranserpnative.R
+import com.google.gson.Gson
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityChatScreenBinding
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
-import com.greensoft.greentranserpnative.ui.common.scanPopup.ScanPopup
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.chatScreen.models.ChatScreenModel
-import com.greensoft.greentranserpnative.ui.operation.notificationPanel.model.NotificationPanelBottomSheetModel
-import com.greensoft.greentranserpnative.ui.print.dcCode.activity.SelectBluetoothActivity
+import com.greensoft.greentranserpnative.ui.operation.communicationList.models.CommunicationListModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -28,20 +23,40 @@ import javax.inject.Inject
 class ChatScreenActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>,
     BottomSheetClick<Any>, AlertCallback<Any> {
     private lateinit var activityBinding: ActivityChatScreenBinding
-    private var getChatList: ArrayList<ChatScreenModel> = ArrayList()
+    private var chatList: ArrayList<ChatScreenModel> = ArrayList()
     private lateinit var manager: LinearLayoutManager
     private val viewModel: ChatScreenViewModel by viewModels()
     private var chatScreenAdapter: ChatScreenAdapter? = null
+    private var communicationModel: CommunicationListModel? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityChatScreenBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
-        setSupportActionBar(activityBinding.toolBar.root)
-        setUpToolbar("Communication Details")
+        getIntentData()
         initUi()
         onClick()
-        refreshData()
         setObservers()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshData()
+    }
+
+    private fun getIntentData() {
+        if(intent.extras != null){
+            var data = intent.extras!!.getString("communication_data")
+            if(data != null) {
+                var gson = Gson()
+                try {
+                    val commListModel = gson.fromJson(data, CommunicationListModel::class.java)
+                    communicationModel = commListModel
+                }
+                catch (ex: Exception) {
+                    errorToast(somethingWentWrongErrorMsg)
+                }
+            }
+        }
     }
 
     fun onClick(){
@@ -58,31 +73,39 @@ class ChatScreenActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>
     }
 
     private fun initUi(){
-        activityBinding.refreshLayout.setOnRefreshListener {
-            refreshData()
+        setSupportActionBar(activityBinding.toolBar.root)
+        if(communicationModel != null) {
+            setUpToolbar(communicationModel!!.custname.toString())
+        } else {
+            setUpToolbar("Chat")
         }
+
     }
     private fun refreshData() {
         getChats()
-        lifecycleScope.launch {
-            delay(1500)
-            activityBinding.refreshLayout.isRefreshing = false
-        }
     }
 
 
-    private fun openCommunicationDetailBottomSheet(rvList: ArrayList<NotificationPanelBottomSheetModel>) {
-        val commonList = ArrayList<NotificationPanelBottomSheetModel>()
-        for (i in 0 until rvList.size) {
-            commonList.add(NotificationPanelBottomSheetModel(rvList[i].notiname, i.toString()))
-
-        }
-        openCounterBottomSheet(this, "Chat Detail", this, commonList)
-    }
+//    private fun openCommunicationDetailBottomSheet(rvList: ArrayList<NotificationPanelBottomSheetModel>) {
+////        val commonList = ArrayList<NotificationPanelBottomSheetModel>()
+////        for (i in 0 until rvList.size) {
+////            commonList.add(NotificationPanelBottomSheetModel(rvList[i].notiname, i.toString()))
+////
+////        }
+////        openCounterBottomSheet(this, "Chat Detail", this, commonList)
+////    }
 
     private fun setObservers(){
         viewModel.isError.observe(this){ errMsg->
             errorToast(errMsg)
+        }
+
+        activityBinding.refreshLayout.setOnRefreshListener {
+            refreshData()
+            lifecycleScope.launch {
+                delay(1500)
+                activityBinding.refreshLayout.isRefreshing = false
+            }
         }
 //        viewModel.viewDialogLiveData.observe(this, Observer { show ->
 ////            progressBar.visibility = if(show) View.VISIBLE else View.GONE
@@ -94,7 +117,7 @@ class ChatScreenActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>
 //            }
 //        })
         viewModel.getChatListLiveData.observe(this){ resultChatList->
-            getChatList = resultChatList
+            chatList = resultChatList
             setupRecyclerView()
         }
 
@@ -107,38 +130,47 @@ class ChatScreenActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>
         }
     }
     private fun getChats(){
-        viewModel.getChats(
-            loginDataModel?.companyid.toString(),
-//            "10",
+        if(communicationModel != null) {
+            viewModel.getChats(
+                loginDataModel?.companyid.toString(),
                 "gtnative_getdrivercustomercomments",
-            listOf("prmtransactionid"),
-            arrayListOf("10050")
-//            arrayListOf("53057")
-        )
+                listOf("prmtransactionid","prmisboy"),
+                arrayListOf(communicationModel!!.transactionid.toString(), "Y")
+            )
+        } else {
+            errorToast(somethingWentWrongErrorMsg)
+        }
     }
     private fun addChat(){
-        viewModel.addChats(
-            loginDataModel?.companyid.toString(),
-//            "10",
-            "gtnative_adddrivercustomercomments",
-            listOf("prmtransactionid","prmboyid","prmcustcode","prmcomment"),
-            arrayListOf("10050",userDataModel?.executiveid.toString(),"",activityBinding.messageBox.text.toString())
-//            arrayListOf("53057","","",activityBinding.messageBox.text.toString())
-        )
+        if(communicationModel != null) {
+            viewModel.addChats(
+                loginDataModel?.companyid.toString(),
+                "gtnative_adddrivercustomercomments",
+                listOf("prmtransactionid", "prmboyid", "prmcustcode", "prmcomment"),
+                arrayListOf(
+                    communicationModel!!.transactionid.toString()
+                    ,userDataModel?.executiveid.toString(),
+                    "",
+                    activityBinding.messageBox.text.toString()
+                )
+                //            arrayListOf("53057","","",activityBinding.messageBox.text.toString())
+            )
+        }
+        else {
+            errorToast(somethingWentWrongErrorMsg)
+        }
     }
 
     private fun deleteChat(chat: ChatScreenModel?){
-        if(chat == null) {
-            errorToast("Something went wrong, Please try again.")
+        if(chat == null || communicationModel == null) {
+            errorToast(somethingWentWrongErrorMsg)
             return
         }
         viewModel.deleteChats(
             loginDataModel?.companyid.toString(),
-//            "10",
             "gtnative_deletedrivercustomercomments",
             listOf("prmtransactionid","prmdataid","prmdeletedby"),
-            arrayListOf("10050", chat.dataid.toString(),"")
-//            arrayListOf("53057","","",activityBinding.messageBox.text.toString())
+            arrayListOf(communicationModel!!.transactionid.toString(), chat.dataid.toString(),"D")
         )
     }
 
@@ -147,8 +179,15 @@ class ChatScreenActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>
             manager = LinearLayoutManager(this)
             activityBinding.recyclerview.layoutManager = manager
         }
-        chatScreenAdapter = ChatScreenAdapter(getChatList, this)
+        chatScreenAdapter = ChatScreenAdapter(chatList, this)
         activityBinding.recyclerview.adapter = chatScreenAdapter
+        lifecycleScope.launch {
+            delay(200)
+            if(chatList.size > 1) {
+                activityBinding.recyclerview.smoothScrollToPosition(chatList.size - 1)
+//                activityBinding.recyclerview.scrollToPosition(chatList.size - 1)
+            }
+        }
     }
 
     override fun onLongClick(data: Any, clickType: String) {

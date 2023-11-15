@@ -75,7 +75,8 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
     lateinit var mContext: Context
 //    var progressDialog: ProgressDialog? = null
 //    var prefManager: PrefManager? = null
-    var serverErrorMsg = "Something Went Wrong Please Try Again Later"
+    var serverErrorMsg = "Something went wrong, please try again later."
+    var somethingWentWrongErrorMsg = "Something Went Wrong, Please Try Again."
     var internetError = "Internet Not Working Please Check Your Internet Connection"
     val noLoadingGRSelectedErrMsg = "No Loading/GR # is selected for manifest. Please select at least 1 Loading/GR #."
 

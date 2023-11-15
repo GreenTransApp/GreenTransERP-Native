@@ -1,8 +1,8 @@
 package com.greensoft.greentranserpnative.ui.operation.communicationList.models
 
 data class CommunicationListModel (
-    var commandstatus: Any,
-    var commandmessage: Int?,
+    var commandstatus: Int,
+    var commandmessage: String?,
     var transactionid: Int?,
     var custname: String?,
     var custcode: String?,
@@ -10,4 +10,5 @@ data class CommunicationListModel (
     var dest: String?,
     var orgcode: String?,
     var origin: String?,
+    val totalcustcomments: Int
 )

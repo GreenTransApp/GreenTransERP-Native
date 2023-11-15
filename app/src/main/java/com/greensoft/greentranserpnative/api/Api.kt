@@ -1,8 +1,10 @@
 package com.greensoft.greentranserpnative.api
 
+import android.util.Log
 import com.greensoft.greentranserpnative.common.CommonResult
 import retrofit2.Call
 import retrofit2.http.*
+import kotlin.math.log
 
 
 interface Api {
@@ -28,7 +30,12 @@ interface Api {
         @Field("spname") spName: String?,
         @Field("param") params: List<String>,
         @Field("values") values: ArrayList<String>
-    ): Call<CommonResult>
+    ) : Call<CommonResult>
+//    ) {
+//        Log.d("Common Api Home", "with spName: $spName")
+//        Log.d("Params for ${spName}:", params.toString())
+//        Log.d("Values for ${spName}:", values.toString())
+//    }
 
     @FormUrlEncoded
     @POST("WMS/CommonApi")
@@ -37,7 +44,7 @@ interface Api {
         @Field("spname") spName: String?,
         @Field("param") params: List<String>,
         @Field("values") values: ArrayList<String>
-    ): Call<CommonResult>
+    ) : Call<CommonResult>
 
 
     @GET("WMS/LoginbranchList")
