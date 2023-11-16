@@ -70,6 +70,15 @@ class CommunicationListActivity @Inject constructor() : BaseActivity(), OnRowCli
             communicationList = commuListData
             setupRecyclerView()
         }
+        viewModel.viewDialogLiveData.observe(this) { show ->
+
+            if (show) {
+                showProgressDialog()
+            } else {
+                hideProgressDialog()
+            }
+        }
+
     }
     private fun getCommunicationList(){
         viewModel.getCommunicationList(

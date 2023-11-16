@@ -6,6 +6,7 @@
         <variable
             name="communicationListModel"
             type="com.greensoft.greentranserpnative.ui.operation.communicationList.models.CommunicationListModel" />
+
     </data>
 
     <LinearLayout

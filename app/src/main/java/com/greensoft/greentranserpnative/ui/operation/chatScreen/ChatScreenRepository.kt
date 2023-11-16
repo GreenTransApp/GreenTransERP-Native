@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.ui.operation.chatScreen.models.ChatScreenModel
+import com.greensoft.greentranserpnative.ui.operation.chatScreen.models.CustomerDetailModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -16,6 +17,7 @@ class ChatScreenRepository @Inject constructor() : BaseRepository(){
     private val getChatListMuteData = MutableLiveData<ArrayList<ChatScreenModel>>()
     private val addChatListMuteData = MutableLiveData<ArrayList<ChatScreenModel>>()
     private val deleteChatListMuteData = MutableLiveData<ArrayList<ChatScreenModel>>()
+    private val custDetailMuteData = MutableLiveData<CustomerDetailModel>()
 
     val getChatListLiveData: LiveData<ArrayList<ChatScreenModel>>
         get() = getChatListMuteData
@@ -23,6 +25,8 @@ class ChatScreenRepository @Inject constructor() : BaseRepository(){
         get() = addChatListMuteData
     val deleteChatListLiveData: LiveData<ArrayList<ChatScreenModel>>
         get() = deleteChatListMuteData
+    val custDetailLiveData: LiveData<CustomerDetailModel>
+        get() = custDetailMuteData
 
     val viewDialogLiveData: LiveData<Boolean>
         get() = viewDialogMutData
@@ -41,6 +45,13 @@ class ChatScreenRepository @Inject constructor() : BaseRepository(){
                             val listType = object: TypeToken<List<ChatScreenModel>>() {}.type
                             val resultList: ArrayList<ChatScreenModel> = gson.fromJson(jsonArray.toString(), listType);
                             getChatListMuteData.postValue(resultList);
+
+                        }
+                        val jsonArray2 = getResult2(result);
+                        if(jsonArray2 != null) {
+                            val listType = object: TypeToken<List<CustomerDetailModel>>() {}.type
+                            val resultList: ArrayList<CustomerDetailModel> = gson.fromJson(jsonArray2.toString(), listType);
+                            custDetailMuteData.postValue(resultList[0])
 
                         }
                     } else {

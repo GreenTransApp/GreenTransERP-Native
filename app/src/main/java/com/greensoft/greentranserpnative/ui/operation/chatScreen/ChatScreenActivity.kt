@@ -2,18 +2,24 @@ package com.greensoft.greentranserpnative.ui.operation.chatScreen
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
+import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityChatScreenBinding
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.booking.BookingViewModel
 import com.greensoft.greentranserpnative.ui.operation.chatScreen.models.ChatScreenModel
+import com.greensoft.greentranserpnative.ui.operation.chatScreen.models.CustomerDetailModel
 import com.greensoft.greentranserpnative.ui.operation.communicationList.models.CommunicationListModel
+import com.greensoft.greentranserpnative.ui.operation.eway_bill.EwayBillBottomSheet
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -24,6 +30,7 @@ class ChatScreenActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>
     BottomSheetClick<Any>, AlertCallback<Any> {
     private lateinit var activityBinding: ActivityChatScreenBinding
     private var chatList: ArrayList<ChatScreenModel> = ArrayList()
+    private var custDetail: CustomerDetailModel ?=null
     private lateinit var manager: LinearLayoutManager
     private val viewModel: ChatScreenViewModel by viewModels()
     private var chatScreenAdapter: ChatScreenAdapter? = null
@@ -32,16 +39,46 @@ class ChatScreenActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>
         super.onCreate(savedInstanceState)
         activityBinding = ActivityChatScreenBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
+        setObservers()
         getIntentData()
         initUi()
         onClick()
-        setObservers()
+
     }
 
     override fun onResume() {
         super.onResume()
         refreshData()
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.customer_info_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.cust_info_menu -> {
+                openCustomerBottomSheeet()
+            }
+            R.id.refresh_icon->{
+                refreshData()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+    private fun openCustomerBottomSheeet(){
+        if(custDetail != null){
+            val bottomSheet= CustomerInfoBottomSheet.newInstance(this, "INFORMATION",custDetail!!.transactionid.toString(),custDetail!!.custname.toString(),communicationModel!!.origin.toString(),communicationModel!!.dest.toString(),custDetail!!.mobileno.toString())
+            bottomSheet.show(supportFragmentManager,"CUST-INFO-BottomSheet")
+        }else{
+            errorToast("Went something wrong")
+        }
+
+    }
+
+
 
     private fun getIntentData() {
         if(intent.extras != null){
@@ -127,6 +164,9 @@ class ChatScreenActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>
         }
         viewModel.deleteChatListLiveData.observe(this){
 
+        }
+        viewModel.custDetailLiveData.observe(this){ custDetails->
+            custDetail=custDetails
         }
     }
     private fun getChats(){

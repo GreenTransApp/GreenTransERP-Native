@@ -39,20 +39,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_weight="10"
-            android:layout_marginBottom="10dp"
             >
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="5sp"
                 android:layout_weight="8"
                 >
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/message_box"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:textColor="@color/black"
                     android:inputType="text"
                     android:hint="Enter comment here"
@@ -61,12 +62,13 @@
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/sent_btn"
+                android:gravity="center"
+                android:layout_gravity="bottom"
+                android:elevation="0dp"
+                android:layout_margin="5sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:layout_height="match_parent"
                 android:text="Send"
-                app:cornerRadius="10dp"
-                android:layout_marginStart="2dp"
                 />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

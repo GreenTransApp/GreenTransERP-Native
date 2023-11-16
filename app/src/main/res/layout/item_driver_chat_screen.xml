@@ -20,17 +20,19 @@
             android:id="@+id/chat_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10sp"
             app:cardCornerRadius="10dp"
             app:cardElevation="10dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:backgroundTint="@color/driverChat"
+            android:backgroundTint="@color/customerChat"
             >
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:padding="10dp"
                 android:weightSum="5"
                 >
 

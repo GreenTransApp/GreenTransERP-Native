@@ -5,11 +5,16 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission
         android:name="android.permission.BLUETOOTH"
         android:maxSdkVersion="30" />
@@ -33,6 +38,7 @@
         android:theme="@style/Theme.GreenTransERPNative"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
         <activity
             android:name=".ui.operation.notificationPanel.NotificationPanelBottomSheet"
             android:exported="false" />
@@ -43,8 +49,7 @@
         <activity
             android:name=".ui.operation.communicationList.CommunicationListActivity"
             android:exported="false"
-            android:parentActivityName=".ui.home.HomeActivity"
-            />
+            android:parentActivityName=".ui.home.HomeActivity" />
         <activity
             android:name=".ui.common.viewImage.ViewImage"
             android:exported="false" />
@@ -90,7 +95,7 @@
             android:parentActivityName=".ui.operation.pickup_reference.PickupReferenceActivity" />
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".ui.operation.loadingSlip.scanLoad.ScanLoadActivity"
             android:exported="false"

@@ -54,8 +54,10 @@ open class BaseRepository @Inject constructor() {
             Data = response.DataSet
             Obj = JSONObject(Data)
             JsonArray = Obj.getJSONArray("Table1")
+            Log.d("JSON_ARRAY_TABLE_1", JsonArray.toString())
             JsonResult = if (JsonArray.length() != 0) {
                 val jObj = JsonArray.getJSONObject(0)
+                Log.d("JSON_OBJ_1", jObj.toString())
                 if (jObj["commandstatus"].toString() == "1") {
                     JsonArray
                 } else {
@@ -78,9 +80,11 @@ open class BaseRepository @Inject constructor() {
         try {
             Data = response.DataSet
             Obj = JSONObject(Data)
-            JsonArray = Obj.getJSONArray("Table1")
+            JsonArray = Obj.getJSONArray("Table2")
+            Log.d("JSON_ARRAY_TABLE_2", JsonArray.toString())
             JsonResult = if (JsonArray.length() != 0) {
                 val jObj = JsonArray.getJSONObject(0)
+                Log.d("JSON_OBJ_2", jObj.toString())
                 if (jObj["commandstatus"].toString() == "1") {
                     JsonArray
                 } else {

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.greensoft.greentranserpnative.base.BaseViewModel
 import com.greensoft.greentranserpnative.ui.operation.chatScreen.models.ChatScreenModel
+import com.greensoft.greentranserpnative.ui.operation.chatScreen.models.CustomerDetailModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,6 +22,8 @@ class ChatScreenViewModel @Inject constructor(private val _repository: ChatScree
 
     val deleteChatListLiveData : LiveData<ArrayList<ChatScreenModel>>
         get() = _repository.deleteChatListLiveData
+     val custDetailLiveData : LiveData<CustomerDetailModel>
+        get() = _repository.custDetailLiveData
 
 
     val viewDialogLiveData: LiveData<Boolean>
