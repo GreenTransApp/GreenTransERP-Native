@@ -67,9 +67,9 @@ class CallRegisterRepository @Inject constructor(): BaseRepository(){
 
     }
 
-    fun acceptPickup(companyId:String, transactionId: String, pickupDate: String, pickupTime: String, pickupRemarks: String) {
+    fun acceptPickup(companyId:String, transactionId: String, pickupDate: String, pickupTime: String, pickupRemarks: String, sendMsgToCust: String) {
         viewDialogMutData.postValue(true)
-        api.acceptPickup(companyId, transactionId,pickupDate, pickupTime, pickupRemarks).enqueue(object: Callback<CommonResult> {
+        api.acceptPickup(companyId, transactionId,pickupDate, pickupTime, pickupRemarks, sendMsgToCust).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!

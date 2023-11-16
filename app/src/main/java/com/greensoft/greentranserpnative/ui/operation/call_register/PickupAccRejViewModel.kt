@@ -27,9 +27,9 @@ class PickupAccRejViewModel @Inject constructor(private val _repo: CallRegisterR
     val testLiveData = MutableLiveData<Boolean>()
 
 
-    fun acceptPickup(companyId:String, transactionId: String, pickupDate: String, pickupTime: String, pickupRemarks: String){
+    fun acceptPickup(companyId:String, transactionId: String, pickupDate: String, pickupTime: String, pickupRemarks: String, sendMsgToCust: String){
         viewModelScope.launch(Dispatchers.IO) {
-            _repo.acceptPickup(companyId, transactionId, pickupDate, pickupTime, pickupRemarks)
+            _repo.acceptPickup(companyId, transactionId, pickupDate, pickupTime, pickupRemarks, sendMsgToCust)
         }
     }
 

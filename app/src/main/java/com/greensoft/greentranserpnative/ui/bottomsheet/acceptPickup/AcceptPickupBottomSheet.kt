@@ -96,7 +96,8 @@ class AcceptPickupBottomSheet @Inject constructor(): BottomSheetDialogFragment()
                 transactionId,
                 sqlDate,
                 layoutBinding.inputTime.text.toString(),
-                layoutBinding.inputRemark.text.toString()
+                layoutBinding.inputRemark.text.toString(),
+                "Y"
             )
         }
     }

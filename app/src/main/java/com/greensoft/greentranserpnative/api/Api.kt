@@ -73,7 +73,8 @@ interface Api {
         @Field("prmtransactionid") transactionId: String?,
         @Field("prmdapickupdate") pickupDate: String?,
         @Field("prmdapickuptime") pickupTime: String?,
-        @Field("prmdapickupremarks") pickupRemarks: String?
+        @Field("prmdapickupremarks") pickupRemarks: String?,
+        @Field("prmsendmsgtocust") prmsendmsgtocust: String
     ): Call<CommonResult>
 
 
