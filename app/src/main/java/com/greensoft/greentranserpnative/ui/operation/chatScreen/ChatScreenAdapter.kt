@@ -70,9 +70,9 @@ class ChatScreenAdapter @Inject constructor(
         fun onBind(chatData : ChatScreenModel, onRowClick: OnRowClick<Any>){
             layoutBinding.chatsData = chatData
 
-            layoutBinding.chatCard.setOnClickListener {
-                onRowClick.onLongClick(chatData,"DELETE")
-            }
+//            layoutBinding.chatCard.setOnClickListener {
+//                onRowClick.onLongClick(chatData,"DELETE")
+//            }
         }
     }
 }
