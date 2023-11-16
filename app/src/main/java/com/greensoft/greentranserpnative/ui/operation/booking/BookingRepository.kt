@@ -86,6 +86,10 @@ class BookingRepository @Inject constructor():BaseRepository(){
     val pickupByLiveData: LiveData<ArrayList<PickupBySelection>>
         get() = pickupByMuteLiveData
 
+    private val boxValidateMuteLiveData = MutableLiveData<BoxNoValidateModel>()
+    val boxValidateLiveData: LiveData<BoxNoValidateModel>
+        get() = boxValidateMuteLiveData
+
 
     private val serviceListMuteLiveData = MutableLiveData<ArrayList<ServiceTypeSelectionLov>>()
     val serviceListLiveData: LiveData<ArrayList<ServiceTypeSelectionLov>>
@@ -106,6 +110,8 @@ class BookingRepository @Inject constructor():BaseRepository(){
     private val getAccParaMutData = MutableLiveData<CommonResult>()
     val getAccParaLiveData: LiveData<CommonResult>
         get() = getAccParaMutData
+
+
 
     private val ewayBillDetailMutableLiveData = MutableLiveData<EwayBillDetailResponse>()
     val ewayBillDetailLiveData: LiveData<EwayBillDetailResponse>
@@ -291,6 +297,37 @@ class BookingRepository @Inject constructor():BaseRepository(){
                             val listType = object: TypeToken<List<PickupBoySelectionModel>>() {}.type
                             val resultList: ArrayList<PickupBoySelectionModel> = gson.fromJson(jsonArray.toString(), listType);
                             pickupBoyMuteLiveData.postValue(resultList);
+
+                        }
+                    } else {
+                        isError.postValue(result.CommandMessage.toString())
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR)
+                }
+                viewDialogMutData.postValue(false)
+            }
+
+            override fun onFailure(call: Call<CommonResult>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
+    }
+
+    fun boxNoValidate(companyId: String, spname: String, param: List<String>, values: ArrayList<String>){
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
+                if(response.body() != null){
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if(result.CommandStatus == 1){
+                        val jsonArray = getResult(result);
+                        if(jsonArray != null) {
+                            val listType = object: TypeToken<List<BoxNoValidateModel>>() {}.type
+                            val resultList: ArrayList<BoxNoValidateModel> = gson.fromJson(jsonArray.toString(), listType);
+                            boxValidateMuteLiveData.postValue(resultList[0]);
 
                         }
                     } else {

@@ -6,6 +6,7 @@ import com.greensoft.greentranserpnative.base.BaseViewModel
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.ui.operation.booking.models.AgentSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.BookingVehicleSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.BoxNoValidateModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ConsignorSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ContentSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.CustomerSelectionModel
@@ -98,6 +99,9 @@ class BookingViewModel @Inject constructor(private val _repository: BookingRepos
     val ewayBillValidationDoneLiveData: LiveData<Boolean>
         get() = _repository.ewayBillDetailValidationLiveData
 
+
+    val boxNoValidateLiveData: LiveData<BoxNoValidateModel>
+        get() = _repository.boxValidateLiveData
     fun getCustomerList(
         companyId: String,
         spname: String,
@@ -284,6 +288,19 @@ class BookingViewModel @Inject constructor(private val _repository: BookingRepos
             _repository.getPckgTypeLov(companyId, spname, param, values)
         }
     }
+
+    fun boxNoValidate(
+        companyId: String,
+        spname: String,
+        param: List<String>,
+        values: ArrayList<String>
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _repository.boxNoValidate(companyId, spname, param, values)
+        }
+    }
+
+
 
 
     fun saveBooking(

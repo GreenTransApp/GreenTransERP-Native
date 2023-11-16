@@ -6,7 +6,7 @@ data class SinglePickupRefModel(
     val Departmentcode: Int,
     val Origin: String,
     val aweight: Double,
-    val boxno: Any,
+    var boxno: String?,
     val branchname: String,
     val cnge: String,
     val cngeaddress: Any,
@@ -73,5 +73,6 @@ data class SinglePickupRefModel(
     val transactionid: Int,
     var volfactor: Float,
     val weight: Double,
-    var localVWeight: Float
+    var localVWeight: Float,
+    var isBoxValidated: Boolean
 )

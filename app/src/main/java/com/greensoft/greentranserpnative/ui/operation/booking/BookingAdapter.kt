@@ -2,12 +2,14 @@ package com.greensoft.greentranserpnative.ui.operation.booking
 
 import android.R
 import android.content.Context
+import android.graphics.Color
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.compose.ui.res.colorResource
 import androidx.recyclerview.widget.RecyclerView
 import com.greensoft.greentranserpnative.databinding.BookingItemViewBinding
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
@@ -16,8 +18,6 @@ import com.greensoft.greentranserpnative.ui.operation.booking.models.GelPackItem
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.TemperatureSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
-import com.greensoft.greentranserpnative.utils.Utils
-import okhttp3.internal.Util
 import javax.inject.Inject
 import kotlin.math.ceil
 
@@ -31,6 +31,10 @@ class BookingAdapter @Inject constructor(
 ): RecyclerView.Adapter<BookingAdapter.BookingViewHolder>() {
     var actualVWeight:Float=0f
     var actualWeight:Int=0
+
+    val originalColor = Color.WHITE
+    val changeBoxColor = Color.RED
+    val validateColor =  Color.parseColor("#509753")
 
 //    init {
 //        setObservers()
@@ -217,6 +221,11 @@ class BookingAdapter @Inject constructor(
            binding.index = adapterPosition
            setOnClicks(singlePickupRefModel)
            setUpAdapter()
+           if(singlePickupRefModel.isBoxValidated) {
+               boxNoValidated(binding)
+           } else {
+               boxNotValidated(binding)
+           }
        }
 
        private fun setUpAdapter() {
@@ -224,13 +233,71 @@ class BookingAdapter @Inject constructor(
            binding.selectDatalogger.adapter = dataLoggerAdapter
        }
 
+
+
    }
 
-    fun setObservers() {
-        activity.mScanner.observe(activity) {
-            activity.errorToast(it)
+//    fun setObservers() {
+//        activity.mScanner.observe(activity) { sticker ->
+//            activity.errorToast(sticker)
+//        }
+//    }
+
+//    fun nextAvailable() {
+//        bookingList.forEachIndexed { index, singlePickupRefModel ->
+//            if(singlePickupRefModel.isBoxValidated == false && singlePickupRefModel.boxno.toString().isNotBlank()) {
+//                return index
+//            }
+//        }
+//    }
+
+
+     fun boxNoValidated( layoutBinding: BookingItemViewBinding){
+         bookingList.forEachIndexed { _, singlePickupRefModel ->
+
+             if(singlePickupRefModel.isBoxValidated){
+                 layoutBinding.btnValidateBox.text = "Validate Box"
+//                 layoutBinding.boxNo.setBackgroundColor(validateColor)
+//                 layoutBinding.btnValidateBox.setBackgroundColor(validateColor)
+                 layoutBinding.boxNo.isFocusable=false
+             }
+         }
+     }
+
+     fun boxNotValidated(layoutBinding: BookingItemViewBinding){
+
+         bookingList.forEachIndexed { _, singlePickupRefModel ->
+             if(!singlePickupRefModel.isBoxValidated){
+                 layoutBinding.btnValidateBox.text = "Change Box"
+                 layoutBinding.boxNo.setBackgroundColor(validateColor)
+                 layoutBinding.btnValidateBox.setBackgroundResource(changeBoxColor)
+                 layoutBinding.boxNo.isFocusable=true
+
+             }
+         }
+     }
+
+    fun enterBoxOnNextAvailable(boxNo: String) {
+        run forEachExit@{
+            bookingList.forEachIndexed { _, singlePickupRefModel ->
+//            Log.d("BOX_VALIDATED", singlePickupRefModel.isBoxValidated.toString())
+                if (singlePickupRefModel.boxno.isNullOrBlank()) singlePickupRefModel.boxno = ""
+                if (!singlePickupRefModel.isBoxValidated && singlePickupRefModel.boxno.toString()
+                        .isBlank()
+                ) {
+                    Log.d("BOX_NO", singlePickupRefModel.boxno.toString())
+                    singlePickupRefModel.boxno = boxNo
+                    return@forEachExit
+                }
+            }
         }
+        changeBoxNo()
     }
+
+    private fun changeBoxNo() {
+        notifyDataSetChanged()
+    }
+
 
     fun calculateVWeight(index: Int, layoutBinding: BookingItemViewBinding){
         if(layoutBinding.length.text.toString().isNotEmpty() && layoutBinding.breadth.toString().isNotEmpty() && layoutBinding.height.toString().isNotEmpty() ) {

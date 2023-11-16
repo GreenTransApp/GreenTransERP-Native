@@ -552,6 +552,9 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 //    }
 
     private fun setObservers() {
+        mScanner.observe(this) { boxNo ->
+            boxNoValidate(boxNo)
+        }
         imageClicked.observe(this) { clicked ->
             if(clicked) {
                 setBottomSheetRecyclerView()
@@ -560,6 +563,11 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         timePeriod.observe(this) { time ->
             activityBinding.inputTime.setText(time)
 
+        }
+        viewModel.boxNoValidateLiveData.observe(this) {
+            if(it.commandstatus == 1) {
+                bookingAdapter?.enterBoxOnNextAvailable(it.boxno.toString())
+            }
         }
         activityBinding.refreshLayout.setOnRefreshListener {
 //            refreshData()
@@ -955,6 +963,19 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 //        )
 //    }
 
+
+    private fun boxNoValidate(boxNo: String?) {
+        if(boxNo.isNullOrBlank()) {
+            errorToast("Not a valid Box, Please scan again")
+            return
+        }
+        viewModel.boxNoValidate(
+            loginDataModel?.companyid.toString(),
+            "greentransweb_validateboxno",
+            listOf("prmbranchcode","prmpackingcode","prmasondt","prmgrno","prmboxno"),
+            arrayListOf(userDataModel!!.loginbranchcode.toString(),selectedGelPackItenCode,sqlDate!!,"",boxNo)
+        )
+    }
     private fun setupRecyclerView() {
         if(bookingAdapter == null) {
             linearLayoutManager = object: LinearLayoutManager (this){
@@ -1074,7 +1095,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         }else if(clickType=="Gel Pack Selection"){
             val selectedGelPack=data as GelPackItemSelectionModel
             bookingAdapter?.setGelPack(selectedGelPack, index)
-//            selectedGelPackItenCode=selectedGelPack.itemcode.toString()
+            selectedGelPackItenCode=selectedGelPack.itemcode.toString()
 
         }
 

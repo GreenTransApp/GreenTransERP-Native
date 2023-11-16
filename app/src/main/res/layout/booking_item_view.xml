@@ -80,18 +80,37 @@
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
-                    <EditText
-                        android:id="@+id/boxNo"
-                        android:layout_width="150sp"
+                    <LinearLayout
+                        android:layout_width="300sp"
                         android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:inputType="number"
-                        android:hint="BOX NO."
-                        android:layout_margin="1dp"
-                        android:focusable="false"
-                        android:text="@{gridData.boxno ==null ?``:String.valueOf(gridData.boxno)}"
+                        android:orientation="horizontal"
                         android:background="@drawable/table_content_cell_bg"
-                        android:textSize="16sp" />
+                        >
+
+                        <EditText
+                            android:id="@+id/boxNo"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:layout_width="150sp"
+                            android:inputType="number"
+                            android:hint="BOX NO."
+                            android:background="@drawable/table_content_cell_bg"
+                            android:layout_margin="1dp"
+                            android:text="@{gridData.boxno ==null ?``:String.valueOf(gridData.boxno)}"
+                            android:textSize="16sp" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/btn_validate_box"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:layout_width="140sp"
+                            android:backgroundTint="@color/success"
+                            android:textColor="@color/white"
+                            android:textSize="8sp"
+                            android:text=""/>
+                    </LinearLayout>
+
+
 
                     <EditText
                         android:id="@+id/content"

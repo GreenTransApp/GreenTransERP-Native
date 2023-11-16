@@ -815,7 +815,7 @@
 
                                 <TextView
                                     android:id="@+id/boxNo_txt"
-                                    android:layout_width="152sp"
+                                    android:layout_width="302sp"
                                     android:layout_height="match_parent"
                                     android:gravity="center_horizontal"
                                     android:textColor="@color/white"
