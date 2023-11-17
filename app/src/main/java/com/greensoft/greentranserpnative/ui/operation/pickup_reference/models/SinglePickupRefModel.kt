@@ -65,7 +65,7 @@ data class SinglePickupRefModel(
     var localLength: Double,
     val pckgs: Int,
     val pcs: Int,
-    val referenceno: Any?,
+    var referenceno: Any?,
     val servicetype: String,
     val stockitemcode: String,
     var tempurature: String?,

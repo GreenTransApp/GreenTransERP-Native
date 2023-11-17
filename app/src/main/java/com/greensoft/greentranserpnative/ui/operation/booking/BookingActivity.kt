@@ -1095,7 +1095,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         }else if(clickType=="Gel Pack Selection"){
             val selectedGelPack=data as GelPackItemSelectionModel
             bookingAdapter?.setGelPack(selectedGelPack, index)
-//            selectedGelPackItemCode=selectedGelPack.itemcode.toString()
+            selectedGelPackItemCode=selectedGelPack.itemcode.toString()
 
         }
 
@@ -1137,6 +1137,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 //        activityBinding.inputAWeight.setText(aWeight.toString())
 //        activityBinding.inputCWeight.setText(cWeight.toString())
 //    }
+
+
     fun setVWeight(vWeight: Float) {
         activityBinding.inputVolWeight.setText(vWeight.toString())
     }
@@ -1432,7 +1434,13 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         var adapterEnteredData: ArrayList<SinglePickupRefModel>? = bookingAdapter?.getEnteredData()
         run enteredData@ {
             adapterEnteredData?.forEachIndexed { index, singlePickupRefModel ->
-                if (Utils.isDecimalNotEntered(singlePickupRefModel.weight.toString())) {
+                if (singlePickupRefModel.referenceno.toString().isNullOrEmpty()) {
+                    errorToast("Reference # Not Entered at INPUT - ${index + 1}")
+                    return
+                } else if (singlePickupRefModel.boxno.isNullOrEmpty()) {
+                    errorToast("Box # Not Entered at INPUT - ${index + 1}")
+                    return
+                } else if (Utils.isDecimalNotEntered(singlePickupRefModel.weight.toString())) {
                     errorToast("Weight Not Entered at INPUT - ${index + 1}")
                     return
                 } else if (Utils.isDecimalNotEntered(singlePickupRefModel.localLength.toString())) {
@@ -1445,6 +1453,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                     errorToast("Height Not Entered at INPUT - ${index + 1}")
                     return
                 }
+
                 Utils.logger("RUN_TEST", "in run")
             }
         }
@@ -1470,7 +1479,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             val dimBreath=  if (adapterEnteredData == null) singleRefList[i].localBreath else adapterEnteredData[i].localBreath
             val dimLength=  if (adapterEnteredData == null) singleRefList[i].localLength else adapterEnteredData[i].localLength
 
-            val boxNoStr=singleRefList[i].boxno ?: ""
+            val boxNoStr=adapterEnteredData?.get(i)?.boxno ?: singleRefList[i].boxno ?: ""
             val gelPackStr= adapterEnteredData?.get(i)?.gelpacktype ?: singleRefList[i].gelpacktype ?: ""
             val gelPackQtyStr= adapterEnteredData?.get(i)?.gelpackqty ?: singleRefList[i].gelpackqty
             val packageStr= if (adapterEnteredData == null) singleRefList[i].pcs else adapterEnteredData[i].pcs
