@@ -3,10 +3,8 @@ package com.greensoft.greentranserpnative.ui.operation.booking
 //import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 import android.app.AlertDialog
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
@@ -34,7 +32,6 @@ import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityBookingBinding
 import com.greensoft.greentranserpnative.ui.bottomsheet.attachedImages.AttachedImagesBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.attachedImages.OnAddImageClickListener
-import com.greensoft.greentranserpnative.ui.bottomsheet.common.CommonBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.common.viewImage.ViewImage
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
@@ -144,7 +141,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     var vendorCode = ""
     var pickupByValue = ""
     var vehicleCode = ""
-    var selectedGelPackItenCode = ""
+    var selectedGelPackItemCode = ""
     var pickupContentId = ""
     var aWeight = ""
     var volWeight = ""
@@ -171,8 +168,9 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         sqlDate = getSqlCurrentDate()
         activityBinding.inputTime.setText(getSqlCurrentTime())
         activityBinding.inputGrNo.hint = "ENTER GR #"
+        activityBinding.inputPickupBoy.setText(loginDataModel!!.username.toString())
         getIntentData()
-        getSingleRefData()
+
         getServiceType()
         getPickupBy()
 
@@ -248,6 +246,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                 pickupRefData.addAll(resultList)
                 pickupRefData.forEachIndexed { _, element ->
                     transactionId=element.transactionid.toString()
+                    getSingleRefData()
                 }
             }
         }
@@ -395,7 +394,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                             activityBinding.inputLayoutVehicle.visibility=View.GONE
                             activityBinding.inputLayoutVehicleVendor.visibility=View.GONE
 
-                            activityBinding.inputPickupBoy.text?.clear()
+//                            activityBinding.inputPickupBoy.text?.clear()
                             activityBinding.inputAgent.text?.clear()
                             activityBinding.inputVehicle.text?.clear()
                             activityBinding.inputVehicleVendor.text?.clear()
@@ -504,7 +503,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         }
 
         activityBinding.inputPickupBoy.setOnClickListener {
-            getPickupBoyList()
+//            getPickupBoyList()
+
 
         }
         activityBinding.inputAgent.setOnClickListener {
@@ -650,7 +650,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         }
         viewModel.agentLiveData.observe(this) { agent ->
             agentList = agent
-            openAgentSelectionBottomSheet(agentList)
+
+//            openAgentSelectionBottomSheet(agentList)
         }
         viewModel.vendorLiveData.observe(this) { vendor ->
             vehicleVendorList = vendor
@@ -675,9 +676,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             val pickupAdapter =
                 ArrayAdapter(this, android.R.layout.simple_list_item_1,pickupByTypeList)
             activityBinding.selectedPickupType.adapter = pickupAdapter
-
-
         }
+
         viewModel.ServiceTypeLiveData.observe(this) { service ->
             serviceTypeList = service
             val serviceAdapter =
@@ -973,7 +973,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             loginDataModel?.companyid.toString(),
             "greentransweb_validateboxno",
             listOf("prmbranchcode","prmpackingcode","prmasondt","prmgrno","prmboxno"),
-            arrayListOf(userDataModel!!.loginbranchcode.toString(),selectedGelPackItenCode,sqlDate!!,"",boxNo)
+            arrayListOf(userDataModel!!.loginbranchcode.toString(),selectedGelPackItemCode,sqlDate!!,"",boxNo)
         )
     }
     private fun setupRecyclerView() {
@@ -1095,7 +1095,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         }else if(clickType=="Gel Pack Selection"){
             val selectedGelPack=data as GelPackItemSelectionModel
             bookingAdapter?.setGelPack(selectedGelPack, index)
-            selectedGelPackItenCode=selectedGelPack.itemcode.toString()
+//            selectedGelPackItemCode=selectedGelPack.itemcode.toString()
 
         }
 
@@ -1112,6 +1112,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
         }else if(clickType =="GEL_PACK_SELECT"){
             openGelPackSelectionBottomSheet(gelPackList,index)
+
         }else if(clickType =="PACKING_SELECT"){
             openPackingSelectionBottomSheet(packingList,index)
 
@@ -1609,6 +1610,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             remarks = activityBinding.inputRemark.text.toString(),
             cngrGstNo = cngrGstNo,
             cngeGstNo = cngeGstNo,
+            images = imageBase64List
         )
     }
 

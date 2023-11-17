@@ -104,7 +104,7 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:layout_width="140sp"
-                            android:backgroundTint="@color/success"
+                            android:backgroundTint="@color/danger"
                             android:textColor="@color/white"
                             android:textSize="8sp"
                             android:text=""/>
@@ -114,7 +114,7 @@
 
                     <EditText
                         android:id="@+id/content"
-                        android:layout_width="200sp"
+                        android:layout_width="202sp"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:textColor="@color/black"
@@ -163,12 +163,13 @@
                     <LinearLayout
                         android:id="@+id/input_layout_datalogger"
                         android:layout_width="200sp"
-                        android:layout_height="wrap_content"
+                        android:layout_margin="1sp"
+                        android:layout_height="match_parent"
                         android:background="@drawable/table_content_cell_bg">
                         <Spinner
                             android:id="@+id/selectDatalogger"
-                            android:layout_width="200sp"
-                            android:layout_height="55sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             />
                     </LinearLayout>
 <!--                    </EditText>-->
@@ -205,11 +206,12 @@
                         android:gravity="center"
                         android:layout_margin="1dp"
                        android:inputType="number"
-                        android:text="@{String.valueOf(gridData.pckglength)}"
+                        android:text="@{String.valueOf(gridData.localLength)}"
                         android:background="@drawable/table_content_cell_bg"
                        android:textSize="16sp" />
 
 
+<!--                        android:text="@{String.valueOf(gridData.pckgbreath)}"-->
                     <EditText
                         android:id="@+id/breadth"
                         android:layout_width="150sp"
@@ -217,7 +219,7 @@
                         android:gravity="center"
                         android:layout_margin="1dp"
                         android:inputType="number"
-                        android:text="@{String.valueOf(gridData.pckgbreath)}"
+                        android:text="@{String.valueOf(gridData.localBreath)}"
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
@@ -229,7 +231,7 @@
                         android:gravity="center"
                         android:inputType="number"
                         android:layout_margin="1dp"
-                        android:text="@{String.valueOf(gridData.pckgheight)}"
+                        android:text="@{String.valueOf(gridData.localHeight)}"
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
@@ -249,7 +251,7 @@
 
                    </LinearLayout>
 
-
+<!--                    android:text='@{String.valueOf(gridData.gelpacktype) ?? "N.A"}'-->
                     <EditText
                         android:id="@+id/gel_pack_item"
                         android:layout_width="150sp"
@@ -258,7 +260,7 @@
                         android:layout_margin="1dp"
                         android:focusable="false"
                         android:enabled="false"
-                        android:text='@{String.valueOf(gridData.gelpacktype)?? "N.A"}'
+                        android:text='@{gridData.gelpacktype== "0" ? "select" :gridData.gelpacktype}'
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 <!--                        android:inputType="number"-->

@@ -165,19 +165,33 @@ class BookingAdapter @Inject constructor(
 //            binding.selectDatalogger.setOnItemClickListener {
 //                onRowClick.onRowClick(singlePickupRefModel, "DATALOGGER_SELECT",adapterPosition)
 //            }
+           binding.gelPackItem.setText("select")
 
-           binding.chekGelPack.setOnCheckedChangeListener { _, isChecked ->
-               if (isChecked) {
-                   binding.gelPackItem.isEnabled = true
+           binding.chekGelPack.setOnCheckedChangeListener { compoundButton, bool ->
+
+               if(bool) {
+                   singlePickupRefModel.gelpack="Y"
+//
                } else {
-                   binding.gelPackItem.isEnabled = false
-                   binding.gelPackItem.text.clear()
+                   singlePickupRefModel.gelpack="N"
                }
-               singlePickupRefModel.gelpack = if(binding.gelPackItem.isEnabled) "Y" else "N"
+               binding.gelPackItem.isEnabled = (bool)
            }
+//           binding.chekGelPack.setOnCheckedChangeListener { _, isChecked ->
+//               if(isChecked){
+//
+//                   binding.gelPackItem.isEnabled=true
+//               }else{
+//                   binding.gelPackItem.isEnabled=false
+//                   singlePickupRefModel.gelpack = if(binding.gelPackItem.isEnabled) "Y" else "N"
+//               }
+////               binding.gelPackItem.isEnabled = isChecked
+////               singlePickupRefModel.gelpack = if(binding.gelPackItem.isEnabled) "Y" else "N"
+//           }
 
 //                 binding.inputLayoutDatalogger.setOnClickListener {
-//                     Toast.makeText(mContext, "test", Toast.LENGTH_SHORT).show()
+//                     Toast.makeText(mContext, "test", Toast.
+       //                     _SHORT).show()
 //                     val dataLoggerAdapter =
 //                         ArrayAdapter(mContext, R.layout.simple_list_item_1, dataLoggerItems)
 //                     binding.selectDatalogger.adapter = dataLoggerAdapter
@@ -219,6 +233,7 @@ class BookingAdapter @Inject constructor(
        fun bindData(singlePickupRefModel: SinglePickupRefModel, onRowClick: OnRowClick<Any>) {
            binding.gridData = singlePickupRefModel
            binding.index = adapterPosition
+           binding.gelPackItem.setText("select")
            setOnClicks(singlePickupRefModel)
            setUpAdapter()
            if(singlePickupRefModel.isBoxValidated) {
@@ -226,11 +241,15 @@ class BookingAdapter @Inject constructor(
            } else {
                boxNotValidated(binding)
            }
+
+
        }
 
        private fun setUpAdapter() {
            val dataLoggerAdapter = ArrayAdapter(mContext, R.layout.simple_list_item_1, dataLoggerItems)
            binding.selectDatalogger.adapter = dataLoggerAdapter
+
+
        }
 
 
@@ -270,7 +289,7 @@ class BookingAdapter @Inject constructor(
              if(!singlePickupRefModel.isBoxValidated){
                  layoutBinding.btnValidateBox.text = "Change Box"
                  layoutBinding.boxNo.setBackgroundColor(validateColor)
-                 layoutBinding.btnValidateBox.setBackgroundResource(changeBoxColor)
+//                 layoutBinding.btnValidateBox.setBackgroundResource(changeBoxColor)
                  layoutBinding.boxNo.isFocusable=true
 
              }
@@ -323,7 +342,7 @@ class BookingAdapter @Inject constructor(
             if(activity.productCode =="A"){
 //                   actualVWeight= (bookingList[index].pckglength * bookingList[index].pckgbreath * bookingList[index].pckgheight).toFloat()/6000
 //                actualVWeight= (layoutBinding.length.toString().toInt() * layoutBinding.breadth.toString().toInt() * layoutBinding.height.toString().toInt()).toFloat()/6000
-                bookingList[index].localVWeight= (layoutBinding.length.text.toString().toInt() * layoutBinding.breadth.text.toString().toInt() * layoutBinding.height.text.toString().toInt()).toFloat()/6000
+                bookingList[index].localVWeight= (layoutBinding.length.text.toString().toDouble() * layoutBinding.breadth.text.toString().toDouble() * layoutBinding.height.text.toString().toDouble()).toFloat()/6000
             }else{
 //                   actualVWeight= (bookingList[index].pckglength * bookingList[index].pckgbreath * bookingList[index].pckgheight).toFloat()/5000
 //                   actualVWeight= (layoutBinding.length.text.toString().toDouble() * layoutBinding.breadth.text.toString().toDouble() * layoutBinding.height.text.toString().toDouble()).toFloat()/5000
@@ -414,22 +433,26 @@ class BookingAdapter @Inject constructor(
         bookingList[adapterPosition].contents = contentModel.itemname
         bookingList[adapterPosition].contentsCode = contentModel.itemcode
         notifyItemChanged(adapterPosition)
+//        notifyDataSetChanged()
     }
     fun setTemperature(tempModel: TemperatureSelectionModel, adapterPosition: Int) {
         bookingList[adapterPosition].tempurature = tempModel.name
         bookingList[adapterPosition].tempuratureCode = tempModel.value
         notifyItemChanged(adapterPosition)
+//        notifyDataSetChanged()
     }
     fun setPacking(pckgsModel: PackingSelectionModel, adapterPosition: Int) {
         bookingList[adapterPosition].packing = pckgsModel.packingname
         bookingList[adapterPosition].packingcode = pckgsModel.packingcode
         notifyItemChanged(adapterPosition)
+//        notifyDataSetChanged()
     }
     fun setGelPack(model: GelPackItemSelectionModel, adapterPosition: Int) {
         bookingList[adapterPosition].gelpacktype = model.itemname
         bookingList[adapterPosition].gelpackitemcode = model.itemcode
-
         notifyItemChanged(adapterPosition)
+//        notifyDataSetCha
+    //        nged()
     }
 
 //     fun removeItem(model:SinglePickupRefModel,adapterPosition: Int){

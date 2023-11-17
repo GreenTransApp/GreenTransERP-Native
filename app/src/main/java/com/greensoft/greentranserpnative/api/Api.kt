@@ -209,7 +209,8 @@ interface Api {
         @Field ("prmcngecode") prmcngecode: String,
         @Field ("prmremarks") prmremarks: String,
         @Field ("prmcngrgstno") prmcngrgstno: String,
-        @Field ("prmcngegstno") prmcngegstno: String
+        @Field ("prmcngegstno") prmcngegstno: String,
+        @Field("prmimages") prmimages: ArrayList<String>,
     ): Call<CommonResult>
 
 

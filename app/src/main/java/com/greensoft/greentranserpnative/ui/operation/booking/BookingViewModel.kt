@@ -381,7 +381,9 @@ class BookingViewModel @Inject constructor(private val _repository: BookingRepos
         cngeCode: String,
         remarks: String,
         cngrGstNo: String,
-        cngeGstNo: String
+        cngeGstNo: String,
+        images: ArrayList<String>
+
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             _repository.saveJeenaBooking(
@@ -462,7 +464,8 @@ class BookingViewModel @Inject constructor(private val _repository: BookingRepos
                 cngeCode,
                 remarks,
                 cngrGstNo,
-                cngeGstNo
+                cngeGstNo,
+                images
 
             )
         }
