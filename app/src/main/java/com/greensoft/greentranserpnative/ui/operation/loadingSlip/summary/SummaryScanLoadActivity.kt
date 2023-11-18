@@ -82,10 +82,10 @@ class SummaryScanLoadActivity @Inject constructor(): BaseActivity() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        Utils.loadingNo = loadingNo!!
-    }
+//    override fun onPause() {
+//        super.onPause()
+//        Utils.loadingNo = loadingNo!!
+//    }
 
     //    @Override
     //    public boolean onCreateOptionsMenu(Menu menu) {
@@ -146,8 +146,8 @@ class SummaryScanLoadActivity @Inject constructor(): BaseActivity() {
             if (result.commandstatus == 1) {
                 successfullyLoadedAlert(result, loadingNo)
                 successToast("Loading Successful.")
-                this.loadingNo = ""
-                Utils.loadingNo = ""
+//                this.loadingNo = ""
+//                Utils.loadingNo = ""
             }
         }
         viewModel.summaryListLiveData.observe(this) { result: ArrayList<SummaryScanLoadModel>? ->
@@ -174,9 +174,10 @@ class SummaryScanLoadActivity @Inject constructor(): BaseActivity() {
         builder.setPositiveButton(
             "Okay",
             DialogInterface.OnClickListener { dialog: DialogInterface?, which: Int ->
-                val i = Intent(this@SummaryScanLoadActivity, HomeActivity::class.java)
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                startActivity(i)
+//                val i = Intent(this@SummaryScanLoadActivity, HomeActivity::class.java)
+//                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//                startActivity(i)
+                finish()
             })
         val alertDialog = builder.create()
         alertDialog.show()
