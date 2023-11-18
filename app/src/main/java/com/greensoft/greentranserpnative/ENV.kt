@@ -18,7 +18,7 @@ class ENV {
         val IMAGE_PREF_SHARE = "image_prefs${PREF_TAG}"
 
         val DEBUGGING: Boolean = true
-        val LOCAL_API: Boolean = false
+        val LOCAL_API: Boolean = true
 
         val APP_NAME = "GreenTransERPNative"
 //        val DEBUG_USERNAME: String = "ADMIN@GREENTRANS"
@@ -34,7 +34,7 @@ class ENV {
 //        val LIVE_BASE_URL: String = "https://greentrans.in:444/API/Printer/";
         private const val LIVE_BASE_URL: String = "https://greentrans.in:444/API/";
 //        val DEBUG_BASE_URL: String = "http://192.168.1.226:45457/API/";
-        private const val DEBUG_BASE_URL: String = "http://192.168.1.226:45461/API/";
+        private const val DEBUG_BASE_URL: String = "http://192.168.1.226:45459/API/";
         const val EWAY_BILL_LOGIN_URL: String = "https://api.easywaybill.in/ezewb/v1/auth/initlogin"
         const val EWAY_BILL_COMPLETE_LOGIN_URL: String = "https://api.easywaybill.in/ezewb/v1/auth/completelogin"
         const val EWAY_BILL_DETAIL_URL: String = "https://api.easywaybill.in/ezewb/v1/ewb/data"

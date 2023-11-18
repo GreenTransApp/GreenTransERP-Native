@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="balance_pckgs_txt" type="id" />
+    <item name="input_layout_pckgsType" type="id" />
 </resources>

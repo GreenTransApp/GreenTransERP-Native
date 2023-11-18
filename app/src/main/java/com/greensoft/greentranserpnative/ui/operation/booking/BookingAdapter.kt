@@ -7,9 +7,12 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.compose.ui.res.colorResource
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.greensoft.greentranserpnative.databinding.BookingItemViewBinding
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
@@ -44,7 +47,7 @@ class BookingAdapter @Inject constructor(
 
 
 
-       fun setOnClicks(singlePickupRefModel: SinglePickupRefModel) {
+       private fun setOnClicks(singlePickupRefModel: SinglePickupRefModel) {
            binding.gelPackItem.setOnClickListener {
                onRowClick.onRowClick(singlePickupRefModel, "GEL_PACK_SELECT", adapterPosition)
            }
@@ -63,7 +66,11 @@ class BookingAdapter @Inject constructor(
                removeItem(singlePickupRefModel, adapterPosition)
 //                onRowClick.onCLick(singlePickupRefModel, "REMOVE_SELECT")
            }
+          binding.btnValidateBox.setOnClickListener {
 
+
+
+          }
            binding.pckgs.addTextChangedListener(object : TextWatcher {
                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                }
@@ -161,41 +168,103 @@ class BookingAdapter @Inject constructor(
                }
            })
 
-
-//            binding.selectDatalogger.setOnItemClickListener {
-//                onRowClick.onRowClick(singlePickupRefModel, "DATALOGGER_SELECT",adapterPosition)
-//            }
-
-           binding.chekGelPack.setOnCheckedChangeListener { _, isChecked ->
-               if (isChecked) {
-                   binding.gelPackItem.isEnabled = true
-               } else {
-                   binding.gelPackItem.isEnabled = false
-                   binding.gelPackItem.text.clear()
+           binding.boxNo.addTextChangedListener(object : TextWatcher {
+               override fun beforeTextChanged(
+                   s: CharSequence?,
+                   start: Int,
+                   count: Int,
+                   after: Int
+               ) {
                }
-               singlePickupRefModel.gelpack = if(binding.gelPackItem.isEnabled) "Y" else "N"
-           }
 
-//                 binding.inputLayoutDatalogger.setOnClickListener {
-//                     Toast.makeText(mContext, "test", Toast.LENGTH_SHORT).show()
+               override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+               override fun afterTextChanged(s: Editable?) {
+//                   activity.setBoxNum(binding.boxNo.text.toString())
+                   setEnteredBoxNo(adapterPosition,binding)
+
+               }
+           })
+
+
+            binding.refNo.addTextChangedListener(object : TextWatcher {
+                       override fun beforeTextChanged(
+                           s: CharSequence?,
+                           start: Int,
+                           count: Int,
+                           after: Int
+                       ) {
+                       }
+
+                       override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                       override fun afterTextChanged(s: Editable?) {
+            //                   activity.setBoxNum(binding.boxNo.text.toString())
+                           setEnteredReferenceNum(adapterPosition,binding)
+
+                       }
+                   })
+
+
+
+
+
+
+           binding.chekGelPack.setOnCheckedChangeListener { compoundButton, bool ->
+
+               if(bool) {
+                   singlePickupRefModel.gelpack="Y"
+//
+               } else {
+                   singlePickupRefModel.gelpack="N"
+               }
+               binding.gelPackItem.isEnabled = (bool)
+           }
+//           binding.chekGelPack.setOnCheckedChangeListener { _, isChecked ->
+//               if(isChecked){
+//
+//                   binding.gelPackItem.isEnabled=true
+//               }else{
+//                   binding.gelPackItem.isEnabled=false
+//                   singlePickupRefModel.gelpack = if(binding.gelPackItem.isEnabled) "Y" else "N"
+//               }
+////               binding.gelPackItem.isEnabled = isChecked
+////               singlePickupRefModel.gelpack = if(binding.gelPackItem.isEnabled) "Y" else "N"
+//           }
+
+//                 binding.inpu
+       //                 tLayoutDatalogger.setOnClickListener {
+//                     Toast.makeText(mContext, "test", Toast.
+       //                     _SHORT).show()
 //                     val dataLoggerAdapter =
 //                         ArrayAdapter(mContext, R.layout.simple_list_item_1, dataLoggerItems)
 //                     binding.selectDatalogger.adapter = dataLoggerAdapter
-//           binding.selectDatalogger.onItemSelectedListener = object: OnItemSelectedListener {
-//               override fun onItemSelected(
-//                   parent: AdapterView<*>?,
-//                   view: View?,
-//                   position: Int,
-//                   id: Long
-//               ) {
-//
-//               }
-//
-//               override fun onNothingSelected(parent: AdapterView<*>?) {
-//
-//               }
-//
-//           }
+           binding.selectDatalogger.onItemSelectedListener = object:
+               AdapterView.OnItemSelectedListener {
+               override fun onItemSelected(
+                   parent: AdapterView<*>?,
+                   view: View?,
+                   position: Int,
+                   id: Long
+               ) {
+                   var dataLoggerSelection = dataLoggerItems.get(position)
+                   binding.dataloggerNum.setText("")
+                    when(dataLoggerSelection) {
+                        "SELECT", "NO" -> {
+                            binding.dataloggerNum.isEnabled = false
+                        }
+                        "YES" -> {
+                            binding.dataloggerNum.isEnabled = true
+                        }
+                        else -> {
+
+                        }
+                    }
+               }
+
+               override fun onNothingSelected(parent: AdapterView<*>?) {
+
+               }
+
+           }
 
        }
 
@@ -219,6 +288,7 @@ class BookingAdapter @Inject constructor(
        fun bindData(singlePickupRefModel: SinglePickupRefModel, onRowClick: OnRowClick<Any>) {
            binding.gridData = singlePickupRefModel
            binding.index = adapterPosition
+           binding.gelPackItem.setText("select")
            setOnClicks(singlePickupRefModel)
            setUpAdapter()
            if(singlePickupRefModel.isBoxValidated) {
@@ -226,11 +296,17 @@ class BookingAdapter @Inject constructor(
            } else {
                boxNotValidated(binding)
            }
+
+
        }
 
        private fun setUpAdapter() {
            val dataLoggerAdapter = ArrayAdapter(mContext, R.layout.simple_list_item_1, dataLoggerItems)
            binding.selectDatalogger.adapter = dataLoggerAdapter
+
+
+
+
        }
 
 
@@ -265,12 +341,12 @@ class BookingAdapter @Inject constructor(
      }
 
      fun boxNotValidated(layoutBinding: BookingItemViewBinding){
-
+        layoutBinding.boxNo.text.clear()
          bookingList.forEachIndexed { _, singlePickupRefModel ->
              if(!singlePickupRefModel.isBoxValidated){
                  layoutBinding.btnValidateBox.text = "Change Box"
-                 layoutBinding.boxNo.setBackgroundColor(validateColor)
-                 layoutBinding.btnValidateBox.setBackgroundResource(changeBoxColor)
+//                 layoutBinding.boxNo.setBackgroundColor(validateColor)
+//                 layoutBinding.btnValidateBox.setBackgroundResource(changeBoxColor)
                  layoutBinding.boxNo.isFocusable=true
 
              }
@@ -298,7 +374,16 @@ class BookingAdapter @Inject constructor(
         notifyDataSetChanged()
     }
 
+    fun setEnteredBoxNo(index: Int, layoutBinding: BookingItemViewBinding){
+     bookingList[index].boxno=layoutBinding.boxNo.text.toString()
+    }
+    fun setEnteredReferenceNum(index: Int, layoutBinding: BookingItemViewBinding){
+     bookingList[index].referenceno=layoutBinding.refNo.text.toString()
+    }
 
+   fun setEnteredReferenceNo(){
+
+   }
     fun calculateVWeight(index: Int, layoutBinding: BookingItemViewBinding){
         if(layoutBinding.length.text.toString().isNotEmpty() && layoutBinding.breadth.toString().isNotEmpty() && layoutBinding.height.toString().isNotEmpty() ) {
             Log.d("CALC VWEIGHT", "Data in wrong format: LENGTH: ${layoutBinding.length.text}, BREADTH: ${layoutBinding.breadth.text}, HEIGHT: ${layoutBinding.height.text}")
@@ -323,7 +408,7 @@ class BookingAdapter @Inject constructor(
             if(activity.productCode =="A"){
 //                   actualVWeight= (bookingList[index].pckglength * bookingList[index].pckgbreath * bookingList[index].pckgheight).toFloat()/6000
 //                actualVWeight= (layoutBinding.length.toString().toInt() * layoutBinding.breadth.toString().toInt() * layoutBinding.height.toString().toInt()).toFloat()/6000
-                bookingList[index].localVWeight= (layoutBinding.length.text.toString().toInt() * layoutBinding.breadth.text.toString().toInt() * layoutBinding.height.text.toString().toInt()).toFloat()/6000
+                bookingList[index].localVWeight= (layoutBinding.length.text.toString().toDouble() * layoutBinding.breadth.text.toString().toDouble() * layoutBinding.height.text.toString().toDouble()).toFloat()/6000
             }else{
 //                   actualVWeight= (bookingList[index].pckglength * bookingList[index].pckgbreath * bookingList[index].pckgheight).toFloat()/5000
 //                   actualVWeight= (layoutBinding.length.text.toString().toDouble() * layoutBinding.breadth.text.toString().toDouble() * layoutBinding.height.text.toString().toDouble()).toFloat()/5000
@@ -414,22 +499,26 @@ class BookingAdapter @Inject constructor(
         bookingList[adapterPosition].contents = contentModel.itemname
         bookingList[adapterPosition].contentsCode = contentModel.itemcode
         notifyItemChanged(adapterPosition)
+//        notifyDataSetChanged()
     }
     fun setTemperature(tempModel: TemperatureSelectionModel, adapterPosition: Int) {
         bookingList[adapterPosition].tempurature = tempModel.name
         bookingList[adapterPosition].tempuratureCode = tempModel.value
         notifyItemChanged(adapterPosition)
+//        notifyDataSetChanged()
     }
     fun setPacking(pckgsModel: PackingSelectionModel, adapterPosition: Int) {
         bookingList[adapterPosition].packing = pckgsModel.packingname
         bookingList[adapterPosition].packingcode = pckgsModel.packingcode
         notifyItemChanged(adapterPosition)
+//        notifyDataSetChanged()
     }
     fun setGelPack(model: GelPackItemSelectionModel, adapterPosition: Int) {
         bookingList[adapterPosition].gelpacktype = model.itemname
         bookingList[adapterPosition].gelpackitemcode = model.itemcode
-
         notifyItemChanged(adapterPosition)
+//        notifyDataSetCha
+    //        nged()
     }
 
 //     fun removeItem(model:SinglePickupRefModel,adapterPosition: Int){
