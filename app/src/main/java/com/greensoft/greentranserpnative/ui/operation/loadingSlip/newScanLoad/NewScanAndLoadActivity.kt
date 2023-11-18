@@ -1,66 +1,85 @@
-package com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad
+package com.greensoft.greentranserpnative.ui.operation.loadingSlip.newScanLoad
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
-import com.greensoft.greentranserpnative.databinding.ActivityScanLoadBinding
+import com.greensoft.greentranserpnative.databinding.ActivityNewScanAndLoadBinding
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
 import com.greensoft.greentranserpnative.ui.common.alert.CommonAlert
-import com.greensoft.greentranserpnative.ui.common.scanPopup.ScanPopup
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.models.LoadingSlipHeaderDataModel
+import com.greensoft.greentranserpnative.ui.operation.loadingSlip.newScanLoad.models.LoadedStickerModel
+import com.greensoft.greentranserpnative.ui.operation.loadingSlip.newScanLoad.models.ValidateStickerModel
 import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.models.StickerModel
 import com.greensoft.greentranserpnative.ui.operation.loadingSlip.summary.SummaryScanLoadActivity
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import okhttp3.internal.Util
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ScanLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertCallback<Any> {
-    private lateinit var activityBinding: ActivityScanLoadBinding
+class NewScanAndLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertCallback<Any> {
+    private lateinit var activityBinding: ActivityNewScanAndLoadBinding
     private lateinit var manager: LinearLayoutManager
-    private lateinit var headerData: LoadingSlipHeaderDataModel
-    private val viewModel: ScanLoadViewModel by viewModels()
-    private var stickerList: ArrayList<StickerModel> = ArrayList()
-    private val menuCode: String = "GTAPP_SCANANDLOAD"
+//    private lateinit var headerData: LoadingSlipHeaderDataModel
+    private val viewModel: NewScanAndLoadViewModel by viewModels()
+    private var stickerList: ArrayList<LoadedStickerModel> = ArrayList()
+//    private val menuCode: String = "GTAPP_SCANANDLOAD"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityBinding = ActivityScanLoadBinding.inflate(layoutInflater)
+        activityBinding = ActivityNewScanAndLoadBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
         setUpToolbar("SCAN AND LOAD")
-        if(Utils.grModel == null) {
-            finish()
-        }
-        activityBinding.grNo = Utils.grModel?.grno
+        setHeaderData(if(Utils.loadingNo == "") "Not Available" else Utils.loadingNo, 0)
         onClicks()
         setObservers()
-        getScannedSticker()
     }
 
-//    fun fakeData() {
-//        stickerList.add(StickerModel("","test",1,1,"123123","asr","UDIT123123123123"))
-//        stickerList.add(StickerModel("","test",1,1,"123123","asr","UDIT12375686578"))
-//        stickerList.add(StickerModel("","test",1,1,"123123","asr","UDIT123"))
-//        stickerList.add(StickerModel("","test",1,1,"123123","asr","UDIT12876t3434"))
-//        stickerList.add(StickerModel("","test",1,1,"123123","asr","UDIT1rhthrth23"))
-//        stickerList.add(StickerModel("","test",1,1,"123123","asr","UDIT123jyhrtyhj3123"))
-//        stickerList.add(StickerModel("","test",1,1,"123123","asr","UDIT123123123123"))
-//        stickerList.add(StickerModel("","test",1,1,"123123","asr","UDIT123123123123"))
-//        setupRecyclerView()
-//    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.scanloadsearchlist, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.scanLoadSearchListMenu -> {
+                openScanLoadSearchList()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun openScanLoadSearchList() {
+//        val intent = Intent(this@NewScanAndLoadActivity, )
+//        startActivity(intent)
+        successToast("Open Activity")
+    }
+
+
+    private fun setHeaderData(loadingNo: String, scannedStickers: Int) {
+        activityBinding.scannedGrStickers = scannedStickers.toString()
+        activityBinding.loadingNo = loadingNo
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshData()
+    }
 
     private fun refreshData() {
         stickerList.clear()
         setupRecyclerView()
-        getScannedSticker()
+        getScannedStickersScanLoad(Utils.loadingNo)
         lifecycleScope.launch {
             delay(1500)
             activityBinding.pullDownToRefresh.isRefreshing = false
@@ -68,13 +87,13 @@ class ScanLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, A
     }
 
     private fun setUi() {
-        activityBinding.totalScanned.text = headerData.totalscanned.toString()
+//        activityBinding.totalScanned.text = headerData.totalscanned.toString()
 //        activityBinding.totalBalance.text = headerData.totalbalance.toString()
-        activityBinding.total.text = headerData.total.toString()
+//        activityBinding.total.text = headerData.total.toString()
     }
 
     override fun onClick(data: Any, clickType: String) {
-        val rowData = data as StickerModel
+        val rowData = data as LoadedStickerModel
         if(clickType == "REMOVE_STICKER") {
             CommonAlert.createAlert(
                 context = this,
@@ -109,20 +128,21 @@ class ScanLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, A
             errorToast(errMsg)
         }
 
-        viewModel.headerLivedata.observe(this){ headerDataModel ->
-            headerData = headerDataModel
-            setUi()
-        }
+//        viewModel.headerLivedata.observe(this){ headerDataModel ->
+//            headerData = headerDataModel
+//            setUi()
+//        }
 
         viewModel.stickerListLivedata.observe(this){stickerData->
             stickerList = stickerData
             setupRecyclerView()
         }
         viewModel.validateStickerLiveData.observe(this) { validateStickerModel ->
-            successToast(validateStickerModel.commandmessage.toString())
+//            successToast(validateStickerModel.commandmessage.toString())
             saveSticker(
                 stickerNo = validateStickerModel.stickerno,
-                grNo = Utils.grModel!!.grno
+//                grNo = Utils.grModel!!.grno
+                grNo = validateStickerModel.grno
             )
         }
         viewModel.saveStickerLiveData.observe(this) { saveStickerModel ->
@@ -137,9 +157,10 @@ class ScanLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, A
     }
 
     private fun setupRecyclerView(){
+        setHeaderData(if(Utils.loadingNo == "") "Not Available" else Utils.loadingNo, stickerList.size)
         manager = LinearLayoutManager(this)
         activityBinding.rvSticker.apply {
-            adapter = ScanLoadStickerAdapter(this@ScanLoadActivity, stickerList, this@ScanLoadActivity)
+            adapter = NewScanLoadStickerAdapter(this@NewScanAndLoadActivity, stickerList, this@NewScanAndLoadActivity)
             layoutManager = manager
         }
     }
@@ -154,39 +175,29 @@ class ScanLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, A
 //            openPopup()
 //        }
     }
-    private fun openScanPalletPopUp(){
-        val dialogFragment = ScanPopup("SCAN PALLET")
-        dialogFragment.show(supportFragmentManager, "SCAN_PALLET_POP_UP")
-    }
 
-    private fun getScannedSticker(){
-        viewModel.getScannedSticker(
-            getCompanyId(),
-            "gtapp_getinscannedsticker",
-            arrayListOf("prmgrno","prmbranchcode","prmusercode","prmsessionid"),
-            arrayListOf(
-                Utils.grModel!!.grno,
-                getLoginBranchCode(),
-                getUserCode(),
-                getSessionId()
+    private fun getScannedStickersScanLoad(loadingNo: String) {
+        if (isNetworkConnected()) {
+            viewModel.getScannedStickers(
+                getCompanyId(),
+                if (loadingNo == "") "0" else loadingNo
             )
-        )
+        } else {
+            errorToast(internetError)
+        }
     }
 
     private fun validateSticker(stickerNo: String) {
-        viewModel.validateSticker(
-            getCompanyId(),
-            "gtapp_getstickerdetailforscanandload",
-            arrayListOf("prmgrno", "prmstickerno", "prmbranchcode", "prmdt", "prmusercode", "prmsessionid"),
-            arrayListOf(
-                Utils.grModel!!.grno,
-                stickerNo,
+        if(isNetworkConnected()) {
+            viewModel.validateSticker(
+                getCompanyId(),
                 getLoginBranchCode(),
-                getSqlCurrentDate(),
-                getUserCode(),
-                getSessionId()
+                stickerNo,
+                getSqlCurrentDate()
             )
-        )
+        } else {
+            errorToast(internetError)
+        }
     }
 
     private fun removeAlreadyScannedStickerAlert(stickerNo: String) {
@@ -208,19 +219,19 @@ class ScanLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, A
             getSqlCurrentDate(),
             getSqlCurrentTime(),
             getLoginBranchCode(),
-            Utils.grModel!!.orgcode, // ( Origin )
-            Utils.grModel!!.destcode, // ( Destination )
-            Utils.grModel!!.modetype,
+            "", // ( Origin )
+            "", // ( Destination )
             "",
-            Utils.grModel!!.modecode,
+            "",
+            "",
             getUserCode(),
-            Utils.grModel!!.drivercode,
+            "",
             "",
             "$stickerNo~",
             "$grNo~",
             getUserCode(),
             getSessionId(),
-            Utils.grModel!!.drivermobile,
+            "",
             "O" //                despatchType.equals("OUTSTATION") ? "O" : "D"
         )
     }
@@ -250,7 +261,7 @@ class ScanLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, A
                 getCompanyId(), loadingNo, loadingDt, loadingTime, stnCode, branchCode,
                 destCode, modeType, vendCode, modeCode, loadedBy, driverCode, remarks,
                 stickerNoStr, grNoStr, userCode,
-                menuCode,  // "GTNATAPP_SCANANDLOAD"
+                if(Utils.menuModel == null) "GTAPP_LOADING" else Utils.menuModel!!.menucode,
                 sessionId, driverMobileNo, despatchType
             )
         } else {
@@ -264,7 +275,7 @@ class ScanLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, A
                 getCompanyId(),
                 stickerNo,
                 getUserCode(),
-                menuCode,  // "GTNATAPP_SCANANDLOAD"
+                if(Utils.menuModel == null) "GTAPP_LOADING" else Utils.menuModel!!.menucode,
                 getSessionId()
             )
         } else {
@@ -297,15 +308,38 @@ class ScanLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, A
         }
     }
 
-    private fun openSummary(loadingComplete: String) {
+    fun openSummary(loadingComplete: String) {
         if (stickerList.size < 1) {
             errorToast("Please scan stickers to get the summary.")
             return
         }
-        val intent = Intent(this@ScanLoadActivity, SummaryScanLoadActivity::class.java)
+        val intent = Intent(this@NewScanAndLoadActivity, SummaryScanLoadActivity::class.java)
         intent.putExtra("LOADING_NO", Utils.loadingNo)
         intent.putExtra("SAVE", loadingComplete) // "Y" -- "N"
         startActivity(intent)
     }
+
+//    private fun showDifferentDestAlert(result: ValidateStickerModel) {
+//        val builder = AlertDialog.Builder(mContext)
+//        builder.setTitle("Destination Difference Alert !")
+//        builder.setMessage(
+//            """
+//            Sticker #: ${result.stickerno}
+//            Destination: ${selectedToBranch.getStnname()}
+//            Not Matching
+//            To Station: ${result.destination}.
+//            Do you want to continue?
+//            """.trimIndent()
+//        )
+//        builder.setPositiveButton("Yes") { dialogInterface, i ->
+//            saveSticker(
+//                result.stickerno,
+//                result.grno
+//            )
+//        }
+//        builder.setNeutralButton("Cancel") { dialogInterface, i -> dialogInterface.dismiss() }
+//        builder.setCancelable(false)
+//        builder.show()
+//    }
 
 }

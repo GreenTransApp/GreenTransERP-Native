@@ -44,6 +44,8 @@ import com.greensoft.greentranserpnative.ui.operation.communicationList.Communic
 import com.greensoft.greentranserpnative.ui.operation.communicationList.models.CommunicationListModel
 import com.greensoft.greentranserpnative.ui.operation.notificationPanel.model.NotificationPanelBottomSheetModel
 import com.greensoft.greentranserpnative.ui.operation.grList.GrListActivity
+import com.greensoft.greentranserpnative.ui.operation.loadingSlip.newScanLoad.NewScanAndLoadActivity
+import com.greensoft.greentranserpnative.ui.operation.loadingSlip.newScanLoad.NewScanLoadStickerAdapter
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestEntryActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceActivity
 import com.greensoft.greentranserpnative.utils.Utils
@@ -388,13 +390,18 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
                 intent.putExtra("MENU_DATA", jsonSerialized)
                 startActivity(intent)
             }
-            "GTAPP_GRLIST" -> run {
-                val intent = Intent(this, GrListActivity::class.java)
+            "GTAPP_LOADING" -> run {
+                val intent = Intent(this, NewScanAndLoadActivity::class.java)
                 intent.putExtra("MENU_DATA", jsonSerialized)
                 startActivity(intent)
             }
             "GTAPP_NATIVEPICKUPMANIFEST" -> run {
                 val intent = Intent(this, PickupManifestEntryActivity::class.java)
+                intent.putExtra("MENU_DATA", jsonSerialized)
+                startActivity(intent)
+            }
+            "GTAPP_GRLIST" -> run {
+                val intent = Intent(this, GrListActivity::class.java)
                 intent.putExtra("MENU_DATA", jsonSerialized)
                 startActivity(intent)
             }

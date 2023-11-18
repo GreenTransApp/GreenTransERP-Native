@@ -1,10 +1,8 @@
 package com.greensoft.greentranserpnative.api
 
-import android.util.Log
 import com.greensoft.greentranserpnative.common.CommonResult
 import retrofit2.Call
 import retrofit2.http.*
-import kotlin.math.log
 
 
 interface Api {
@@ -258,5 +256,20 @@ interface Api {
         @Query("KeyNo") keyNo: String,
         @Query("prmcompanyid") companyId: String
     ): Call<CommonResult>
+
+    @GET("WMS/LoadStickerGetList")
+    fun getLoadedStickers(
+        @Query("prmcompanyid") companyId: String,
+        @Query("prmloadingno") loadingNo: String
+    ): Call<CommonResult>
+
+    @GET("WMS/GetStickerDetailForScanAndLoad")
+    fun validateStickerDetail(
+        @Query("prmcompanyid") companyId: String,
+        @Query("prmbranchcode") branchCode: String?,
+        @Query("prmstickerno") stickerNo: String?,
+        @Query("prmdt") date: String?
+    ): Call<CommonResult>
+
 
 }
