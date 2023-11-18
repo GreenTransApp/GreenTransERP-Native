@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/pullDownToRefresh">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.operation.loadingSlip.search_list.SearchListActivity">
+
+        <include
+            layout="@layout/toolbar"
+            android:id="@+id/toolBar" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_below="@+id/toolBar"
+            android:id="@+id/search_layout"
+            android:layout_width="match_parent"
+            android:layout_height="45sp"
+            android:layout_margin="6sp">
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:iconifiedByDefault="false"
+                app:queryHint="Search here..." />
+        </androidx.cardview.widget.CardView>
+
+        <HorizontalScrollView
+            android:layout_below="@id/search_layout"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="50sp"
+                        android:layout_height="match_parent"
+                        android:text="S#"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:textColor="@color/white"
+                        android:background="@drawable/table_header_cell_bg"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:layout_width="120sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:text="Loading #"
+                        android:background="@drawable/table_header_cell_bg"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:layout_width="100sp"
+                        android:text="Loading Date"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:textColor="@color/white"
+                        android:background="@drawable/table_header_cell_bg"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:layout_width="150sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:text="Branch"
+                        android:textColor="@color/white"
+                        android:background="@drawable/table_header_cell_bg"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:layout_width="150sp"
+                        android:layout_height="match_parent"
+                        android:text="Destination"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:textColor="@color/white"
+                        android:background="@drawable/table_header_cell_bg"
+                        android:textSize="12sp" />
+
+
+                    <TextView
+                        android:layout_width="100sp"
+                        android:layout_height="match_parent"
+                        android:text="Vehicle"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:textColor="@color/white"
+                        android:background="@drawable/table_header_cell_bg"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:layout_width="100sp"
+                        android:layout_height="match_parent"
+                        android:text="Driver"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:textColor="@color/white"
+                        android:background="@drawable/table_header_cell_bg"
+                        android:textSize="12sp"
+                        />
+
+                    <TextView
+                        android:layout_width="100sp"
+                        android:layout_height="match_parent"
+                        android:text="Manifest"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:textColor="@color/white"
+                        android:background="@drawable/table_header_cell_bg"
+                        android:textSize="12sp"
+                        />
+
+                    <TextView
+                        android:id="@+id/Action"
+                        android:layout_width="150sp"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:textColor="@color/white"
+                        android:background="@drawable/table_header_cell_bg"
+                        android:text="Action"
+                        android:textSize="12sp" />
+
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/period"
+
+                    tools:ignore="MissingConstraints" />
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+    </RelativeLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</layout>
