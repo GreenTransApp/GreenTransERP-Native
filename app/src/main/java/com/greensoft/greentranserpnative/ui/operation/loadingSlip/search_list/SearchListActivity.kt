@@ -1,5 +1,6 @@
 package com.greensoft.greentranserpnative.ui.operation.loadingSlip.search_list
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -14,6 +15,7 @@ import com.greensoft.greentranserpnative.databinding.ActivitySearchListBinding
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.loadingSlip.newScanLoad.NewScanAndLoadActivity
 import com.greensoft.greentranserpnative.ui.operation.loadingSlip.search_list.models.SearchListModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestViewModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.SavePickupManifestAdapter
@@ -46,20 +48,20 @@ class SearchListActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>,
 
     override fun onResume() {
         super.onResume()
-
         refreshData()
     }
 
     private fun refreshData(){
         getSearchList()
-
-    }
-
-    fun setObserver(){
-        refreshData()
         lifecycleScope.launch {
             delay(1500)
-            activityBinding.pullDownToRefresh.isRefreshing=false
+            activityBinding.pullDownToRefresh.isRefreshing = false
+        }
+    }
+
+    private fun setObserver(){
+        activityBinding.pullDownToRefresh.setOnRefreshListener {
+            refreshData()
         }
           viewModel.isError.observe(this) { errMsg ->
               errorToast(errMsg)
@@ -74,7 +76,6 @@ class SearchListActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>,
           })
           viewModel.searchListLiveData.observe(this){data->
               searchList=data
-
               setupRecyclerView()
           }
 
@@ -110,7 +111,7 @@ class SearchListActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>,
     private fun getSearchList() {
         viewModel.getSearchList(
             loginDataModel?.companyid.toString(),
-            "greentransweb_scanandload_searchlist",
+            "gtapp_scanandload_searchlist",
             listOf("prmbranchcode","prmfromdt","prmtodt"),
             arrayListOf(userDataModel!!.loginbranchcode.toString(),fromDt,toDt)
         )
@@ -118,10 +119,8 @@ class SearchListActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>,
     private fun setupRecyclerView() {
         linearLayoutManager = LinearLayoutManager(this)
         rvAdapter = SearchListAdapter(this,searchList, this@SearchListActivity)
-        activityBinding.recyclerView.apply {
-            layoutManager = linearLayoutManager
-            adapter = rvAdapter
-        }
+        activityBinding.recyclerView.layoutManager = linearLayoutManager
+        activityBinding.recyclerView.adapter = rvAdapter
 
 
     }
@@ -130,6 +129,17 @@ class SearchListActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>,
     }
 
     override fun onClick(data: Any, clickType: String) {
-        TODO("Not yet implemented")
+        when(clickType) {
+            "EDIT_CLICKED" -> {
+                val model = data as SearchListModel
+                Utils.loadingNo = data.loadingno
+                finish()
+//                val intent = Intent(this@SearchListActivity, NewScanAndLoadActivity::class.java);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//                startActivity(intent)
+            }
+        }
     }
+
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">GreenTransERP - Scanner [ Native ]</string>
+    <string name="app_name">GreenTrans ERP</string>
     <string name="web_www_kgslpl_com">Web : WWW.KGSLPL.COM</string>
     <string name="my_app_name">KGS</string>
     <string name="new_and_select_label">New or Select Labels</string>

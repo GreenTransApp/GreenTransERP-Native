@@ -27,7 +27,7 @@ class SearchListAdapter(private val mContext: Context,
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
 
-    private var filterList: ArrayList<SearchListModel> = ArrayList()
+    private var filterList: ArrayList<SearchListModel> = rvList
     private val EMPTY_VIEW = 1
     private val DATA_VIEW = 2
     var view: View? = null
@@ -43,8 +43,8 @@ class SearchListAdapter(private val mContext: Context,
         }
     }
 
-    inner class DataViewHolder(itemBinding: ItemSearchListBinding) :
-        RecyclerView.ViewHolder(itemBinding.getRoot()) {
+    inner class DataViewHolder(itemBinding: ItemSearchListBinding, onRowClick: OnRowClick<Any>) :
+        RecyclerView.ViewHolder(itemBinding.root) {
         var itemBinding: ItemSearchListBinding
 
         init {
@@ -61,8 +61,7 @@ class SearchListAdapter(private val mContext: Context,
             itemBinding.driverName.setText(String.valueOf(model.drivername))
             itemBinding.manifestNo.setText("")
             itemBinding.btnEDIT.setOnClickListener { view ->
-
-
+                onRowClick.onClick(model, "EDIT_CLICKED")
             }
         }
     }
@@ -91,7 +90,7 @@ class SearchListAdapter(private val mContext: Context,
                     LayoutInflater.from(parent.context), parent, false
                 )
             //                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.grn_list, parent, false);
-            DataViewHolder(itemBinding)
+            DataViewHolder(itemBinding, onRowClick)
         }
     }
 

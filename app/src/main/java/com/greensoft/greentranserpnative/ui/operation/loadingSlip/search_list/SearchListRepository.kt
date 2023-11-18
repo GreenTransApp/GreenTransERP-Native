@@ -8,6 +8,7 @@ import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.ui.operation.loadingSlip.search_list.models.SearchListModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,7 +36,16 @@ class SearchListRepository @Inject constructor(): BaseRepository() {
                             val listType = object: TypeToken<List<SearchListModel>>() {}.type
                             val resultList: ArrayList<SearchListModel> = gson.fromJson(jsonArray.toString(), listType);
                             searchListMuteLiveData.postValue(resultList);
-
+                        } else {
+                            try {
+                                val dataSet = result.DataSet
+                                val obj = JSONObject(dataSet)
+                                val array = obj.getJSONArray("Table")
+                                if (array.length() <= 0)
+                                    isError.postValue("No Data Found")
+                            } catch (ex: Exception) {
+                                isError.postValue(SERVER_ERROR)
+                            }
                         }
                     } else {
                         isError.postValue(result.CommandMessage.toString());

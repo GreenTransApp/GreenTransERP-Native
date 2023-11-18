@@ -3,6 +3,7 @@ package com.greensoft.greentranserpnative.ui.operation.loadingSlip.newScanLoad
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
@@ -18,6 +19,7 @@ import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.loadingSlip.newScanLoad.models.LoadedStickerModel
 import com.greensoft.greentranserpnative.ui.operation.loadingSlip.newScanLoad.models.ValidateStickerModel
 import com.greensoft.greentranserpnative.ui.operation.loadingSlip.scanLoad.models.StickerModel
+import com.greensoft.greentranserpnative.ui.operation.loadingSlip.search_list.SearchListActivity
 import com.greensoft.greentranserpnative.ui.operation.loadingSlip.summary.SummaryScanLoadActivity
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
@@ -60,9 +62,9 @@ class NewScanAndLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<A
     }
 
     private fun openScanLoadSearchList() {
-//        val intent = Intent(this@NewScanAndLoadActivity, )
-//        startActivity(intent)
-        successToast("Open Activity")
+        val intent = Intent(this@NewScanAndLoadActivity, SearchListActivity::class.java)
+        startActivity(intent)
+//        successToast("Open Activity")
     }
 
 
@@ -342,4 +344,9 @@ class NewScanAndLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<A
 //        builder.show()
 //    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("NewScanAndLoadActivity", "onDestroy: CALLED for SCAN LOAD")
+        Utils.loadingNo = ""
+    }
 }

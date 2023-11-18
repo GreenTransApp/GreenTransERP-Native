@@ -34,7 +34,7 @@ class SummaryScanLoadActivity @Inject constructor(): BaseActivity() {
     private var searchView: SearchView? = null
     private var loadingNo: String? = null
     private var loadingCompleteSave: String? = "N"
-    private var menuCode: String = "GTAPP_SCANANDLOAD"
+    private var menuCode: String = "GTAPP_LOADING"
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //        setContentView(R.layout.activity_scanandload_searchlist);
@@ -233,7 +233,7 @@ class SummaryScanLoadActivity @Inject constructor(): BaseActivity() {
                 loadingNo,
                 "N",
                 getUserCode(),
-                menuCode,  // "WMSAPP_SCANLOAD"
+                menuCode,
                 getSessionId()
             )
         } else {
@@ -249,7 +249,7 @@ class SummaryScanLoadActivity @Inject constructor(): BaseActivity() {
                 loadingNo,
                 "Y",
                 getUserCode(),
-                menuCode,  // "WMSAPP_SCANLOAD"
+                menuCode,
                 getSessionId()
             )
         } else {
