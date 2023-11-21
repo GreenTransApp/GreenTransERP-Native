@@ -65,7 +65,9 @@
             android:exported="false" />
         <activity
             android:name=".ui.navDrawer.ProfileActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity"
+            />
         <activity
             android:name=".ui.operation.pickup_manifest.SavePickupManifestActivity"
             android:exported="false"
