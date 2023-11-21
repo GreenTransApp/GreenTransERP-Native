@@ -43,11 +43,12 @@ class BookingAdapter @Inject constructor(
 //        setObservers()
 //    }
    inner class BookingViewHolder ( val binding:BookingItemViewBinding):RecyclerView.ViewHolder(binding.root) {
-       private var dataLoggerItems = arrayOf("SELECT", "YES", "NO")
+       private var dataLoggerItems = arrayOf("YES", "NO")
+//    private var dataLoggerItems = arrayOf("SELECT", "YES", "NO")
 
 
 
-       private fun setOnClicks(singlePickupRefModel: SinglePickupRefModel) {
+    private fun setOnClicks(singlePickupRefModel: SinglePickupRefModel) {
            binding.gelPackItem.setOnClickListener {
                onRowClick.onRowClick(singlePickupRefModel, "GEL_PACK_SELECT", adapterPosition)
            }
@@ -208,7 +209,7 @@ class BookingAdapter @Inject constructor(
 
 
 
-           binding.chekGelPack.setOnCheckedChangeListener { compoundButton, bool ->
+           binding.checkGelPack.setOnCheckedChangeListener { compoundButton, bool ->
 
                if(bool) {
                    singlePickupRefModel.gelpack="Y"
@@ -248,7 +249,8 @@ class BookingAdapter @Inject constructor(
                    var dataLoggerSelection = dataLoggerItems.get(position)
                    binding.dataloggerNum.setText("")
                     when(dataLoggerSelection) {
-                        "SELECT", "NO" -> {
+//                        "SELECT", "NO" -> {
+                        "NO" -> {
                             binding.dataloggerNum.isEnabled = false
                         }
                         "YES" -> {
@@ -291,6 +293,9 @@ class BookingAdapter @Inject constructor(
            binding.gelPackItem.setText("select")
            setOnClicks(singlePickupRefModel)
            setUpAdapter()
+           if(singlePickupRefModel.datalogger == "Y") {
+               binding.selectDatalogger.setSelection(0) // 0 Index is -> YES in the List
+           }
            if(singlePickupRefModel.isBoxValidated) {
                boxNoValidated(binding)
            } else {
@@ -303,10 +308,7 @@ class BookingAdapter @Inject constructor(
        private fun setUpAdapter() {
            val dataLoggerAdapter = ArrayAdapter(mContext, R.layout.simple_list_item_1, dataLoggerItems)
            binding.selectDatalogger.adapter = dataLoggerAdapter
-
-
-
-
+           binding.selectDatalogger.setSelection(1)
        }
 
 
@@ -454,7 +456,7 @@ class BookingAdapter @Inject constructor(
         }
         if(aWeight > 0){
             bookingList.forEachIndexed {index, element ->
-                actualWeight= (actualWeight+element.weight).toInt()
+                actualWeight= (actualWeight+element.aweight).toInt()
             }
         }
         if(actualWeight.toFloat().isNaN()){

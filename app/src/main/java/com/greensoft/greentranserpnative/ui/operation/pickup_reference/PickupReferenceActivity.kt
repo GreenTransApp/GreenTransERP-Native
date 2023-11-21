@@ -42,12 +42,12 @@ class PickupReferenceActivity  @Inject constructor(): BaseActivity(), OnRowClick
 //        loadBookingList()
 //        getSingleRefData()
         searchItem()
-        refreshData()
 
     }
 
     override fun onResume() {
         super.onResume()
+        refreshData()
     }
     private fun refreshData(){
         pickupRefList.clear()
