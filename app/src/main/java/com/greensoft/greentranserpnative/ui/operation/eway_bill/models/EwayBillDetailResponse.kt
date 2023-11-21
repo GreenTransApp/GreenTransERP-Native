@@ -102,7 +102,7 @@ data class VehicleDetail(
     val groupNo: String,
     val transDocNo: String,
     val transMode: String,
-    val tripshtNo: Int,
+    val tripshtNo: String,
     val userGSTINTransin: String,
     val vehicleNo: String
 )

@@ -37,21 +37,7 @@ import com.greensoft.greentranserpnative.ui.common.viewImage.ViewImage
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import com.greensoft.greentranserpnative.ui.operation.booking.models.AgentSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.BookingVehicleSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.ConsignorSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.ContentSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.CustomerSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.DepartmentSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.DestinationSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.GelPackItemSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.OriginSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.PckgTypeSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.PickupBoySelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.PickupBySelection
-import com.greensoft.greentranserpnative.ui.operation.booking.models.ServiceTypeSelectionLov
-import com.greensoft.greentranserpnative.ui.operation.booking.models.TemperatureSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.*
 import com.greensoft.greentranserpnative.ui.operation.eway_bill.EwayBillBottomSheet
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.PickupRefModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
@@ -107,9 +93,6 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 //    var pickupTypeSelectedItems =
 //        arrayOf("JEENA STAFF", "AGENT", " MARKET VEHICLE", "OFFICE/AIRPORT DROP", "CANCEL")
 
-    private val addListMuteLiveData = MutableLiveData<String>()
-    val addListLiveData: LiveData<String>
-        get() = addListMuteLiveData
     var transactionId = ""
     var destCode = ""
     var custCode = ""
@@ -263,8 +246,9 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     }
 
     private fun setReferenceData(){
-        singleRefList.forEachIndexed { _, element ->
-
+//        singleRefList.forEachIndexed { _, element ->
+        if(singleRefList.isEmpty()) return
+            val element: SinglePickupRefModel = singleRefList.get(0)
             activityBinding.inputCustName.setText(checkNullOrEmpty(element.custname).toString())
             activityBinding.inputCngrName.setText(checkNullOrEmpty(element.cngr).toString())
 //            activityBinding.inputCngrAddress.setText(checkNullOrEmpty(element.cngraddress).toString())
@@ -286,12 +270,11 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             cngeCode=element.cngecode.toString()
             destCode=element.destcode.toString()
 //            addListMuteLiveData.postValue(activityBinding.inputPckgsNo.text.toString())
-            addListMuteLiveData.postValue(element.pckgs.toString())
 //            activityBinding.selectedPickupType.setAutofillHints(checkNullOrEmpty(element.gelpacktype).toString())
 //           errorToast(activityBinding.selectedPckgsType.toString())
 
 
-        }
+//        }
     }
 
     fun setLayoutVisibility(){
@@ -591,7 +574,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         viewModel.saveBookingLiveData.observe(this){ data->
             if(data != null) {
                 if(data.commandstatus == 1) {
-                    successToast(data.commandmessage.toString())
+                    showGrCreatedAlert(data)
+//                    successToast(data.commandmessage.toString())
                 } else {
                     errorToast(data.commandmessage.toString())
                 }
@@ -1434,10 +1418,11 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         var adapterEnteredData: ArrayList<SinglePickupRefModel>? = bookingAdapter?.getEnteredData()
         run enteredData@ {
             adapterEnteredData?.forEachIndexed { index, singlePickupRefModel ->
-                if (singlePickupRefModel.referenceno.toString().isNullOrEmpty()) {
-                    errorToast("Reference # Not Entered at INPUT - ${index + 1}")
-                    return
-                } else if (singlePickupRefModel.boxno.isNullOrEmpty()) {
+//                if (singlePickupRefModel.referenceno.toString().isNullOrEmpty()) {
+//                    errorToast("Reference # Not Entered at INPUT - ${index + 1}")
+//                    return
+//                } else
+                if (singlePickupRefModel.boxno.isNullOrEmpty() && singlePickupRefModel.packagetype == "Jeena Packing") {
                     errorToast("Box # Not Entered at INPUT - ${index + 1}")
                     return
                 } else if (Utils.isDecimalNotEntered(singlePickupRefModel.weight.toString())) {
@@ -1454,14 +1439,12 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                     return
                 }
 
-                Utils.logger("RUN_TEST", "in run")
             }
         }
-        Utils.logger("RUN_TEST", "out run")
 
 
         for(i in 0 until singleRefList.size) {
-            val refNo = singleRefList[i].referenceno
+            val refNo = singleRefList[i].detailreferenceno
             val weightStr= adapterEnteredData?.get(i)?.weight ?: singleRefList[i].weight ?: ""
             val pckgType= singleRefList[i].packagetype ?: ""
             val tempStr= if (adapterEnteredData == null) singleRefList[i].tempurature else adapterEnteredData[i].tempurature
@@ -1470,7 +1453,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             val dryIceStr=singleRefList[i].dryice
             val dryIceQtyStr= adapterEnteredData?.get(i)?.dryiceqty ?: singleRefList[i].dryiceqty
             val dataLoggerStr= adapterEnteredData?.get(i)?.datalogger ?: singleRefList[i].datalogger
-            val dataLoggerNoStr= adapterEnteredData?.get(i)?.dataloggerno ?: singleRefList[i].dataloggerno
+            val dataLoggerNoStr= adapterEnteredData?.get(i)?.dataloggerno ?: singleRefList[i].dataloggerno ?: ""
             val gelPackItemCodeStr = adapterEnteredData?.get(i)?.gelpackitemcode ?: singleRefList[i].gelpackitemcode ?: ""
 //            val dimHeight=singleRefList[i].localHeight
 //            val dimBreath=singleRefList[i].localBreath
@@ -1480,7 +1463,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             val dimLength=  if (adapterEnteredData == null) singleRefList[i].localLength else adapterEnteredData[i].localLength
 
             val boxNoStr=adapterEnteredData?.get(i)?.boxno ?: singleRefList[i].boxno ?: ""
-            val gelPackStr= adapterEnteredData?.get(i)?.gelpacktype ?: singleRefList[i].gelpacktype ?: ""
+            val gelPackStr= singleRefList[i].gelpack
             val gelPackQtyStr= adapterEnteredData?.get(i)?.gelpackqty ?: singleRefList[i].gelpackqty
             val packageStr= if (adapterEnteredData == null) singleRefList[i].pcs else adapterEnteredData[i].pcs
             val vWeightStr=singleRefList[i].volfactor
@@ -1652,5 +1635,15 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 //        val dialogFragment = ViewImage.newInstance(this, this, "View Image" ,imageBitmap, imageBase64, imageUri)
         val dialogFragment = ViewImage.newInstance(this, this, "View Image" ,imageBitmap)
         dialogFragment.show(supportFragmentManager, ViewImage.TAG)
+    }
+
+    private fun showGrCreatedAlert(model: SaveBookingModel) {
+        AlertDialog.Builder(this)
+            .setTitle("Success!!!")
+            .setMessage(model.commandmessage)
+            .setPositiveButton("Okay") { _, _ ->
+                finish()
+            }
+            .show()
     }
 }

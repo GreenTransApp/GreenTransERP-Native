@@ -60,8 +60,9 @@
                         android:gravity="center"
                         android:hint="ENTER REF #"
                         android:inputType="number"
+                        android:focusable="false"
                         android:layout_margin="1dp"
-                        android:text="@{gridData.referenceno ==null ?``:String.valueOf(gridData.referenceno)}"
+                        android:text="@{gridData.detailreferenceno==null ?``:String.valueOf(gridData.detailreferenceno)}"
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
@@ -193,7 +194,7 @@
                         android:gravity="center"
                         android:layout_margin="1dp"
                         android:inputType="number"
-                        android:text="@{String.valueOf(gridData.weight)}"
+                        android:text="@{String.valueOf(gridData.aweight)}"
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp"/>
 
@@ -241,7 +242,7 @@
                        android:background="@drawable/table_content_cell_bg"
                        android:gravity="center">
                        <CheckBox
-                           android:id="@+id/chek_gel_pack"
+                           android:id="@+id/check_gel_pack"
                            android:layout_width="wrap_content"
                            android:layout_height="wrap_content"
                            android:gravity="center"
