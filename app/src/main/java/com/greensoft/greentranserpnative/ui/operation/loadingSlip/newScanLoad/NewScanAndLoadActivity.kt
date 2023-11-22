@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.greensoft.greentranserpnative.R
@@ -129,6 +130,14 @@ class NewScanAndLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<A
         viewModel.isError.observe(this) { errMsg ->
             errorToast(errMsg)
         }
+        viewModel.viewDialogLiveData.observe(this, Observer { show ->
+//            progressBar.visibility = if(show) View.VISIBLE else View.GONE
+            if(show) {
+                showProgressDialog()
+            } else {
+                hideProgressDialog()
+            }
+        })
 
 //        viewModel.headerLivedata.observe(this){ headerDataModel ->
 //            headerData = headerDataModel
@@ -291,13 +300,13 @@ class NewScanAndLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<A
                 AlertClick.YES -> {
                     if (alertCallType == "REMOVE_STICKER") {
                         if (data != null) {
-                            val stickerData = data as StickerModel
+                            val stickerData = data as LoadedStickerModel
                             removeStickerScanLoad(stickerData.stickerno)
                         }
                     } else if (alertCallType == "REMOVE_SCANNED_STICKER") {
                         if (data != null) {
                             val stickerNo: String = data.toString()
-                            validateSticker(stickerNo)
+                            removeStickerScanLoad(stickerNo)
                         }
                     }
                 }
@@ -310,7 +319,7 @@ class NewScanAndLoadActivity @Inject constructor(): BaseActivity(), OnRowClick<A
         }
     }
 
-    fun openSummary(loadingComplete: String) {
+    private fun openSummary(loadingComplete: String) {
         if (stickerList.size < 1) {
             errorToast("Please scan stickers to get the summary.")
             return

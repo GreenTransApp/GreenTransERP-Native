@@ -39,7 +39,7 @@ data class SinglePickupRefModel(
     val custcode: String?,
     val custname: String,
     val datalogger: String,
-    val dataloggerno: String?,
+    var dataloggerno: String?,
     val departmentname: String,
     val destcode: String?,
     val destname: String,

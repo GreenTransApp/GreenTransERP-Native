@@ -113,7 +113,7 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
     private fun getGrList(){
         viewModel.getGrList(
             loginDataModel?.companyid.toString(),
-            "greentranswebsg_grallocationlistforpickupmanifest",
+            "greentransapp_grallocationlistforpickupmanifest",
             listOf("prmbranchcode","prmdt"),
             arrayListOf(userDataModel?.loginbranchcode.toString(),grDt)
 //            arrayListOf("321","2023-10-09")

@@ -24,6 +24,8 @@ class NewScanAndLoadViewModel @Inject constructor(private val _repo: NewScanAndL
         get() = _repo.saveStickerLiveData
     val removeStickerLiveData: LiveData<RemoveStickerModel>
         get() = _repo.removeStickerLiveData
+    val viewDialogLiveData: LiveData<Boolean>
+        get() = _repo.viewDialogLiveData
 
 //    fun getScannedSticker(companyId: String, spName: String, param: ArrayList<String>, values: ArrayList<String>){
 //        viewModelScope.launch(Dispatchers.IO) {

@@ -26,9 +26,11 @@ val saveStickerLiveData: LiveData<SaveStickerModel>
     get() = saveStickerMutData
 val removeStickerLiveData: LiveData<RemoveStickerModel>
     get() = removeStickerMutData
+val viewDialogLiveData: LiveData<Boolean>
+        get() = viewDialogMutData
 
 fun getScannedSticker(companyId: String, loadingNo: String){
-    viewDialogMutData.postValue(true)
+//    viewDialogMutData.postValue(true)
     api.getLoadedStickers(companyId, loadingNo).enqueue(object: Callback<CommonResult> {
         override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
             if(response.body() != null){
@@ -47,12 +49,12 @@ fun getScannedSticker(companyId: String, loadingNo: String){
             } else {
                 isError.postValue(SERVER_ERROR);
             }
-            viewDialogMutData.postValue(false)
+//            viewDialogMutData.postValue(false)
 
         }
 
         override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
-            viewDialogMutData.postValue(false)
+//            viewDialogMutData.postValue(false)
             isError.postValue(t.message)
         }
 
@@ -60,7 +62,7 @@ fun getScannedSticker(companyId: String, loadingNo: String){
 }
 
 fun validateSticker(companyId: String, branchCode: String, stickerNo: String, dt: String){
-    viewDialogMutData.postValue(true)
+//    viewDialogMutData.postValue(true)
     api.validateStickerDetail(companyId,branchCode,stickerNo,dt).enqueue(object: Callback<CommonResult> {
         override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
             if(response.body() != null){
@@ -79,12 +81,12 @@ fun validateSticker(companyId: String, branchCode: String, stickerNo: String, dt
             } else {
                 isError.postValue(SERVER_ERROR);
             }
-            viewDialogMutData.postValue(false)
+//            viewDialogMutData.postValue(false)
 
         }
 
         override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
-            viewDialogMutData.postValue(false)
+//            viewDialogMutData.postValue(false)
             isError.postValue(t.message)
         }
 
@@ -102,6 +104,7 @@ fun updateSticker(
         stickerNoStr, grNoStr, userCode, menuCode, sessionId, driverMobileNo, despatchType).enqueue(object:
         Callback<CommonResult> {
         override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
+            viewDialogMutData.postValue(false)
             if(response.body() != null){
                 val result = response.body()!!
                 val gson = Gson()
@@ -118,8 +121,7 @@ fun updateSticker(
             } else {
                 isError.postValue(SERVER_ERROR);
             }
-            viewDialogMutData.postValue(false)
-
+//
         }
 
         override fun onFailure(call: Call<CommonResult?>, t: Throwable) {

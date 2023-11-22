@@ -30,6 +30,7 @@ import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.Veh
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.VendorSelectionModel
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.internal.Util
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -68,8 +69,9 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
     var loadedByType = ""
     var manifestDt= getSqlCurrentDate()
     var driverCode=""
+    var menuCode = ""
 
-    var menuCode="GTAPP_NATIVEPICKUPMANIFEST"
+//    var menuCode="GTAPP_NATIVEPICKUPMANIFEST"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +80,9 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
         setSupportActionBar(activityBinding.toolBar.root)
         activityBinding.inputDate.setText(getViewCurrentDate())
         activityBinding.inputTime.setText(getSqlCurrentTime())
+        activityBinding.inputBranch.setText(userDataModel?.loginbranchname)
+        branchCode = userDataModel?.loginbranchcode.toString()
+        menuCode = if(Utils.menuModel == null) "GTAPP_NATIVEPICKUPMANIFEST" else Utils.menuModel?.menucode.toString()
         setUpToolbar("Pickup Manifest")
         setObservers()
 
@@ -148,9 +153,9 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
     }
 
     private fun setOnclick(){
-          activityBinding.inputBranch.setOnClickListener{
-              getBranchList()
-          }
+//          activityBinding.inputBranch.setOnClickListener{
+//              getBranchList()
+//          }
           activityBinding.inputPickupLocation.setOnClickListener{
               getPickupLocation()
 //              openPickupLocationSelectionBottomSheet(locationList)
@@ -495,11 +500,11 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
  }
     override fun onItemClick(data: Any, clickType: String) {
       when(clickType){
-          "Branch Selection"-> run{
-              val selectedBranch = data as BranchSelectionModel
-              activityBinding.inputBranch.setText(selectedBranch.stnname)
-              branchCode=selectedBranch.stncode.toString()
-          }
+//          "Branch Selection"-> run{
+//              val selectedBranch = data as BranchSelectionModel
+//              activityBinding.inputBranch.setText(selectedBranch.stnname)
+//              branchCode=selectedBranch.stncode.toString()
+//          }
 
           "Pickup Location Selection"-> run{
               val selectedLocation = data as PickupLocationModel
