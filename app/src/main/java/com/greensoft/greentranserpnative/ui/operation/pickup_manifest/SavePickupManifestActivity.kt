@@ -1,5 +1,6 @@
 package com.greensoft.greentranserpnative.ui.operation.pickup_manifest
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -21,9 +22,11 @@ import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.booking.BookingViewModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ContentSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.SaveBookingModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.SavePickupManifestAdapter
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.ManifestEnteredDataModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.SavePickupManifestModel
 import com.greensoft.greentranserpnative.utils.Utils
 
 import dagger.hilt.android.AndroidEntryPoint
@@ -224,17 +227,34 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
              packingList = packing
          }
          viewModel.manifestLiveData.observe(this){manifest->
-             if(manifest.commandstatus==1){
-                 goToHomeActivity()
-             }else{
-                 errorToast(manifest.commandmessage.toString())
+
+             if(manifest != null) {
+                 if(manifest.commandstatus==1){
+                     showManifestCreatedAlert(manifest)
+
+                     successToast(manifest.commandmessage.toString())
+                 }else{
+                     errorToast(manifest.commandmessage.toString())
+                 }
              }
+
 
          }
 //         manifestLiveData.observe(this){data->
 //             successToast(data.toString())
 //         }
      }
+
+    private fun showManifestCreatedAlert(model: SavePickupManifestModel) {
+        AlertDialog.Builder(this)
+            .setTitle("Success!!!")
+            .setMessage(model.commandmessage)
+            .setPositiveButton("Okay") { _, _ ->
+                goToHomeActivity()
+                finish()
+            }
+            .show()
+    }
      private fun goToHomeActivity(){
          val intent = Intent(this, HomeActivity::class.java)
          intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)

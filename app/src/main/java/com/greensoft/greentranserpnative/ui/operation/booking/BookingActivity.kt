@@ -151,7 +151,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         sqlDate = getSqlCurrentDate()
         activityBinding.inputTime.setText(getSqlCurrentTime())
         activityBinding.inputGrNo.hint = "ENTER GR #"
-        activityBinding.inputPickupBoy.setText(loginDataModel!!.username.toString())
+        activityBinding.inputPickupBoy.setText(userDataModel!!.username.toString())
         getIntentData()
 
         getServiceType()

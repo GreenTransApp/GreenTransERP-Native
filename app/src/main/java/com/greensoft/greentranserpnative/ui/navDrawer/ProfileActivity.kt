@@ -29,7 +29,6 @@ class ProfileActivity  @Inject constructor(): BaseActivity(), BottomSheetClick<A
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
         setUpToolbar("PROFILE")
-
         setUserDetails()
         setOnClick()
     }

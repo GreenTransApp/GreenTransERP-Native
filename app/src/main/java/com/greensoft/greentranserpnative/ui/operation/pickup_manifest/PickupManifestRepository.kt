@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
+import com.greensoft.greentranserpnative.ui.login.models.LoginDataModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -347,8 +348,9 @@ class PickupManifestRepository @Inject constructor(): BaseRepository(){
                         if(result.CommandStatus == 1){
                             val jsonArray = getResult(result);
                             if(jsonArray != null) {
+
                                 val listType = object: TypeToken<List<SavePickupManifestModel>>() {}.type
-                                val resultList: ArrayList<SavePickupManifestModel> = gson.fromJson(result.DataSet, listType);
+                                val resultList: ArrayList<SavePickupManifestModel> = gson.fromJson(jsonArray.toString(), listType);
                                 saveManifestMuteLiveData.postValue(resultList[0])
                             }
                         } else {

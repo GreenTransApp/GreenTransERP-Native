@@ -1092,7 +1092,24 @@
                                                 android:background="@drawable/table_header_cell_bg"
                                                 android:textSize="12sp" />
 
-
+                                            <TextView
+                                                android:id="@+id/loading_no_txt"
+                                                android:layout_width="150sp"
+                                                android:layout_height="match_parent"
+                                                android:gravity="center_horizontal"
+                                                android:textColor="@color/white"
+                                                android:background="@drawable/table_header_cell_bg"
+                                                android:text="Loading #"
+                                                android:textSize="12sp" />
+                                            <TextView
+                                                android:id="@+id/loading_dt_txt"
+                                                android:layout_width="150sp"
+                                                android:layout_height="match_parent"
+                                                android:gravity="center_horizontal"
+                                                android:textColor="@color/white"
+                                                android:background="@drawable/table_header_cell_bg"
+                                                android:text="Loading Date"
+                                                android:textSize="12sp" />
 
                                             <TextView
                                                 android:id="@+id/gr_no_txt"
@@ -1101,8 +1118,9 @@
                                                 android:gravity="center_horizontal"
                                                 android:textColor="@color/white"
                                                 android:background="@drawable/table_header_cell_bg"
-                                                android:text="GR#"
+                                                android:text="GR #"
                                                 android:textSize="12sp" />
+
 
                                             <TextView
                                                 android:id="@+id/allocated_dt_txt"
