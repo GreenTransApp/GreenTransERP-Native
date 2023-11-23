@@ -317,8 +317,10 @@ class BookingRepository @Inject constructor():BaseRepository(){
     }
 
     fun boxNoValidate(companyId: String, spname: String, param: List<String>, values: ArrayList<String>){
+        viewDialogMutData.postValue(true);
         api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
+                viewDialogMutData.postValue(false);
                 if(response.body() != null){
                     val result = response.body()!!
                     val gson = Gson()

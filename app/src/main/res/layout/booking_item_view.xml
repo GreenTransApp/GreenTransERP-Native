@@ -104,10 +104,10 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:layout_width="140sp"
-                            android:backgroundTint="@color/danger"
+                            android:backgroundTint="@color/success"
                             android:textColor="@color/white"
                             android:textSize="8sp"
-                            android:text=""/>
+                            android:text="Validate Box"/>
                     </LinearLayout>
 
 
@@ -183,7 +183,7 @@
                         android:inputType="number"
                         android:hint="ENTER DATALOGGER #"
                         android:layout_margin="1dp"
-                        android:text="@{gridData.dataloggerno ==null ?``:String.valueOf(gridData.dataloggerno)}"
+                        android:text="@{gridData.dataloggerno == null ?``:String.valueOf(gridData.dataloggerno)}"
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 
@@ -259,7 +259,7 @@
                         android:layout_margin="1dp"
                         android:focusable="false"
                         android:enabled="false"
-                        android:text='@{gridData.gelpacktype== "0" ? "select" :gridData.gelpacktype}'
+                        android:text='@{String.valueOf(gridData.gelpacktype)}'
                         android:background="@drawable/table_content_cell_bg"
                         android:textSize="16sp" />
 <!--                        android:inputType="number"-->

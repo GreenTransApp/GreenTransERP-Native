@@ -34,10 +34,19 @@ class BookingAdapter @Inject constructor(
 ): RecyclerView.Adapter<BookingAdapter.BookingViewHolder>() {
     var actualVWeight:Float=0f
     var actualWeight:Int=0
+    val TAG ="BookingAdapter"
 
     val originalColor = Color.WHITE
     val changeBoxColor = Color.RED
     val validateColor =  Color.parseColor("#509753")
+
+    private fun logDebug(str: String?) {
+        var printable = str
+        if(printable.isNullOrBlank()) {
+            printable = "EMPTY"
+        }
+        Log.d(TAG, printable)
+    }
 
 //    init {
 //        setObservers()
@@ -68,8 +77,7 @@ class BookingAdapter @Inject constructor(
 //                onRowClick.onCLick(singlePickupRefModel, "REMOVE_SELECT")
            }
           binding.btnValidateBox.setOnClickListener {
-
-
+              onRowClick.onRowClick(singlePickupRefModel, "VALIDATE_BOX", adapterPosition)
 
           }
            binding.pckgs.addTextChangedListener(object : TextWatcher {
@@ -265,14 +273,15 @@ class BookingAdapter @Inject constructor(
                    id: Long
                ) {
                    var dataLoggerSelection = dataLoggerItems.get(position)
-                   binding.dataloggerNum.setText("")
                     when(dataLoggerSelection) {
 //                        "SELECT", "NO" -> {
                         "NO" -> {
                             binding.dataloggerNum.isEnabled = false
+                            binding.dataloggerNum.setText("")
                         }
                         "YES" -> {
                             binding.dataloggerNum.isEnabled = true
+                            binding.dataloggerNum.setText(singlePickupRefModel.dataloggerno)
                         }
                         else -> {
 
@@ -285,6 +294,21 @@ class BookingAdapter @Inject constructor(
                }
 
            }
+            binding.length.setOnFocusChangeListener { view, selected ->
+                if(selected && binding.length.text.toString() == "0.0" ||  binding.length.text.toString() == "0") {
+                    binding.length.text = Editable.Factory.getInstance().newEditable("")
+                }
+            }
+            binding.breadth.setOnFocusChangeListener { view, selected ->
+                if(selected && binding.breadth.text.toString() == "0.0" ||  binding.breadth.text.toString() == "0") {
+                    binding.breadth.text = Editable.Factory.getInstance().newEditable("")
+                }
+            }
+            binding.height.setOnFocusChangeListener { view, selected ->
+                if(selected && binding.height.text.toString() == "0.0" ||  binding.height.text.toString() == "0") {
+                    binding.height.text = Editable.Factory.getInstance().newEditable("")
+                }
+            }
 
        }
 
@@ -306,27 +330,34 @@ class BookingAdapter @Inject constructor(
 
 
        fun bindData(singlePickupRefModel: SinglePickupRefModel, onRowClick: OnRowClick<Any>) {
+//           if(singlePickupRefModel.gelpacktype)
+           logDebug("DATALOGGER: ${singlePickupRefModel.dataloggerno}")
+           if(singlePickupRefModel.gelpacktype == "0") {
+               singlePickupRefModel.gelpacktype = "SELECT"
+           }
            binding.gridData = singlePickupRefModel
            binding.index = adapterPosition
-           binding.gelPackItem.setText("select")
            setOnClicks(singlePickupRefModel)
            setUpAdapter()
+           if(singlePickupRefModel.gelpack == "Y") {
+               binding.checkGelPack.isChecked = true
+           }
            if(singlePickupRefModel.datalogger == "Y") {
                binding.selectDatalogger.setSelection(0) // 0 Index is -> YES in the List
-           }
-           if(singlePickupRefModel.isBoxValidated) {
-               boxNoValidated(binding)
            } else {
-               boxNotValidated(binding)
+               binding.selectDatalogger.setSelection(1)
            }
-
-
+//           if(singlePickupRefModel.isBoxValidated) {
+//               boxNoValidated(binding, singlePickupRefModel)
+//           } else {
+//               boxNotValidated(binding, singlePickupRefModel)
+//           }
        }
 
        private fun setUpAdapter() {
            val dataLoggerAdapter = ArrayAdapter(mContext, R.layout.simple_list_item_1, dataLoggerItems)
            binding.selectDatalogger.adapter = dataLoggerAdapter
-           binding.selectDatalogger.setSelection(1)
+//           binding.selectDatalogger.setSelection(1)
        }
 
 
@@ -348,30 +379,25 @@ class BookingAdapter @Inject constructor(
 //    }
 
 
-     fun boxNoValidated( layoutBinding: BookingItemViewBinding){
-         bookingList.forEachIndexed { _, singlePickupRefModel ->
+//     fun boxNoValidated( layoutBinding: BookingItemViewBinding, singlePickupRefModel: SinglePickupRefModel){
+//         if(singlePickupRefModel.isBoxValidated){
+//             layoutBinding.btnValidateBox.text = "Change Box"
+////                 layoutBinding.boxNo.setBackgroundColor(validateColor)
+////                 layoutBinding.btnValidateBox.setBackgroundColor(validateColor)
+//             layoutBinding.boxNo.isFocusable=false
+//         }
+//     }
 
-             if(singlePickupRefModel.isBoxValidated){
-                 layoutBinding.btnValidateBox.text = "Validate Box"
-//                 layoutBinding.boxNo.setBackgroundColor(validateColor)
-//                 layoutBinding.btnValidateBox.setBackgroundColor(validateColor)
-                 layoutBinding.boxNo.isFocusable=false
-             }
-         }
-     }
-
-     fun boxNotValidated(layoutBinding: BookingItemViewBinding){
-        layoutBinding.boxNo.text.clear()
-         bookingList.forEachIndexed { _, singlePickupRefModel ->
-             if(!singlePickupRefModel.isBoxValidated){
-                 layoutBinding.btnValidateBox.text = "Change Box"
-//                 layoutBinding.boxNo.setBackgroundColor(validateColor)
-//                 layoutBinding.btnValidateBox.setBackgroundResource(changeBoxColor)
-                 layoutBinding.boxNo.isFocusable=true
-
-             }
-         }
-     }
+//     fun boxNotValidated(layoutBinding: BookingItemViewBinding, singlePickupRefModel: SinglePickupRefModel){
+//        layoutBinding.boxNo.text.clear()
+//        if(!singlePickupRefModel.isBoxValidated){
+//         layoutBinding.btnValidateBox.text = "Validate Box"
+////          layoutBinding.boxNo.setBackgroundColor(validateColor)
+////          layoutBinding.btnValidateBox.setBackgroundResource(changeBoxColor)
+//         layoutBinding.boxNo.isFocusable=true
+//
+//        }
+//     }
 
     fun enterBoxOnNextAvailable(boxNo: String) {
         run forEachExit@{

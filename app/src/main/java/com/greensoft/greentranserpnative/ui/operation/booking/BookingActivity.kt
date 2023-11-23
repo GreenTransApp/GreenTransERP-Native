@@ -1104,9 +1104,13 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         }else if(clickType =="PACKING_SELECT"){
             openPackingSelectionBottomSheet(packingList,index)
 
-        }else if(clickType =="LENGTH_SELECT"){
-//           errorToast("length select")
-
+        }else if(clickType =="VALIDATE_BOX"){
+            val singlePickupRefModel = data as SinglePickupRefModel
+            if(singlePickupRefModel.boxno.isNullOrBlank()) {
+                errorToast("Enter Box # to validate.")
+            } else {
+                boxNoValidate(singlePickupRefModel.boxno)
+            }
         }else if(clickType == "REMOVE_SELECT"){
 //                singlePickupDataList.forEachIndexed {index, element ->
 //                singlePickupDataList.removeAt(index)
@@ -1457,7 +1461,12 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             val dryIceStr=singleRefList[i].dryice
             val dryIceQtyStr= adapterEnteredData?.get(i)?.dryiceqty ?: singleRefList[i].dryiceqty
             val dataLoggerStr= adapterEnteredData?.get(i)?.datalogger ?: singleRefList[i].datalogger
-            val dataLoggerNoStr= adapterEnteredData?.get(i)?.dataloggerno ?: singleRefList[i].dataloggerno ?: ""
+            var dataLoggerNoStr = ""
+            if(dataLoggerStr=="Y") {
+                dataLoggerNoStr =
+                    adapterEnteredData?.get(i)?.dataloggerno ?: singleRefList[i].dataloggerno ?: ""
+            }
+
             val gelPackItemCodeStr = adapterEnteredData?.get(i)?.gelpackitemcode ?: singleRefList[i].gelpackitemcode ?: ""
 //            val dimHeight=singleRefList[i].localHeight
 //            val dimBreath=singleRefList[i].localBreath
@@ -1465,7 +1474,6 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             val dimHeight= if (adapterEnteredData == null) singleRefList[i].localHeight else adapterEnteredData[i].localHeight
             val dimBreath=  if (adapterEnteredData == null) singleRefList[i].localBreath else adapterEnteredData[i].localBreath
             val dimLength=  if (adapterEnteredData == null) singleRefList[i].localLength else adapterEnteredData[i].localLength
-
             val boxNoStr=adapterEnteredData?.get(i)?.boxno ?: singleRefList[i].boxno ?: ""
             val gelPackStr= singleRefList[i].gelpack
             val gelPackQtyStr= adapterEnteredData?.get(i)?.gelpackqty ?: singleRefList[i].gelpackqty
