@@ -198,7 +198,8 @@ class PickupManifestRepository @Inject constructor(): BaseRepository(){
                             val listType = object: TypeToken<List<VehicleSelectionModel>>() {}.type
                             val resultList: ArrayList<VehicleSelectionModel> = gson.fromJson(jsonArray.toString(), listType);
                             vehicleMuteLiveData.postValue(resultList);
-
+                        } else {
+                            isError.postValue("No Data Found.")
                         }
                     } else {
                         isError.postValue(result.CommandMessage.toString());

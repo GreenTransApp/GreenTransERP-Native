@@ -20,7 +20,7 @@ data class LoginDataModel(
     val grouplogin: String,
     val host: Any,
     val location: String,
-    val logoimage: String,
+    val logoimage: String?,
     val mobileno: String,
     val port: Any,
     val serverip: String,

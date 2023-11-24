@@ -205,7 +205,7 @@
             android:text="@{String.valueOf(grModel.ewaybillno)}"
             />
 
-        <RelativeLayout
+        <!-- <RelativeLayout
             android:layout_width="150sp"
             android:background="@drawable/table_content_cell_bg"
             android:layout_height="wrap_content">
@@ -222,7 +222,7 @@
                 style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 />
 
-        </RelativeLayout>
+        </RelativeLayout>-->
 
 
         <RelativeLayout

@@ -2,6 +2,9 @@ package com.greensoft.greentranserpnative.ui.operation.chatScreen
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
@@ -35,6 +38,8 @@ class ChatScreenActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>
     private val viewModel: ChatScreenViewModel by viewModels()
     private var chatScreenAdapter: ChatScreenAdapter? = null
     private var communicationModel: CommunicationListModel? = null
+    private var handler: Handler? = null
+    var runnable: Runnable? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityChatScreenBinding.inflate(layoutInflater)
@@ -43,11 +48,30 @@ class ChatScreenActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>
         getIntentData()
         initUi()
         onClick()
+        handler = Handler(Looper.getMainLooper())
 
+    }
+
+    private fun setInterval() {
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            Log.d("CHAT_LOOPER:", "HIT")
+//            getChats()
+//        },10000)
+        handler?.postDelayed(Runnable {
+            handler?.postDelayed(runnable!!, 10000)
+            Log.d("CHAT_LOOPER:", "HIT")
+            getChats()
+        }.also { runnable = it }, 10000)
+    }
+
+    override fun onPause() {
+        handler?.removeCallbacks(runnable!!)
+        super.onPause()
     }
 
     override fun onResume() {
         super.onResume()
+        setInterval()
         refreshData()
     }
 

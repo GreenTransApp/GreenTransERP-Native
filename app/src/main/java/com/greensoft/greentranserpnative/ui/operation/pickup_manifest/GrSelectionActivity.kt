@@ -188,14 +188,14 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
 
         viewModel.grLiveData.observe(this) { data ->
            grList = data
-//            setupRecyclerView()
+            setupRecyclerView()
 
 
         }
         mPeriod.observe(this) { date ->
             grDt = date.sqlsingleDate.toString()
             getGrList()
-            setupRecyclerView()
+//            setupRecyclerView()
 //            if(!rvAdapter!!.notCheck)
 //             {
 //                 errorToast("Please select atleast one loading slip")
@@ -207,14 +207,18 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
     private fun setupRecyclerView() {
 
         linearLayoutManager = LinearLayoutManager(this)
-        if (rvAdapter == null) {
-            activityBinding.emptyView.visibility= View.GONE
-            rvAdapter = GrSelectionAdapter(grList, this,this@GrSelectionActivity)
-            activityBinding.recyclerView.apply {
-                layoutManager = linearLayoutManager
-                adapter = rvAdapter
-            }
+//        if (rvAdapter == null) {
+//            activityBinding.emptyView.visibility= View.GONE
+//        }
+        if(grList.isEmpty()) {
+            activityBinding.emptyView.visibility = View.VISIBLE
+        } else {
+            activityBinding.emptyView.visibility = View.GONE
         }
+        rvAdapter = GrSelectionAdapter(grList, this,this@GrSelectionActivity)
+        activityBinding.recyclerView.layoutManager = linearLayoutManager
+        activityBinding.recyclerView.adapter = rvAdapter
+
     }
 
     override fun onItemClick(data: Any, clickType: String) {

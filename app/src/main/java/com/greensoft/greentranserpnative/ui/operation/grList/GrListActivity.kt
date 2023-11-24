@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -54,9 +55,19 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
     private var toDate:String = getSqlDate()!!
     private var bookingType: String = "M"
 //    private val printer = TSCPrinter(App.get().curConnect)
-    @Inject
-    lateinit var printer: TSCPrinter
-    private var userMenuModel: UserMenuModel? = null
+    var printer: TSCPrinter? = null
+    private var userMenuModel: UserMenuModel = UserMenuModel(
+        commandstatus = 1,
+        commandmessage = "Success",
+        outputtype = "GR LIST",
+        outputid = 0,
+        documenttype = "GR LIST",
+        menuname = "GR LIST",
+        menucode = "GTAPP_GRLIST",
+        displayname = "GR LIST",
+        rights = "11111",
+        cntr = 0
+    );
 
     private var btLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()) { result ->
@@ -81,6 +92,7 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
         activityBinding = ActivityGrListBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
+        printer = TSCPrinter(App.get().curConnect)
         initUi()
         getDefaultConnection()
 //        getGrList()
@@ -200,7 +212,7 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
         mContext = this@GrListActivity
         fromDate = getSqlDate()!!
         toDate = getSqlDate()!!
-        userMenuModel = getMenuData()
+//        userMenuModel = getMenuData()
         activityBinding.swipeRefreshLayout.setOnRefreshListener(OnRefreshListener {
             refreshData()
 
@@ -221,8 +233,8 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
     override fun onResume() {
         super.onResume()
         refreshData()
-        userMenuModel = Utils.menuModel
-        var menuNameEdited = userMenuModel?.menuname
+//        userMenuModel = Utils.menuModel
+        var menuNameEdited = userMenuModel.menuname
         menuNameEdited += if(bookingType == "M") {
             " ( Manual )"
         } else {
@@ -326,19 +338,24 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
     bsDialog.show()
 }
     private fun isPrinterConnected(): Boolean {
-        val isPrinterConnected = AtomicBoolean(false)
-        if (printer != null && App.get().curConnect!= null) {
-
-            printer!!.isConnect { isConnected: Int ->
-                if (isConnected == 1) {
-                    isPrinterConnected.set(true)
+        try {
+            val isPrinterConnected = AtomicBoolean(false)
+            if (printer != null && App.get().curConnect != null) {
+                printer!!.isConnect { isConnected: Int ->
+                    if (isConnected == 1) {
+                        isPrinterConnected.set(true)
+                    }
                 }
+
             }
-        }
-        if (isPrinterConnected.get()) {
-            return true
-        } else {
-            errorToast("Printer may not be connected. Please check the bluetooth connection.")
+            if (isPrinterConnected.get()) {
+                return true
+            } else {
+                errorToast("Printer may not be connected. Please check the bluetooth connection.")
+            }
+        } catch (ex: Exception) {
+            errorToast("Could not connect to any bluetooth printer.")
+            Log.d("PRINTER EXCEPTION", ex.message.toString())
         }
         return false
     }
@@ -391,7 +408,7 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
         bottomSheetDialog.show()
     }
     fun changeMenuName() {
-        var menuNameEdited = Utils.menuModel!!.menuname
+        var menuNameEdited = userMenuModel.menuname
         menuNameEdited += if(bookingType == "M") {
             " ( Manual )"
         } else {

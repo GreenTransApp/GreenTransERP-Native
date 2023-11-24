@@ -116,7 +116,7 @@
         <activity
             android:name=".ui.operation.grList.GrListActivity"
             android:exported="false"
-            android:parentActivityName=".ui.home.HomeActivity" />
+            android:parentActivityName=".ui.operation.pickup_reference.PickupReferenceActivity" />
         <activity
             android:name=".ui.print.dcCode.activity.SelectBluetoothActivity"
             android:exported="false" />

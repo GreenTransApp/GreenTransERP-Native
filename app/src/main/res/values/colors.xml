@@ -30,7 +30,8 @@
 
     <color name="red">#FA0000</color>
     <color name="enabled_color">#797978</color>
-    <color name="disabled_color">#806D6D</color>
+<!--    <color name="disabled_color">#806D6D</color>-->
+    <color name="disabled_color">#CAC7C7</color>
 
 <!--    <color name="customerChat">#A9CCEF</color>-->
     <color name="customerChat">#4CAF50</color>

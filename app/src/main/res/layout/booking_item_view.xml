@@ -185,7 +185,9 @@
                         android:layout_margin="1dp"
                         android:text="@{gridData.dataloggerno == null ?``:String.valueOf(gridData.dataloggerno)}"
                         android:background="@drawable/table_content_cell_bg"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:maxLength="50"
+                        />
 
                     <EditText
                         android:id="@+id/weight"

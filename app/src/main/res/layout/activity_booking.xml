@@ -805,6 +805,7 @@
                                     android:focusable="false"
                                     android:textColor="@color/black"
                                     android:inputType="text"
+                                    android:background="@drawable/disable_txtfield_bg"
                                     />
 
                             </com.google.android.material.textfield.TextInputLayout>
@@ -848,6 +849,7 @@
                                     android:inputType="text"
                                     android:focusable="false"
                                     android:textColor="@color/black"
+                                    android:background="@drawable/disable_txtfield_bg"
                                     />
 
                             </com.google.android.material.textfield.TextInputLayout>

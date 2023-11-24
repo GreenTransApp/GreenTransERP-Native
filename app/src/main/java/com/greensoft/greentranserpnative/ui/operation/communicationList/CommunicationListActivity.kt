@@ -30,6 +30,7 @@ class CommunicationListActivity @Inject constructor() : BaseActivity(), OnRowCli
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
         setUpToolbar("Customer Communication")
+        setupRecyclerView()
         setObservers()
         getCommunicationList()
     }
@@ -99,13 +100,4 @@ class CommunicationListActivity @Inject constructor() : BaseActivity(), OnRowCli
 //    }
     }
 
-    private fun generateSimpleList(): ArrayList<CommunicationListModel> {
-        val dataList: ArrayList<CommunicationListModel> =
-            java.util.ArrayList<CommunicationListModel>()
-        for (i in 0..99) {
-            dataList.add(CommunicationListModel(1,"",i+100 ,"",
-            "","","","","", 0))
-        }
-        return dataList
-    }
 }

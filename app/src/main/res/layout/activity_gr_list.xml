@@ -246,15 +246,15 @@
                         <!--                    android:background="@drawable/table_header_cell_bg"-->
                         <!--                    android:textSize="12sp" />-->
 
-                        <TextView
-                            android:id="@+id/scanAction"
-                            android:layout_width="150sp"
-                            android:layout_height="match_parent"
-                            android:gravity="center_horizontal|center_vertical"
-                            android:textColor="@color/white"
-                            android:background="@drawable/table_header_cell_bg"
-                            android:text="SCAN"
-                            android:textSize="12sp" />
+<!--                        <TextView-->
+<!--                            android:id="@+id/scanAction"-->
+<!--                            android:layout_width="150sp"-->
+<!--                            android:layout_height="match_parent"-->
+<!--                            android:gravity="center_horizontal|center_vertical"-->
+<!--                            android:textColor="@color/white"-->
+<!--                            android:background="@drawable/table_header_cell_bg"-->
+<!--                            android:text="SCAN"-->
+<!--                            android:textSize="12sp" />-->
 
                         <TextView
                             android:id="@+id/printAction"
@@ -274,7 +274,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:layout_constraintTop_toBottomOf="@+id/period"
-                        tools:ignore="MissingConstraints" />
+                        tools:ignore="MissingConstraints"
+                        tools:listitem="@layout/item_gr_list"
+                        />
 
                 </LinearLayout>
 

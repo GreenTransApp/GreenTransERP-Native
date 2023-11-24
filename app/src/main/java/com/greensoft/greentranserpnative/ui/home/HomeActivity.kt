@@ -175,8 +175,10 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
      private fun setupUi(){
          badgeDrawable = BadgeDrawable.create(this@HomeActivity)
          //Important to change the position of the Badge
-         badgeDrawable.horizontalOffset = 60
-         badgeDrawable.verticalOffset = 30
+//         badgeDrawable.horizontalOffset = 60
+//         badgeDrawable.verticalOffset = 30
+         badgeDrawable.horizontalOffset = 40
+         badgeDrawable.verticalOffset = 20
          activityBinding.navigationView.setNavigationItemSelectedListener(this)
          setNotificationCounter(0)
          activityBinding.notificationBtn.viewTreeObserver

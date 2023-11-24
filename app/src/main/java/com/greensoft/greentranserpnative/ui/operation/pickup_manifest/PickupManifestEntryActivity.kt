@@ -8,8 +8,6 @@ import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseActivity
 
 import com.greensoft.greentranserpnative.databinding.ActivityPickupManifestEntryBinding
@@ -30,7 +28,6 @@ import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.Veh
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.VendorSelectionModel
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
-import okhttp3.internal.Util
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -82,6 +79,7 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
         activityBinding.inputTime.setText(getSqlCurrentTime())
         activityBinding.inputBranch.setText(userDataModel?.loginbranchname)
         branchCode = userDataModel?.loginbranchcode.toString()
+        activityBinding.inputManifestNum.hint = "Enter Manifest #"
         menuCode = if(Utils.menuModel == null) "GTAPP_NATIVEPICKUPMANIFEST" else Utils.menuModel?.menucode.toString()
         setUpToolbar("Pickup Manifest")
         setObservers()
@@ -178,12 +176,14 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
 
           }
 
-          activityBinding.autoManifestCheck.setOnCheckedChangeListener { compoundButton, bool ->
-              if(bool) {
-                  activityBinding.inputManifestNum.setText("")
-
+          activityBinding.autoManifestCheck.setOnCheckedChangeListener { compoundButton, selected ->
+              activityBinding.inputManifestNum.setText("")
+              if(selected) {
+                  activityBinding.inputManifestNum.hint = "Auto Manifest"
+              } else {
+                  activityBinding.inputManifestNum.hint = "Enter Manifest #"
               }
-              activityBinding.inputManifestNum.isEnabled = !(bool)
+              activityBinding.inputManifestNum.isEnabled = !(selected)
 
           }
           activityBinding.inputDate.setOnClickListener {
@@ -204,7 +204,7 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
 //                   successToast("not show")
 //               }
 //           }
-          activityBinding.btnGrSelect.setOnClickListener {
+          activityBinding.btnLoadingSelect.setOnClickListener {
             if (activityBinding.inputBranch.text.isNullOrEmpty()) {
                 Companion.errorToast(this,"Please Select Branch")
                 return@setOnClickListener
@@ -214,17 +214,17 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
                     return@setOnClickListener
             }
             }else if (activityBinding.inputDate.text.isNullOrEmpty()) {
-                Companion.errorToast(this,"Please Select Date")
+                Companion.errorToast(this,"Please select Date")
                 return@setOnClickListener
             }else if (activityBinding.inputTime.text.isNullOrEmpty()) {
-                Companion.errorToast(this,"Please Select Time")
+                Companion.errorToast(this,"Please select Time")
                 return@setOnClickListener
             }else if (activityBinding.inputDriverName .text.isNullOrEmpty()) {
-                Companion.errorToast(this,"Please Driver Name")
+                Companion.errorToast(this,"Please select Driver.")
                 return@setOnClickListener
 
             }else if (activityBinding.inputVehicleNumber .text.isNullOrEmpty()) {
-                Companion.errorToast(this,"Please Select Vehicle Number")
+                Companion.errorToast(this,"Please select Vehicle Number.")
                 return@setOnClickListener
             }
               val intent= Intent(this,GrSelectionActivity::class.java)
@@ -317,6 +317,7 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
                           when(vehicleCategory){
                               //OWN
                               "O"-> run{
+                                  activityBinding.inputLayoutVendorName.visibility = View.GONE
                                   activityBinding.inputVendorName.text!!.clear()
                                   activityBinding.inputVendorName.isEnabled= false
                                   activityBinding.inputVehicleNumber.text!!.clear()
@@ -324,11 +325,12 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
                               }
                               //ATTACHED
                               "A"-> run{
+                                  activityBinding.inputLayoutVendorName.visibility = View.VISIBLE
                                   activityBinding.inputVendorName.isEnabled= true
                                   activityBinding.inputVehicleNumber.text!!.clear()
-
                               }
                               "M"-> run{
+                                  activityBinding.inputLayoutVendorName.visibility = View.GONE
                                   vendorCode=""
                                   activityBinding.inputVendorName.text!!.clear()
                                   activityBinding.inputVendorName.isEnabled= false
