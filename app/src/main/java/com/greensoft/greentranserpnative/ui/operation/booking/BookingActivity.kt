@@ -46,6 +46,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.round
 
 
 @AndroidEntryPoint
@@ -78,7 +79,6 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     private var pickupRefData: ArrayList<PickupRefModel> = ArrayList()
     private var serviceTypeList: ArrayList<ServiceTypeSelectionLov> = ArrayList()
     private var pickupByTypeList: ArrayList<PickupBySelection> = ArrayList()
-    private lateinit var JeenaStaff: PickupBySelection
     private var agentList: ArrayList<AgentSelectionModel> = ArrayList()
     private var vehicleVendorList: ArrayList<AgentSelectionModel> = ArrayList()
     private var vehicleList: ArrayList<BookingVehicleSelectionModel> = ArrayList()
@@ -134,6 +134,10 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     //    var actualAWeight = ""
     var actualAWeight:Float=0f
     var actualVWeight = ""
+
+    companion object {
+        val JEENA_PACKING: String = "Jeena Packing"
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -265,7 +269,10 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             totalAWeight += ref.aweight
         }
         activityBinding.inputAWeight.setText(checkNullOrEmpty(totalAWeight))
-        activityBinding.inputVolWeight.setText(checkNullOrEmpty(element.volfactor))
+        if(checkNullOrEmpty(element.volfactor) != "NOT AVAILABLE") {
+            val volumetricWeight = round(element.volfactor)
+            activityBinding.inputVolWeight.setText(volumetricWeight.toString())
+        }
         aWeight=activityBinding.inputAWeight.text.toString()
         volWeight=activityBinding.inputVolWeight.toString()
 //             activityBinding.selectedPckgsType.isEnabled=false
@@ -382,7 +389,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                             activityBinding.inputLayoutVehicleVendor.visibility=View.GONE
 
 //                            activityBinding.inputPickupBoy.text?.clear()
-                            activityBinding.inputAgent.text?.clear()
+//                            activityBinding.inputAgent.text?.clear()
                             activityBinding.inputVehicle.text?.clear()
                             activityBinding.inputVehicleVendor.text?.clear()
 
@@ -401,30 +408,30 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 //                            activityBinding.inputVehicleVendor.text?.clear()
 //                        }
 //                        //MARKET VEHICLE
-//                        "M"-> run{
-//                            activityBinding.inputLayoutPickBoy.visibility=View.VISIBLE
-//                            activityBinding.inputLayoutVehicle.visibility=View.VISIBLE
-//                            activityBinding.inputLayoutVehicleVendor.visibility=View.VISIBLE
-//                            activityBinding.inputLayoutAgent.visibility=View.GONE
-//
+                        "M"-> run{
+                            activityBinding.inputLayoutPickBoy.visibility=View.VISIBLE
+                            activityBinding.inputLayoutVehicle.visibility=View.VISIBLE
+                            activityBinding.inputLayoutVehicleVendor.visibility=View.VISIBLE
+                            activityBinding.inputLayoutAgent.visibility=View.GONE
+
 //                            activityBinding.inputPickupBoy.text?.clear()
 //                            activityBinding.inputAgent.text?.clear()
-//                            activityBinding.inputVehicle.text?.clear()
-//                            activityBinding.inputVehicleVendor.text?.clear()
-//
-//                        }
+                            activityBinding.inputVehicle.text?.clear()
+                            activityBinding.inputVehicleVendor.text?.clear()
+
+                        }
 //                        //OFFICE/AIRPORT DROP
-//                        "O"-> run{
-//                            activityBinding.inputLayoutAgent.visibility=View.GONE
-//                            activityBinding.inputLayoutPickBoy.visibility=View.VISIBLE
-//                            activityBinding.inputLayoutVehicle.visibility=View.GONE
-//                            activityBinding.inputLayoutVehicleVendor.visibility=View.GONE
-//
+                        "O"-> run{
+                            activityBinding.inputLayoutAgent.visibility=View.GONE
+                            activityBinding.inputLayoutPickBoy.visibility=View.VISIBLE
+                            activityBinding.inputLayoutVehicle.visibility=View.GONE
+                            activityBinding.inputLayoutVehicleVendor.visibility=View.GONE
+
 //                            activityBinding.inputPickupBoy.text?.clear()
 //                            activityBinding.inputAgent.text?.clear()
-//                            activityBinding.inputVehicle.text?.clear()
-//                            activityBinding.inputVehicleVendor.text?.clear()
-//                        }
+                            activityBinding.inputVehicle.text?.clear()
+                            activityBinding.inputVehicleVendor.text?.clear()
+                        }
 //                        //CANCEL
 //                        "N"-> run{
 //                            activityBinding.inputLayoutAgent.visibility=View.GONE
@@ -508,7 +515,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         activityBinding.inputDate.setOnClickListener {
 //            successToast(mContext, "datePicker")
 //            openDatePicker()
-            openSingleDatePicker()
+//            openSingleDatePicker()
+            openBookingDatePicker()
         }
 
         activityBinding.inputTime.setOnClickListener {
@@ -655,6 +663,13 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         }
 
         viewModel.singleRefLiveData.observe(this) { data ->
+            if(data.isNotEmpty()) {
+                if(data.get(0).packagetype.toString() == BookingActivity.JEENA_PACKING) {
+                    activityBinding.boxNoTxt.visibility = View.VISIBLE
+                } else {
+                    activityBinding.boxNoTxt.visibility = View.GONE
+                }
+            }
             singleRefList = data
             setReferenceData()
             setupRecyclerView()
@@ -1132,7 +1147,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
 
     fun setVWeight(vWeight: Float) {
-        activityBinding.inputVolWeight.setText(vWeight.toString())
+        val localVWeight = round(vWeight)
+        activityBinding.inputVolWeight.setText(localVWeight.toString())
     }
 
     fun setAWeight(aWeight: Int) {
@@ -1430,7 +1446,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 //                    errorToast("Reference # Not Entered at INPUT - ${index + 1}")
 //                    return
 //                } else
-                if (singlePickupRefModel.boxno.isNullOrEmpty() && singlePickupRefModel.packagetype == "Jeena Packing") {
+                if (singlePickupRefModel.boxno.isNullOrEmpty() && singlePickupRefModel.packagetype == BookingActivity.JEENA_PACKING) {
                     errorToast("Box # Not Entered at INPUT - ${index + 1}")
                     return
                 } else if (Utils.isDecimalNotEntered(singlePickupRefModel.weight.toString())) {

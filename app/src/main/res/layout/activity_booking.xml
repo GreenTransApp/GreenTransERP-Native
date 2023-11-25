@@ -214,7 +214,7 @@
                                     android:id="@+id/input_grNo"
                                     android:layout_width="match_parent"
                                     android:inputType="text"
-                                    android:maxLength="20"
+                                    android:maxLength="8"
                                     android:layout_height="wrap_content"
                                     />
                                 <!--                        android:hint="ENTER GR #"-->
@@ -924,7 +924,9 @@
                                     android:textColor="@color/white"
                                     android:background="@drawable/table_header_cell_bg"
                                     android:text="Box No."
-                                    android:textSize="12sp" />
+                                    android:textSize="12sp"
+                                    android:visibility="gone"
+                                    />
 
                                 <TextView
                                     android:id="@+id/content_txt"
@@ -1063,7 +1065,9 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 app:layout_constraintTop_toBottomOf="@+id/period"
-                                tools:listitem="@layout/booking_item_view" />
+                                tools:listitem="@layout/booking_item_view"
+                                tools:itemCount="3"
+                                />
                         </LinearLayout>
                     </HorizontalScrollView>
 

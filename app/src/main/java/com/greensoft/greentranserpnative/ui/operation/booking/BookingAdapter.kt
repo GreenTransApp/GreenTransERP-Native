@@ -337,6 +337,11 @@ class BookingAdapter @Inject constructor(
            }
            binding.gridData = singlePickupRefModel
            binding.index = adapterPosition
+           if(singlePickupRefModel.packagetype.toString() == BookingActivity.JEENA_PACKING) {
+               binding.boxLayout.visibility = View.VISIBLE
+           } else {
+               binding.boxLayout.visibility = View.GONE
+           }
            setOnClicks(singlePickupRefModel)
            setUpAdapter()
            if(singlePickupRefModel.gelpack == "Y") {

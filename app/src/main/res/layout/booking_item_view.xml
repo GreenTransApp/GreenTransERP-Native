@@ -81,10 +81,12 @@
                         android:textSize="16sp" />
 
                     <LinearLayout
+                        android:id="@+id/boxLayout"
                         android:layout_width="300sp"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:background="@drawable/table_content_cell_bg"
+                        android:visibility="gone"
                         >
 
                         <EditText

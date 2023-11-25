@@ -36,6 +36,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
+import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -65,9 +68,9 @@ import java.io.File
 import java.io.InputStream
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.TimeZone
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 
 @AndroidEntryPoint
@@ -615,15 +618,22 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
 //            })
     }
 
-    open fun openSingleDatePicker() {
+    open fun openBookingDatePicker() {
+        val constraints =CalendarConstraints.Builder()
+            .setValidator(DateValidatorPointForward.now())
+            .build()
+
+//        ---------------------------
+
         Log.d("BASE ACTIVITY", "SINGLE PERIOD SELECTION")
         val materialDateBuilder: MaterialDatePicker.Builder<*> =
             MaterialDatePicker.Builder.datePicker()
         materialDateBuilder.setTitleText("SELECT A DATE")
+        materialDateBuilder.setCalendarConstraints(constraints)
         singleDatePicker = materialDateBuilder.build()
         singleDatePicker!!.addOnPositiveButtonClickListener{ selection: Any ->
-                val viewFormat = SimpleDateFormat("MM-dd-yyyy")
-                val sqlFormat = SimpleDateFormat("yyyy-MM-dd")
+                val viewFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+                val sqlFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 val selectedDate = selection
                 val singleDate = Date(selectedDate as Long)
                 val periodSelection = PeriodSelection()
@@ -631,6 +641,31 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
                 periodSelection.viewsingleDate = viewFormat.format(singleDate)
                 mPeriod.postValue(periodSelection)
             }
+        if(singleDatePicker != null) {
+            if (singleDatePicker!!.isVisible) {
+                return;
+            }
+            singleDatePicker!!.show(supportFragmentManager, "DATE_PICKER");
+        }
+    }
+
+
+    open fun openSingleDatePicker() {
+        Log.d("BASE ACTIVITY", "SINGLE PERIOD SELECTION")
+        val materialDateBuilder: MaterialDatePicker.Builder<*> =
+            MaterialDatePicker.Builder.datePicker()
+        materialDateBuilder.setTitleText("SELECT A DATE")
+        singleDatePicker = materialDateBuilder.build()
+        singleDatePicker!!.addOnPositiveButtonClickListener{ selection: Any ->
+            val viewFormat = SimpleDateFormat("dd-MM-yyyy")
+            val sqlFormat = SimpleDateFormat("yyyy-MM-dd")
+            val selectedDate = selection
+            val singleDate = Date(selectedDate as Long)
+            val periodSelection = PeriodSelection()
+            periodSelection.sqlsingleDate = sqlFormat.format(singleDate)
+            periodSelection.viewsingleDate = viewFormat.format(singleDate)
+            mPeriod.postValue(periodSelection)
+        }
         if(singleDatePicker != null) {
             if (singleDatePicker!!.isVisible) {
                 return;
