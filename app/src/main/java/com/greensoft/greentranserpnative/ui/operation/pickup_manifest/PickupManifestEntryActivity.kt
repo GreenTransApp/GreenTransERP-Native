@@ -31,10 +31,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, BottomSheetClick<Any> {
+class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>,
+    BottomSheetClick<Any> {
     lateinit var activityBinding: ActivityPickupManifestEntryBinding
     private val viewModel: PickupManifestViewModel by viewModels()
-//    var selectedVehicleType = arrayOf("OWN", "ATTACHED", "MARKET")
+
+    //    var selectedVehicleType = arrayOf("OWN", "ATTACHED", "MARKET")
     var selectedLoadedBy = arrayOf("CUSTOMER", "SELF")
     lateinit var linearLayoutManager: LinearLayoutManager
     private var branchList: ArrayList<BranchSelectionModel> = ArrayList()
@@ -52,11 +54,11 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
     private var model: ManifestEnteredDataModel? = null
 
 
-    var contentCode=""
-    var content=""
-    var enteredPckgs=""
-    var enteredGWeight=""
-    var enteredBalancePckg=""
+    var contentCode = ""
+    var content = ""
+    var enteredPckgs = ""
+    var enteredGWeight = ""
+    var enteredBalancePckg = ""
 
     var vendorCode = ""
     var areaCode = ""
@@ -64,15 +66,15 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
     var vehicleCode = ""
     var vehicleCategory = ""
     var loadedByType = ""
-    var manifestDt= getSqlCurrentDate()
-    var driverCode=""
+    var manifestDt = getSqlCurrentDate()
+    var driverCode = ""
     var menuCode = ""
 
 //    var menuCode="GTAPP_NATIVEPICKUPMANIFEST"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityBinding=ActivityPickupManifestEntryBinding.inflate(layoutInflater)
+        activityBinding = ActivityPickupManifestEntryBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
         activityBinding.inputDate.setText(getViewCurrentDate())
@@ -80,7 +82,8 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
         activityBinding.inputBranch.setText(userDataModel?.loginbranchname)
         branchCode = userDataModel?.loginbranchcode.toString()
         activityBinding.inputManifestNum.hint = "Enter Manifest #"
-        menuCode = if(Utils.menuModel == null) "GTAPP_NATIVEPICKUPMANIFEST" else Utils.menuModel?.menucode.toString()
+        menuCode =
+            if (Utils.menuModel == null) "GTAPP_NATIVEPICKUPMANIFEST" else Utils.menuModel?.menucode.toString()
         setUpToolbar("Pickup Manifest")
         setObservers()
 
@@ -96,7 +99,6 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
 //        getIntentData()
 
 
-
     }
 
     override fun onRestart() {
@@ -104,6 +106,7 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
 
 
     }
+
     override fun onResume() {
         super.onResume()
 //        val data=Utils.selectedGrList
@@ -139,59 +142,60 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
 //
 //    }
 
-    fun getPckgsValue(pckgs: Double){
-        enteredPckgs=pckgs.toString()
+    fun getPckgsValue(pckgs: Double) {
+        enteredPckgs = pckgs.toString()
     }
 
-    fun getBalancepckg(balancePckg:Double){
-        enteredBalancePckg=balancePckg.toString()
-    }
-    fun getGWeightValue(gWeight:Double){
-        enteredGWeight=gWeight.toString()
+    fun getBalancepckg(balancePckg: Double) {
+        enteredBalancePckg = balancePckg.toString()
     }
 
-    private fun setOnclick(){
+    fun getGWeightValue(gWeight: Double) {
+        enteredGWeight = gWeight.toString()
+    }
+
+    private fun setOnclick() {
 //          activityBinding.inputBranch.setOnClickListener{
 //              getBranchList()
 //          }
-          activityBinding.inputPickupLocation.setOnClickListener{
-              getPickupLocation()
+        activityBinding.inputPickupLocation.setOnClickListener {
+            getPickupLocation()
 //              openPickupLocationSelectionBottomSheet(locationList)
-          }
-          activityBinding.inputDriverName.setOnClickListener{
-              getDriverList()
+        }
+        activityBinding.inputDriverName.setOnClickListener {
+            getDriverList()
 //              openDriverSelectionBottomSheet(driverList)
-          }
-          activityBinding.inputVendorName.setOnClickListener{
+        }
+        activityBinding.inputVendorName.setOnClickListener {
 //              openVendorSelectionBottomSheet(vendorList)
-              getVendorList()
-          }
-          activityBinding.inputVehicleNumber.setOnClickListener{
+            getVendorList()
+        }
+        activityBinding.inputVehicleNumber.setOnClickListener {
 //                  if (activityBinding.inputVendorName.text!!.isNullOrEmpty()){
 //                      errorToast("Please Select Vendor First")
 //                      return@setOnClickListener
 //                  }
-                  getVehicleList()
+            getVehicleList()
 
 
-          }
+        }
 
-          activityBinding.autoManifestCheck.setOnCheckedChangeListener { compoundButton, selected ->
-              activityBinding.inputManifestNum.setText("")
-              if(selected) {
-                  activityBinding.inputManifestNum.hint = "Auto Manifest"
-              } else {
-                  activityBinding.inputManifestNum.hint = "Enter Manifest #"
-              }
-              activityBinding.inputManifestNum.isEnabled = !(selected)
+        activityBinding.autoManifestCheck.setOnCheckedChangeListener { compoundButton, selected ->
+            activityBinding.inputManifestNum.setText("")
+            if (selected) {
+                activityBinding.inputManifestNum.hint = "Auto Manifest"
+            } else {
+                activityBinding.inputManifestNum.hint = "Enter Manifest #"
+            }
+            activityBinding.inputManifestNum.isEnabled = !(selected)
 
-          }
-          activityBinding.inputDate.setOnClickListener {
-              openSingleDatePicker()
-          }
-          activityBinding.inputTime.setOnClickListener {
-              openTimePicker()
-          }
+        }
+        activityBinding.inputDate.setOnClickListener {
+            openSingleDatePicker()
+        }
+        activityBinding.inputTime.setOnClickListener {
+            openTimePicker()
+        }
 //           activityBinding.autoManifestCheck.setOnClickListener {
 //               if (activityBinding.autoManifestCheck.isChecked){
 //                   activityBinding.inputManifestNum.isFocusable=false
@@ -204,177 +208,177 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
 //                   successToast("not show")
 //               }
 //           }
-          activityBinding.btnLoadingSelect.setOnClickListener {
+        activityBinding.btnLoadingSelect.setOnClickListener {
             if (activityBinding.inputBranch.text.isNullOrEmpty()) {
-                Companion.errorToast(this,"Please Select Branch")
+                Companion.errorToast(this, "Please Select Branch")
                 return@setOnClickListener
-            }else if(!activityBinding.autoManifestCheck.isChecked){
-                if(activityBinding.inputManifestNum .text.isNullOrEmpty()) {
-                    Companion.errorToast(this,"Please Enter Manifest Number")
+            } else if (!activityBinding.autoManifestCheck.isChecked) {
+                if (activityBinding.inputManifestNum.text.isNullOrEmpty()) {
+                    Companion.errorToast(this, "Please Enter Manifest Number")
                     return@setOnClickListener
+                }
+            } else if (activityBinding.inputDate.text.isNullOrEmpty()) {
+                Companion.errorToast(this, "Please select Date")
+                return@setOnClickListener
+            } else if (activityBinding.inputTime.text.isNullOrEmpty()) {
+                Companion.errorToast(this, "Please select Time")
+                return@setOnClickListener
+            } else if (activityBinding.inputDriverName.text.isNullOrEmpty()) {
+                Companion.errorToast(this, "Please select Driver.")
+                return@setOnClickListener
+
+            } else if (activityBinding.inputVehicleNumber.text.isNullOrEmpty()) {
+                Companion.errorToast(this, "Please select Vehicle Number.")
+                return@setOnClickListener
             }
-            }else if (activityBinding.inputDate.text.isNullOrEmpty()) {
-                Companion.errorToast(this,"Please select Date")
-                return@setOnClickListener
-            }else if (activityBinding.inputTime.text.isNullOrEmpty()) {
-                Companion.errorToast(this,"Please select Time")
-                return@setOnClickListener
-            }else if (activityBinding.inputDriverName .text.isNullOrEmpty()) {
-                Companion.errorToast(this,"Please select Driver.")
-                return@setOnClickListener
+            val intent = Intent(this, GrSelectionActivity::class.java)
+            getManifestData()
+            startActivity(intent)
 
-            }else if (activityBinding.inputVehicleNumber .text.isNullOrEmpty()) {
-                Companion.errorToast(this,"Please select Vehicle Number.")
-                return@setOnClickListener
-            }
-              val intent= Intent(this,GrSelectionActivity::class.java)
-              getManifestData()
-              startActivity(intent)
+        }
 
-          }
+    }
 
-     }
-
-      private fun setObservers(){
-          viewModel.isError.observe(this) { errMsg ->
-              errorToast(errMsg)
-          }
-          viewModel.viewDialogLiveData.observe(this, Observer { show ->
+    private fun setObservers() {
+        viewModel.isError.observe(this) { errMsg ->
+            errorToast(errMsg)
+        }
+        viewModel.viewDialogLiveData.observe(this, Observer { show ->
 //            progressBar.visibility = if(show) View.VISIBLE else View.GONE
-              if(show) {
-                  showProgressDialog()
-              } else {
-                  hideProgressDialog()
-              }
-          })
+            if (show) {
+                showProgressDialog()
+            } else {
+                hideProgressDialog()
+            }
+        })
 
-          viewModel.branchLiveData.observe(this) { branchData ->
-              if (branchData.elementAt(0).commandstatus ==1){
-                    branchList = branchData
-                    openBranchSelectionBottomSheet(branchList)
-              }else{
-                  errorToast(branchData.elementAt(0).commandmessage.toString())
-              }
-          }
+        viewModel.branchLiveData.observe(this) { branchData ->
+            if (branchData.elementAt(0).commandstatus == 1) {
+                branchList = branchData
+                openBranchSelectionBottomSheet(branchList)
+            } else {
+                errorToast(branchData.elementAt(0).commandmessage.toString())
+            }
+        }
 
-          viewModel.pickupLocationLiveData.observe(this) { locationData ->
-              if(locationData.elementAt(0).commandstatus ==1){
-              locationList = locationData
-                  openPickupLocationSelectionBottomSheet(locationList)
-              }else{
+        viewModel.pickupLocationLiveData.observe(this) { locationData ->
+            if (locationData.elementAt(0).commandstatus == 1) {
+                locationList = locationData
+                openPickupLocationSelectionBottomSheet(locationList)
+            } else {
 
-              }
-          }
-          viewModel.driverLiveData.observe(this) { driverData ->
-              if(driverData.elementAt(0).commandstatus ==1){
-              driverList = driverData
-                  openDriverSelectionBottomSheet(driverList)
-              }
-          }
-          viewModel.vendorLiveData.observe(this) { vendData ->
-              if(vendData.elementAt(0).commandstatus ==1){
-              vendorList = vendData
-                  openVendorSelectionBottomSheet(vendorList)
-              }
+            }
+        }
+        viewModel.driverLiveData.observe(this) { driverData ->
+            if (driverData.elementAt(0).commandstatus == 1) {
+                driverList = driverData
+                openDriverSelectionBottomSheet(driverList)
+            }
+        }
+        viewModel.vendorLiveData.observe(this) { vendData ->
+            if (vendData.elementAt(0).commandstatus == 1) {
+                vendorList = vendData
+                openVendorSelectionBottomSheet(vendorList)
+            }
 
-          }
-          viewModel.vehicleLiveData.observe(this) { vehicleData ->
-              if(vehicleData.elementAt(0).commandstatus== 1){
-                  vehicleList = vehicleData
-                  openVehicleSelectionBottomSheet(vehicleList)
-              }else{
-                 errorToast(vehicleData.elementAt(0).commandmessage.toString())
-              }
+        }
+        viewModel.vehicleLiveData.observe(this) { vehicleData ->
+            if (vehicleData.elementAt(0).commandstatus == 1) {
+                vehicleList = vehicleData
+                openVehicleSelectionBottomSheet(vehicleList)
+            } else {
+                errorToast(vehicleData.elementAt(0).commandmessage.toString())
+            }
 
-          }
-          viewModel.vehicleTypeLiveData.observe(this) { type ->
-              vehicleTypeList = type
-              val vehicleAdapter =
-                  ArrayAdapter(this, android.R.layout.simple_list_item_1, vehicleTypeList)
-              activityBinding.selectedVehicleType.adapter = vehicleAdapter
-          }
+        }
+        viewModel.vehicleTypeLiveData.observe(this) { type ->
+            vehicleTypeList = type
+            val vehicleAdapter =
+                ArrayAdapter(this, android.R.layout.simple_list_item_1, vehicleTypeList)
+            activityBinding.selectedVehicleType.adapter = vehicleAdapter
+        }
 
-         mPeriod.observe(this){date->
-             activityBinding.inputDate.setText(date.viewsingleDate)
-             manifestDt=date.sqlsingleDate.toString()
-         }
-          timePeriod.observe(this){time ->
-              activityBinding.inputTime.setText(time)
-          }
-      }
+        mPeriod.observe(this) { date ->
+            activityBinding.inputDate.setText(date.viewsingleDate)
+            manifestDt = date.sqlsingleDate.toString()
+        }
+        timePeriod.observe(this) { time ->
+            activityBinding.inputTime.setText(time)
+        }
+    }
 
-      private fun setSpinners(){
+    private fun setSpinners() {
 
-              activityBinding.selectedVehicleType.onItemSelectedListener =
-                  object : AdapterView.OnItemSelectedListener {
-                      override fun onItemSelected(
-                          parent: AdapterView<*>?,
-                          view: View?,
-                          position: Int,
-                          id: Long
-                      ) {
-                           vehicleCategory=vehicleTypeList[position].value
-                          when(vehicleCategory){
-                              //OWN
-                              "O"-> run{
-                                  activityBinding.inputLayoutVendorName.visibility = View.GONE
-                                  activityBinding.inputVendorName.text!!.clear()
-                                  activityBinding.inputVendorName.isEnabled= false
-                                  activityBinding.inputVehicleNumber.text!!.clear()
-                                  vendorCode=""
-                              }
-                              //ATTACHED
-                              "A"-> run{
-                                  activityBinding.inputLayoutVendorName.visibility = View.VISIBLE
-                                  activityBinding.inputVendorName.isEnabled= true
-                                  activityBinding.inputVehicleNumber.text!!.clear()
-                              }
-                              "M"-> run{
-                                  activityBinding.inputLayoutVendorName.visibility = View.GONE
-                                  vendorCode=""
-                                  activityBinding.inputVendorName.text!!.clear()
-                                  activityBinding.inputVendorName.isEnabled= false
-                                  activityBinding.inputVehicleNumber.text!!.clear()
-                              }
+        activityBinding.selectedVehicleType.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    vehicleCategory = vehicleTypeList[position].value
+                    when (vehicleCategory) {
+                        //OWN
+                        "O" -> run {
+//                            activityBinding.inputLayoutVendorName.visibility = View.GONE
+                            activityBinding.inputVendorName.text!!.clear()
+                            activityBinding.inputVendorName.isEnabled = false
+                            activityBinding.inputVehicleNumber.text!!.clear()
+//                            vendorCode = ""
+                        }
+                        //ATTACHED
+                        "A" -> run {
+//                            activityBinding.inputLayoutVendorName.visibility = View.VISIBLE
+                            activityBinding.inputVendorName.isEnabled = true
+                            activityBinding.inputVehicleNumber.text!!.clear()
+                        }
+                        "M" -> run {
+//                            activityBinding.inputLayoutVendorName.visibility = View.GONE
+//                            vendorCode = ""
+                            activityBinding.inputVendorName.text!!.clear()
+                            activityBinding.inputVendorName.isEnabled = false
+                            activityBinding.inputVehicleNumber.text!!.clear()
+                        }
 
-                          }
-                      }
+                    }
+                }
 
-                      override fun onNothingSelected(parent: AdapterView<*>?) {
-                          TODO("Not yet implemented")
-                      }
-              }
-          val loadedByAdapter =
-              ArrayAdapter(this, android.R.layout.simple_list_item_1, selectedLoadedBy)
-              activityBinding.selectedLoadedBy.adapter = loadedByAdapter
-              activityBinding.selectedLoadedBy.onItemSelectedListener =
-                  object : AdapterView.OnItemSelectedListener {
-                      override fun onItemSelected(
-                          parent: AdapterView<*>?,
-                          view: View?,
-                          position: Int,
-                          id: Long
-                      ) {
-                          when(position){
-                              0-> run{
-                                  //customer
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    TODO("Not yet implemented")
+                }
+            }
+        val loadedByAdapter =
+            ArrayAdapter(this, android.R.layout.simple_list_item_1, selectedLoadedBy)
+        activityBinding.selectedLoadedBy.adapter = loadedByAdapter
+        activityBinding.selectedLoadedBy.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    when (position) {
+                        0 -> run {
+                            //customer
 
-                                  loadedByType="C"
-                              }
-                              // self
-                              1 -> kotlin.run {
-                                  loadedByType="S"
-                              }
-                          }
+                            loadedByType = "C"
+                        }
+                        // self
+                        1 -> kotlin.run {
+                            loadedByType = "S"
+                        }
+                    }
 
-                      }
+                }
 
-                      override fun onNothingSelected(parent: AdapterView<*>?) {
-                          TODO("Not yet implemented")
-                      }
-              }
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    TODO("Not yet implemented")
+                }
+            }
 
-      }
+    }
 
 
     private fun getBranchList() {
@@ -398,7 +402,7 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
     private fun getPickupLocation() {
         viewModel.getPickupLocation(
             loginDataModel?.companyid.toString(),
-            "greentransweb_showlocalarealist",
+            "greentransapp_pickuplocationlov",
             listOf("prmbranchcode"),
             arrayListOf(userDataModel?.loginbranchcode.toString())
         )
@@ -417,8 +421,8 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
         viewModel.getDriverList(
             loginDataModel?.companyid.toString(),
             "greentrans_driversearchlist",
-            listOf("prmmenucode","prmvehiclecategory"),
-            arrayListOf(menuCode,vehicleCategory)
+            listOf("prmmenucode", "prmvehiclecategory"),
+            arrayListOf(menuCode, vehicleCategory)
         )
     }
 
@@ -430,12 +434,13 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
         }
         openCommonBottomSheet(this, "Driver Selection", this, commonList)
     }
+
     private fun getVendorList() {
         viewModel.getVendorList(
             loginDataModel?.companyid.toString(),
             "greentrans_vendlist",
-            listOf("prmvendorcategory","prmmenucode"),
-            arrayListOf("VEHICLE VENDOR",menuCode)
+            listOf("prmvendorcategory", "prmmenucode"),
+            arrayListOf("VEHICLE VENDOR", menuCode)
         )
     }
 
@@ -449,11 +454,16 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
     }
 
     private fun getVehicleList() {
+//        greentranswebsg_showvehicleontype
         viewModel.getVehicleList(
             loginDataModel?.companyid.toString(),
-            "greentranswebsg_showvehicleontype",
-            listOf("prmcategory","prmvendorcode"),
-            arrayListOf(vehicleCategory,vendorCode)
+            "greentransapp_vehiclelov",
+            listOf(),
+            arrayListOf()
+//            listOf("prmcategory", "prmvendorcode"),
+//            arrayListOf(vehicleCategory, "")
+//            listOf("prmcategory", "prmvendorcode"),
+//            arrayListOf(vehicleCategory, vendorCode)
         )
     }
 
@@ -477,64 +487,66 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
     override fun onClick(data: Any, clickType: String) {
         TODO("Not yet implemented")
     }
- private fun  getManifestData(){
-        Utils.manifestModel=ManifestEnteredDataModel(
-             branchName = activityBinding.inputBranch.text.toString(),
-             branchCode=branchCode,
-             manifestNo = activityBinding.inputManifestNum.text.toString(),
-             pickupLocation = activityBinding.inputPickupLocation.text.toString(),
-             driverCode = driverCode,
-             manifestDt = manifestDt,
-             manifestTime = activityBinding.inputTime.text.toString(),
-             driverName = activityBinding.inputDriverName.text.toString(),
-             drivermobile = activityBinding.inputDriverMobile.text.toString(),
-             vehicleType = vehicleCategory,
-             vendorName = activityBinding.inputVendorName.text.toString(),
-             vendorCode = vendorCode,
-             vehicleNo = activityBinding.inputVehicleNumber.text.toString(),
-             vehicleCode = vehicleCode,
-             loadedBy = loadedByType,
-             capacity = activityBinding.inputCapacity.text.toString(),
-             areaCode = areaCode,
-             remark = activityBinding.inputRemark.text.toString(),
-         )
 
- }
+    private fun getManifestData() {
+        Utils.manifestModel = ManifestEnteredDataModel(
+            branchName = activityBinding.inputBranch.text.toString(),
+            branchCode = branchCode,
+            manifestNo = activityBinding.inputManifestNum.text.toString(),
+            pickupLocation = activityBinding.inputPickupLocation.text.toString(),
+            driverCode = driverCode,
+            manifestDt = manifestDt,
+            manifestTime = activityBinding.inputTime.text.toString(),
+            driverName = activityBinding.inputDriverName.text.toString(),
+            drivermobile = activityBinding.inputDriverMobile.text.toString(),
+            vehicleType = vehicleCategory,
+            vendorName = activityBinding.inputVendorName.text.toString(),
+            vendorCode = vendorCode,
+            vehicleNo = activityBinding.inputVehicleNumber.text.toString(),
+            vehicleCode = vehicleCode,
+            loadedBy = loadedByType,
+            capacity = activityBinding.inputCapacity.text.toString(),
+            areaCode = areaCode,
+            remark = activityBinding.inputRemark.text.toString(),
+        )
+
+    }
+
     override fun onItemClick(data: Any, clickType: String) {
-      when(clickType){
+        when (clickType) {
 //          "Branch Selection"-> run{
 //              val selectedBranch = data as BranchSelectionModel
 //              activityBinding.inputBranch.setText(selectedBranch.stnname)
 //              branchCode=selectedBranch.stncode.toString()
 //          }
 
-          "Pickup Location Selection"-> run{
-              val selectedLocation = data as PickupLocationModel
-              activityBinding.inputPickupLocation.setText(selectedLocation.name)
-              areaCode=selectedLocation.code.toString()
-          }
+            "Pickup Location Selection" -> run {
+                val selectedLocation = data as PickupLocationModel
+                activityBinding.inputPickupLocation.setText(selectedLocation.name)
+                areaCode = selectedLocation.code.toString()
+            }
 
-          "Driver Selection"-> run{
-              val selectedDriver = data as DriverSelectionModel
-              activityBinding.inputDriverName.setText(selectedDriver.drivername)
-              activityBinding.inputDriverMobile.setText(selectedDriver.mobileno)
-              driverCode=selectedDriver.drivercode.toString()
-          }
-          "Vendor Selection"-> run{
-              val selectedVendor = data as VendorSelectionModel
-              activityBinding.inputVendorName.setText(selectedVendor.vendname)
-              vendorCode=selectedVendor.vendcode
+            "Driver Selection" -> run {
+                val selectedDriver = data as DriverSelectionModel
+                activityBinding.inputDriverName.setText(selectedDriver.drivername)
+                activityBinding.inputDriverMobile.setText(selectedDriver.mobileno)
+                driverCode = selectedDriver.drivercode.toString()
+            }
+            "Vendor Selection" -> run {
+                val selectedVendor = data as VendorSelectionModel
+                activityBinding.inputVendorName.setText(selectedVendor.vendname)
+                vendorCode = selectedVendor.vendcode
 //              getVehicleList()
 
 
-          }
-          "Vehicle Selection"-> run{
-              val selectedVehicle = data as VehicleSelectionModel
-              activityBinding.inputVehicleNumber.setText(selectedVehicle.regno)
-              vehicleCode= selectedVehicle.vehiclecode
-             activityBinding.inputCapacity.setText(selectedVehicle.capacity.toString())
+            }
+            "Vehicle Selection" -> run {
+                val selectedVehicle = data as VehicleSelectionModel
+                activityBinding.inputVehicleNumber.setText(selectedVehicle.regno)
+                vehicleCode = selectedVehicle.vehiclecode
+                activityBinding.inputCapacity.setText(selectedVehicle.capacity.toString())
 
-          }
-      }
+            }
+        }
     }
 }

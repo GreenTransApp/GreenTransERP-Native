@@ -9,8 +9,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.ImageView
 import android.widget.TextView
@@ -20,7 +22,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
+import androidx.compose.ui.unit.dp
 import androidx.core.view.GravityCompat
+import androidx.core.view.marginEnd
+import androidx.core.view.setMargins
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -76,7 +81,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
     val CAMERA_REQUEST_CODE: Int = 10001
     val fromDt: String = "2023-09-11"
     val toDt: String = "2023-10-11"
-    lateinit var badgeDrawable: BadgeDrawable
+//    lateinit var badgeDrawable: BadgeDrawable
 
     var resultLauncher: ActivityResultLauncher<Intent>
     = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -147,6 +152,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
     }
 
     private fun getNotificationPanelList() {
+        Log.e("NOTI PANEL", "getNotificationPanelList: " )
         viewModel.getNotificationPanelList(
             loginDataModel?.companyid.toString(),
             "gtapp_getnotificationpanel",
@@ -170,24 +176,41 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
     }
 
     private fun setNotificationCounter(counter: Int) {
-        badgeDrawable.number = counter
+//        badgeDrawable.number = counter
+//        val param = activityBinding.notificationCounter.layoutParams as ViewGroup.MarginLayoutParams
+        var counterAsString = counter.toString()
+        if(counter > 999) {
+            counterAsString = "999+"
+        }
+//        if(counter < 10) {
+//            param.setMargins(0,0,12,0)
+//        } else if (counter < 100) {
+//            param.setMargins(0,0, 8,0)
+//        } else if (counter < 1000) {
+//            param.setMargins(0, 0 , 2, 0)
+//        } else {
+//            param.setMargins(0, 0 , 0, 0)
+//            counterAsString = "999+"
+//        }
+//        activityBinding.notificationCounter.layoutParams = param
+        activityBinding.notificationCounter.text = counterAsString
     }
      private fun setupUi(){
-         badgeDrawable = BadgeDrawable.create(this@HomeActivity)
+//         badgeDrawable = BadgeDrawable.create(this@HomeActivity)
          //Important to change the position of the Badge
 //         badgeDrawable.horizontalOffset = 60
 //         badgeDrawable.verticalOffset = 30
-         badgeDrawable.horizontalOffset = 40
-         badgeDrawable.verticalOffset = 20
+//         badgeDrawable.horizontalOffset = 40
+//         badgeDrawable.verticalOffset = 20
          activityBinding.navigationView.setNavigationItemSelectedListener(this)
          setNotificationCounter(0)
-         activityBinding.notificationBtn.viewTreeObserver
-             .addOnGlobalLayoutListener(@ExperimentalBadgeUtils object : OnGlobalLayoutListener {
-                 override fun onGlobalLayout() {
-                     BadgeUtils.attachBadgeDrawable(badgeDrawable, activityBinding.notificationBtn, null)
-                     activityBinding.notificationBtn.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                 }
-             })
+//         activityBinding.notificationBtn.viewTreeObserver
+//             .addOnGlobalLayoutListener(@ExperimentalBadgeUtils object : OnGlobalLayoutListener {
+//                 override fun onGlobalLayout() {
+//                     BadgeUtils.attachBadgeDrawable(badgeDrawable, activityBinding.notificationBtn, null)
+//                     activityBinding.notificationBtn.viewTreeObserver.removeOnGlobalLayoutListener(this)
+//                 }
+//             })
 
          //set header of nav drawer
          val navigationView=activityBinding.navigationView
@@ -331,7 +354,8 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
 //        supportFragmentManager.beginTransaction().add(frag, "TEST").commit()
     }
     private fun setOnClicks() {
-        activityBinding.notificationBtn.setOnClickListener {
+//        activityBinding.notificationBtn.setOnClickListener {
+        activityBinding.notiImg.setOnClickListener {
 //            showNotificationModelBottomSheet()
 //            openNotificationBottomSheet(notificationDetailList)
             getNotificationPanelList()

@@ -171,8 +171,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         getTempLov()
         getpackingLov()
         getGelPackLov()
-        getVehicleLov()
-        getVehicleVendor()
+//        getVehicleLov()
+//        getVehicleVendor()
         getAgentLov()
 //        getPckgTypeLov()
         getContentList()
@@ -198,7 +198,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         viewModel.getSingleRefData(
             loginDataModel?.companyid.toString(),
 //            "10",
-            "greentransweb_jeenabooking_getpickupforbooking",
+//            "greentransweb_jeenabooking_getpickupforbooking",
+            "nativeerp_jeenabooking_getpickupforbooking",
             listOf("prmtransactionid"),
             arrayListOf(transactionId)
 //            arrayListOf("804320")
@@ -505,10 +506,10 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
             getAgentLov()
         }
         activityBinding.inputVehicleVendor.setOnClickListener {
-            openVehicleVendorSelectionBottomSheet(vehicleVendorList)
+            getVehicleVendor()
         }
         activityBinding.inputVehicle.setOnClickListener {
-            openVehicleSelectionBottomSheet(vehicleList)
+            getVehicleLov()
         }
 
 
@@ -516,7 +517,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 //            successToast(mContext, "datePicker")
 //            openDatePicker()
 //            openSingleDatePicker()
-            openBookingDatePicker()
+//            openBookingDatePicker()
         }
 
         activityBinding.inputTime.setOnClickListener {
@@ -651,9 +652,11 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         }
         viewModel.vendorLiveData.observe(this) { vendor ->
             vehicleVendorList = vendor
+            openVehicleVendorSelectionBottomSheet(vehicleVendorList)
         }
         viewModel.vehicleLiveData.observe(this) { vehicle ->
             vehicleList = vehicle
+            openVehicleSelectionBottomSheet(vehicleList)
         }
         viewModel.packingLiveData.observe(this) { packing ->
             packingList = packing

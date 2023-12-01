@@ -1,5 +1,6 @@
 package com.greensoft.greentranserpnative.ui.operation.pickup_reference.models
 
+import android.util.Log
 import androidx.compose.ui.text.font.FontWeight
 
 data class SinglePickupRefModel(
@@ -75,4 +76,12 @@ data class SinglePickupRefModel(
     val weight: Double,
     var localVWeight: Float,
     var isBoxValidated: Boolean
-)
+) {
+
+    init {
+        Log.d("SinglePickupRefModel", "Single Pickup Ref Model Init Called: ")
+        localLength = pckglength
+        localBreath = pckgbreath
+        localHeight = pckgheight
+    }
+}
