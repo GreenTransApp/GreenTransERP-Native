@@ -558,8 +558,9 @@
                         android:layout_height="wrap_content"
                         android:inputType="text"
                         android:hint="Select Vendor"
-                        android:textAllCaps="true" />
-<!--                        android:focusable="false"-->
+                        android:focusable="false"
+                        />
+<!--                        android:textAllCaps="true" -->
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>

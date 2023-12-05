@@ -88,15 +88,15 @@
                                 android:background="@drawable/table_content_cell_bg"
                                 android:textSize="16sp" />
 
-                            <TextView
-                                android:id="@+id/gr_no_txt"
-                                android:layout_width="150sp"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:textColor="@color/black"
-                                android:text="@{grModel.grno}"
-                                android:background="@drawable/table_content_cell_bg"
-                                android:textSize="16sp" />
+<!--                            <TextView-->
+<!--                                android:id="@+id/gr_no_txt"-->
+<!--                                android:layout_width="150sp"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:gravity="center"-->
+<!--                                android:textColor="@color/black"-->
+<!--                                android:text="@{grModel.grno}"-->
+<!--                                android:background="@drawable/table_content_cell_bg"-->
+<!--                                android:textSize="16sp" />-->
 
 
                             <TextView

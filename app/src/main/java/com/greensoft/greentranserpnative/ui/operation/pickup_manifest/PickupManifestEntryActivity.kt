@@ -341,7 +341,7 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
 //                            activityBinding.inputLayoutVendorName.visibility = View.GONE
 //                            vendorCode = ""
                             activityBinding.inputVendorName.text!!.clear()
-                            activityBinding.inputVendorName.isEnabled = false
+//                            activityBinding.inputVendorName.isEnabled = false
                             activityBinding.inputVehicleNumber.text!!.clear()
                         }
 
