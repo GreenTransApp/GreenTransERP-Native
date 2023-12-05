@@ -227,7 +227,11 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
                 Companion.errorToast(this, "Please select Driver.")
                 return@setOnClickListener
 
-            } else if (activityBinding.inputVehicleNumber.text.isNullOrEmpty()) {
+            } else if (activityBinding.inputVendorName.text.isNullOrEmpty()) {
+                Companion.errorToast(this, "Please select Vendor.")
+                return@setOnClickListener
+            }
+            else if (activityBinding.inputVehicleNumber.text.isNullOrEmpty()) {
                 Companion.errorToast(this, "Please select Vehicle Number.")
                 return@setOnClickListener
             }

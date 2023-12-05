@@ -355,6 +355,7 @@
                         android:drawableTint="@color/colorPrimary"
                         android:textAllCaps="true"
                         android:focusable="false"
+
                         />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -415,6 +416,7 @@
                         android:focusable="false"
                         android:textColor="@color/black"
                         android:inputType="text"
+                        android:hint="Select Driver"
                         />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -458,6 +460,7 @@
                         android:inputType="text"
                         android:focusable="false"
                         android:textColor="@color/black"
+                        android:hint="Driver Mobile"
                         />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -554,8 +557,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
-                        android:focusable="false"
+                        android:hint="Select Vendor"
                         android:textAllCaps="true" />
+<!--                        android:focusable="false"-->
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
