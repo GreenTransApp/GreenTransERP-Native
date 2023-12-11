@@ -397,7 +397,7 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
     }
     private fun savePickupManifest(){
 
-        var actualGrNo: String = ""
+        var actualLoadingNo: String = ""
         var actualPacking: String = ""
         var actualAWeight: String = ""
         var actualContent: String = ""
@@ -417,12 +417,13 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
             }
         }
     for(i in 0 until grList.size){
-        val grNo = grList[i].grno.toString()
+//        val grNo = grList[i].grno.toString()
+        val loadingNo = grList[i].loadingno.toString()
         val packing = grList[i].packing.toString()
         val content = grList[i].goods.toString()
         val aWeight = grList[i].aweight.toString()
 
-        actualGrNo += "$grNo~"
+        actualLoadingNo += "$loadingNo~"
         actualPacking += "$packing~"
         actualContent += "$content~"
         actualAWeight += "$aWeight~"
@@ -441,7 +442,8 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
              loadedby = model!!.loadedBy.toString(),
              remarks = model!!.remark.toString(),
              ispickupmanifest = "Y",
-             grno = actualGrNo,
+//             grno = actualGrNo,
+             loadingNo = actualLoadingNo,
              pckgs = enteredPckgs,
              aweight = enteredGWeight ,
              goods = actualContent,
