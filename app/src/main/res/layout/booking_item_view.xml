@@ -82,7 +82,7 @@
 
                     <LinearLayout
                         android:id="@+id/boxLayout"
-                        android:layout_width="300sp"
+                        android:layout_width="150sp"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:background="@drawable/table_content_cell_bg"
@@ -93,7 +93,7 @@
                             android:id="@+id/boxNo"
                             android:layout_height="match_parent"
                             android:gravity="center"
-                            android:layout_width="150sp"
+                            android:layout_width="wrap_content"
                             android:inputType="number"
                             android:hint=" ENTER BOX NO."
                             android:background="@drawable/disable_table_content_cell_bg"
@@ -101,15 +101,15 @@
                             android:text="@{gridData.boxno ==null ?``:String.valueOf(gridData.boxno)}"
                             android:textSize="16sp" />
 
-                        <androidx.appcompat.widget.AppCompatButton
-                            android:id="@+id/btn_validate_box"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:layout_width="140sp"
-                            android:backgroundTint="@color/success"
-                            android:textColor="@color/white"
-                            android:textSize="8sp"
-                            android:text="Validate Box"/>
+<!--                        <androidx.appcompat.widget.AppCompatButton-->
+<!--                            android:id="@+id/btn_validate_box"-->
+<!--                            android:layout_height="match_parent"-->
+<!--                            android:gravity="center"-->
+<!--                            android:layout_width="140sp"-->
+<!--                            android:backgroundTint="@color/success"-->
+<!--                            android:textColor="@color/white"-->
+<!--                            android:textSize="8sp"-->
+<!--                            android:text="Validate Box"/>-->
                     </LinearLayout>
 
 

@@ -76,10 +76,10 @@ class BookingAdapter @Inject constructor(
                removeItem(singlePickupRefModel, adapterPosition)
 //                onRowClick.onCLick(singlePickupRefModel, "REMOVE_SELECT")
            }
-          binding.btnValidateBox.setOnClickListener {
-              onRowClick.onRowClick(singlePickupRefModel, "VALIDATE_BOX", adapterPosition)
-
-          }
+//          binding.btnValidateBox.setOnClickListener {
+//              onRowClick.onRowClick(singlePickupRefModel, "VALIDATE_BOX", adapterPosition)
+//
+//          }
            binding.pckgs.addTextChangedListener(object : TextWatcher {
                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                }
