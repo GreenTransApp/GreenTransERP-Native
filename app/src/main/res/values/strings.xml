@@ -312,4 +312,6 @@
     <string name="title_activity_gr_select">\ngrSelect</string>
     <string name="navigation_drawer_open" />
     <string name="navigation_drawer_close" />
+    <string name="to_station">To Station</string>
+    <string name="enter_to_station">Enter to Station</string>
 </resources>

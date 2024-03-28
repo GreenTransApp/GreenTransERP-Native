@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +17,7 @@ import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.booking.BookingViewModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ContentSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.DestinationSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.SavePickupManifestAdapter
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
@@ -41,6 +43,7 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
     lateinit var linearLayoutManager: LinearLayoutManager
     private var branchList: ArrayList<BranchSelectionModel> = ArrayList()
     private var locationList: ArrayList<PickupLocationModel> = ArrayList()
+    private var toStationList: ArrayList<DestinationSelectionModel> = ArrayList()
     private var driverList: ArrayList<DriverSelectionModel> = ArrayList()
     private var vendorList: ArrayList<VendorSelectionModel> = ArrayList()
     private var vehicleList: ArrayList<VehicleSelectionModel> = ArrayList()
@@ -68,6 +71,7 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
     var loadedByType = ""
     var manifestDt = getSqlCurrentDate()
     var driverCode = ""
+    var destinationCode = ""
     var menuCode = ""
 
 //    var menuCode="GTAPP_NATIVEPICKUPMANIFEST"
@@ -162,6 +166,10 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
             getPickupLocation()
 //              openPickupLocationSelectionBottomSheet(locationList)
         }
+//        activityBinding.inputToStation.setOnClickListener {
+//            Toast.makeText(this, "testing", Toast.LENGTH_SHORT).show()
+////            getToStationList()
+//        }
         activityBinding.inputDriverName.setOnClickListener {
             getDriverList()
 //              openDriverSelectionBottomSheet(driverList)
@@ -273,6 +281,12 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
 
             }
         }
+        viewModel.toStationLiveData.observe(this){ toStationData ->
+            if (toStationData.elementAt(0).commandstatus == 1) {
+                toStationList = toStationData
+                openToStationBottomSheet(toStationList)
+            }
+        }
         viewModel.driverLiveData.observe(this) { driverData ->
             if (driverData.elementAt(0).commandstatus == 1) {
                 driverList = driverData
@@ -312,7 +326,27 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
     }
 
     private fun setSpinners() {
+        val toStationModeList = listOf("To Airport", "To Hub")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, toStationModeList)
+        activityBinding.inputToStation.adapter = adapter
 
+        activityBinding.inputToStation.onItemSelectedListener =
+            object: AdapterView.OnItemSelectedListener{
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+
+                    toStationModeList[position]
+
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    TODO("Not yet implemented")
+                }
+            }
         activityBinding.selectedVehicleType.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -430,6 +464,23 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
         )
     }
 
+    private fun getToStationList() {
+        viewModel.getToStationList(
+            loginDataModel?.companyid.toString(),
+            "greentrans_destinationLOVforBooking",
+            listOf(),
+            arrayListOf()
+        )
+    }
+    private fun openToStationBottomSheet(rvList: ArrayList<DestinationSelectionModel>) {
+        val commonList = ArrayList<CommonBottomSheetModel<Any>>()
+        for (i in 0 until rvList.size) {
+            commonList.add(CommonBottomSheetModel(rvList[i].stnname, rvList[i]))
+
+        }
+        openCommonBottomSheet(this, "Pickup Location Selection", this, commonList)
+    }
+
     private fun openDriverSelectionBottomSheet(rvList: ArrayList<DriverSelectionModel>) {
         val commonList = ArrayList<CommonBottomSheetModel<Any>>()
         for (i in 0 until rvList.size) {
@@ -529,6 +580,12 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
                 activityBinding.inputPickupLocation.setText(selectedLocation.name)
                 areaCode = selectedLocation.code.toString()
             }
+
+//            "To Station Selection" -> run {
+//                val selectedLocation = data as DestinationSelectionModel
+//                activityBinding.inputToStation.setText(selectedLocation.stnname)
+//                destinationCode = selectedLocation.stncode.toString()
+//            }
 
             "Driver Selection" -> run {
                 val selectedDriver = data as DriverSelectionModel

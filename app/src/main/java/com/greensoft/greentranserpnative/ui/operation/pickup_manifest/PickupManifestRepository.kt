@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.ui.login.models.LoginDataModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.DestinationSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -24,6 +25,10 @@ class PickupManifestRepository @Inject constructor(): BaseRepository(){
     private val pickupLocationMuteLiveData = MutableLiveData<ArrayList<PickupLocationModel>>()
     val pickupLocationLiveData: LiveData<ArrayList<PickupLocationModel>>
         get() = pickupLocationMuteLiveData
+
+    private val toStationMuteLiveData = MutableLiveData<ArrayList<DestinationSelectionModel>>()
+     val toStationLiveData: LiveData<ArrayList<DestinationSelectionModel>>
+         get() = toStationMuteLiveData
 
     private val driverMuteLiveData = MutableLiveData<ArrayList<DriverSelectionModel>>()
     val driverLiveData: LiveData<ArrayList<DriverSelectionModel>>
@@ -150,6 +155,38 @@ class PickupManifestRepository @Inject constructor(): BaseRepository(){
         })
 
     }
+    fun getDestinationList(companyId: String, spname: String, param: List<String>, values: ArrayList<String>){
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
+                if(response.body() != null){
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if(result.CommandStatus == 1){
+                        val jsonArray = getResult(result)
+                        if(jsonArray != null) {
+                            val listType = object: TypeToken<List<DestinationSelectionModel>>() {}.type
+                            val resultList: ArrayList<DestinationSelectionModel> = gson.fromJson(jsonArray.toString(), listType);
+//                            destinationMuteLiveData.postValue(resultList);
+                            toStationMuteLiveData.postValue(resultList);
+
+                        }
+                    } else {
+                        isError.postValue(result.CommandMessage.toString());
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR)
+                }
+                viewDialogMutData.postValue(false)
+            }
+
+            override fun onFailure(call: Call<CommonResult>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
+    }
+
 
     fun getVendorList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
         viewDialogMutData.postValue(true)

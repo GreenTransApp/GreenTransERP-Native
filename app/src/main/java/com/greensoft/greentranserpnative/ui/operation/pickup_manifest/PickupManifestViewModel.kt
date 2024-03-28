@@ -3,6 +3,7 @@ package com.greensoft.greentranserpnative.ui.operation.pickup_manifest
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.greensoft.greentranserpnative.base.BaseViewModel
+import com.greensoft.greentranserpnative.ui.operation.booking.models.DestinationSelectionModel
 
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,6 +23,8 @@ class PickupManifestViewModel @Inject constructor(private val _repo: PickupManif
         get() = _repo.branchLiveData
     val pickupLocationLiveData: LiveData<ArrayList<PickupLocationModel>>
         get() = _repo.pickupLocationLiveData
+    val toStationLiveData:LiveData<ArrayList<DestinationSelectionModel>>
+        get() = _repo.toStationLiveData
     val driverLiveData: LiveData<ArrayList<DriverSelectionModel>>
         get() = _repo.driverLiveData
 
@@ -47,6 +50,11 @@ class PickupManifestViewModel @Inject constructor(private val _repo: PickupManif
     fun getPickupLocation( companyId:String,spname: String,param:List<String>, values:ArrayList<String>){
         viewModelScope.launch(Dispatchers.IO) {
             _repo.getPickupLocation(companyId,spname, param,values)
+        }
+    }
+    fun getToStationList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>){
+        viewModelScope.launch(Dispatchers.IO) {
+            _repo.getDestinationList(companyId,spname, param,values)
         }
     }
 
