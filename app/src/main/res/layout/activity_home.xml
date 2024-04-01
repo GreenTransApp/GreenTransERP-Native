@@ -182,7 +182,7 @@
                         android:padding="20dp"
                         android:text="Test_Debugging"
                         android:textColor="@color/white"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 

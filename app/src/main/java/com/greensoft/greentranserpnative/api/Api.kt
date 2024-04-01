@@ -283,5 +283,15 @@ interface Api {
         @Query("prmmodetype") modeType: String?
     ): Call<CommonResult>
 
+    @GET("WMS/GetPendingArrivalDetail")
+    fun getInScanDetail(
+        @Query("prmconnstring") companyId: String,
+        @Query("prmusercode") userCode: String?,
+        @Query("prmbranchcode") branchCode: String?,
+        @Query("prmmanifestno") manifestNo: String?,
+        @Query("prmmanifesttype") manifestType: String?,
+        @Query("prmsessionid") sessionId: String?
+    ): Call<CommonResult>
+
 
 }
