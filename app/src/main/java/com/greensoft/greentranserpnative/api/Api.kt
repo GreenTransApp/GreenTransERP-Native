@@ -272,6 +272,16 @@ interface Api {
         @Query("prmstickerno") stickerNo: String?,
         @Query("prmdt") date: String?
     ): Call<CommonResult>
+ @GET("InscanAPI/GetPendingRetrialval")
+    fun getInscanList(
+        @Query("prmconnstring") companyId: String,
+        @Query("prmbranchcode") branchCode: String?,
+        @Query("prmfrombranchcode") fromBranchCode: String?,
+        @Query("prmfromdt") fromDt: String?,
+        @Query("prmtodt") toDt: String?,
+        @Query("prmmanifesttype") manifestType: String?,
+        @Query("prmmodetype") modeType: String?
+    ): Call<CommonResult>
 
 
 }
