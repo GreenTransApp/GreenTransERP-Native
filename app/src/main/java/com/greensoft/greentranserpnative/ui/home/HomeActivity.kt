@@ -53,6 +53,7 @@ import com.greensoft.greentranserpnative.ui.operation.loadingSlip.newScanLoad.Ne
 import com.greensoft.greentranserpnative.ui.operation.loadingSlip.newScanLoad.NewScanLoadStickerAdapter
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestEntryActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceActivity
+import com.greensoft.greentranserpnative.ui.operation.unarrived.InscanListActivity
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -137,7 +138,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
          activityBinding.branchName.text = userDataModel!!.loginbranchname.toString()
 //
         if(ENV.DEBUGGING) {
-//            activityBinding.testDebugging.visibility = View.VISIBLE
+            activityBinding.testDebugging.visibility = View.VISIBLE
         }
         setupUi()
         setObserver()
@@ -341,8 +342,8 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
 
 
     private fun testFunction() {
-//        val intent=Intent(this,PickupManifestEntryActivity::class.java)
-//        startActivity(intent)
+        val intent=Intent(this,InscanListActivity::class.java)
+        startActivity(intent)
 //        Utils.changeDateFormatForEway("28/08/2023 02:37:00 PM")
 //        Utils.changeDateFormatForEway("08/08/2023 09:31:00 AM")
         Utils.changeDateFormatForEwayInvoiceDt("30-10-2023")
@@ -367,9 +368,9 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
                 activityBinding.myDrawerLayout.openDrawer(GravityCompat.START)
             }
         }
-//        activityBinding.testDebugging.setOnClickListener {
-//            testFunction()
-//        }
+        activityBinding.testDebugging.setOnClickListener {
+            testFunction()
+        }
 //        activityBinding.btnLogOut.setOnClickListener {
 //           logOut()
 //        }

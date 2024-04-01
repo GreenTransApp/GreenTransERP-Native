@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="index"
+            type="Integer"
+            />
+        <variable
+            name="InscanModel"
+            type="com.greensoft.greentranserpnative.ui.operation.unarrived.models.InscanListModel" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/sNo_txt"
+                            android:layout_width="52sp"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:text="@{String.valueOf(index + 1)}"
+                            android:background="@drawable/table_content_cell_bg"
+                            android:textSize="16sp" />
+
+
+                        <TextView
+                            android:id="@+id/mawb_no_txt"
+                            android:layout_width="202sp"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/table_content_cell_bg"
+                            android:gravity="center"
+                            android:text="@{InscanModel.mawbno}"
+                            android:textColor="@color/black"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/manifest_no_txt"
+                            android:layout_width="202sp"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:text="@{InscanModel.manifestno}"
+                            android:background="@drawable/table_content_cell_bg"
+                            android:textSize="16sp" />
+
+
+                        <TextView
+                            android:id="@+id/date_txt"
+                            android:layout_width="202sp"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
+                            android:background="@drawable/table_content_cell_bg"
+                            android:text="@{InscanModel.manifestdt}" />
+
+                        <TextView
+                            android:id="@+id/branch_txt"
+                            android:layout_width="202sp"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:background="@drawable/table_content_cell_bg"
+                            android:text="@{InscanModel.branchname}"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/from_branch_txt"
+                            android:layout_width="202sp"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:text="@{InscanModel.fromstation}"
+                            android:background="@drawable/table_content_cell_bg"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/desp_pckgs_txt"
+                            android:layout_width="152sp"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:text="@{InscanModel.despatchpckgs.toString()}"
+                            android:background="@drawable/table_content_cell_bg"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/desp_weight_txt"
+                            android:layout_width="152sp"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:text="@{InscanModel.despatchweight.toString()}"
+                            android:background="@drawable/table_content_cell_bg"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/rcvd_pckgs_txt"
+                            android:layout_width="152sp"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:text="@{InscanModel.receivedpckgs.toString()}"
+                            android:background="@drawable/table_content_cell_bg"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/cngr_txt"
+                            android:layout_width="202sp"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:text="@{InscanModel.cngr}"
+                            android:background="@drawable/table_content_cell_bg"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/cnge_txt"
+                            android:layout_width="202sp"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:text="@{InscanModel.cnge}"
+                            android:background="@drawable/table_content_cell_bg"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/flight_txt"
+                            android:layout_width="152sp"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:text="@{InscanModel.modename}"
+                            android:background="@drawable/table_content_cell_bg"
+                            android:textSize="16sp" />
+
+                        <LinearLayout
+                            android:layout_width="148dp"
+                            android:background="@drawable/table_content_cell_bg"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_scan"
+                                android:layout_height="match_parent"
+                                android:gravity="center_horizontal|center_vertical"
+                                android:layout_width="145dp"
+                                android:background="@color/colorPrimary"
+                                android:text="SCAN">
+
+                            </com.google.android.material.button.MaterialButton>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="148dp"
+                            android:background="@drawable/table_content_cell_bg"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_without_scan"
+                                android:layout_height="match_parent"
+                                android:gravity="center_horizontal|center_vertical"
+                                android:layout_width="145dp"
+                                android:background="@color/colorPrimary"
+                                android:text="WITHOUT SCAN">
+
+                            </com.google.android.material.button.MaterialButton>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </HorizontalScrollView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>
