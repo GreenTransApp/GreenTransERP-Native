@@ -38,17 +38,24 @@
         android:theme="@style/Theme.GreenTransERPNative"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
+        <activity
+            android:name=".ui.operation.inscan_detail_with_scanner.InScanDetailWithScannerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.operation.inscan_detail_with_scanner.InScanWithScannerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.operation.inscan_detail_without_scanner.InScanDetailsActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity" />
         <activity
             android:name=".ui.operation.loadingSlip.search_list.SearchListActivity"
             android:exported="false"
-            android:parentActivityName=".ui.home.HomeActivity"
-            />
+            android:parentActivityName=".ui.home.HomeActivity" />
         <activity
             android:name=".ui.operation.loadingSlip.newScanLoad.NewScanAndLoadActivity"
             android:exported="false"
-            android:parentActivityName=".ui.home.HomeActivity"
-            />
+            android:parentActivityName=".ui.home.HomeActivity" />
         <activity
             android:name=".ui.operation.notificationPanel.NotificationPanelBottomSheet"
             android:exported="false" />
@@ -66,8 +73,7 @@
         <activity
             android:name=".ui.navDrawer.ProfileActivity"
             android:exported="false"
-            android:parentActivityName=".ui.home.HomeActivity"
-            />
+            android:parentActivityName=".ui.home.HomeActivity" />
         <activity
             android:name=".ui.operation.pickup_manifest.SavePickupManifestActivity"
             android:exported="false"

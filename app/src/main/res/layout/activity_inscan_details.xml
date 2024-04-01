@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+
+        <include
+            layout="@layout/toolbar"
+            android:id="@+id/toolBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/inScan_detail_Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:padding="20dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="10dp"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/layout_card_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="5"
+                    android:padding="20dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="In-Scan Details"
+                        android:textSize="20sp"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_gravity="center"
+                        android:textStyle="bold"
+                        android:layout_marginStart="35dp"
+                        android:layout_weight="3"
+                        />
+
+                    <ImageButton
+                        android:id="@+id/card_expend_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/outline_arrow_circle_down_24"
+                        android:background="@color/white"
+
+                        android:layout_weight="2"
+
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/linearLayoutInsideCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    >
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="2"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="MAWB #: "
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:textStyle="bold"
+                            android:layout_weight="1"
+                            />
+                        <TextView
+                            android:id="@+id/input_mawb"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:gravity="start"
+                            android:layout_marginStart="5dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:layout_weight="1"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="2"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="Manifest #: "
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:textStyle="bold"
+                            android:layout_weight="1"
+                            />
+                        <TextView
+                            android:id="@+id/input_manifest"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:gravity="start"
+                            android:layout_marginStart="5dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:layout_weight="1"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="2"
+                        android:orientation="horizontal">
+                        <TextView
+
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="Dispatch On: "
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:textStyle="bold"
+                            android:layout_weight="1"
+                            />
+                        <TextView
+                            android:id="@+id/input_dispatch_on"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:gravity="start"
+                            android:layout_marginStart="5dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:layout_weight="1"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="2"
+                        android:orientation="horizontal">
+                        <TextView
+
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="Airline: "
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:textStyle="bold"
+                            android:layout_weight="1"
+                            />
+                        <TextView
+                            android:id="@+id/input_airline"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:gravity="start"
+                            android:layout_marginStart="5dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:layout_weight="1"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="2"
+                        android:orientation="horizontal">
+                        <TextView
+
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="Vehicle #: "
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:textStyle="bold"
+                            android:layout_weight="1"
+                            />
+                        <TextView
+                            android:id="@+id/input_vehicle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:gravity="start"
+                            android:layout_marginStart="5dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:layout_weight="1"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="2"
+                        android:orientation="horizontal">
+                        <TextView
+
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="Origin: "
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:textStyle="bold"
+                            android:layout_weight="1"
+                            />
+                        <TextView
+                            android:id="@+id/input_from_station"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:gravity="start"
+                            android:layout_marginStart="5dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:layout_weight="1"
+                            />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:layout_weight="2"
+                        android:orientation="horizontal">
+
+                        <TextView
+
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:text="Destination:"
+                            android:textStyle="bold"
+                            android:layout_weight="1"
+                            />
+                        <TextView
+                            android:id="@+id/input_to_station"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:layout_gravity="center"
+                            android:layout_marginStart="5dp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:layout_weight="1"
+                            />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_card_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+
+
+    </LinearLayout>
+</layout>
