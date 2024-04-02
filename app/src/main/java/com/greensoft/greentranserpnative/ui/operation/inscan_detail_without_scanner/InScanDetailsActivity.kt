@@ -29,7 +29,7 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), OnRowClick<A
         activityBinding = ActivityInscanDetailsBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
-        setUpToolbar("In-Scan Detail Without Scanner")
+        setUpToolbar("In-Scan Detail Without Scan")
         setObservers()
         getInScanDetails()
 
@@ -60,13 +60,13 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), OnRowClick<A
 //    }
 
     private fun setInScanData() {
-        activityBinding.inputMawb.text = inScanDetailData?.mawbno?: "Data not available"
-        activityBinding.inputManifest.text = inScanDetailData?.manifestno ?: "Data not available"
-        activityBinding.inputAirline.text = inScanDetailData?.airline?.toString() ?: "Data not available"
-        activityBinding.inputVehicle.text = inScanDetailData?.modename ?: "Data not available"
-        activityBinding.inputDispatchOn.text = inScanDetailData?.manifestdt?: "Data not available"
-        activityBinding.inputFromStation.text = inScanDetailData?.origin ?: "Data not available"
-        activityBinding.inputToStation.text = inScanDetailData?.tostation ?: "Data not available"
+        activityBinding.inputMawb.text = inScanDetailData?.mawbno?: "No data available"
+        activityBinding.inputManifest.text = inScanDetailData?.manifestno ?: "No data available"
+//        activityBinding.inputAirline.text = inScanDetailData?.airline?.toString() ?: "No data available"
+        activityBinding.inputVehicle.text = inScanDetailData?.modename ?: "No data available"
+        activityBinding.inputDispatchOn.text = inScanDetailData?.manifestdt?: "No data available"
+        activityBinding.inputFromStation.text = inScanDetailData?.origin ?: "No data available"
+        activityBinding.inputToStation.text = inScanDetailData?.tostation ?: "No data available"
     }
 
 

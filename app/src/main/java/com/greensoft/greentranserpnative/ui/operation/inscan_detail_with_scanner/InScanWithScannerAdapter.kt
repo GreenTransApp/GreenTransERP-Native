@@ -33,9 +33,7 @@ class InScanWithScannerAdapter @Inject constructor(
         private val context: Context ):RecyclerView.ViewHolder(layoutBinding.root){
              fun  onBind(inScanWithoutScannerModel: InScanWithoutScannerModel, onRowClick: OnRowClick<Any>){
                 layoutBinding.inScanCardDetailModel = inScanWithoutScannerModel
-                layoutBinding.btnSaveCard.setOnClickListener {
-                    onRowClick.onClick(inScanWithoutScannerModel,"SAVE_CARD")
-                }
+
             }
     }
 }

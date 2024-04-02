@@ -31,7 +31,7 @@ class InScanDetailWithScannerActivity  @Inject constructor(): BaseActivity(), On
         activityBinding = ActivityInScanDetailWithScannerBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
-        setUpToolbar("In-Scan Detail With Scanner")
+        setUpToolbar("In-Scan Detail With Scan")
         setObservers()
         getInScanDetails()
 
@@ -51,7 +51,7 @@ class InScanDetailWithScannerActivity  @Inject constructor(): BaseActivity(), On
     private fun setInScanData() {
         activityBinding.inputMawb.text = inScanDetailData?.mawbno?: "No data available"
         activityBinding.inputManifest.text = inScanDetailData?.manifestno ?: "No data available"
-        activityBinding.inputAirline.text = inScanDetailData?.airline?.toString() ?: "No data available"
+//        activityBinding.inputAirline.text = inScanDetailData?.airline?.toString() ?: "No data available"
         activityBinding.inputVehicle.text = inScanDetailData?.modename ?: "No data available"
         activityBinding.inputDispatchOn.text = inScanDetailData?.manifestdt?: "No data available"
         activityBinding.inputFromStation.text = inScanDetailData?.origin ?: "No data available"
