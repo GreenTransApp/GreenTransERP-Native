@@ -293,5 +293,11 @@ interface Api {
         @Query("prmsessionid") sessionId: String?
     ): Call<CommonResult>
 
+    @GET("BookingAPI/GetPickupDataForBooking")
+    fun getBookingIndentInfo(
+        @Query("prmconnstring") companyId: String,
+        @Query("prmtransactionid") transactionId: String?
+    ):Call<CommonResult>
+
 
 }

@@ -33,6 +33,31 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_margin="5dp"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Job#"
+                            android:layout_gravity="center"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            />
+                        <TextView
+                            android:id="@+id/tv_job"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Not available"
+                            android:layout_gravity="center"
+                            android:textStyle="bold"
+                            android:textColor="@color/colorPrimary"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="10dp"
                         android:layout_marginVertical="5dp"
