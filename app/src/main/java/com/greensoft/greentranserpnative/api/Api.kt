@@ -307,5 +307,5 @@ interface Api {
         @Query("prmbranchcode") branchCode: String?,
         @Query("prmsessionid") sessionId: String?,
         @Query("prmstickerno") stickerNo: String?
-    )
+    ):Call<CommonResult>
 }

@@ -60,9 +60,9 @@ class InScanDetailWithScannerRepository @Inject constructor(): BaseRepository() 
         })
     }
 
-    fun addInScanSticker(companyId: String, userCode: String, branchCode: String, manifestNo:String,manifestType:String,sessionId:String){
+    fun addInScanSticker(companyId: String, userCode: String, branchCode: String,sessionId:String,stickerNo:String){
         viewDialogMutData.postValue(true)
-        api.getInScanDetail(companyId,userCode, branchCode,manifestNo,manifestType,sessionId).enqueue(object:
+        api.addInScanStickerUnArrived(companyId,userCode, branchCode,sessionId,stickerNo).enqueue(object:
             Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
