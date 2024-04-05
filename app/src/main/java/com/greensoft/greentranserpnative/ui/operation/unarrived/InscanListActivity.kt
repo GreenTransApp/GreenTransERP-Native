@@ -10,10 +10,12 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityInscanListBinding
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.booking.BookingActivity
 import com.greensoft.greentranserpnative.ui.operation.inscan_detail_with_scanner.InScanDetailWithScannerActivity
 import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.InScanDetailsActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceAdapter
@@ -51,7 +53,7 @@ class InscanListActivity @Inject constructor(): BaseActivity(), OnRowClick<Any> 
         super.onResume()
         refreshData()
 
-        inscanList = generateSimpleList()
+         //inscanList = generateSimpleList()
         setupRecyclerView()
     }
 
@@ -98,10 +100,10 @@ class InscanListActivity @Inject constructor(): BaseActivity(), OnRowClick<Any> 
 
      private fun getInscanList(){
          viewModel.getInscanList(
-          companyId = loginDataModel?.companyid.toString(),
-          // companyId = "17846899",  // need to change for  jeena
-             branchCode = userDataModel?.loginbranchcode.toString(),
-           //  branchCode = "00000",
+          //companyId = loginDataModel?.companyid.toString(),
+           companyId = "17846899",  // need to change for  jeena
+             // branchCode = userDataModel?.loginbranchcode.toString(),
+             branchCode = "00000",
              "ALL",
              fromDt = fromDt,
              toDt = toDt,
@@ -157,14 +159,22 @@ class InscanListActivity @Inject constructor(): BaseActivity(), OnRowClick<Any> 
 //            }
 //        }
         if (clickType== "SCAN_SELECT"){
-            val intent = Intent(this, InScanDetailWithScannerActivity::class.java)
-            intent.putExtra("ManifestNo",inScanModel?.manifestno.toString())
+           // val intent = Intent(this, InScanDetailWithScannerActivity::class.java)
+          //   intent.putExtra("ManifestNo",inScanModel?.manifestno.toString())
+          //  startActivity(intent)
+
+            val gson = Gson()
+            val jsonString = gson.toJson(inscanList)
+            val intent = Intent(this,InScanDetailWithScannerActivity::class.java)
+            intent.putExtra("ManifestNo", jsonString)
             startActivity(intent)
 
         }
         else if (clickType=="WITHOUT_SCAN"){
-            val intent = Intent(this, InScanDetailsActivity::class.java)
-            intent.putExtra("ManifestNo",inScanModel?.manifestno.toString())
+            val gson = Gson()
+            val jsonString = gson.toJson(inscanList)
+            val intent = Intent(this,InScanDetailsActivity::class.java)
+            intent.putExtra("ManifestNo", jsonString)
             startActivity(intent)
         }
     }
