@@ -348,8 +348,8 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
 
     private fun testFunction() {
 //        val intent=Intent(this,InScanDetailWithScannerActivity::class.java)
-//        val intent=Intent(this,InScanDetailsActivity::class.java)
-//        startActivity(intent)
+        val intent=Intent(this,InscanListActivity::class.java)
+        startActivity(intent)
 //        Utils.changeDateFormatForEway("28/08/2023 02:37:00 PM")
 //        Utils.changeDateFormatForEway("08/08/2023 09:31:00 AM")
         Utils.changeDateFormatForEwayInvoiceDt("30-10-2023")
@@ -360,7 +360,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
 //        val frag = CameraXFullscreenFragment()
 //        supportFragmentManager.beginTransaction().add(frag, "TEST").commit()
 
-        openBookingIndentInfoBottomSheet(this,"Booking Indent Information",this,)
+//        openBookingIndentInfoBottomSheet(this,"Booking Indent Information",this,)
 
     }
     private fun setOnClicks() {

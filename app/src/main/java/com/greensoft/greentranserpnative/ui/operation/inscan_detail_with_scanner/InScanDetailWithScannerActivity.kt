@@ -47,8 +47,13 @@ class InScanDetailWithScannerActivity  @Inject constructor(): BaseActivity(), On
             inScanCardDetailList = inScanCardList
             setupRecyclerView()
         }
+        mScanner.observe(this){data->
+            Companion.successToast(mContext,data)
+            playSound()
+        }
     }
     private fun setInScanData() {
+
         activityBinding.inputMawb.text = inScanDetailData?.mawbno?: "No data available"
         activityBinding.inputManifest.text = inScanDetailData?.manifestno ?: "No data available"
 //        activityBinding.inputAirline.text = inScanDetailData?.airline?.toString() ?: "No data available"

@@ -31,6 +31,9 @@ RecyclerView.Adapter<InscanListAdapter.InscanViewHolder>() , Filterable {
             binding.btnScan.setOnClickListener {
                 onRowClick.onClick(model, "SCAN_SELECT")
             }
+            binding.btnWithoutScan.setOnClickListener {
+                onRowClick.onClick(model,"WITHOUT_SCAN")
+            }
         }
     }
 

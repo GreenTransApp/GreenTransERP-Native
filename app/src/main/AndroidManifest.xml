@@ -50,6 +50,11 @@
             android:exported="false"
             android:parentActivityName=".ui.home.HomeActivity" />
         <activity
+            android:name=".ui.operation.unarrived.InscanListActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity"
+            />
+        <activity
             android:name=".ui.operation.inscan_detail_without_scanner.InScanDetailsActivity"
             android:exported="false"
             android:parentActivityName=".ui.home.HomeActivity" />

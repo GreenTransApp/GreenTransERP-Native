@@ -299,5 +299,13 @@ interface Api {
         @Query("prmtransactionid") transactionId: String?
     ):Call<CommonResult>
 
-
+    @FormUrlEncoded
+    @POST("WMS/AddInScanStickerUnArrived")
+    fun addInScanStickerUnArrived(
+        @Query("prmcompanyid") companyId: String,
+        @Query("prmusercode") userCode: String?,
+        @Query("prmbranchcode") branchCode: String?,
+        @Query("prmsessionid") sessionId: String?,
+        @Query("prmstickerno") stickerNo: String?
+    )
 }
