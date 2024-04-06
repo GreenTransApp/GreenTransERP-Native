@@ -1,8 +1,10 @@
 package com.greensoft.greentranserpnative.ui.login
 
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter.AllCaps
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.google.gson.Gson
@@ -31,6 +33,8 @@ class LoginActivity @Inject constructor(): BaseActivity(), BottomSheetClick<Any>
         activityBinding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
         mContext = this
+        activityBinding.inputUsername.filters = activityBinding.inputUsername.filters + AllCaps()
+        activityBinding.inputPassword.filters = activityBinding.inputPassword.filters + AllCaps()
         setObservers()
 
 //        loginPrefs = getSharedPreferences(ENV.LOGIN_PREF_TAG, MODE_PRIVATE)
