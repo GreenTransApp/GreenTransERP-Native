@@ -39,12 +39,18 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.bottomsheet.bookingIndentInfoBottomSheet.BookingIndentInfoBottomSheet"
+            android:exported="false" />
+        <activity
             android:name=".ui.operation.inscan_detail_with_scanner.InScanDetailWithScannerActivity"
             android:exported="false"
-            android:parentActivityName=".ui.home.HomeActivity"
-            />
+            android:parentActivityName=".ui.home.HomeActivity" />
         <activity
             android:name=".ui.operation.inscan_detail_with_scanner.InScanWithScannerActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity" />
+        <activity
+            android:name=".ui.operation.unarrived.InscanListActivity"
             android:exported="false"
             android:parentActivityName=".ui.home.HomeActivity"
             />

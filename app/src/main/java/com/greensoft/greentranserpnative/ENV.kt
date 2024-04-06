@@ -24,7 +24,7 @@ class ENV {
 //       const val DEBUG_USERNAME: String = "ADMIN@GREENTRANS"
 //       const val DEBUG_PASSWORD: String = "GREEN@#321"
         const val DEBUG_USERNAME: String = "TESTING@JEENA"
-        const val DEBUG_PASSWORD: String = "123456"
+        const val DEBUG_PASSWORD: String = "12345678"
 //       const val DEBUG_USERNAME: String = "DELHIPICKUPBOY@GREENTRANS"
 //       const val DEBUG_PASSWORD: String = "123456"
 //        const val DEBUG_USERNAME: String = "PANKAJ@JEENA"

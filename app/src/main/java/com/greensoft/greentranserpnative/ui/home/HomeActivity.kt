@@ -1,6 +1,7 @@
 package com.greensoft.greentranserpnative.ui.home
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.graphics.Bitmap
@@ -40,6 +41,7 @@ import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityHomeBinding
+import com.greensoft.greentranserpnative.ui.bottomsheet.bookingIndentInfoBottomSheet.BookingIndentInfoBottomSheet
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.login.LoginActivity
 import com.greensoft.greentranserpnative.ui.navDrawer.ProfileActivity
@@ -85,6 +87,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
     val fromDt: String = "2023-09-11"
     val toDt: String = "2023-10-11"
 //    lateinit var badgeDrawable: BadgeDrawable
+    private  var transactionId:String = "884042"
 
     var resultLauncher: ActivityResultLauncher<Intent>
     = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -344,8 +347,8 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
 
 
     private fun testFunction() {
-        val intent=Intent(this,InScanDetailWithScannerActivity::class.java)
-//        val intent=Intent(this,InScanDetailsActivity::class.java)
+//        val intent=Intent(this,InScanDetailWithScannerActivity::class.java)
+        val intent=Intent(this,InscanListActivity::class.java)
         startActivity(intent)
 //        Utils.changeDateFormatForEway("28/08/2023 02:37:00 PM")
 //        Utils.changeDateFormatForEway("08/08/2023 09:31:00 AM")
@@ -356,6 +359,9 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
 //        startActivity(intent)
 //        val frag = CameraXFullscreenFragment()
 //        supportFragmentManager.beginTransaction().add(frag, "TEST").commit()
+
+//        openBookingIndentInfoBottomSheet(this,"Booking Indent Information",this,)
+
     }
     private fun setOnClicks() {
 //        activityBinding.notificationBtn.setOnClickListener {
@@ -486,6 +492,20 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
 //        }
 //        openCounterBottomSheet(this, "Notification Detail", this, commonList)
         openCounterBottomSheet(this, "Notification Panel", this, rvList)
+    }
+
+    private fun openBookingIndentInfoBottomSheet(mContext: Context, title: String, bottomSheetClick: OnRowClick<Any>,withAdapter: Boolean = false, index: Int = -1) {
+//        showProgressDialog()
+        val bottomSheetDialog = BookingIndentInfoBottomSheet.newInstance(
+            mContext,
+            title,
+            transactionId,
+            bottomSheetClick,
+            withAdapter,
+            index
+        )
+//        hideProgressDialog()
+        bottomSheetDialog.show(supportFragmentManager, BookingIndentInfoBottomSheet.TAG)
     }
 //    private fun generateSimpleList(): ArrayList<NotificationPanelBottomSheetModel> {
 //        val dataList: ArrayList<NotificationPanelBottomSheetModel> =

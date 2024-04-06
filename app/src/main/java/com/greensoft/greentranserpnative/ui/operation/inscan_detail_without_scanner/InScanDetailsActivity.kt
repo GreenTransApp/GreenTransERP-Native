@@ -5,13 +5,18 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityInscanDetailsBinding
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
+import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.InScanWithoutScannerModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.PickupRefModel
+import com.greensoft.greentranserpnative.ui.operation.unarrived.models.InscanListModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -23,20 +28,34 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), OnRowClick<A
     private var inScanCardAdapterList:InScanDetailsAdapter? = null
     private var inScanCardDetailList:ArrayList<InScanWithoutScannerModel> = ArrayList()
     private  var inScanDetailData: InScanWithoutScannerModel? = null
-
+    private var inscanListData: ArrayList<InscanListModel> = ArrayList()
+    private var manifestNo:String? =""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityInscanDetailsBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
-        setSupportActionBar(activityBinding.toolBar.root)
-        setUpToolbar("In-Scan Detail Without Scan")
+        getInscanData()
         setObservers()
         getInScanDetails()
-
         setOnClick()
 
     }
 
+    private fun getInscanData() {
+        if(intent != null) {
+            val jsonString = intent.getStringExtra("ManifestNo")
+            if(jsonString != "") {
+                val gson = Gson()
+                val listType = object : TypeToken<List<InscanListModel>>() {}.type
+                val resultList: ArrayList<InscanListModel> =
+                    gson.fromJson(jsonString.toString(), listType)
+                inscanListData.addAll(resultList)
+                inscanListData.forEachIndexed { _, element ->
+                    manifestNo= element.manifestno.toString()
+                }
+            }
+        }
+    }
 
     private fun setObservers(){
         viewModel.inScanDetailLiveData.observe(this){ inScanData->

@@ -1,17 +1,23 @@
 package com.greensoft.greentranserpnative.ui.operation.unarrived
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityInscanListBinding
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.booking.BookingActivity
+import com.greensoft.greentranserpnative.ui.operation.inscan_detail_with_scanner.InScanDetailWithScannerActivity
+import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.InScanDetailsActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceAdapter
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.PickupRefModel
 import com.greensoft.greentranserpnative.ui.operation.unarrived.models.InscanListModel
@@ -27,6 +33,7 @@ class InscanListActivity @Inject constructor(): BaseActivity(), OnRowClick<Any> 
     private var inscanList: ArrayList<InscanListModel> = ArrayList()
     private var rvAdapter: InscanListAdapter? = null
     lateinit var linearLayoutManager: LinearLayoutManager
+    private  var inScanModel:InscanListModel? = null;
 
     var fromDt= getSqlCurrentDate()
     var toDt= getSqlCurrentDate()
@@ -36,7 +43,7 @@ class InscanListActivity @Inject constructor(): BaseActivity(), OnRowClick<Any> 
         activityBinding= ActivityInscanListBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
-        setUpToolbar("Inscan List")
+        setUpToolbar("In-Scan List")
         setObserver()
         searchItem()
         refreshData()
@@ -45,6 +52,9 @@ class InscanListActivity @Inject constructor(): BaseActivity(), OnRowClick<Any> 
     override fun onResume() {
         super.onResume()
         refreshData()
+
+         //inscanList = generateSimpleList()
+        setupRecyclerView()
     }
 
      private fun setObserver(){
@@ -90,10 +100,10 @@ class InscanListActivity @Inject constructor(): BaseActivity(), OnRowClick<Any> 
 
      private fun getInscanList(){
          viewModel.getInscanList(
-          companyId = loginDataModel?.companyid.toString(),
-          // companyId = "17846899",  // need to change for  jeena
-             branchCode = userDataModel?.loginbranchcode.toString(),
-           //  branchCode = "00000",
+          //companyId = loginDataModel?.companyid.toString(),
+           companyId = "17846899",  // need to change for  jeena
+             // branchCode = userDataModel?.loginbranchcode.toString(),
+             branchCode = "00000",
              "ALL",
              fromDt = fromDt,
              toDt = toDt,
@@ -139,12 +149,44 @@ class InscanListActivity @Inject constructor(): BaseActivity(), OnRowClick<Any> 
     }
 
     override fun onClick(data: Any, clickType: String) {
-        when(clickType) {
-            "SCAN_SELECT" -> run {
-                val model: InscanListModel = data as InscanListModel
+//        when(clickType) {
+//            "SCAN_SELECT" -> run {
+//                val model: InscanListModel = data as InscanListModel
+//                
+//            }
+//            "WITHOUT_SCAN"-> run {
+//
+//            }
+//        }
+        if (clickType== "SCAN_SELECT"){
+           // val intent = Intent(this, InScanDetailWithScannerActivity::class.java)
+          //   intent.putExtra("ManifestNo",inScanModel?.manifestno.toString())
+          //  startActivity(intent)
 
+            val gson = Gson()
+            val jsonString = gson.toJson(inscanList)
+            val intent = Intent(this,InScanDetailWithScannerActivity::class.java)
+            intent.putExtra("ManifestNo", jsonString)
+            startActivity(intent)
 
-            }
         }
+        else if (clickType=="WITHOUT_SCAN"){
+            val gson = Gson()
+            val jsonString = gson.toJson(inscanList)
+            val intent = Intent(this,InScanDetailsActivity::class.java)
+            intent.putExtra("ManifestNo", jsonString)
+            startActivity(intent)
+        }
+    }
+
+    private fun generateSimpleList(): ArrayList<InscanListModel> {
+        val dataList: ArrayList<InscanListModel> =
+            java.util.ArrayList<InscanListModel>()
+        for (i in 0..99) {
+            dataList.add(InscanListModel("","test","Jeena","testing",1,
+                2.5,5.3,"","",i.toString(),"","",
+                "","",5.5,2.2,1))
+        }
+        return dataList
     }
 }

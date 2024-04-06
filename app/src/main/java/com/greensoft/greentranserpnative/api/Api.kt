@@ -293,5 +293,19 @@ interface Api {
         @Query("prmsessionid") sessionId: String?
     ): Call<CommonResult>
 
+    @GET("BookingAPI/GetPickupDataForBooking")
+    fun getBookingIndentInfo(
+        @Query("prmconnstring") companyId: String,
+        @Query("prmtransactionid") transactionId: String?
+    ):Call<CommonResult>
 
+    @FormUrlEncoded
+    @POST("WMS/AddInScanStickerUnArrived")
+    fun addInScanStickerUnArrived(
+        @Query("prmcompanyid") companyId: String,
+        @Query("prmusercode") userCode: String?,
+        @Query("prmbranchcode") branchCode: String?,
+        @Query("prmsessionid") sessionId: String?,
+        @Query("prmstickerno") stickerNo: String?
+    ):Call<CommonResult>
 }

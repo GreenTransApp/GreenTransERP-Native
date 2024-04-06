@@ -3,18 +3,20 @@ package com.greensoft.greentranserpnative.ui.operation.booking
 //import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 import android.app.AlertDialog
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.InputType
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -32,6 +34,7 @@ import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityBookingBinding
 import com.greensoft.greentranserpnative.ui.bottomsheet.attachedImages.AttachedImagesBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.attachedImages.OnAddImageClickListener
+import com.greensoft.greentranserpnative.ui.bottomsheet.bookingIndentInfoBottomSheet.BookingIndentInfoBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.common.viewImage.ViewImage
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
@@ -187,6 +190,22 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         super.onResume()
 //        refreshData()
     }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.booking_indent_info_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.booking_indent_info_menu -> {
+                Toast.makeText(this, "testing", Toast.LENGTH_SHORT).show()
+                openBookingIndentInfoBottomSheet(this,"Booking Indent Information",this,)
+
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     //    override fun onResume() {
 //        super.onResume()
@@ -254,6 +273,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 //        singleRefList.forEachIndexed { _, element ->
         if(singleRefList.isEmpty()) return
         val element: SinglePickupRefModel = singleRefList.get(0)
+        activityBinding.tvJob.text = element.transactionid.toString()?:"Not available"
         activityBinding.inputCustName.setText(checkNullOrEmpty(element.custname).toString())
         activityBinding.inputCngrName.setText(checkNullOrEmpty(element.cngr).toString())
 //            activityBinding.inputCngrAddress.setText(checkNullOrEmpty(element.cngraddress).toString())
@@ -1676,5 +1696,19 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                 finish()
             }
             .show()
+    }
+
+    private fun openBookingIndentInfoBottomSheet(mContext: Context, title: String, bottomSheetClick: OnRowClick<Any>,withAdapter: Boolean = false, index: Int = -1) {
+//        showProgressDialog()
+        val bottomSheetDialog = BookingIndentInfoBottomSheet.newInstance(
+            mContext,
+            title,
+            transactionId,
+            bottomSheetClick,
+            withAdapter,
+            index
+        )
+//        hideProgressDialog()
+        bottomSheetDialog.show(supportFragmentManager, BookingIndentInfoBottomSheet.TAG)
     }
 }
