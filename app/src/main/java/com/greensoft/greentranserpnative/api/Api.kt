@@ -272,10 +272,12 @@ interface Api {
         @Query("prmstickerno") stickerNo: String?,
         @Query("prmdt") date: String?
     ): Call<CommonResult>
- @GET("InscanAPI/GetPendingRetrialval")
+ @GET("InscanAPI/GetPendingRetrialval_NV")
     fun getInscanList(
         @Query("prmconnstring") companyId: String,
+        @Query("prmusercode") userCode: String?,
         @Query("prmbranchcode") branchCode: String?,
+        @Query("prmsessionid") sessionId: String?,
         @Query("prmfrombranchcode") fromBranchCode: String?,
         @Query("prmfromdt") fromDt: String?,
         @Query("prmtodt") toDt: String?,
@@ -302,10 +304,36 @@ interface Api {
     @FormUrlEncoded
     @POST("WMS/AddInScanStickerUnArrived")
     fun addInScanStickerUnArrived(
-        @Query("prmcompanyid") companyId: String,
-        @Query("prmusercode") userCode: String?,
-        @Query("prmbranchcode") branchCode: String?,
-        @Query("prmsessionid") sessionId: String?,
-        @Query("prmstickerno") stickerNo: String?
-    )
+        @Field("prmcompanyid") companyId: String,
+        @Field("prmusercode") userCode: String?,
+        @Field("prmbranchcode") branchCode: String?,
+        @Field("prmmenucode") menuCode: String?,
+        @Field("prmsessionid") sessionId: String?,
+        @Field("prmstickerno") stickerNo: String?,
+        @Field("prmmanifestno") manifestNo: String?
+    ):Call<CommonResult>
+
+    @FormUrlEncoded
+    @POST("WMS/SaveInscanDetailWithoutScan")
+    fun saveInscanDetailWithoutScan(
+        @Field("prmconnstring") companyId: String,
+        @Field("prmmanifestno")manifestNo:String,
+        @Field("prmmawbno")mawbNo:String,
+        @Field("prmbranchcode")branchCode:String,
+        @Field("prmreceivedt")receiveDt:String,
+        @Field("prmreceivetime")receiveTime:String,
+        @Field("prmvehiclecode")vehicleCode:String,
+        @Field("prmremarks")remarks:String,
+        @Field("prmgrno")grNo:String,
+        @Field("prmmfpckgs")mfPckgs:String,
+        @Field("prmpckgs")pckgs:String,
+        @Field("prmweight")weight:String,
+        @Field("prmdamagepckgs")damagePckgs:String,
+        @Field("prmdamagereasoncode")damageReasoncode:String,
+        @Field("prmdetailremarks")detailRemarks:String,
+        @Field("prmusercode")userCode:String,
+        @Field("prmmenucode")menuCode:String,
+        @Field("prmsessionid")sessionId:String,
+        @Field("prmfromstncode")fromstnCode:String,
+    ):Call<CommonResult>
 }

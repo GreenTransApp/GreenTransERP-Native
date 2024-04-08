@@ -32,9 +32,9 @@ class InScanDetailWithScannerViewModel @Inject constructor(private val _repo: In
             _repo.getInScanDetails(companyId,userCode, branchCode,manifestNo,manifestType,sessionId)
         }
     }
-    fun addInScanSticker(companyId: String, userCode: String, branchCode: String, manifestNo:String,manifestType:String,sessionId:String){
+    fun addInScanSticker(companyId: String, userCode: String, branchCode: String,menuCode:String, sessionId:String,stickerNo:String,manifestNo: String){
         viewModelScope.launch(Dispatchers.IO) {
-            _repo.addInScanSticker(companyId,userCode, branchCode,manifestNo,manifestType,sessionId)
+            _repo.addInScanSticker(companyId,userCode, branchCode, menuCode,sessionId,stickerNo,manifestNo)
         }
     }
 }

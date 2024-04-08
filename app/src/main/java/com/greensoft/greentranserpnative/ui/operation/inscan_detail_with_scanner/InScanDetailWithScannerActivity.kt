@@ -1,7 +1,7 @@
 package com.greensoft.greentranserpnative.ui.operation.inscan_detail_with_scanner
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -14,7 +14,6 @@ import com.greensoft.greentranserpnative.databinding.ActivityInScanDetailWithSca
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.InScanDetailsAdapter
 import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.InScanWithoutScannerModel
 import com.greensoft.greentranserpnative.ui.operation.unarrived.models.InscanListModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,13 +30,14 @@ class InScanDetailWithScannerActivity  @Inject constructor(): BaseActivity(), On
     private  var inScanDetailData: InScanWithoutScannerModel? = null
     private var inscanListData: ArrayList<InscanListModel> = ArrayList()
     private var manifestNo:String? =""
+    private var inScanSelectedData: InscanListModel? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityInScanDetailWithScannerBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
         setUpToolbar("In-Scan Detail With Scan")
-        getInscanData()
+        getInScanMfHeadFromIntent()
         setObservers()
         getInScanDetails()
 
@@ -53,9 +53,14 @@ class InScanDetailWithScannerActivity  @Inject constructor(): BaseActivity(), On
             inScanCardDetailList = inScanCardList
             setupRecyclerView()
         }
-        mScanner.observe(this){data->
-            Companion.successToast(mContext,data)
+        mScanner.observe(this){ stickerNo->
+//            Companion.successToast(mContext, stickerNo)
+            addInScanSticker(stickerNo)
             playSound()
+        }
+        viewModel.inScanAddStickerLiveData.observe(this) { inScanSuccess ->
+            successToast(inScanSuccess.commandmessage.toString())
+            getInScanDetails();
         }
     }
     private fun setInScanData() {
@@ -79,17 +84,21 @@ class InScanDetailWithScannerActivity  @Inject constructor(): BaseActivity(), On
         }
 
     }
-    private fun getInscanData() {
+    private fun getInScanMfHeadFromIntent() {
         if(intent != null) {
             val jsonString = intent.getStringExtra("ManifestNo")
             if(jsonString != "") {
                 val gson = Gson()
-                val listType = object : TypeToken<List<InscanListModel>>() {}.type
-                val resultList: ArrayList<InscanListModel> =
+                val listType = object : TypeToken<InscanListModel>() {}.type
+                val resultList: InscanListModel =
                     gson.fromJson(jsonString.toString(), listType)
-                inscanListData.addAll(resultList)
-                inscanListData.forEachIndexed { _, element ->
-                    manifestNo= element.manifestno.toString()
+                inScanSelectedData = resultList;
+                if(inScanSelectedData != null) {
+                    manifestNo = inScanSelectedData?.manifestno
+                } else {
+                    Log.e("InScanDetailWithScannerActivity", "Manifest was corrupted.")
+                    errorToast("Something went wrong, Please try again.")
+                    finish()
                 }
             }
         }
@@ -99,12 +108,22 @@ class InScanDetailWithScannerActivity  @Inject constructor(): BaseActivity(), On
     private fun getInScanDetails(){
         viewModel.getInScanDetails(
             getCompanyId(),
-//            "17846899",
-            "A810",
+            getUserCode(),
             getLoginBranchCode(),
-            "1040000014",
-            "o",
-            "syst"
+            manifestNo.toString(),
+            "i",
+            getSessionId()
+        )
+    }
+    private fun addInScanSticker(stickerNo: String){
+        viewModel.addInScanSticker(
+            getCompanyId(),
+            getUserCode(),
+            getLoginBranchCode(),
+            "WMSAPP_INSCANPICKUP",
+            getSessionId(),
+            stickerNo,
+            manifestNo.toString()
         )
     }
 
