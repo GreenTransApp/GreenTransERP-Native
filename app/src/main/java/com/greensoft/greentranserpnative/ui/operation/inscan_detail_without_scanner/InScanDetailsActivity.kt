@@ -11,6 +11,7 @@ import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityInscanDetailsBinding
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
+import com.greensoft.greentranserpnative.ui.common.alert.CommonAlert
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
@@ -30,10 +31,13 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), OnRowClick<A
     private  var inScanDetailData: InScanWithoutScannerModel? = null
     private var inscanListData: ArrayList<InscanListModel> = ArrayList()
     private var manifestNo:String? =""
+    private var mawb:String? =""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityInscanDetailsBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
+        setSupportActionBar(activityBinding.toolBar.root)
+        setUpToolbar("Inscan Details Without Scanner")
         getInscanData()
         setObservers()
         getInScanDetails()
@@ -52,6 +56,8 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), OnRowClick<A
                 inscanListData.addAll(resultList)
                 inscanListData.forEachIndexed { _, element ->
                     manifestNo= element.manifestno.toString()
+                    mawb=element.mawbno.toString()
+
                 }
             }
         }
@@ -98,17 +104,18 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), OnRowClick<A
             toggleCardVisibility()
         }
 
+
     }
 
     private fun getInScanDetails(){
         viewModel.getInScanDetails(
             getCompanyId(),
 //            "17846899",
-            "A810",
+            userDataModel?.usercode.toString(),
             getLoginBranchCode(),
-            "1040000014",
-            "o",
-            "syst"
+            manifestNo!!,
+            "I",
+            getSessionId()
         )
     }
 
@@ -136,16 +143,62 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), OnRowClick<A
        }
     }
 
-
+    private  fun showAlertOnSave(){
+        CommonAlert.createAlert(
+            context = this,
+            header = "Alert!!",
+            description = " Are You Sure You Want To Save InScan Details  ?",
+            callback =this,
+            alertCallType ="SELECT_SAVE",
+            data = ""
+        )
+    }
 
 
     override fun onClick(data: Any, clickType: String) {
         if (clickType == "SAVE_CARD") {
             Toast.makeText(mContext, "Save Button Clicked", Toast.LENGTH_SHORT).show()
+            showAlertOnSave()
+
         }
     }
 
-    override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {}
+    override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {
+        if(alertCallType =="SELECT_SAVE"){
+            successToast("test")
+            saveInscanDetailWithoutScan()
 
+        }
+    }
 
+ private fun saveInscanDetailWithoutScan(){
+
+     viewModel.saveInScanDetailsWithoutScan(
+         companyId =getCompanyId(),
+         manifestNo = manifestNo.toString(),
+         mawbNo = mawb.toString(),
+         branchCode =getLoginBranchCode() ,
+         receiveDt = "",
+         receiveTime = "",
+         vehicleCode = inScanDetailData?.modecode.toString(),
+         remarks = inScanDetailData?.remarks.toString(),
+         grNo = inScanDetailData?.grno.toString(),
+         mfPckgs = inScanDetailData?.despatchpckgs.toString(),
+         pckgs = "",
+         weight = inScanDetailData?.despatchweight.toString(),
+         damagePckgs =inScanDetailData?.damage.toString(),
+         damageReasoncode = inScanDetailData?.damagereason.toString(),
+         detailRemarks = "",
+         userCode = userDataModel?.usercode.toString(),
+         menuCode = "",
+         sessionId = getSessionId(),
+         fromstnCode = inScanDetailData?.orgcode.toString(),
+
+         )
+ }
 }
+
+
+
+
+
