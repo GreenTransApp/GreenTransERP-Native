@@ -22,9 +22,9 @@ class InscanListViewModel @Inject constructor(private val _repository: InscanLis
         get() = _repository.inscanListLiveData
 
 
-    fun getInscanList(companyId: String, branchCode: String,fromBranchCode:String,fromDt:String,toDt:String,manifestType:String,modeType:String){
+    fun getInscanList(companyId: String,userCode:String, branchCode: String,sessionId:String,fromBranchCode:String,fromDt:String,toDt:String,manifestType:String,modeType:String){
         viewModelScope.launch(Dispatchers.IO) {
-            _repository.getInscanList(companyId, branchCode,fromBranchCode, fromDt, toDt, manifestType, modeType)
+            _repository.getInscanList(companyId,userCode, branchCode,sessionId,fromBranchCode, fromDt, toDt, manifestType, modeType)
         }
     }
 

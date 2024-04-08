@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
+import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityInscanListBinding
@@ -24,6 +25,7 @@ import com.greensoft.greentranserpnative.ui.operation.unarrived.models.InscanLis
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -47,6 +49,7 @@ class InscanListActivity @Inject constructor(): BaseActivity(), OnRowClick<Any> 
         setObserver()
         searchItem()
         refreshData()
+
     }
 
     override fun onResume() {
@@ -100,10 +103,11 @@ class InscanListActivity @Inject constructor(): BaseActivity(), OnRowClick<Any> 
 
      private fun getInscanList(){
          viewModel.getInscanList(
-          //companyId = loginDataModel?.companyid.toString(),
-           companyId = "17846899",  // need to change for  jeena
-             // branchCode = userDataModel?.loginbranchcode.toString(),
-             branchCode = "00000",
+          companyId = getCompanyId(),
+//           companyId = "17846899",  // need to change for  jeena
+             userCode = getUserCode(),
+              branchCode = getLoginBranchCode(),
+             sessionId = getSessionId(),
              "ALL",
              fromDt = fromDt,
              toDt = toDt,
@@ -112,6 +116,8 @@ class InscanListActivity @Inject constructor(): BaseActivity(), OnRowClick<Any> 
 
          );
      }
+
+
 
     private fun refreshData(){
         inscanList.clear()
@@ -152,30 +158,36 @@ class InscanListActivity @Inject constructor(): BaseActivity(), OnRowClick<Any> 
 //        when(clickType) {
 //            "SCAN_SELECT" -> run {
 //                val model: InscanListModel = data as InscanListModel
-//                
+//
 //            }
 //            "WITHOUT_SCAN"-> run {
 //
 //            }
 //        }
         if (clickType== "SCAN_SELECT"){
-           // val intent = Intent(this, InScanDetailWithScannerActivity::class.java)
-          //   intent.putExtra("ManifestNo",inScanModel?.manifestno.toString())
-          //  startActivity(intent)
-
             val gson = Gson()
-            val jsonString = gson.toJson(inscanList)
-            val intent = Intent(this,InScanDetailWithScannerActivity::class.java)
-            intent.putExtra("ManifestNo", jsonString)
-            startActivity(intent)
+            try {
+                var data = data as InscanListModel
+                val jsonString = gson.toJson(data)
+                val intent = Intent(this,InScanDetailWithScannerActivity::class.java)
+                intent.putExtra("ManifestNo", jsonString)
+                startActivity(intent)
+            } catch (ex: Exception) {
+                errorToast("Data Conversion Error: " + ex.message)
+            }
 
         }
         else if (clickType=="WITHOUT_SCAN"){
             val gson = Gson()
-            val jsonString = gson.toJson(inscanList)
-            val intent = Intent(this,InScanDetailsActivity::class.java)
-            intent.putExtra("ManifestNo", jsonString)
-            startActivity(intent)
+            try {
+                var data = data as InscanListModel
+                val jsonString = gson.toJson(data)
+                val intent = Intent(this,InScanDetailsActivity::class.java)
+                intent.putExtra("ManifestNo", jsonString)
+                startActivity(intent)
+            } catch (ex:Exception){
+                errorToast("Data Conversion Error: " + ex.message)
+            }
         }
     }
 

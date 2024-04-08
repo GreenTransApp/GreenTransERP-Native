@@ -19,9 +19,9 @@ class InscanListRepository @Inject constructor(): BaseRepository(){
         get() = inscanListMuteLiveData
 
 
-    fun getInscanList(companyId: String, branchCode: String,fromBranchCode:String,fromDt:String,toDt:String,manifestType:String,modeType:String){
+    fun getInscanList(companyId: String, userCode:String, branchCode: String,sessionId:String, fromBranchCode:String,fromDt:String,toDt:String,manifestType:String,modeType:String){
   viewDialogMutData.postValue(true)
-        api.getInscanList(companyId, branchCode,fromBranchCode, fromDt, toDt, manifestType, modeType).enqueue(object: Callback<CommonResult> {
+        api.getInscanList(companyId, userCode, branchCode,sessionId, fromBranchCode, fromDt, toDt, manifestType, modeType).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
