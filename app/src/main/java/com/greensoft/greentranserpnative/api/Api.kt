@@ -301,6 +301,11 @@ interface Api {
         @Query("prmtransactionid") transactionId: String?
     ):Call<CommonResult>
 
+    @GET("InscanAPI/GetDamageReason")
+    fun getDamageReasonList(
+        @Query("prmconnstring") companyId: String,
+
+    ):Call<CommonResult>
     @FormUrlEncoded
     @POST("WMS/AddInScanStickerUnArrived")
     fun addInScanStickerUnArrived(
@@ -336,4 +341,6 @@ interface Api {
         @Field("prmsessionid")sessionId:String,
         @Field("prmfromstncode")fromstnCode:String,
     ):Call<CommonResult>
+
+
 }

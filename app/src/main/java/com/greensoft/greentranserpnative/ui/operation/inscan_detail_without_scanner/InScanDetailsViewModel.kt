@@ -3,6 +3,7 @@ package com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_sca
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.greensoft.greentranserpnative.base.BaseViewModel
+import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.DamageReasonModel
 import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.InScanWithoutScannerModel
 import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.InscanDetailsSaveModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,12 +22,20 @@ class InScanDetailsViewModel @Inject constructor(private val _repo: InScanDetail
         get() = _repo.inScanDetailLiveData
     val inScanCardLiveData:LiveData<ArrayList<InScanWithoutScannerModel>>
         get() = _repo.inScanCardLiveData
+
+    val damagePckgsReasonLiveData:LiveData<ArrayList<DamageReasonModel>>
+        get() = _repo.damageReasonLiveData
 val inScanSaveLiveData:LiveData<InscanDetailsSaveModel>
         get() = _repo.inscanSaveLiveData
 
     fun getInScanDetails(companyId: String, userCode: String, branchCode: String, manifestNo:String,manifestType:String,sessionId:String){
         viewModelScope.launch(Dispatchers.IO) {
             _repo.getInScanDetails(companyId,userCode, branchCode,manifestNo,manifestType,sessionId)
+        }
+    }
+    fun getDamageReasonList(companyId: String,){
+        viewModelScope.launch(Dispatchers.IO) {
+            _repo.getDamageReasonList(companyId)
         }
     }
 

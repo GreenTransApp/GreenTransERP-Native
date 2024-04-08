@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
+import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.DamageReasonModel
 import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.InScanWithoutScannerModel
 import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.InscanDetailsSaveModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.SavePickupManifestModel
@@ -18,12 +19,16 @@ class InScanDetailsRepository @Inject constructor(): BaseRepository(){
 
     private val inScanDetailMutData = MutableLiveData<InScanWithoutScannerModel>()
     private val inScanDetailsCardMutData = MutableLiveData<ArrayList<InScanWithoutScannerModel>>()
+    private val damageReasonMutData = MutableLiveData<ArrayList<DamageReasonModel>>()
     private val inscanSaveMutableLiveData = MutableLiveData<InscanDetailsSaveModel>()
 
     val inScanDetailLiveData:LiveData<InScanWithoutScannerModel>
         get() = inScanDetailMutData
     val inScanCardLiveData: LiveData<ArrayList<InScanWithoutScannerModel>>
         get() = inScanDetailsCardMutData
+
+    val damageReasonLiveData: LiveData<ArrayList<DamageReasonModel>>
+        get() = damageReasonMutData
 
     val inscanSaveLiveData: LiveData<InscanDetailsSaveModel>
         get() = inscanSaveMutableLiveData
@@ -42,6 +47,39 @@ class InScanDetailsRepository @Inject constructor(): BaseRepository(){
                             val resultList: ArrayList<InScanWithoutScannerModel> = gson.fromJson(jsonArray.toString(), listType);
                             inScanDetailMutData.postValue(resultList[0]);
                             inScanDetailsCardMutData.postValue(resultList);
+                        }
+
+                    } else {
+                        isError.postValue(result.CommandMessage.toString());
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR);
+                }
+                viewDialogMutData.postValue(false)
+
+            }
+
+            override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
+    }
+
+    fun getDamageReasonList(companyId: String){
+        viewDialogMutData.postValue(true)
+        api.getDamageReasonList(companyId).enqueue(object: Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
+                if(response.body() != null){
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if(result.CommandStatus == 1){
+                        val jsonArray = getResult(result);
+                        if(jsonArray != null) {
+                            val listType = object: TypeToken<List<DamageReasonModel>>() {}.type
+                            val resultList: ArrayList<DamageReasonModel> = gson.fromJson(jsonArray.toString(), listType)
+                            damageReasonMutData.postValue(resultList)
                         }
 
                     } else {
