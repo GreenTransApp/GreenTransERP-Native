@@ -92,9 +92,10 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
         activityBinding = ActivityGrListBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
-        printer = TSCPrinter(App.get().curConnect)
         initUi()
         getDefaultConnection()
+
+        printer = TSCPrinter(App.get().curConnect)
 //        getGrList()
         setObservers()
         searchItem()
@@ -346,7 +347,6 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
                         isPrinterConnected.set(true)
                     }
                 }
-
             }
             if (isPrinterConnected.get()) {
                 return true
