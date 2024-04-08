@@ -44,7 +44,6 @@
             android:layout_marginHorizontal="40dp"
             android:layout_marginTop="30dp"
             android:hint="Enter Username."
-            android:textAllCaps="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,7 +54,6 @@
                 android:id="@+id/input_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAllCaps="true"
                 android:inputType="textEmailAddress"
                 />
 
