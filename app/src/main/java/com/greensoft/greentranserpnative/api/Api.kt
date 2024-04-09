@@ -342,5 +342,48 @@ interface Api {
         @Field("prmfromstncode")fromstnCode:String,
     ):Call<CommonResult>
 
+    @GET("ManifestAPI/GetVendorListV2")
+    fun getVendListDRS(
+        @Query("prmconnstring") companyId: String,
+        @Query("prmcharstr") charStr: String?,
+        @Query("prmcategory") category: String?,
+    ): Call<CommonResult>
 
+    @GET("ManifestAPI/VehicleSelectionFromJeenaBooking")
+    fun getVehicleListDRS(
+        @Query("prmconnstring") companyId: String,
+        @Query("prmbranchcode") branchCode:String?,
+        @Query("prmusercode") userCode: String?,
+        @Query("prmcharstr") charStr: String?,
+        @Query("prmvendcode") vendCode: String?,
+        @Query("prmmodetype") modeType: String?,
+    ): Call<CommonResult>
+
+    @FormUrlEncoded
+    @POST("ManifestAPI/updateDRSNew_v1")
+    fun saveDRS(
+        @Field("prmconnstring") companyId: String,
+        @Field("prmbranchcode")branchCode:String?,
+        @Field("prmdrsdt")drsDt:String?,
+        @Field("prmdrstime")drsTime:String?,
+        @Field("prmdrsno")drsSno:String?,
+        @Field("prmdrivername")driverName:String?,
+        @Field("prmdrivertelno")driverTele:String?,
+        @Field("prmmodecode")modeCode:String?,
+        @Field("prmremarks")remarks:String?,
+        @Field("prmgrnostr")grnoStr:String?,
+        @Field("prmdrnostr")drnoStr:String?,
+        @Field("prmpckgstr")pckgsStr:String?,
+        @Field("prmweightstr")weightStr:String?,
+        @Field("prmremarksstr")remarksStr:String?,
+        @Field("prmloadedby")loadedBy:String?,
+        @Field("prmusercode")userCode:String?,
+        @Field("prmsessionid")sessionId:String?,
+        @Field("prmmenucode")menuCode:String?,
+        @Field("prmexecutiveid")executiveId:String?,
+        @Field("prmdeliveredby")deliveredBy:String?,
+        @Field("prmdlvagentcode")dlvAgentCode:String?,
+        @Field("prmdlvvehicleno")dlvVehicleNo:String?,
+
+    ):Call<CommonResult>
 }

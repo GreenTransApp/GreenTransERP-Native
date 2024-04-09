@@ -49,6 +49,7 @@ import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.call_register.CallRegisterActivity
 import com.greensoft.greentranserpnative.ui.operation.communicationList.CommunicationListActivity
 import com.greensoft.greentranserpnative.ui.operation.communicationList.models.CommunicationListModel
+import com.greensoft.greentranserpnative.ui.operation.drs.DRSActivity
 import com.greensoft.greentranserpnative.ui.operation.notificationPanel.model.NotificationPanelBottomSheetModel
 import com.greensoft.greentranserpnative.ui.operation.grList.GrListActivity
 import com.greensoft.greentranserpnative.ui.operation.inscan_detail_with_scanner.InScanDetailWithScannerActivity
@@ -348,7 +349,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
 
     private fun testFunction() {
 //        val intent=Intent(this,InScanDetailWithScannerActivity::class.java)
-        val intent=Intent(this,InscanListActivity::class.java)
+        val intent=Intent(this,DRSActivity::class.java)
         startActivity(intent)
 //        Utils.changeDateFormatForEway("28/08/2023 02:37:00 PM")
 //        Utils.changeDateFormatForEway("08/08/2023 09:31:00 AM")

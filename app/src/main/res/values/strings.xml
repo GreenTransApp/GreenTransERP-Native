@@ -314,4 +314,13 @@
     <string name="navigation_drawer_close" />
     <string name="to_station">To Station</string>
     <string name="enter_to_station">Enter to Station</string>
+    <string name="deliver_by">Deliver By</string>
+    <string name="date">Date</string>
+    <string name="select_deliver_by">Select Deliver By</string>
+    <string name="select_vendor">Select Vendor</string>
+    <string name="select_vehicle">Select Vehicle</string>
+    <string name="enter_remarks">Enter Remarks</string>
+    <string name="delivery_boy_name">Delivery Boy Name</string>
+    <string name="drs_date">DRS Date</string>
+    <string name="drs_time">DRS Time</string>
 </resources>
