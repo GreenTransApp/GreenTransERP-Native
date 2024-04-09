@@ -21,838 +21,424 @@
             app:layout_constraintVertical_bias="0.0"
             />
 
-<!--        <ScrollView-->
-<!--            android:id="@+id/scroll_layout"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/toolBar"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintBottom_toTopOf="@id/btn_loading_select"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            >-->
+        <ScrollView
+            android:id="@+id/scroll_layout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/toolBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/save_btn"
+            app:layout_constraintStart_toStartOf="parent"
+            >
 
 
-<!--            <LinearLayout-->
+            <LinearLayout
 
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:orientation="vertical"-->
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
 
-<!--                >-->
+                >
 
 <!--                <LinearLayout-->
-<!--                    android:id="@+id/input_layout_pickup_location"-->
-<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_width="wrap_content"-->
 <!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginHorizontal="10dp"-->
-<!--                    android:layout_marginVertical="5dp"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/input_layout_manifest_num"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
 <!--                    android:orientation="vertical">-->
+
 <!--                    <LinearLayout-->
 <!--                        android:layout_width="wrap_content"-->
 <!--                        android:layout_height="wrap_content"-->
 <!--                        android:orientation="horizontal">-->
+
 <!--                        <TextView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="Pickup Location/Area"-->
-<!--                            />-->
+<!--                            android:id="@+id/sNo"-->
+<!--                            android:layout_width="60dp"-->
+<!--                            android:layout_height="match_parent"-->
+<!--                            android:text="S#"-->
+<!--                            android:gravity="center_horizontal|center_vertical"-->
+<!--                            android:textColor="@color/white"-->
+<!--                            android:background="@drawable/table_header_cell_bg"-->
+<!--                            android:textSize="12sp" />-->
+
 <!--                        <TextView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:textColor="@color/danger"-->
-<!--                            android:text=" "-->
-<!--                            />-->
-<!--                    </LinearLayout>-->
-
-<!--                    <com.google.android.material.textfield.TextInputLayout-->
-
-<!--                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        app:hintTextColor="@color/black"-->
-<!--                        android:hint="Enter pickup location/area"-->
-<!--                        >-->
-
-<!--                        <com.google.android.material.textfield.TextInputEditText-->
-<!--                            android:id="@+id/input_pickup_location"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:inputType="text"-->
-<!--                            android:focusable="false"-->
-<!--                            android:textAllCaps="true" />-->
-
-<!--                    </com.google.android.material.textfield.TextInputLayout>-->
-<!--                </LinearLayout>-->
-
-<!--                <LinearLayout-->
-<!--                    android:id="@+id/to_station_layout"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginHorizontal="10dp"-->
-<!--                    android:layout_marginVertical="5dp"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/input_layout_pickup_location"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    android:orientation="vertical">-->
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:orientation="horizontal">-->
+<!--                            android:id="@+id/grNo"-->
+<!--                            android:layout_width="170dp"-->
+<!--                            android:layout_height="match_parent"-->
+<!--                            android:gravity="center_horizontal|center_vertical"-->
+<!--                            android:text="GR#"-->
+<!--                            android:background="@drawable/table_header_cell_bg"-->
+<!--                            android:textColor="@color/white"-->
+<!--                            android:textSize="12sp" />-->
 <!--                        <TextView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="@string/to_station"-->
-<!--                            />-->
-<!--                        <TextView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:textColor="@color/danger"-->
-<!--                            android:text=""-->
-<!--                            />-->
-<!--                    </LinearLayout>-->
+<!--                            android:id="@+id/removeAction"-->
+<!--                            android:layout_width="145dp"-->
+<!--                            android:layout_height="match_parent"-->
+<!--                            android:gravity="center_horizontal|center_vertical"-->
+<!--                            android:textColor="@color/white"-->
+<!--                            android:background="@drawable/table_header_cell_bg"-->
+<!--                            android:text="Action"-->
+<!--                            android:textSize="12sp" />-->
 
-<!--                    <com.google.android.material.textfield.TextInputLayout-->
-
-<!--                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--                        android:background="@drawable/spinner_background"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        app:hintTextColor="@color/black"-->
-<!--                        android:hint="@string/enter_to_station"-->
-<!--                        >-->
-
-<!--                        &lt;!&ndash;                <com.google.android.material.textfield.TextInputEditText&ndash;&gt;-->
-<!--                        &lt;!&ndash;                    android:id="@+id/input_to_station"&ndash;&gt;-->
-<!--                        &lt;!&ndash;                    android:layout_width="match_parent"&ndash;&gt;-->
-<!--                        &lt;!&ndash;                    android:layout_height="wrap_content"&ndash;&gt;-->
-<!--                        &lt;!&ndash;                    android:inputType="text"&ndash;&gt;-->
-<!--                        &lt;!&ndash;                    android:focusable="false"&ndash;&gt;-->
-<!--                        &lt;!&ndash;                    android:textAllCaps="true" />&ndash;&gt;-->
-<!--                        <Spinner-->
-<!--                            android:focusable="false"-->
-<!--                            android:id="@+id/inputToStation"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="55sp"-->
-<!--                            />-->
-
-<!--                    </com.google.android.material.textfield.TextInputLayout>-->
-<!--                </LinearLayout>-->
-
-<!--                <LinearLayout-->
-<!--                    android:id="@+id/input_layout_date_time"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginHorizontal="10dp"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/to_station_layout"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    android:layout_marginVertical="5dp"-->
-<!--                    android:orientation="horizontal">-->
-
-<!--                    <LinearLayout-->
-
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:layout_marginRight="5dp"-->
-<!--                        android:orientation="vertical">-->
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:orientation="horizontal">-->
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:text="Date"-->
-<!--                                />-->
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:textColor="@color/danger"-->
-<!--                                android:text=" * "-->
-<!--                                />-->
-<!--                        </LinearLayout>-->
-<!--                        <com.google.android.material.textfield.TextInputLayout-->
-<!--                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:hint=""-->
-<!--                            >-->
-<!--                            <com.google.android.material.textfield.TextInputEditText-->
-<!--                                android:drawableRight="@drawable/calendar"-->
-<!--                                android:drawableTint="@color/colorPrimary"-->
-<!--                                android:id="@+id/input_date"-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:textAllCaps="true"-->
-<!--                                android:focusable="false"-->
-<!--                                />-->
-
-<!--                        </com.google.android.material.textfield.TextInputLayout>-->
 
 <!--                    </LinearLayout>-->
 
-<!--                    <LinearLayout-->
-<!--                        android:id="@+id/input_layout_time"-->
+<!--                    <androidx.recyclerview.widget.RecyclerView-->
+<!--                        android:id="@+id/recyclerView"-->
 <!--                        android:layout_width="match_parent"-->
 <!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:layout_marginLeft="5dp"-->
-<!--                        android:orientation="vertical">-->
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:orientation="horizontal">-->
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:text="Time"-->
-<!--                                />-->
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:textColor="@color/danger"-->
-<!--                                android:text=" * "-->
-<!--                                />-->
-<!--                        </LinearLayout>-->
-<!--                        <com.google.android.material.textfield.TextInputLayout-->
-<!--                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:hint=""-->
-<!--                            >-->
-<!--                            <com.google.android.material.textfield.TextInputEditText-->
-<!--                                android:id="@+id/input_time"-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:drawableRight="@drawable/clock"-->
-<!--                                android:drawableTint="@color/colorPrimary"-->
-<!--                                android:textAllCaps="true"-->
-<!--                                android:focusable="false"-->
-
-<!--                                />-->
-
-<!--                        </com.google.android.material.textfield.TextInputLayout>-->
-
-<!--                    </LinearLayout>-->
-
-
-
+<!--                        app:layout_constraintTop_toBottomOf="@+id/period"-->
+<!--                        tools:ignore="MissingConstraints"-->
+<!--                        tools:listitem="@layout/item_gr_detail_drs"-->
+<!--                        />-->
 
 <!--                </LinearLayout>-->
 
-<!--                <LinearLayout-->
-<!--                    android:id="@+id/input_layout_driver"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginHorizontal="10dp"-->
-<!--                    android:layout_marginVertical="5dp"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/input_layout_date_time"-->
-<!--                    app:layout_constraintEnd_toStartOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    android:orientation="horizontal">-->
-
-<!--                    <LinearLayout-->
-<!--                        android:id="@+id/input_layout_driver_name"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:layout_marginRight="5dp"-->
-<!--                        android:orientation="vertical">-->
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:orientation="horizontal">-->
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:text="Driver Name"-->
-<!--                                />-->
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:textColor="@color/danger"-->
-<!--                                android:text=" * "-->
-<!--                                />-->
-<!--                        </LinearLayout>-->
-<!--                        <com.google.android.material.textfield.TextInputLayout-->
-<!--                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:hint=""-->
-<!--                            >-->
-<!--                            <com.google.android.material.textfield.TextInputEditText-->
-
-<!--                                android:id="@+id/input_driver_name"-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:textAllCaps="true"-->
-<!--                                android:focusable="false"-->
-<!--                                android:textColor="@color/black"-->
-<!--                                android:inputType="text"-->
-<!--                                android:hint="Select Driver"-->
-<!--                                />-->
-
-<!--                        </com.google.android.material.textfield.TextInputLayout>-->
-
-<!--                    </LinearLayout>-->
-
-<!--                    <LinearLayout-->
-<!--                        android:id="@+id/input_layout_driver_mobile"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:layout_marginLeft="5dp"-->
-<!--                        android:orientation="vertical">-->
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:orientation="horizontal">-->
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:text="Driver Mobile#"-->
-<!--                                />-->
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:textColor="@color/danger"-->
-<!--                                android:text="  "-->
-<!--                                />-->
-<!--                        </LinearLayout>-->
-<!--                        <com.google.android.material.textfield.TextInputLayout-->
-<!--                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:hint=""-->
-<!--                            >-->
-<!--                            <com.google.android.material.textfield.TextInputEditText-->
-<!--                                android:id="@+id/input_driver_mobile"-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:textAllCaps="true"-->
-<!--                                android:inputType="text"-->
-<!--                                android:focusable="false"-->
-<!--                                android:textColor="@color/black"-->
-<!--                                android:hint="Driver Mobile"-->
-<!--                                />-->
-
-<!--                        </com.google.android.material.textfield.TextInputLayout>-->
-
-<!--                    </LinearLayout>-->
-<!--                </LinearLayout>-->
-
-<!--                <LinearLayout-->
-<!--                    android:id="@+id/input_layout_vendor"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_margin="10dp"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/input_layout_driver"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    android:orientation="horizontal">-->
-
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:layout_marginRight="5dp"-->
-<!--                        android:layout_marginTop="5dp"-->
-<!--                        android:orientation="vertical">-->
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginBottom="5dp"-->
-<!--                            android:orientation="horizontal">-->
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:text="Vehicle Type"-->
-<!--                                />-->
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:textColor="@color/danger"-->
-<!--                                android:text=" * "-->
-<!--                                />-->
-<!--                        </LinearLayout>-->
-
-<!--                        <com.google.android.material.textfield.TextInputLayout-->
-<!--                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:background="@drawable/spinner_background"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            >-->
-<!--                            <Spinner-->
-
-<!--                                android:id="@+id/selected_vehicle_type"-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="55sp"-->
-<!--                                />-->
-
-<!--                        </com.google.android.material.textfield.TextInputLayout>-->
-<!--                    </LinearLayout>-->
-
-<!--                    &lt;!&ndash;                android:id="@+id/input_layout_vendor_name"&ndash;&gt;-->
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginLeft="5dp"-->
-<!--                        android:layout_marginVertical="5dp"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:orientation="vertical"-->
-<!--                        android:visibility="visible"-->
-<!--                        >-->
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:orientation="horizontal">-->
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:text="Vendor"-->
-<!--                                />-->
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:textColor="@color/danger"-->
-<!--                                android:text=" * "-->
-<!--                                />-->
-
-<!--                        </LinearLayout>-->
-
-<!--                        <com.google.android.material.textfield.TextInputLayout-->
-<!--                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            >-->
-<!--                            <com.google.android.material.textfield.TextInputEditText-->
-<!--                                android:id="@+id/input_vendor_name"-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:inputType="text"-->
-<!--                                android:hint="Select Vendor"-->
-<!--                                android:focusable="false"-->
-<!--                                />-->
-<!--                            &lt;!&ndash;                        android:textAllCaps="true" &ndash;&gt;-->
-
-<!--                        </com.google.android.material.textfield.TextInputLayout>-->
-<!--                    </LinearLayout>-->
-<!--                </LinearLayout>-->
-
-<!--                <LinearLayout-->
-<!--                    android:id="@+id/input_layout_vehicle_number"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginHorizontal="10dp"-->
-<!--                    android:layout_marginVertical="5dp"-->
-<!--                    app:layout_constraintTop_toBottomOf="@id/input_layout_vendor"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    android:orientation="vertical">-->
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:orientation="horizontal">-->
-<!--                        <TextView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="Vehicle#"-->
-<!--                            />-->
-<!--                        <TextView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:textColor="@color/danger"-->
-<!--                            android:text="* "-->
-<!--                            />-->
-<!--                    </LinearLayout>-->
-
-<!--                    <com.google.android.material.textfield.TextInputLayout-->
-
-<!--                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        app:hintTextColor="@color/black"-->
-<!--                        android:hint="Enter Vehicle Number"-->
-<!--                        >-->
-
-
-
-<!--                        <com.google.android.material.textfield.TextInputEditText-->
-<!--                            android:id="@+id/input_vehicle_number"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:textAllCaps="true"-->
-<!--                            android:textColor="@color/black"-->
-<!--                            android:focusable="false"-->
-<!--                            android:inputType="number"-->
-<!--                            />-->
-
-<!--                    </com.google.android.material.textfield.TextInputLayout>-->
-<!--                </LinearLayout>-->
-
-<!--                <LinearLayout-->
-<!--                    android:id="@+id/input_layout_loaded_by"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_margin="10dp"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/input_layout_vehicle_number"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    android:orientation="horizontal">-->
-
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:layout_marginRight="5dp"-->
-<!--                        android:layout_marginTop="5dp"-->
-<!--                        android:orientation="vertical">-->
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginBottom="5dp"-->
-<!--                            android:orientation="horizontal">-->
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:text="Loaded By"-->
-<!--                                />-->
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:textColor="@color/danger"-->
-<!--                                android:text=" "-->
-<!--                                />-->
-<!--                        </LinearLayout>-->
-
-<!--                        <com.google.android.material.textfield.TextInputLayout-->
-<!--                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:background="@drawable/spinner_background"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            >-->
-<!--                            <Spinner-->
-
-<!--                                android:id="@+id/selected_loaded_by"-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="55sp"-->
-<!--                                />-->
-
-<!--                        </com.google.android.material.textfield.TextInputLayout>-->
-<!--                    </LinearLayout>-->
-
-<!--                    <LinearLayout-->
-<!--                        android:id="@+id/input_layout_capacity"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginLeft="5dp"-->
-<!--                        android:layout_marginVertical="5dp"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:orientation="vertical">-->
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:orientation="horizontal">-->
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:text="Capacity"-->
-<!--                                />-->
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:textColor="@color/danger"-->
-<!--                                android:text="  "-->
-<!--                                />-->
-
-<!--                        </LinearLayout>-->
-
-<!--                        <com.google.android.material.textfield.TextInputLayout-->
-<!--                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            >-->
-<!--                            <com.google.android.material.textfield.TextInputEditText-->
-<!--                                android:id="@+id/input_capacity"-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:textAllCaps="true"-->
-<!--                                android:textColor="@color/black"-->
-<!--                                android:inputType="number"-->
-<!--                                />-->
-
-<!--                        </com.google.android.material.textfield.TextInputLayout>-->
-<!--                    </LinearLayout>-->
-<!--                </LinearLayout>-->
-
-<!--                <LinearLayout-->
-<!--                    android:id="@+id/input_layout_remark"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginHorizontal="5dp"-->
-<!--                    android:layout_marginVertical="5dp"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/input_layout_loaded_by"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    android:orientation="vertical">-->
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:orientation="horizontal">-->
-<!--                        <TextView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:text="Remark"-->
-<!--                            />-->
-
-<!--                    </LinearLayout>-->
-
-
-<!--                    <com.google.android.material.textfield.TextInputLayout-->
-
-<!--                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--                        app:layout_constraintTop_toBottomOf="@id/input_layout_loaded_by"-->
-<!--                        app:layout_constraintStart_toStartOf="parent"-->
-<!--                        android:layout_marginHorizontal="10dp"-->
-<!--                        app:layout_constraintEnd_toEndOf="parent"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:hint=""-->
-<!--                        >-->
-
-<!--                        <com.google.android.material.textfield.TextInputEditText-->
-<!--                            android:id="@+id/input_remark"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:inputType="textMultiLine"-->
-<!--                            android:lines="2"-->
-<!--                            android:maxLines="3"-->
-<!--                            android:gravity="top|left"-->
-<!--                            android:padding="20dp"-->
-<!--                            android:textColor="@color/black"-->
-
-<!--                            />-->
-<!--                        &lt;!&ndash;                android:textAllCaps="true"&ndash;&gt;-->
-<!--                    </com.google.android.material.textfield.TextInputLayout>-->
-<!--                </LinearLayout>-->
-
-<!--                &lt;!&ndash;        <LinearLayout&ndash;&gt;-->
-<!--                &lt;!&ndash;            app:layout_constraintTop_toBottomOf="@+id/input_layout_remark"&ndash;&gt;-->
-<!--                &lt;!&ndash;            app:layout_constraintStart_toStartOf="parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;            android:layout_marginTop="10dp"&ndash;&gt;-->
-<!--                &lt;!&ndash;            app:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;            android:layout_height="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;            android:orientation="vertical">&ndash;&gt;-->
-
-<!--                &lt;!&ndash;            <LinearLayout&ndash;&gt;-->
-<!--                &lt;!&ndash;                android:layout_width="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                android:background="@color/colorPrimary"&ndash;&gt;-->
-<!--                &lt;!&ndash;                android:layout_height="wrap_content">&ndash;&gt;-->
-
-<!--                &lt;!&ndash;                <androidx.cardview.widget.CardView&ndash;&gt;-->
-<!--                &lt;!&ndash;                    android:id="@+id/search_layout"&ndash;&gt;-->
-<!--                &lt;!&ndash;                    android:layout_width="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                    android:layout_height="45sp"&ndash;&gt;-->
-<!--                &lt;!&ndash;                    android:layout_margin="6sp">&ndash;&gt;-->
-
-<!--                &lt;!&ndash;                    <androidx.appcompat.widget.SearchView&ndash;&gt;-->
-<!--                &lt;!&ndash;                        android:id="@+id/search_view"&ndash;&gt;-->
-<!--                &lt;!&ndash;                        android:layout_width="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                        android:layout_height="wrap_content"&ndash;&gt;-->
-
-<!--                &lt;!&ndash;                        app:queryHint="Search here..." />&ndash;&gt;-->
-<!--                &lt;!&ndash;                </androidx.cardview.widget.CardView>&ndash;&gt;-->
-<!--                &lt;!&ndash;            </LinearLayout>&ndash;&gt;-->
-
-
-<!--                &lt;!&ndash;            <LinearLayout&ndash;&gt;-->
-<!--                &lt;!&ndash;                android:layout_width="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                android:layout_height="match_parent">&ndash;&gt;-->
-
-<!--                &lt;!&ndash;                <HorizontalScrollView&ndash;&gt;-->
-<!--                &lt;!&ndash;                    android:layout_width="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                    android:layout_height="match_parent">&ndash;&gt;-->
-<!--                &lt;!&ndash;                    <LinearLayout&ndash;&gt;-->
-<!--                &lt;!&ndash;                        android:layout_width="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                        android:layout_height="wrap_content"&ndash;&gt;-->
-<!--                &lt;!&ndash;                        android:orientation="vertical"&ndash;&gt;-->
-<!--                &lt;!&ndash;                        >&ndash;&gt;-->
-<!--                &lt;!&ndash;                        <LinearLayout&ndash;&gt;-->
-<!--                &lt;!&ndash;                            android:layout_width="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                            android:layout_height="wrap_content"&ndash;&gt;-->
-<!--                &lt;!&ndash;                            android:orientation="horizontal"&ndash;&gt;-->
-<!--                &lt;!&ndash;                            >&ndash;&gt;-->
-
-<!--                &lt;!&ndash;                            <TextView&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:id="@+id/sNo_txt"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_width="50sp"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_height="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:gravity="center_horizontal"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textColor="@color/white"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:text="S#"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:background="@drawable/table_header_cell_bg"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textSize="12sp" />&ndash;&gt;-->
-
-
-
-<!--                &lt;!&ndash;                            <TextView&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:id="@+id/gr_no_txt"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_width="150sp"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_height="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:gravity="center_horizontal"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textColor="@color/white"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:background="@drawable/table_header_cell_bg"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:text="GR#"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textSize="12sp" />&ndash;&gt;-->
-
-<!--                &lt;!&ndash;                            <TextView&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:id="@+id/allocated_dt_txt"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_width="150sp"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_height="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:gravity="center_horizontal"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textColor="@color/white"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:background="@drawable/table_header_cell_bg"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:text="Allocate Date"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textSize="12sp" />&ndash;&gt;-->
-
-
-<!--                &lt;!&ndash;                            <TextView&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:id="@+id/cust_txt"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_width="200sp"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_height="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:gravity="center_horizontal"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textColor="@color/white"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:background="@drawable/table_header_cell_bg"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:text="Customer"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textSize="12sp" />&ndash;&gt;-->
-
-<!--                &lt;!&ndash;                            <TextView&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:id="@+id/cngr_txt"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_width="200sp"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_height="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:gravity="center_horizontal"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textColor="@color/white"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:background="@drawable/table_header_cell_bg"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:text="Consignor"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textSize="12sp" />&ndash;&gt;-->
-
-<!--                &lt;!&ndash;                            <TextView&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:id="@+id/cnge_txt"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_width="200sp"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_height="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:gravity="center_horizontal"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textColor="@color/white"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:background="@drawable/table_header_cell_bg"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:text="Consignee"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textSize="12sp" />&ndash;&gt;-->
-
-<!--                &lt;!&ndash;                            <TextView&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:id="@+id/destination_txt"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_width="200sp"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_height="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:gravity="center_horizontal"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textColor="@color/white"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:background="@drawable/table_header_cell_bg"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:text="Destination"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textSize="12sp" />&ndash;&gt;-->
-
-<!--                &lt;!&ndash;                            <TextView&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:id="@+id/content_txt"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_width="200sp"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_height="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:gravity="center_horizontal"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textColor="@color/white"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:background="@drawable/table_header_cell_bg"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:text="Content"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textSize="12sp" />&ndash;&gt;-->
-
-<!--                &lt;!&ndash;                            <TextView&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:id="@+id/packing_txt"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_width="150sp"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_height="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:gravity="center_horizontal"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textColor="@color/white"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:background="@drawable/table_header_cell_bg"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:text="Packing"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textSize="12sp" />&ndash;&gt;-->
-
-<!--                &lt;!&ndash;                            <TextView&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:id="@+id/balance_pckgs_txt"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_width="150sp"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_height="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:gravity="center_horizontal"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textColor="@color/white"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:background="@drawable/table_header_cell_bg"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:text="Balance Pckgs"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textSize="12sp" />&ndash;&gt;-->
-
-<!--                &lt;!&ndash;                            <TextView&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:id="@+id/pckgs_txt"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_width="150sp"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_height="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:gravity="center_horizontal"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textColor="@color/white"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:background="@drawable/table_header_cell_bg"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:text="Pckgs"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textSize="12sp" />&ndash;&gt;-->
-
-<!--                &lt;!&ndash;                            <TextView&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:id="@+id/g_weight_txt"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_width="150sp"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_height="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:gravity="center_horizontal"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textColor="@color/white"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:background="@drawable/table_header_cell_bg"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:text="Gross Weight"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textSize="12sp" />&ndash;&gt;-->
-
-
-
-<!--                &lt;!&ndash;                            <TextView&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:id="@+id/action_txt"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_width="150sp"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:layout_height="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:gravity="center_horizontal"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textColor="@color/white"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:background="@drawable/table_header_cell_bg"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:text="Action"&ndash;&gt;-->
-<!--                &lt;!&ndash;                                android:textSize="12sp" />&ndash;&gt;-->
-
-<!--                &lt;!&ndash;                        </LinearLayout>&ndash;&gt;-->
-
-
-<!--                &lt;!&ndash;                        <androidx.recyclerview.widget.RecyclerView&ndash;&gt;-->
-<!--                &lt;!&ndash;                            android:id="@+id/recyclerView"&ndash;&gt;-->
-<!--                &lt;!&ndash;                            android:layout_width="match_parent"&ndash;&gt;-->
-<!--                &lt;!&ndash;                            android:layout_height="wrap_content"&ndash;&gt;-->
-<!--                &lt;!&ndash;                            app:layout_constraintTop_toBottomOf="@+id/period"&ndash;&gt;-->
-<!--                &lt;!&ndash;                            tools:listitem="@layout/save_pickup_manifest_item" />&ndash;&gt;-->
-<!--                &lt;!&ndash;                    </LinearLayout>&ndash;&gt;-->
-<!--                &lt;!&ndash;                </HorizontalScrollView>&ndash;&gt;-->
-
-<!--                &lt;!&ndash;            </LinearLayout>&ndash;&gt;-->
-<!--                &lt;!&ndash;        </LinearLayout>&ndash;&gt;-->
-<!--            </LinearLayout>-->
-
-<!--        </ScrollView>-->
+                <LinearLayout
+                    android:id="@+id/input_layout_date_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="5dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="5dp"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/drs_date"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/danger"
+                                android:text=" * "
+                                />
+                        </LinearLayout>
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint=""
+                            >
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:drawableEnd="@drawable/calendar"
+                                android:drawableTint="@color/colorPrimary"
+                                android:id="@+id/input_date"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAllCaps="true"
+                                android:focusable="false"
+                                />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/input_layout_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="5dp"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/drs_time"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/danger"
+                                android:text=" * "
+                                />
+                        </LinearLayout>
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint=""
+                            >
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/input_time"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableRight="@drawable/clock"
+                                android:drawableTint="@color/colorPrimary"
+                                android:textAllCaps="true"
+                                android:focusable="false"
+
+                                />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+
+
+
+
+                </LinearLayout>
+
+
 
+                <LinearLayout
+                    android:id="@+id/to_station_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="5dp"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/deliver_by"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/danger"
+                            android:text="*"
+                            />
+                    </LinearLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:background="@drawable/spinner_background"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:hintTextColor="@color/black"
+                        android:hint="@string/select_deliver_by"
+                        >
+                        <Spinner
+                            android:focusable="false"
+                            android:id="@+id/deliveryBy"
+                            android:layout_width="match_parent"
+                            android:layout_height="55sp"
+                            />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/input_layout_pickup_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="5dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/select_vendor"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/danger"
+                            android:text="*"
+                            />
+                    </LinearLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:hintTextColor="@color/black"
+                        android:hint="Select Vendor"
+                        >
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/input_vendor_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:focusable="false"
+                            android:textAllCaps="true" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/input_layout_vehicle_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="5dp"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/select_vehicle"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/danger"
+                            android:text="*"
+                            />
+                    </LinearLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:hintTextColor="@color/black"
+                        android:hint="Select Vehicle"
+                        >
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/input_vehicle_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAllCaps="true"
+                            android:textColor="@color/black"
+                            android:focusable="false"
+                            android:inputType="number"
+                            />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/input_layout_delivery_boy_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="5dp"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/delivery_boy_name"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/danger"
+                            android:text="*"
+                            />
+                    </LinearLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:hintTextColor="@color/black"
+                        android:hint="Test"
+                        >
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/delivery_boy_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAllCaps="true"
+                            android:textColor="@color/black"
+                            android:focusable="false"
+                            android:inputType="number"
+                            />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/input_layout_remark"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginVertical="5dp"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Remark"
+                            />
+
+                    </LinearLayout>
+
+
+                    <com.google.android.material.textfield.TextInputLayout
+
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:layout_constraintTop_toBottomOf="@id/input_layout_loaded_by"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_marginHorizontal="10dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/enter_remarks"
+                        >
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/input_remark"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textMultiLine"
+                            android:lines="2"
+                            android:maxLines="3"
+                            android:gravity="top|left"
+                            android:padding="20dp"
+                            android:textColor="@color/black"
+
+                            />
+                        <!--                android:textAllCaps="true"-->
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_loading_select"
+            android:id="@+id/save_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="10dp"
-
+            app:layout_constraintTop_toBottomOf="@id/scroll_layout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:padding="15dp"
-            android:text="Save"
+            android:text="Scan DRS"
             app:cornerRadius="10dp"
             />
 
