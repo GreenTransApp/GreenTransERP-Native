@@ -44,6 +44,11 @@
             android:parentActivityName=".ui.operation.drs.DRSActivity"
             />
         <activity
+            android:name=".ui.operation.pod_entry.PodEntryActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.operation.drs.DRSActivity"
+            />
+        <activity
             android:name=".ui.operation.drs.DRSActivity"
             android:exported="false" />
         <activity
