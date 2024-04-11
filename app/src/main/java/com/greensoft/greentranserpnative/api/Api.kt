@@ -358,6 +358,17 @@ interface Api {
         @Query("prmvendcode") vendCode: String?,
         @Query("prmmodetype") modeType: String?,
     ): Call<CommonResult>
+ @GET("PODAPI/showpoddetails")
+    fun getPodDetails(
+        @Query("prmconnstring") companyId: String,
+        @Query("prmgrno") grNo:String?,
+
+    ): Call<CommonResult>
+
+    @GET("PODAPI/gerRelations")
+    fun getRelationList(
+        @Query("prmconnstring") companyId: String,
+    ): Call<CommonResult>
 
     @FormUrlEncoded
     @POST("ManifestAPI/updateDRSNew_v1")

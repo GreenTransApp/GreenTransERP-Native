@@ -125,4 +125,11 @@ object Utils {
         Log.d("SMALL_DT_INVOICE_FORMAT", sqlFormat.format(date).toString())
         return sqlFormat.format(date)
     }
+
+     fun checkNullOrEmpty(value: Any?): String {
+        if(value == "" || value == null|| value == "null"){
+            return "NOT AVAILABLE"
+        }
+        return value.toString()
+    }
 }
