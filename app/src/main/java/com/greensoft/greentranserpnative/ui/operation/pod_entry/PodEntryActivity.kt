@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.databinding.adapters.ViewBindingAdapter.setOnClick
 import androidx.lifecycle.Observer
@@ -27,12 +28,16 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any> {
     var relationType = ""
     private var relationList: ArrayList<RelationListModel> = ArrayList()
     private val viewModel: PodEntryViewModel by viewModels()
+    var grDt = getSqlCurrentDate()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding= ActivityPodEntryBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
         setUpToolbar("POD Entry")
+        activityBinding.inputDate.setText(getViewCurrentDate())
+        activityBinding.inputTime.setText(getSqlCurrentTime())
         setObservers()
         setSpinner()
         setOnClick()
@@ -80,12 +85,29 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any> {
          }
         viewModel.relationLiveData.observe(this){ List->
             relationList =List
+            val relationAdapter =
+                ArrayAdapter(this, android.R.layout.simple_list_item_1,relationList )
+            activityBinding.inputRelation.adapter = relationAdapter
+
         }
 
     }
      private fun setOnClick(){
          activityBinding.btnGrProceed.setOnClickListener {
              getPodDetails()
+         }
+         activityBinding.inputDate.setOnClickListener {
+             openSingleDatePicker()
+         }
+         activityBinding.inputTime.setOnClickListener {
+             openTimePicker()
+         }
+         mPeriod.observe(this) { date ->
+             activityBinding.inputDate.setText(date.viewsingleDate)
+             grDt = date.sqlsingleDate.toString()
+         }
+         timePeriod.observe(this) { time ->
+             activityBinding.inputTime.setText(time)
          }
      }
  private  fun getRelationList(){
