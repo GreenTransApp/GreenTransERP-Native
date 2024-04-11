@@ -3,9 +3,8 @@ package com.greensoft.greentranserpnative.ui.operation.drs
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.greensoft.greentranserpnative.base.BaseViewModel
-import com.greensoft.greentranserpnative.ui.operation.drs.model.GrDetailModelDRS
+import com.greensoft.greentranserpnative.ui.bottomsheet.vehicleSelection.model.VehicleModelDRS
 import com.greensoft.greentranserpnative.ui.operation.drs.model.SaveDRSModel
-import com.greensoft.greentranserpnative.ui.operation.drs.model.VehicleModelDRS
 import com.greensoft.greentranserpnative.ui.operation.drs.model.VendorModelDRS
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

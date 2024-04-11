@@ -1,4 +1,4 @@
-package com.greensoft.greentranserpnative.ui.operation.drs.model
+package com.greensoft.greentranserpnative.ui.bottomsheet.vehicleSelection.model
 
 data class VehicleModelDRS(
     val capacity: Double,

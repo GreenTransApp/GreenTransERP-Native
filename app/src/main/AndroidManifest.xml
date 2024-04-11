@@ -39,10 +39,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.bottomsheet.vehicleSelection.VehicleSelectionBottomSheet"
+            android:exported="false" />
+        <activity
             android:name=".ui.operation.drsScan.DrsScanActivity"
             android:exported="false"
-            android:parentActivityName=".ui.operation.drs.DRSActivity"
-            />
+            android:parentActivityName=".ui.operation.drs.DRSActivity" />
         <activity
             android:name=".ui.operation.drs.DRSActivity"
             android:exported="false" />
