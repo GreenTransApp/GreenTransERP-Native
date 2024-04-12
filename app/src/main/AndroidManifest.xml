@@ -39,15 +39,19 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.operation.scan_and_delivery.ScanAndDeliveryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.operation.delivery.DeliveryOptionActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.operation.drsScan.DrsScanActivity"
             android:exported="false"
-            android:parentActivityName=".ui.operation.drs.DRSActivity"
-            />
+            android:parentActivityName=".ui.operation.drs.DRSActivity" />
         <activity
             android:name=".ui.operation.pod_entry.PodEntryActivity"
             android:exported="false"
-            android:parentActivityName=".ui.operation.drs.DRSActivity"
-            />
+            android:parentActivityName=".ui.operation.drs.DRSActivity" />
         <activity
             android:name=".ui.operation.drs.DRSActivity"
             android:exported="false" />
