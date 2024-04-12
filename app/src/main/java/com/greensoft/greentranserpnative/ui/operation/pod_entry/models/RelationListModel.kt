@@ -5,3 +5,8 @@ data class RelationListModel(
     val commandstatus: Int?,
     val relations: String?
 )
+{
+    override fun toString(): String {
+        return relations.toString()
+    }
+}

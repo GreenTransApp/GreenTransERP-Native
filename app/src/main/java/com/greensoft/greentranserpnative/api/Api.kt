@@ -397,4 +397,32 @@ interface Api {
         @Field("prmdlvvehicleno")dlvVehicleNo:String?,
 
     ):Call<CommonResult>
+
+    @FormUrlEncoded
+    @POST("PODAPI/SavePodV2")
+    fun SavePodEntry(
+        @Field("prmconnstring") companyId :String?,
+        @Field("prmloginbranchcode") loginBranchCode:String?,
+        @Field("prmgrno") grNo:String?,
+        @Field("prmdlvtime") dlvTime:String?,
+        @Field("prmname") name:String?,
+        @Field("prmdlvdt") dlvDt:String?,
+        @Field("prmrelation") relation:String?,
+        @Field("prmphno") phoneNo:String?,
+        @Field("prmsign") sign:String?,
+        @Field("prmstamp") stamp:String?,
+        @Field("prmpodimage") podImage:String?,
+        @Field("prmsignimage") signImage:String?,
+        @Field("prmremarks") remarks:String?,
+        @Field("prmusercode") userCode:String?,
+        @Field("prmsessionid") sessionId:String?,
+        @Field("prmdelayreason") delayReason:String?,
+        @Field("prmmenucode") menuCode:String?,
+        @Field("prmdeliveryboy") deliveryBoy:String?,
+        @Field("prmboyid") boyId:String?,
+        @Field("prmpoddt") podDt:String?,
+        @Field("prmpckgs") pckgs:String?,
+        @Field("prmpckgstr")pckgsStr :String?,
+        @Field("prmdataidstr") dataIdStr: String ?,
+        ):Call<CommonResult>
 }
