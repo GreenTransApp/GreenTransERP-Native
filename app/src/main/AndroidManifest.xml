@@ -39,10 +39,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".ui.operation.scan_and_delivery.ScanAndDeliveryActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.operation.delivery.DeliveryOptionActivity"
+            android:name=".ui.bottomsheet.vehicleSelection.VehicleSelectionBottomSheet"
             android:exported="false" />
         <activity
             android:name=".ui.operation.drsScan.DrsScanActivity"
