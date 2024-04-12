@@ -425,4 +425,37 @@ interface Api {
         @Field("prmpckgstr")pckgsStr :String?,
         @Field("prmdataidstr") dataIdStr: String ?,
         ):Call<CommonResult>
+
+    @FormUrlEncoded
+    @POST("WMS/DrsSticker_Update")
+    fun updateDrsSticker(
+        @Field("prmconnstring") companyId: String,
+        @Field("prmusercode")userCode:String?,
+        @Field("prmloginbranchcode")loginBranchCode:String?,
+        @Field("prmbranchcode")branchCode:String?,
+        @Field("prmmanifestno")manifestNo:String?,
+        @Field("prmdrsdt")drsDt:String?,
+        @Field("prmdrstime")drsTime: String?,
+        @Field("prmmodecode")modeCode:String?,
+        @Field("prmvendcode")vendCode:String?,
+        @Field("prmcustcode")custCode:String?,
+        @Field("prmremarks")remark:String?,
+        @Field("prmstickerno")stickerNo:String?,
+        @Field("prmdeliveredby")deliveredBy:String?,
+        @Field("prmdlvagentcode")agentCode:String?,
+        @Field("prmdlvvehicleno")vehicleNo:String?,
+        @Field("prmsessionid")sessionId:String?,
+    ):Call<CommonResult>
+
+    @FormUrlEncoded
+    @POST("WMS/DrsSticker_Remove")
+    fun removeDrsSticker(
+        @Field("prmconnstring") companyId: String,
+        @Field("prmusercode")userCode:String?,
+        @Field("prmloginbranchcode")loginBranchCode:String?,
+        @Field("prmmanifestno")manifestNo:String?,
+        @Field("prmstickerno")stickerNo:String?,
+        @Field("prmsessionid")sessionId:String?,
+    ):Call<CommonResult>
+
 }
