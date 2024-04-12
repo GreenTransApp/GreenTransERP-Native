@@ -58,6 +58,7 @@ import com.greensoft.greentranserpnative.ui.operation.loadingSlip.newScanLoad.Ne
 import com.greensoft.greentranserpnative.ui.operation.loadingSlip.newScanLoad.NewScanLoadStickerAdapter
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestEntryActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceActivity
+import com.greensoft.greentranserpnative.ui.operation.pod_entry.PodEntryActivity
 import com.greensoft.greentranserpnative.ui.operation.unarrived.InscanListActivity
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
@@ -437,11 +438,40 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
                 intent.putExtra("MENU_DATA", jsonSerialized)
                 startActivity(intent)
             }
-            "GTAPP_GRLIST" -> run {
-                val intent = Intent(this, GrListActivity::class.java)
+            "GTAPP_PICKUPARRIVAL" -> run {
+                val intent = Intent(this, InscanListActivity::class.java)
                 intent.putExtra("MENU_DATA", jsonSerialized)
                 startActivity(intent)
             }
+            "GTAPP_LONGROUTEMANIFEST" -> run {
+                val intent = Intent(this, PickupManifestEntryActivity::class.java)
+                intent.putExtra("MENU_DATA", jsonSerialized)
+                startActivity(intent)
+            }
+            "GTAPP_LONGROUTEARRIVAL" -> run {
+                val intent = Intent(this, PickupManifestEntryActivity::class.java)
+                intent.putExtra("MENU_DATA", jsonSerialized)
+                startActivity(intent)
+            }
+            "GTAPP_DRSNATIVE" -> run {
+                val intent = Intent(this, DRSActivity::class.java)
+                Utils.drsNo = null
+                intent.putExtra("MENU_DATA", jsonSerialized)
+                startActivity(intent)
+            }
+            "GTAPP_DELIVERYNATIVE" -> run {
+                val intent = Intent(this, PodEntryActivity::class.java)
+                intent.putExtra("MENU_DATA", jsonSerialized)
+                startActivity(intent)
+            }
+
+            // it was moved from the main dashboard ( home page ) to search of
+            //  Pending booking on the top right of the screen ( search list )
+//            "GTAPP_GRLIST" -> run {
+//                val intent = Intent(this, GrListActivity::class.java)
+//                intent.putExtra("MENU_DATA", jsonSerialized)
+//                startActivity(intent)
+//            }
         }
     }
 
