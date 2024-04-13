@@ -6,8 +6,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.SavePickupManifestModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodEntryModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodSaveModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.RelationListModel
@@ -30,7 +28,7 @@ class PodEntryRepository  @Inject constructor(): BaseRepository() {
         get() = podSaveMuteLiveData
     val relationLiveData: LiveData<ArrayList<RelationListModel>>
         get() = relationListMuteLiveData
-    fun getPodData( companyId:String,grNo:String) {
+    fun getGrDetail(companyId:String, grNo:String) {
         viewDialogMutData.postValue(true)
         api.getPodDetails(companyId,grNo).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {

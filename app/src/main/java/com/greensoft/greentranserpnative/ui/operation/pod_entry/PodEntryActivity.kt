@@ -1,34 +1,24 @@
 package com.greensoft.greentranserpnative.ui.operation.pod_entry
 
-import android.content.Intent
+import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.compose.ui.text.toUpperCase
-import androidx.databinding.adapters.ViewBindingAdapter.setOnClick
+import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityPodEntryBinding
+import com.greensoft.greentranserpnative.model.ImageUtil
 import com.greensoft.greentranserpnative.ui.bottomsheet.signBottomSheet.BottomSheetSignature
 import com.greensoft.greentranserpnative.ui.bottomsheet.signBottomSheet.SignatureBottomSheetCompleteListener
-import com.greensoft.greentranserpnative.ui.common.cameraX.Cropper
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import com.greensoft.greentranserpnative.ui.operation.eway_bill.EwayBillBottomSheet
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestViewModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.ManifestEnteredDataModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodEntryModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.RelationListModel
 import com.greensoft.greentranserpnative.utils.Utils
@@ -43,6 +33,8 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
     var stampRequired =""
     var signRequired =""
     var podImagePath =""
+    var signPath =""
+    var pckgs =""
 
 
     private var relationList: ArrayList<RelationListModel> = ArrayList()
@@ -59,6 +51,8 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
         setUpToolbar("POD Entry")
         activityBinding.inputDate.setText(getViewCurrentDate())
         activityBinding.inputTime.setText(getSqlCurrentTime())
+        activityBinding.inputDeliveryDt.setText(getViewCurrentDate())
+        activityBinding.inputDeliveryTime.setText(getSqlCurrentTime())
         activityBinding.signatureLayout.visibility = View.GONE
         activityBinding.imageLayout.visibility = View.GONE
         setOnClick()
@@ -106,10 +100,20 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
                     mPeriod.observe(this) { date ->
                     activityBinding.inputDate.setText(date.viewsingleDate)
                     grDt = date.sqlsingleDate.toString()
-                }
+                    }
                     timePeriod.observe(this) { time ->
                         activityBinding.inputTime.setText(time)
                     }
+
+//                    mPeriod.observe(this) { date ->
+//                    activityBinding.inputDeliveryDt.setText(date.viewsingleDate)
+//
+//                    }
+//                    timePeriod.observe(this) { time ->
+//                        activityBinding.inputDeliveryTime.setText(time)
+//                    }
+
+
          viewModel.podDetailsLiveData.observe(this) { data ->
              podDetail = data
              setPodDetails()
@@ -121,11 +125,12 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
             activityBinding.inputRelation.adapter = relationAdapter
 
         }
-                    imageClicked.observe(this) { clicked ->
-                        if(clicked) {
-                            setPodImage()
-                        }
-                    }
+
+        imageClicked.observe(this) { clicked ->
+            if(clicked) {
+                setPodImage()
+            }
+        }
 
     }
 
@@ -140,6 +145,12 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
          activityBinding.inputTime.setOnClickListener {
              openTimePicker()
          }
+         activityBinding.inputDeliveryDt.setOnClickListener {
+             openSingleDatePicker()
+         }
+         activityBinding.inputDeliveryTime.setOnClickListener {
+             openTimePicker()
+         }
          activityBinding.signatureLayout.setOnClickListener {
              val bottomSheet= BottomSheetSignature.newInstance(this, getCompanyId(), this, signBitmap)
              bottomSheet.show(supportFragmentManager, BottomSheetSignature.TAG)
@@ -149,7 +160,7 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
          }
          activityBinding.signCheck.setOnCheckedChangeListener { _, Bool ->
              if (activityBinding.signCheck.isChecked) {
-             activityBinding.signatureLayout.visibility =View.VISIBLE
+                 activityBinding.signatureLayout.visibility =View.VISIBLE
                  signRequired = "Y"
              }else{
                  activityBinding.signatureLayout.visibility =View.GONE
@@ -157,24 +168,44 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
                  signRequired = "N"
                  activityBinding.signImg.setImageDrawable(null)
              }
-             activityBinding.imageCheck.setOnCheckedChangeListener { buttonView, isChecked ->
-                 if (activityBinding.imageCheck.isChecked) {
-                     activityBinding.imageLayout.visibility = View.VISIBLE
-                     stampRequired = "Y"
-                 } else {
-                     activityBinding.imageLayout.visibility = View.GONE
-                     imageBase64List.clear()
-                     imageBitmapList.clear()
-                     activityBinding.podImage.setImageDrawable(null)
-                     stampRequired = "N"
-
-                 }
+         }
+         activityBinding.imageCheck.setOnCheckedChangeListener { buttonView, isChecked ->
+             if (activityBinding.imageCheck.isChecked) {
+                 activityBinding.imageLayout.visibility = View.VISIBLE
+                 stampRequired = "Y"
+             } else {
+                 activityBinding.imageLayout.visibility = View.GONE
+                 imageBase64List.clear()
+                 imageBitmapList.clear()
+                 activityBinding.podImage.setImageDrawable(null)
+                 stampRequired = "N"
 
              }
 
          }
+
+          activityBinding.btnSavePod.setOnClickListener {
+              alertForSavePod()
+          }
      }
 
+
+     private  fun alertForSavePod(){
+         if(activityBinding.inputDeliveryTime.text.isNullOrEmpty()){
+             errorToast("Please select delivery time.")
+              return
+         }
+
+         AlertDialog.Builder(this)
+             .setTitle("Alert!!!")
+             .setMessage("Are you sure you want to save this POD entry?")
+             .setPositiveButton("Yes") { _, _ ->
+//                 savePod()
+             }
+             .setNeutralButton("No") { _, _ -> }
+             .show()
+
+     }
      private fun setPodImage(){
          if(imageBase64List.isEmpty() && imageBitmapList.isEmpty()) {
              imageBase64List.add("EMPTY")
@@ -183,9 +214,6 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
          }
          activityBinding.podImage.setImageBitmap(imageBitmapList[0]);
          podImagePath= imageBase64List[0].toString()
-
-
-
      }
 
 
@@ -205,6 +233,7 @@ activityBinding.inputReceiverBy.setText(Utils.checkNullOrEmpty(podDetail?.name.t
 activityBinding.inputReceiverbyMobile.setText(Utils.checkNullOrEmpty(podDetail?.phno.toString()))
 activityBinding.inputRemark.setText(Utils.checkNullOrEmpty(podDetail?.remarks.toString()))
 activityBinding.inputDeliveryBoy.setText(Utils.checkNullOrEmpty(userDataModel?.username.toString()))
+pckgs= podDetail?.pckgs.toString()
 
 
 
@@ -234,6 +263,9 @@ activityBinding.inputDeliveryBoy.setText(Utils.checkNullOrEmpty(userDataModel?.u
     }
 
     private fun savePod(){
+
+        var dataIdStr = "";
+        var enteredQtyStr = "";
         viewModel.savePodEntry(
             companyId =getCompanyId(),
             loginBranchCode= getLoginBranchCode(),
@@ -246,18 +278,18 @@ activityBinding.inputDeliveryBoy.setText(Utils.checkNullOrEmpty(userDataModel?.u
             sign = signRequired ,
             stamp = stampRequired,
             podImage = podImagePath,
-            signImage = "",
+            signImage = signPath,
             remarks =activityBinding.inputRemark.text.toString(),
             userCode = getUserCode(),
             sessionId =getSessionId(),
             delayReason = "",
             menuCode = "GTAPP_PODENTRY",
             deliveryBoy = activityBinding.inputDeliveryBoy.text.toString().uppercase(),
-            boyId = "",
+            boyId = getExecutiveId(),
             podDt = activityBinding.inputDate.toString(),
-            pckgs = "",
-            pckgsStr = "",
-            dataIdStr = ""
+            pckgs = pckgs,
+            pckgsStr = enteredQtyStr,
+            dataIdStr = dataIdStr
 
         )
     }
@@ -266,6 +298,8 @@ activityBinding.inputDeliveryBoy.setText(Utils.checkNullOrEmpty(userDataModel?.u
         if(clickType == BottomSheetSignature.COMPLETED_CLICK_LISTENER_TAG) {
             signBitmap = imageBitmap
             activityBinding.signImg.setImageBitmap(signBitmap);
+            signPath = ImageUtil.convert(signBitmap!!)
+
         }
     }
 }
