@@ -10,11 +10,13 @@ import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityDrsScanBinding
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
+import com.greensoft.greentranserpnative.ui.common.alert.CommonAlert
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.drs.model.DrsDataModel
 import com.greensoft.greentranserpnative.ui.operation.drsScan.model.ScannedDrsModel
+import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -37,6 +39,7 @@ class DrsScanActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, Al
     private var vehicleCode:String = ""
     private var deliveryBoy:String = ""
     private var remark:String = ""
+    private var drsNo:String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,10 +47,20 @@ class DrsScanActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, Al
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
         setUpToolbar("DRS Scan")
+        this.drsNo = Utils.drsNo ?: ""
         getDrsActivityDataByIntent()
+
         updateStickersDrsList = generateSimpleList()
         setupRecyclerView()
         setObservers()
+        setOnClick()
+    }
+
+    private fun setOnClick(){
+        activityBinding.submitBtn.setOnClickListener {
+//            updateSticker(stickerNo)
+            errorToast("updateSticker fun call here")
+        }
     }
 
     private fun getDrsActivityDataByIntent() {
@@ -82,6 +95,7 @@ class DrsScanActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, Al
     private fun setObservers(){
         mScanner.observe(this){ stickerData->
             stickerNo = stickerData
+//            updateSticker(stickerData)
             Toast.makeText(this, "sticker no $stickerData", Toast.LENGTH_SHORT).show()
         }
         viewModel.updateStickerLiveData.observe(this){updateSticker->
@@ -96,17 +110,17 @@ class DrsScanActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, Al
             getUserCode(),
             getLoginBranchCode(),
             getLoginBranchCode(),
+            drsNo,
+            drsDate,
+            drsTime,
+            vehicleCode,
+            vendCode,
             "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
+            remark,
             stickerNo,
-            "",
-            "",
-            "",
+            deliveredBy,
+            vendCode,
+            vehicleNo,
             getSessionId()
         )
     }
@@ -116,7 +130,7 @@ class DrsScanActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, Al
             getCompanyId(),
             getUserCode(),
             getLoginBranchCode(),
-            "",
+            drsNo,
             stickerNo,
             getSessionId()
         )
@@ -131,9 +145,34 @@ class DrsScanActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, Al
         activityBinding.rvScanDRS.adapter = rvAdapter
     }
 
+    private  fun showAlert(){
+        CommonAlert.createAlert(
+            context = this,
+            header = "Alert!!",
+            description = " Are You Sure You Want To Remove Sticker?",
+            callback =this,
+            alertCallType ="REMOVE_STICKER",
+            data = ""
+        )
+    }
+
 
     override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {
-        TODO("Not yet implemented")
+        try {
+          when(alertClick){
+              AlertClick.YES->{
+                  if (alertCallType=="REMOVE_STICKER"){
+//                      removeSticker()
+                  errorToast("removeAPI fun call here")
+                  }
+              }
+              AlertClick.NO -> {
+              }
+
+          }
+        } catch (ex:Exception){
+            errorToast(ex.message)
+        }
     }
 
     override fun onItemClick(data: Any, clickType: String) {
@@ -141,7 +180,9 @@ class DrsScanActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, Al
     }
 
     override fun onClick(data: Any, clickType: String) {
-        TODO("Not yet implemented")
+        if (clickType=="REMOVE_STICKER"){
+            showAlert()
+        }
     }
 
     private fun generateSimpleList(): ArrayList<ScannedDrsModel> {

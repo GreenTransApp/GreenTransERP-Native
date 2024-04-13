@@ -326,27 +326,27 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
     }
 
     private fun setSpinners() {
-        val toStationModeList = listOf("To Airport", "To Hub")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, toStationModeList)
-        activityBinding.inputToStation.adapter = adapter
+//        val toStationModeList = listOf("To Airport", "To Hub")
+//        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, toStationModeList)
+//        activityBinding.inputToStation.adapter = adapter
 
-        activityBinding.inputToStation.onItemSelectedListener =
-            object: AdapterView.OnItemSelectedListener{
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-
-                    toStationModeList[position]
-
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                    TODO("Not yet implemented")
-                }
-            }
+//        activityBinding.inputToStation.onItemSelectedListener =
+//            object: AdapterView.OnItemSelectedListener{
+//                override fun onItemSelected(
+//                    parent: AdapterView<*>?,
+//                    view: View?,
+//                    position: Int,
+//                    id: Long
+//                ) {
+//
+//                    toStationModeList[position]
+//
+//                }
+//
+//                override fun onNothingSelected(parent: AdapterView<*>?) {
+//                    TODO("Not yet implemented")
+//                }
+//            }
         activityBinding.selectedVehicleType.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(

@@ -8,7 +8,7 @@ import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.ui.bottomsheet.vehicleSelection.model.VehicleModelDRS
 import com.greensoft.greentranserpnative.ui.operation.drs.model.SaveDRSModel
-import com.greensoft.greentranserpnative.ui.operation.drs.model.VendorModelDRS
+import com.greensoft.greentranserpnative.ui.bottomsheet.vendorSelection.model.VendorModelDRS
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
