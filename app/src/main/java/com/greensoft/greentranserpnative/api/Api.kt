@@ -426,6 +426,19 @@ interface Api {
         @Field("prmdataidstr") dataIdStr: String ?,
         ):Call<CommonResult>
 
+
+    @GET("WMS/GetPodEntryStickers")
+    fun getPodStickerList(
+        @Query("prmconnstring") companyId: String,
+        @Query("prmusercode") userCode: String?,
+        @Query("prmloginbranchcode") loginBranchCode: String?,
+        @Query("prmbranchcode") branchCode: String?,
+        @Query("prmgrno") grNo: String?,
+        @Query("prmmenucode") menuCode: String?,
+        @Query("prmsessionid") sessionId: String?
+    ): Call<CommonResult>
+
+
     @FormUrlEncoded
     @POST("WMS/DrsSticker_Update")
     fun updateDrsSticker(

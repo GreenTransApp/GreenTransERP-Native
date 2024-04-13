@@ -30,7 +30,7 @@
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@id/toolBar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/btn_loading_select"
+            app:layout_constraintBottom_toTopOf="@id/btn_save_pod"
             app:layout_constraintStart_toStartOf="parent"
             >
 
@@ -510,14 +510,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="10dp"
-                    android:layout_marginVertical="5dp"
                     app:layout_constraintTop_toBottomOf="@+id/input_layout_arrival"
-                    app:layout_constraintEnd_toStartOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginVertical="5dp"
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/input_layout_deliveryDt"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -532,7 +532,12 @@
                                 android:layout_height="wrap_content"
                                 android:text="Delivery Date"
                                 />
-
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/danger"
+                                android:text=" * "
+                                />
                         </LinearLayout>
                         <com.google.android.material.textfield.TextInputLayout
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -541,15 +546,13 @@
                             android:hint=""
                             >
                             <com.google.android.material.textfield.TextInputEditText
-
+                                android:drawableRight="@drawable/calendar"
+                                android:drawableTint="@color/colorPrimary"
                                 android:id="@+id/input_delivery_dt"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textAllCaps="true"
                                 android:focusable="false"
-                                android:textColor="@color/black"
-                                android:inputType="text"
-                                android:hint="Enter Delivery Date"
                                 />
 
                         </com.google.android.material.textfield.TextInputLayout>
@@ -559,7 +562,7 @@
                     <LinearLayout
                         android:id="@+id/input_layout_delivery_time"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginLeft="5dp"
                         android:orientation="vertical">
@@ -570,13 +573,13 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Delivery Time"
+                                android:text=" Delivery Time"
                                 />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/danger"
-                                android:text=""
+                                android:text=" * "
                                 />
                         </LinearLayout>
                         <com.google.android.material.textfield.TextInputLayout
@@ -589,11 +592,11 @@
                                 android:id="@+id/input_delivery_time"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:drawableRight="@drawable/clock"
+                                android:drawableTint="@color/colorPrimary"
                                 android:textAllCaps="true"
-                                android:inputType="text"
                                 android:focusable="false"
-                                android:textColor="@color/black"
-                                android:hint="Enter Delivery Time"
+
                                 />
 
                         </com.google.android.material.textfield.TextInputLayout>
@@ -981,7 +984,7 @@
 
         </ScrollView>
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_loading_select"
+            android:id="@+id/btn_save_pod"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"

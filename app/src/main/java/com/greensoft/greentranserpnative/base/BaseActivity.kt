@@ -826,6 +826,9 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
     fun getSessionId(): String {
         return userDataModel?.sessionid.toString()
     }
+    fun getExecutiveId(): String {
+        return userDataModel?.executiveid.toString()
+    }
 //    fun snackBar(message:String){
 //        val snackBar = Snackbar.make(activityBinding.layout, message, Snackbar.LENGTH_LONG)
 //            .setAction("Click") {

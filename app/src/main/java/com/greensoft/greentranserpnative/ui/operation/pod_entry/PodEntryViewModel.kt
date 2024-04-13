@@ -32,7 +32,7 @@ class PodEntryViewModel  @Inject constructor(private val _repo: PodEntryReposito
 
     fun getPodDetails( companyId:String,grNo:String){
         viewModelScope.launch(Dispatchers.IO) {
-            _repo.getPodData(companyId,grNo)
+            _repo.getGrDetail(companyId,grNo)
         }
     }
     fun getRelation( companyId:String){

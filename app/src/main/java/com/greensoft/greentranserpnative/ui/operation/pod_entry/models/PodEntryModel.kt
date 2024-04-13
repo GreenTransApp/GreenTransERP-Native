@@ -20,7 +20,7 @@ data class PodEntryModel(
     val name: Any?,
     val orgcode: String?,
     val origin: String?,
-    val pckgs: Double?,
+    val pckgs: Any?,
     val phno: Any?,
     val picktime: String?,
     val poddate: String?,
