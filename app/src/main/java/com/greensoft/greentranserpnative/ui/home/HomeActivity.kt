@@ -49,6 +49,7 @@ import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.call_register.CallRegisterActivity
 import com.greensoft.greentranserpnative.ui.operation.communicationList.CommunicationListActivity
 import com.greensoft.greentranserpnative.ui.operation.communicationList.models.CommunicationListModel
+import com.greensoft.greentranserpnative.ui.operation.delivery.DeliveryOptionActivity
 import com.greensoft.greentranserpnative.ui.operation.drs.DRSActivity
 import com.greensoft.greentranserpnative.ui.operation.notificationPanel.model.NotificationPanelBottomSheetModel
 import com.greensoft.greentranserpnative.ui.operation.grList.GrListActivity
@@ -460,7 +461,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
                 startActivity(intent)
             }
             "GTAPP_DELIVERYNATIVE" -> run {
-                val intent = Intent(this, PodEntryActivity::class.java)
+                val intent = Intent(this, DeliveryOptionActivity::class.java)
                 intent.putExtra("MENU_DATA", jsonSerialized)
                 startActivity(intent)
             }

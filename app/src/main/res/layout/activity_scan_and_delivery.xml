@@ -98,7 +98,7 @@
 
                                     <TextView
                                         android:id="@+id/gr_no"
-                                        android:layout_width="100sp"
+                                        android:layout_width="200sp"
                                         android:layout_height="match_parent"
                                         android:background="@drawable/table_header_cell_bg"
                                         android:gravity="center_horizontal|center_vertical"
@@ -108,7 +108,7 @@
 
                                     <TextView
                                         android:id="@+id/sticker_no"
-                                        android:layout_width="100sp"
+                                        android:layout_width="200sp"
                                         android:layout_height="match_parent"
                                         android:background="@drawable/table_header_cell_bg"
                                         android:gravity="center_horizontal|center_vertical"
@@ -134,6 +134,7 @@
                                     android:id="@+id/recyclerView"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
                                     app:layout_constraintTop_toBottomOf="@+id/period"
                                     tools:ignore="MissingConstraints"
                                     tools:listitem="@layout/item_gr_list" />

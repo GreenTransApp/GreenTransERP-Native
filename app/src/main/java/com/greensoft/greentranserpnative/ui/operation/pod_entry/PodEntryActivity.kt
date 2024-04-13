@@ -2,14 +2,11 @@ package com.greensoft.greentranserpnative.ui.operation.pod_entry
 
 import android.app.AlertDialog
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
-import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.greensoft.greentranserpnative.R
@@ -35,13 +32,14 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
     var podImagePath =""
     var signPath =""
     var pckgs =""
+    var alreadyExistGr:Boolean = false
 
 
     private var relationList: ArrayList<RelationListModel> = ArrayList()
     private val viewModel: PodEntryViewModel by viewModels()
     var grDt = getSqlCurrentDate()
     var signBitmap: Bitmap? = null
-    lateinit var bottomSheetDialog: BottomSheetDialog;
+    lateinit var bottomSheetDialog: BottomSheetDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,6 +114,7 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
 
          viewModel.podDetailsLiveData.observe(this) { data ->
              podDetail = data
+             alreadyExistGr = data.commandstatus != 1
              setPodDetails()
          }
         viewModel.relationLiveData.observe(this){ List->
@@ -137,7 +136,7 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
 
      private fun setOnClick(){
          activityBinding.btnGrProceed.setOnClickListener {
-             getPodDetails()
+             getGrDetails()
          }
          activityBinding.inputDate.setOnClickListener {
              openSingleDatePicker()
@@ -166,7 +165,7 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
                  activityBinding.signatureLayout.visibility =View.GONE
                  signBitmap = null
                  signRequired = "N"
-                 activityBinding.signImg.setImageDrawable(null)
+                 activityBinding.signImg.setImageDrawable(getResources().getDrawable(R.drawable.image))
              }
          }
          activityBinding.imageCheck.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -177,7 +176,7 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
                  activityBinding.imageLayout.visibility = View.GONE
                  imageBase64List.clear()
                  imageBitmapList.clear()
-                 activityBinding.podImage.setImageDrawable(null)
+                 activityBinding.podImage.setImageDrawable(getResources().getDrawable(R.drawable.image))
                  stampRequired = "N"
 
              }
@@ -191,9 +190,20 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
 
 
      private  fun alertForSavePod(){
-         if(activityBinding.inputDeliveryTime.text.isNullOrEmpty()){
+         if (!alreadyExistGr){
+             if(activityBinding.inputGrno.text.isNullOrEmpty()){
+                 errorToast("Please enter GR#.")
+                 return
+             }
+         }else if(activityBinding.inputDeliveryTime.text.isNullOrEmpty()){
              errorToast("Please select delivery time.")
               return
+         }else if(signBitmap == null){
+             errorToast("Signature not added.")
+             return
+         }else if(podImagePath == null|| podImagePath == ""){
+             errorToast("POD Image not added.")
+           return
          }
 
          AlertDialog.Builder(this)
@@ -251,7 +261,7 @@ pckgs= podDetail?.pckgs.toString()
             companyId = getCompanyId()
         )
     }
-    private fun getPodDetails(){
+    private fun getGrDetails(){
         if(activityBinding.inputGrno.text.isNullOrEmpty()){
             errorToast("Please enter GR#.")
             return

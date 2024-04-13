@@ -1,5 +1,6 @@
 package com.greensoft.greentranserpnative.ui.operation.scan_and_delivery
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
@@ -121,12 +122,23 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
         viewModel.podDetailsLiveData.observe(this) { data ->
             podDetail = data
             setPodDetails()
+
         }
         viewModel.relationLiveData.observe(this){ List->
             relationList =List
             val relationAdapter =
                 ArrayAdapter(this, android.R.layout.simple_list_item_1,relationList )
             activityBinding.inputRelation.adapter = relationAdapter
+
+        }
+        viewModel.stickerLiveData.observe(this){sticker->
+            stickerList = sticker
+            if(stickerList.size > 0){
+                activityBinding.stickerGrid.visibility =  View.VISIBLE
+                activityBinding.btnUpArrow.visibility=View.VISIBLE
+                activityBinding.btnDownArrow.visibility= View.GONE
+                setupRecyclerView()
+            }
 
         }
 
@@ -143,6 +155,8 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
                 setPodImage()
             }
         }
+
+
     }
 
     private fun setupRecyclerView() {
@@ -178,6 +192,7 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
         activityBinding.inputDeliveryBoy.setText(Utils.checkNullOrEmpty(userDataModel?.username.toString()))
 
     }
+      @SuppressLint("UseCompatLoadingForDrawables")
       private  fun setOnClick(){
           activityBinding.btnDownArrow.setOnClickListener{
               activityBinding.stickerGrid.visibility =  View.VISIBLE
@@ -191,6 +206,7 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
           }
           activityBinding.btnGrProceed.setOnClickListener {
               getPodDetails()
+              getScanStickerList()
           }
           activityBinding.inputDate.setOnClickListener {
               openSingleDatePicker()
@@ -221,7 +237,7 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
                   activityBinding.signatureLayout.visibility =View.GONE
                   signBitmap = null
                   signRequired = "N"
-                  activityBinding.signImg.setImageDrawable(null)
+                  activityBinding.signImg.setImageDrawable(getResources().getDrawable(R.drawable.image))
               }
           }
           activityBinding.imageCheck.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -232,7 +248,7 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
                   activityBinding.imageLayout.visibility = View.GONE
                   imageBase64List.clear()
                   imageBitmapList.clear()
-                  activityBinding.podImage.setImageDrawable(null)
+                  activityBinding.podImage.setImageDrawable(getResources().getDrawable(R.drawable.image))
                   stampRequired = "N"
 
               }
@@ -251,12 +267,12 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
      private fun getScanStickerList(){
          viewModel.getStickerList(
              companyId = getCompanyId(),
-             userCode = "",
-             loginBranchCode = "",
-             branchCode = "",
-             menuCode = "",
-             grNo = "",
-             sessionId = ""
+             userCode = getUserCode(),
+             loginBranchCode = getLoginBranchCode(),
+             branchCode = getLoginBranchCode(),
+             menuCode = "SCAN_DELIVERY",
+             grNo = activityBinding.inputGrno.text.toString(),
+             sessionId =getSessionId()
          )
      }
     private fun getPodDetails(){
