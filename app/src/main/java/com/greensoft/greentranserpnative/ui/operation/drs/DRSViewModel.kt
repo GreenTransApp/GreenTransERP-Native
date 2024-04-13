@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.greensoft.greentranserpnative.base.BaseViewModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.vehicleSelection.model.VehicleModelDRS
 import com.greensoft.greentranserpnative.ui.operation.drs.model.SaveDRSModel
-import com.greensoft.greentranserpnative.ui.operation.drs.model.VendorModelDRS
+import com.greensoft.greentranserpnative.ui.bottomsheet.vendorSelection.model.VendorModelDRS
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

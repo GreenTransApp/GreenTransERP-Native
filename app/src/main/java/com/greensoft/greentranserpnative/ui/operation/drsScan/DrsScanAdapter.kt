@@ -34,6 +34,9 @@ class DrsScanAdapter @Inject constructor(
             fun onBind(scannedDrsModel:ScannedDrsModel, onRowClick: OnRowClick<Any>){
 
                 layoutBinding.index = adapterPosition
+                layoutBinding.removeBtn.setOnClickListener {
+                    onRowClick.onClick(scannedDrsModel,"REMOVE_STICKER")
+                }
             }
 
     }

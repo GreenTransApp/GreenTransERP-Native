@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
@@ -15,6 +14,7 @@ import com.greensoft.greentranserpnative.databinding.ActivityDrsBinding
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.vehicleSelection.VehicleSelectionBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.vehicleSelection.model.VehicleModelDRS
+import com.greensoft.greentranserpnative.ui.bottomsheet.vendorSelection.VendorSelectionBottomSheet
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
@@ -22,9 +22,8 @@ import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.drs.model.DrsDataModel
 import com.greensoft.greentranserpnative.ui.operation.drs.model.GrDetailModelDRS
 import com.greensoft.greentranserpnative.ui.operation.drs.model.SaveDRSModel
-import com.greensoft.greentranserpnative.ui.operation.drs.model.VendorModelDRS
+import com.greensoft.greentranserpnative.ui.bottomsheet.vendorSelection.model.VendorModelDRS
 import com.greensoft.greentranserpnative.ui.operation.drsScan.DrsScanActivity
-import com.greensoft.greentranserpnative.ui.operation.unarrived.models.InscanListModel
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -145,7 +144,8 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
             openTimePicker()
         }
         activityBinding.inputVendorName.setOnClickListener {
-            getVendorList()
+//            getVendorList()
+            vendorBottomSheet(this,"Vendor Selection",this)
         }
         activityBinding.inputVehicleName.setOnClickListener {
 //            getVehicleList()
@@ -236,7 +236,16 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
 
 
     override fun onClick(data: Any, clickType: String) {
-        if(clickType == VehicleSelectionBottomSheet.VEHICLE_CLICK_TYPE) {
+        if (clickType==VendorSelectionBottomSheet.VENDOR_CLICK_TYPE){
+            try {
+                val selectedVendor = data as VendorModelDRS
+                activityBinding.inputVendorName.setText(selectedVendor.vendname)
+                vendorCode = selectedVendor.vendcode
+            } catch (ex:Exception){
+                errorToast(ex.message)
+            }
+        }
+        else if(clickType == VehicleSelectionBottomSheet.VEHICLE_CLICK_TYPE) {
             try {
                 val selectedVehicle = data as VehicleModelDRS
                 activityBinding.inputVehicleName.setText(selectedVehicle.regno)
@@ -286,6 +295,11 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
     private fun vehicleBottomSheet(mContext: Context, title:String, onRowClick: OnRowClick<Any>) {
         val bottomSheetDialog = VehicleSelectionBottomSheet.newInstance(mContext,title,onRowClick)
         bottomSheetDialog.show(supportFragmentManager, VehicleSelectionBottomSheet.TAG)
+    }
+
+    private fun vendorBottomSheet(mContext: Context, title:String, onRowClick: OnRowClick<Any>) {
+        val bottomSheetDialog = VendorSelectionBottomSheet.newInstance(mContext,title,onRowClick)
+        bottomSheetDialog.show(supportFragmentManager, VendorSelectionBottomSheet.TAG)
     }
 
     private fun generateSimpleList(): ArrayList<GrDetailModelDRS> {
