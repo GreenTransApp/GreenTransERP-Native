@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityDrsBinding
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
@@ -18,10 +19,13 @@ import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.drs.model.DrsDataModel
 import com.greensoft.greentranserpnative.ui.operation.drs.model.GrDetailModelDRS
 import com.greensoft.greentranserpnative.ui.operation.drs.model.SaveDRSModel
 import com.greensoft.greentranserpnative.ui.operation.drs.model.VendorModelDRS
 import com.greensoft.greentranserpnative.ui.operation.drsScan.DrsScanActivity
+import com.greensoft.greentranserpnative.ui.operation.unarrived.models.InscanListModel
+import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -39,6 +43,8 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
     private val viewModel: DRSViewModel by viewModels()
     var vendorCode = ""
     var vehicleCode = ""
+    var spinnerValue = ""
+    private var drsNo:String? = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityDrsBinding.inflate(layoutInflater)
@@ -53,6 +59,18 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
         setOnClick()
         setObservers()
 //        setupRecyclerView()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        drsNo = Utils.drsNo
+        if (drsNo!=null||drsNo==""){
+            getDrsData(drsNo)
+        }
+    }
+
+    fun getDrsData(drsNo:String?){
+
     }
 
     private fun setObservers(){
@@ -109,7 +127,7 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
                     id: Long
                 ) {
 
-                    deliveryModeList[position]
+                    spinnerValue = deliveryModeList[position].toString()
 
                 }
 
@@ -133,9 +151,29 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
 //            getVehicleList()
             vehicleBottomSheet(this,"Vehicle Selection",this)
         }
-        activityBinding.saveBtn.setOnClickListener {
-            val intent = Intent(this,DrsScanActivity::class.java)
-            startActivity(intent)
+        activityBinding.scanDrsBtn.setOnClickListener {
+
+            val gson = Gson()
+            try {
+                var model= DrsDataModel(
+                    commandstatus = 1,
+                    drsdate = drsDate,
+                    drstime = activityBinding.inputTime.text.toString(),
+                    deliveredby = spinnerValue,
+                    vendorname = activityBinding.inputVendorName.text.toString(),
+                    vendcode = vendorCode,
+                    vehicleno = activityBinding.inputVehicleName.text.toString(),
+                    vehiclecode = vehicleCode,
+                    driver = activityBinding.deliveryBoyName.text.toString(),
+                    remark = activityBinding.inputRemark.text.toString()
+                )
+                val jsonString = gson.toJson(model)
+                val intent = Intent(this, DrsScanActivity::class.java)
+                intent.putExtra("DrsModelData", jsonString)
+                startActivity(intent)
+            } catch (ex: java.lang.Exception) {
+                errorToast("Data Conversion Error: " + ex.message)
+            }
         }
     }
 
@@ -203,7 +241,7 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
                 val selectedVehicle = data as VehicleModelDRS
                 activityBinding.inputVehicleName.setText(selectedVehicle.regno)
                 vehicleCode = selectedVehicle.vehiclecode
-                successToast("Ho gaya bhai: ${selectedVehicle.regno}" )
+//                successToast("Ho gaya bhai: ${selectedVehicle.regno}" )
             } catch (ex: Exception) {
                 errorToast(ex.message)
             }
@@ -257,5 +295,10 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
             dataList.add(GrDetailModelDRS(i,"",1,(100+i).toString()))
         }
         return dataList
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Utils.drsNo = null
     }
     }

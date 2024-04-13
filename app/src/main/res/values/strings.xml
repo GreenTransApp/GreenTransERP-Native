@@ -323,4 +323,5 @@
     <string name="delivery_boy_name">Delivery Boy Name</string>
     <string name="drs_date">DRS Date</string>
     <string name="drs_time">DRS Time</string>
+    <string name="sticker_no">Sticker No</string>
 </resources>

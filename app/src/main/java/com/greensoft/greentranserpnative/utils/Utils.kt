@@ -20,6 +20,7 @@ object Utils {
     var toDate = ""
     var loadingNo = ""
     var manifestNo = ""
+    var drsNo: String? = ""
     var arrivalBranchCode = ""
     var receiveDate = ""
     var receiveViewDate = ""
