@@ -51,7 +51,9 @@
             android:parentActivityName=".ui.operation.drs.DRSActivity" />
         <activity
             android:name=".ui.operation.drs.DRSActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity"
+            />
         <activity
             android:name=".ui.bottomsheet.bookingIndentInfoBottomSheet.BookingIndentInfoBottomSheet"
             android:exported="false" />
