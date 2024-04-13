@@ -97,7 +97,7 @@
                                         android:textSize="12sp" />
 
                                     <TextView
-                                        android:id="@+id/grNo"
+                                        android:id="@+id/gr_no"
                                         android:layout_width="100sp"
                                         android:layout_height="match_parent"
                                         android:background="@drawable/table_header_cell_bg"
@@ -107,193 +107,23 @@
                                         android:textSize="12sp" />
 
                                     <TextView
-                                        android:id="@+id/grDt"
+                                        android:id="@+id/sticker_no"
                                         android:layout_width="100sp"
                                         android:layout_height="match_parent"
                                         android:background="@drawable/table_header_cell_bg"
                                         android:gravity="center_horizontal|center_vertical"
-                                        android:text="GR Date"
-                                        android:textColor="@color/white"
-                                        android:textSize="12sp" />
-
-                                    <!--                <TextView-->
-                                    <!--                    android:id="@+id/arrivalDate"-->
-                                    <!--                    android:layout_width="100sp"-->
-                                    <!--                    android:text="GRN Date"-->
-                                    <!--                    android:layout_height="match_parent"-->
-                                    <!--                    android:gravity="center_horizontal|center_vertical"-->
-                                    <!--                    android:textColor="@color/white"-->
-                                    <!--                    android:background="@drawable/table_header_cell_bg"-->
-                                    <!--                    android:textSize="12sp" />-->
-
-                                    <TextView
-                                        android:id="@+id/orgName"
-                                        android:layout_width="200sp"
-                                        android:layout_height="match_parent"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:gravity="center_horizontal|center_vertical"
-                                        android:text="Origin"
-                                        android:textColor="@color/white"
-                                        android:textSize="12sp" />
-
-                                    <TextView
-                                        android:id="@+id/destName"
-                                        android:layout_width="200sp"
-                                        android:layout_height="match_parent"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:gravity="center_horizontal|center_vertical"
-                                        android:text="Destination"
-                                        android:textColor="@color/white"
-                                        android:textSize="12sp" />
-
-                                    <TextView
-                                        android:id="@+id/customerName"
-                                        android:layout_width="200sp"
-                                        android:layout_height="match_parent"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:gravity="center_horizontal|center_vertical"
-                                        android:text="Customer"
-                                        android:textColor="@color/white"
-                                        android:textSize="12sp" />
-
-                                    <TextView
-                                        android:id="@+id/cngrName"
-                                        android:layout_width="200sp"
-                                        android:layout_height="match_parent"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:gravity="center_horizontal|center_vertical"
-                                        android:text="Consignor"
-                                        android:textColor="@color/white"
-                                        android:textSize="12sp" />
-
-                                    <TextView
-                                        android:id="@+id/cngeName"
-                                        android:layout_width="200sp"
-                                        android:layout_height="match_parent"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:gravity="center_horizontal|center_vertical"
-                                        android:text="Consignee"
-                                        android:textColor="@color/white"
-                                        android:textSize="12sp" />
-
-                                    <!--                <TextView-->
-                                    <!--                    android:id="@+id/partName"-->
-                                    <!--                    android:layout_width="200sp"-->
-                                    <!--                    android:layout_height="match_parent"-->
-                                    <!--                    android:text="Part Name"-->
-                                    <!--                    android:gravity="center_horizontal|center_vertical"-->
-                                    <!--                    android:textColor="@color/white"-->
-                                    <!--                    android:background="@drawable/table_header_cell_bg"-->
-                                    <!--                    android:textSize="12sp" />-->
-
-                                    <TextView
-                                        android:layout_width="100sp"
-                                        android:layout_height="match_parent"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:gravity="center_horizontal|center_vertical"
-                                        android:text="Sale Type"
-                                        android:textColor="@color/white"
-                                        android:textSize="12sp" />
-
-                                    <TextView
-                                        android:layout_width="100sp"
-                                        android:layout_height="match_parent"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:gravity="center_horizontal|center_vertical"
-                                        android:text="Load Type"
-                                        android:textColor="@color/white"
-                                        android:textSize="12sp" />
-
-                                    <TextView
-                                        android:layout_width="100sp"
-                                        android:layout_height="match_parent"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:gravity="center_horizontal|center_vertical"
-                                        android:text="Vehicle #"
-                                        android:textColor="@color/white"
-                                        android:textSize="12sp" />
-
-                                    <TextView
-                                        android:layout_width="100sp"
-                                        android:layout_height="match_parent"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:gravity="center_horizontal|center_vertical"
-                                        android:text="Pckgs"
-                                        android:textColor="@color/white"
-                                        android:textSize="12sp" />
-
-                                    <TextView
-                                        android:layout_width="100sp"
-                                        android:layout_height="match_parent"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:gravity="center_horizontal|center_vertical"
-                                        android:text="Freight"
-                                        android:textColor="@color/white"
-                                        android:textSize="12sp" />
-
-                                    <TextView
-                                        android:layout_width="100sp"
-                                        android:layout_height="match_parent"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:gravity="center_horizontal|center_vertical"
-                                        android:text="Other Charges"
-                                        android:textColor="@color/white"
-                                        android:textSize="12sp" />
-
-                                    <TextView
-                                        android:layout_width="100sp"
-                                        android:layout_height="match_parent"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:gravity="center_horizontal|center_vertical"
-                                        android:text="Amount"
-                                        android:textColor="@color/white"
-                                        android:textSize="12sp" />
-
-                                    <TextView
-                                        android:layout_width="130sp"
-                                        android:layout_height="match_parent"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:gravity="center_horizontal|center_vertical"
-                                        android:text="EWAY Bill #"
+                                        android:text="Sticker#"
                                         android:textColor="@color/white"
                                         android:textSize="12sp" />
 
 
-                                    <!--                <TextView-->
-                                    <!--                    android:layout_width="100sp"-->
-                                    <!--                    android:layout_height="match_parent"-->
-                                    <!--                    android:text="On Pallet"-->
-                                    <!--                    android:gravity="center_horizontal|center_vertical"-->
-                                    <!--                    android:textColor="@color/white"-->
-                                    <!--                    android:background="@drawable/table_header_cell_bg"-->
-                                    <!--                    android:textSize="12sp" />-->
-
-                                    <!--                <TextView-->
-                                    <!--                    android:layout_width="100sp"-->
-                                    <!--                    android:layout_height="match_parent"-->
-                                    <!--                    android:text="On Storage"-->
-                                    <!--                    android:gravity="center_horizontal|center_vertical"-->
-                                    <!--                    android:textColor="@color/white"-->
-                                    <!--                    android:background="@drawable/table_header_cell_bg"-->
-                                    <!--                    android:textSize="12sp" />-->
-
-                                    <!--                        <TextView-->
-                                    <!--                            android:id="@+id/scanAction"-->
-                                    <!--                            android:layout_width="150sp"-->
-                                    <!--                            android:layout_height="match_parent"-->
-                                    <!--                            android:gravity="center_horizontal|center_vertical"-->
-                                    <!--                            android:textColor="@color/white"-->
-                                    <!--                            android:background="@drawable/table_header_cell_bg"-->
-                                    <!--                            android:text="SCAN"-->
-                                    <!--                            android:textSize="12sp" />-->
-
                                     <TextView
-                                        android:id="@+id/printAction"
+                                        android:id="@+id/action"
                                         android:layout_width="150sp"
                                         android:layout_height="match_parent"
                                         android:background="@drawable/table_header_cell_bg"
                                         android:gravity="center_horizontal|center_vertical"
-                                        android:text="PRINT"
+                                        android:text="Action"
                                         android:textColor="@color/white"
                                         android:textSize="12sp" />
 

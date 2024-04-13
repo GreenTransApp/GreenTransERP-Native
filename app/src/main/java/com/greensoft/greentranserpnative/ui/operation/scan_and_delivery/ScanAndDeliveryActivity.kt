@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityScanAndDeliveryBinding
@@ -20,9 +21,13 @@ import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.GrSelectionAdapter
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.SavePickupManifestAdapter
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.PodEntryViewModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodEntryModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.RelationListModel
+import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.adapter.ScanDeliveryAdapter
+import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanStickerModel
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -30,8 +35,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>,
     BottomSheetClick<Any>, AlertCallback<Any>, SignatureBottomSheetCompleteListener {
-        lateinit var  activityBinding:ActivityScanAndDeliveryBinding
+    lateinit var  activityBinding:ActivityScanAndDeliveryBinding
+    lateinit var linearLayoutManager: LinearLayoutManager
     private var podDetail: PodEntryModel? = null
+    private var rvAdapter: ScanDeliveryAdapter? = null
     var relationType = ""
     var stampRequired =""
     var signRequired =""
@@ -41,6 +48,7 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
     var grDt = getSqlCurrentDate()
     var signBitmap: Bitmap? = null
     private var relationList: ArrayList<RelationListModel> = ArrayList()
+    private var stickerList: ArrayList<ScanStickerModel> = ArrayList()
     private val viewModel: ScanAndDeliveryViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -137,6 +145,14 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
         }
     }
 
+    private fun setupRecyclerView() {
+        linearLayoutManager = LinearLayoutManager(this)
+        rvAdapter = ScanDeliveryAdapter(stickerList, this,this)
+        activityBinding.recyclerView.layoutManager = linearLayoutManager
+        activityBinding.recyclerView.adapter = rvAdapter
+
+    }
+
     private fun setPodImage(){
         if(imageBase64List.isEmpty() && imageBitmapList.isEmpty()) {
             imageBase64List.add("EMPTY")
@@ -231,6 +247,18 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
             companyId = getCompanyId()
         )
     }
+
+     private fun getScanStickerList(){
+         viewModel.getStickerList(
+             companyId = getCompanyId(),
+             userCode = "",
+             loginBranchCode = "",
+             branchCode = "",
+             menuCode = "",
+             grNo = "",
+             sessionId = ""
+         )
+     }
     private fun getPodDetails(){
         if(activityBinding.inputGrno.text.isNullOrEmpty()){
             errorToast("Please enter GR#.")

@@ -207,11 +207,11 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
 
      }
      private fun setPodImage(){
-         if(imageBase64List.isEmpty() && imageBitmapList.isEmpty()) {
-             imageBase64List.add("EMPTY")
-             imageBitmapList.add(BitmapFactory.decodeResource(mContext.resources,
-                 R.drawable.baseline_add_a_photo_24))
-         }
+//         if(imageBase64List.isEmpty() && imageBitmapList.isEmpty()) {
+//             imageBase64List.add("EMPTY")
+//             imageBitmapList.add(BitmapFactory.decodeResource(mContext.resources,
+//                 R.drawable.baseline_add_a_photo_24))
+//         }
          activityBinding.podImage.setImageBitmap(imageBitmapList[0]);
          podImagePath= imageBase64List[0].toString()
      }
