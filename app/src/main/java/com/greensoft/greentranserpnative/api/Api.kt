@@ -470,5 +470,16 @@ interface Api {
         @Field("prmstickerno")stickerNo:String?,
         @Field("prmsessionid")sessionId:String?,
     ):Call<CommonResult>
+  @FormUrlEncoded
+    @POST("WMS/SaveDelivery_Scan_Stickers")
+    fun updateScanDeliverySticker(
+        @Field("prmconnstring") companyId: String,
+        @Field("prmusercode")userCode:String?,
+        @Field("prmloginbranchcode")loginBranchCode:String?,
+        @Field("prmbranchcode")branchCode:String?,
+        @Field("prmstickerno")stickerNo:String?,
+        @Field("prmmenucode")menuCode:String?,
+        @Field("prmsessionid")sessionId:String?,
+    ):Call<CommonResult>
 
 }

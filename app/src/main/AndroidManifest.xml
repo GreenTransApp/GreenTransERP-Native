@@ -39,6 +39,16 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.operation.despatch_manifest.DespatchManifestEntryActivity"
+            android:exported="false"
+            android:label="@string/title_activity_pickup_manifest"
+            android:parentActivityName=".ui.home.HomeActivity"
+            android:theme="@style/Theme.GreenTransERPNative.NoActionBar" />
+
+        <activity
+            android:name=".ui.operation.scan_and_delivery.ScanAndUndeliveredActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.bottomsheet.vendorSelection.VendorSelectionBottomSheet"
             android:exported="false" />
         <activity

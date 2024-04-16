@@ -1,6 +1,7 @@
 package com.greensoft.greentranserpnative.ui.operation.pod_entry
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
@@ -15,17 +16,25 @@ import com.greensoft.greentranserpnative.databinding.ActivityPodEntryBinding
 import com.greensoft.greentranserpnative.model.ImageUtil
 import com.greensoft.greentranserpnative.ui.bottomsheet.signBottomSheet.BottomSheetSignature
 import com.greensoft.greentranserpnative.ui.bottomsheet.signBottomSheet.SignatureBottomSheetCompleteListener
+import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
+import com.greensoft.greentranserpnative.ui.common.alert.CommonAlert
+import com.greensoft.greentranserpnative.ui.home.HomeActivity
+import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.GrSelectionActivity
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodEntryModel
+import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodSaveModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.RelationListModel
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, SignatureBottomSheetCompleteListener {
+class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, SignatureBottomSheetCompleteListener,
+    AlertCallback<Any> {
     lateinit var  activityBinding:ActivityPodEntryBinding
     private var podDetail: PodEntryModel? = null
+    private var podSaveModel: PodSaveModel? = null
     var relationType = ""
     var stampRequired =""
     var signRequired =""
@@ -33,11 +42,12 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
     var signPath =""
     var pckgs =""
     var alreadyExistGr:Boolean = false
+    var dlvSqlDt=""
 
 
     private var relationList: ArrayList<RelationListModel> = ArrayList()
     private val viewModel: PodEntryViewModel by viewModels()
-    var grDt = getSqlCurrentDate()
+    var podDt = getSqlCurrentDate()
     var signBitmap: Bitmap? = null
     lateinit var bottomSheetDialog: BottomSheetDialog
 
@@ -51,6 +61,7 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
         activityBinding.inputTime.setText(getSqlCurrentTime())
         activityBinding.inputDeliveryDt.setText(getViewCurrentDate())
         activityBinding.inputDeliveryTime.setText(getSqlCurrentTime())
+        dlvSqlDt = getSqlCurrentDate()
         activityBinding.signatureLayout.visibility = View.GONE
         activityBinding.imageLayout.visibility = View.GONE
         setOnClick()
@@ -97,7 +108,7 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
 
                     mPeriod.observe(this) { date ->
                     activityBinding.inputDate.setText(date.viewsingleDate)
-                    grDt = date.sqlsingleDate.toString()
+                    podDt = date.sqlsingleDate.toString()
                     }
                     timePeriod.observe(this) { time ->
                         activityBinding.inputTime.setText(time)
@@ -112,24 +123,33 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
 //                    }
 
 
-         viewModel.podDetailsLiveData.observe(this) { data ->
-             podDetail = data
-             alreadyExistGr = data.commandstatus != 1
-             setPodDetails()
-         }
-        viewModel.relationLiveData.observe(this){ List->
-            relationList =List
-            val relationAdapter =
-                ArrayAdapter(this, android.R.layout.simple_list_item_1,relationList )
-            activityBinding.inputRelation.adapter = relationAdapter
+                    viewModel.podDetailsLiveData.observe(this) { data ->
+                     podDetail = data
+                     alreadyExistGr = data.commandstatus != 1
+                     setPodDetails()
+                    }
+                    viewModel.relationLiveData.observe(this){ List->
+                        relationList =List
+                        val relationAdapter =
+                            ArrayAdapter(this, android.R.layout.simple_list_item_1,relationList )
+                        activityBinding.inputRelation.adapter = relationAdapter
 
-        }
+                    }
 
-        imageClicked.observe(this) { clicked ->
-            if(clicked) {
-                setPodImage()
-            }
-        }
+                    imageClicked.observe(this) { clicked ->
+                        if(clicked) {
+                            setPodImage()
+                        }
+                    }
+                viewModel.saveLiveData.observe(this){savePod->
+                    podSaveModel = savePod
+                    if(podSaveModel?.commandstatus ==1){
+                        showSuccessAlert(podSaveModel?.commandmessage.toString())
+                    }else{
+                        errorToast(podSaveModel?.commandmessage.toString())
+                    }
+                }
+
 
     }
 
@@ -160,8 +180,11 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
          activityBinding.signCheck.setOnCheckedChangeListener { _, Bool ->
              if (activityBinding.signCheck.isChecked) {
                  activityBinding.signatureLayout.visibility =View.VISIBLE
+                 activityBinding.mainImgLayout.visibility=View.VISIBLE
                  signRequired = "Y"
+
              }else{
+                 activityBinding.mainImgLayout.visibility=View.GONE
                  activityBinding.signatureLayout.visibility =View.GONE
                  signBitmap = null
                  signRequired = "N"
@@ -171,9 +194,11 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
          activityBinding.imageCheck.setOnCheckedChangeListener { buttonView, isChecked ->
              if (activityBinding.imageCheck.isChecked) {
                  activityBinding.imageLayout.visibility = View.VISIBLE
+                 activityBinding.mainImgLayout.visibility=View.VISIBLE
                  stampRequired = "Y"
              } else {
                  activityBinding.imageLayout.visibility = View.GONE
+                 activityBinding.signatureLayout.visibility =View.GONE
                  imageBase64List.clear()
                  imageBitmapList.clear()
                  activityBinding.podImage.setImageDrawable(getResources().getDrawable(R.drawable.image))
@@ -190,12 +215,13 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
 
 
      private  fun alertForSavePod(){
-         if (!alreadyExistGr){
-             if(activityBinding.inputGrno.text.isNullOrEmpty()){
-                 errorToast("Please enter GR#.")
-                 return
-             }
-         }else if(activityBinding.inputDeliveryTime.text.isNullOrEmpty()){
+//         if (!alreadyExistGralreadyExistGr){
+//             if(activityBinding.inputGrno.text.isNullOrEmpty()){
+//                 errorToast("Please enter GR#.")
+//                 return
+//             }
+//         }else
+             if(activityBinding.inputDeliveryTime.text.isNullOrEmpty()){
              errorToast("Please select delivery time.")
               return
          }else if(signBitmap == null){
@@ -210,7 +236,7 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
              .setTitle("Alert!!!")
              .setMessage("Are you sure you want to save this POD entry?")
              .setPositiveButton("Yes") { _, _ ->
-//                 savePod()
+                 savePod()
              }
              .setNeutralButton("No") { _, _ -> }
              .show()
@@ -282,8 +308,8 @@ pckgs= podDetail?.pckgs.toString()
             grNo = activityBinding.inputGrno.text.toString(),
             dlvTime = activityBinding.inputDeliveryTime.text.toString(),
             name = activityBinding.inputReceiverBy.text.toString(),
-            dlvDt =activityBinding.inputDeliveryDt.text.toString() ,
-            relation = activityBinding.inputRelation.toString(),
+            dlvDt =dlvSqlDt,
+            relation = relationType,
             phoneNo = activityBinding.inputReceiverbyMobile.text.toString(),
             sign = signRequired ,
             stamp = stampRequired,
@@ -296,7 +322,7 @@ pckgs= podDetail?.pckgs.toString()
             menuCode = "GTAPP_PODENTRY",
             deliveryBoy = activityBinding.inputDeliveryBoy.text.toString().uppercase(),
             boyId = getExecutiveId(),
-            podDt = activityBinding.inputDate.toString(),
+            podDt = podDt,
             pckgs = pckgs,
             pckgsStr = enteredQtyStr,
             dataIdStr = dataIdStr
@@ -309,6 +335,25 @@ pckgs= podDetail?.pckgs.toString()
             signBitmap = imageBitmap
             activityBinding.signImg.setImageBitmap(signBitmap);
             signPath = ImageUtil.convert(signBitmap!!)
+
+        }
+    }
+
+    private  fun showSuccessAlert(msg:String){
+        CommonAlert.createAlert(
+            context = this,
+            header = "Success",
+            description = msg,
+            callback =this,
+            alertCallType ="SAVE_POD",
+            data = ""
+        )
+    }
+
+    override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {
+        if(alertCallType =="SAVE_POD"){
+            val intent=Intent(this, HomeActivity::class.java)
+            startActivity(intent)
 
         }
     }

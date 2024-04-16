@@ -68,6 +68,10 @@ data class BookingIndentInfoModel(
     val referenceno: Any,
     val stockitemcode: Any,
     val tempurature: String,
+    val orgarea: String,
+    val orggateway: String,
+    val destarea: String,
+    val destgateway: String,
     val transactionid: Int,
     val weight: Double
 )

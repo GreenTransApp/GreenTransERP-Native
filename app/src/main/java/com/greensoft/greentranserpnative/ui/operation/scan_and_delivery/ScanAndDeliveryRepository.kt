@@ -7,7 +7,9 @@ import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodEntryModel
+import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodSaveModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.RelationListModel
+import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanDeliverySaveModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanStickerModel
 import retrofit2.Call
 import retrofit2.Callback
@@ -21,6 +23,7 @@ class ScanAndDeliveryRepository @Inject constructor(): BaseRepository() {
     private val podMuteLiveData = MutableLiveData<PodEntryModel>()
     private val relationListMuteLiveData = MutableLiveData<ArrayList<RelationListModel>>()
     private val stickerListMuteLiveData = MutableLiveData<ArrayList<ScanStickerModel>>()
+    private val podSaveMuteLiveData = MutableLiveData<ScanDeliverySaveModel>()
     val podLiveData: LiveData<PodEntryModel>
         get() = podMuteLiveData
     val relationLiveData: LiveData<ArrayList<RelationListModel>>
@@ -28,8 +31,11 @@ class ScanAndDeliveryRepository @Inject constructor(): BaseRepository() {
 
     val stickerLiveData: LiveData<ArrayList<ScanStickerModel>>
         get() = stickerListMuteLiveData
+
+    val scanPodSaveLiveData: LiveData<ScanDeliverySaveModel>
+        get() = podSaveMuteLiveData
     fun getPodData( companyId:String,grNo:String) {
-        viewDialogMutData.postValue(true)
+//        viewDialogMutData.postValue(true)
         api.getPodDetails(companyId,grNo).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
@@ -96,7 +102,7 @@ class ScanAndDeliveryRepository @Inject constructor(): BaseRepository() {
     }
 
     fun getStickerList( companyId:String,userCode:String,loginBranchCode:String,branchCode:String,grNo:String,menuCode:String,sessionId:String) {
-        viewDialogMutData.postValue(true)
+//        viewDialogMutData.postValue(true)
         api.getPodStickerList(companyId,userCode,loginBranchCode,branchCode, grNo, menuCode,sessionId).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
@@ -127,4 +133,55 @@ class ScanAndDeliveryRepository @Inject constructor(): BaseRepository() {
         })
 
     }
+    fun saveScanDeliveryPod(
+        companyId:String,
+        userCode: String,
+        loginBranchCode: String,
+        branchCode: String,
+        stickerNo: String,
+        menuCode: String,
+        sessionId: String,
+
+    ) {
+        viewDialogMutData.postValue(true)
+        api.updateScanDeliverySticker(
+            companyId,
+            userCode,
+            loginBranchCode,
+            branchCode,
+            stickerNo,
+            menuCode,
+            sessionId
+        )
+            .enqueue(object: Callback<CommonResult> {
+                override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
+                    if(response.body() != null){
+                        val result = response.body()!!
+                        val gson = Gson()
+                        if(result.CommandStatus == 1){
+                            val jsonArray = getResult(result);
+                            if(jsonArray != null) {
+                                val listType = object: TypeToken<List<ScanDeliverySaveModel>>() {}.type
+                                val resultList: ArrayList<ScanDeliverySaveModel> = gson.fromJson(jsonArray.toString(), listType);
+                                podSaveMuteLiveData.postValue(resultList[0])
+                            }
+                        } else {
+                            isError.postValue(result.CommandMessage.toString());
+                        }
+                    } else {
+                        isError.postValue(SERVER_ERROR);
+                    }
+                    viewDialogMutData.postValue(false)
+
+                }
+
+                override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
+                    viewDialogMutData.postValue(false)
+                    isError.postValue(t.message)
+                }
+
+            })
+
+    }
+
 }
