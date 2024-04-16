@@ -84,7 +84,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
         activityBinding.inputManifestNum.hint = "Enter Manifest #"
         menuCode =
             if (Utils.menuModel == null) " " else Utils.menuModel?.menucode.toString()
-        setUpToolbar("Despatch Manifest")
+        setUpToolbar("Outstation Manifest")
         setObservers()
 
         getVehicleTypeList()
@@ -167,27 +167,27 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
         }
     }
     private fun setSpinners() {
-        val toStationModeList = listOf("To Airport", "To Hub")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, toStationModeList)
-        activityBinding.inputToStation.adapter = adapter
-
-        activityBinding.inputToStation.onItemSelectedListener =
-            object: AdapterView.OnItemSelectedListener{
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-
-                    toStationModeList[position]
-
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                    TODO("Not yet implemented")
-                }
-            }
+//        val toStationModeList = listOf("To Airport", "To Hub")
+//        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, toStationModeList)
+//        activityBinding.inputToStation.adapter = adapter
+//
+//        activityBinding.inputToStation.onItemSelectedListener =
+//            object: AdapterView.OnItemSelectedListener{
+//                override fun onItemSelected(
+//                    parent: AdapterView<*>?,
+//                    view: View?,
+//                    position: Int,
+//                    id: Long
+//                ) {
+//
+//                    toStationModeList[position]
+//
+//                }
+//
+//                override fun onNothingSelected(parent: AdapterView<*>?) {
+//                    TODO("Not yet implemented")
+//                }
+//            }
         activityBinding.selectedVehicleType.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(

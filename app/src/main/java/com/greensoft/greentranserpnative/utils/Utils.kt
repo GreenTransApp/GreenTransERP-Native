@@ -1,8 +1,10 @@
 package com.greensoft.greentranserpnative.utils
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.operation.eway_bill.ItemEwayBillModel
 import com.greensoft.greentranserpnative.ui.operation.eway_bill.models.EwayBillDetailResponse
@@ -41,6 +43,15 @@ object Utils {
     var imageUri: Uri? = null
     fun logger(TAG: String?, msg: String?) {
         Log.d(TAG, msg!!)
+    }
+
+    fun debugToast(context: Context, msg: String?) {
+        logger("DEBUG ${context.javaClass.simpleName}", msg)
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+    }
+
+    fun printToast(context: Context, msg: String?) {
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
     }
 
     fun isNumberEntered(number: String?): Boolean {

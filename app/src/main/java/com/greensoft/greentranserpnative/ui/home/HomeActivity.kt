@@ -50,6 +50,7 @@ import com.greensoft.greentranserpnative.ui.operation.call_register.CallRegister
 import com.greensoft.greentranserpnative.ui.operation.communicationList.CommunicationListActivity
 import com.greensoft.greentranserpnative.ui.operation.communicationList.models.CommunicationListModel
 import com.greensoft.greentranserpnative.ui.operation.delivery.DeliveryOptionActivity
+import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.DespatchManifestEntryActivity
 import com.greensoft.greentranserpnative.ui.operation.drs.DRSActivity
 import com.greensoft.greentranserpnative.ui.operation.notificationPanel.model.NotificationPanelBottomSheetModel
 import com.greensoft.greentranserpnative.ui.operation.grList.GrListActivity
@@ -445,7 +446,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
                 startActivity(intent)
             }
             "GTAPP_LONGROUTEMANIFEST" -> run {
-                val intent = Intent(this, PickupManifestEntryActivity::class.java)
+                val intent = Intent(this, DespatchManifestEntryActivity::class.java)
                 intent.putExtra("MENU_DATA", jsonSerialized)
                 startActivity(intent)
             }

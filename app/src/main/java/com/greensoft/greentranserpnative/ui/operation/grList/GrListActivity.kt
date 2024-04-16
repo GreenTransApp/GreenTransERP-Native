@@ -258,10 +258,10 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
 //        }
 //        return super.onOptionsItemSelected(item)
         return when (item.itemId) {
-            R.id.bookig_type_btn->{
-               showBookingTypeSelection()
-                true
-            }
+//            R.id.bookig_type_btn->{
+//               showBookingTypeSelection()
+//                true
+//            }
             R.id.datePicker -> {
                 openDatePicker()
                 true

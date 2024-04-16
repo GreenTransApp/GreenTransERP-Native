@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice
 class ENV {
     companion object {
         const val SCANNER_NOT_WORKING_MSG: String = "Scanner not available. All functionality may not work."
+        const val SOMETHING_WENT_WRONG_ERR_MSG: String = "Something went wrong, please try again."
         private val PREF_TAG = "GreenTransERPNative"
         val LOGIN_PREF_TAG = "loginPrefs_${PREF_TAG}"
         val IS_LOGIN_PREF_TAG = "isLogin_${PREF_TAG}"

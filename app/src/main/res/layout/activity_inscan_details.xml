@@ -6,12 +6,18 @@
     <data>
 
     </data>
-    <LinearLayout
-        android:id="@+id/container"
+<!--    <LinearLayout-->
+<!--        android:id="@+id/container"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:orientation="vertical"-->
+<!--        >-->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         >
+
 
 
         <include
@@ -33,7 +39,9 @@
             android:padding="20dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="10dp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             >
             <LinearLayout
                 android:layout_width="match_parent"
@@ -302,10 +310,37 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_card_details"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            tools:listitem="@layout/item_inscan_card_detail"
+            app:layout_constraintTop_toBottomOf="@id/inScan_detail_Card"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginHorizontal="10dp"
             />
 
+<!--        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:id="@+id/receivingDetailEdit"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            android:layout_margin="10dp"-->
+<!--            android:text="Receiving Details"            -->
+<!--            />-->
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/receivingDetailEdit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_margin="10dp"
+            android:src="@drawable/icon_edit"
+            />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--    </LinearLayout>-->
 </layout>
