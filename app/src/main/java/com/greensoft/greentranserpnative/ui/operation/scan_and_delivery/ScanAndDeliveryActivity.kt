@@ -1,17 +1,17 @@
 package com.greensoft.greentranserpnative.ui.operation.scan_and_delivery
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
-import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityScanAndDeliveryBinding
@@ -19,15 +19,16 @@ import com.greensoft.greentranserpnative.model.ImageUtil
 import com.greensoft.greentranserpnative.ui.bottomsheet.signBottomSheet.BottomSheetSignature
 import com.greensoft.greentranserpnative.ui.bottomsheet.signBottomSheet.SignatureBottomSheetCompleteListener
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
+import com.greensoft.greentranserpnative.ui.common.alert.CommonAlert
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.GrSelectionAdapter
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.SavePickupManifestAdapter
-import com.greensoft.greentranserpnative.ui.operation.pod_entry.PodEntryViewModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.SavePickupManifestActivity
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodEntryModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.RelationListModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.adapter.ScanDeliveryAdapter
+import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanDeliverySaveModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanStickerModel
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,10 +36,11 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>,
-    BottomSheetClick<Any>, AlertCallback<Any>, SignatureBottomSheetCompleteListener {
+    BottomSheetClick<Any>, AlertCallback<Any>, SignatureBottomSheetCompleteListener{
     lateinit var  activityBinding:ActivityScanAndDeliveryBinding
     lateinit var linearLayoutManager: LinearLayoutManager
     private var podDetail: PodEntryModel? = null
+    private var savePodData: ScanDeliverySaveModel? = null
     private var rvAdapter: ScanDeliveryAdapter? = null
     var relationType = ""
     var stampRequired =""
@@ -46,16 +48,19 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
     var podImagePath =""
     var signPath =""
     var pckgs =""
+    var stickerNumber =""
     var grDt = getSqlCurrentDate()
     var signBitmap: Bitmap? = null
     private var relationList: ArrayList<RelationListModel> = ArrayList()
-    private var stickerList: ArrayList<ScanStickerModel> = ArrayList()
+    private var rvList: ArrayList<ScanStickerModel> = ArrayList()
+    private var undeliveredStikerList: ArrayList<ScanStickerModel> = ArrayList()
     private val viewModel: ScanAndDeliveryViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityScanAndDeliveryBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
+//        startScanningAlert()
         setInitData()
         setObservers()
         setOnClick()
@@ -79,7 +84,15 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
     }
 
     private fun saveStickerToPod(stickerNo: String) {
-
+     viewModel.saveScanDeliveryPod(
+         companyId =  getCompanyId(),
+         userCode = getUserCode(),
+         branchCode = getLoginBranchCode(),
+         loginBranchCode = getLoginBranchCode(),
+         stickerNo = stickerNo,
+         menuCode = "GTAPP_DELIVERYNATIVE",
+         sessionId = getSessionId()
+     )
     }
     private fun setSpinner(){
         activityBinding.inputRelation.onItemSelectedListener =
@@ -105,7 +118,21 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
 
     private fun setObservers() {
         mScanner.observe(this) { stickerNo ->
-            saveStickerToPod(stickerNo)
+            successToast(stickerNo)
+
+//            stickerNumber = stickerNo
+//            setupRecyclerView()
+            var stickerAlreadyExists: Boolean = false
+            for(scanStickerModel in rvList) {
+                if(scanStickerModel.stickerno == stickerNo) {
+                    stickerAlreadyExists = true
+                    removeStickerAlert(stickerNo)
+                    break
+                }
+            }
+            if(!stickerAlreadyExists) {
+                saveStickerToPod(stickerNo)
+            }
         }
         viewModel.isError.observe(this) { errMsg ->
             errorToast(errMsg)
@@ -121,7 +148,12 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
 
         viewModel.podDetailsLiveData.observe(this) { data ->
             podDetail = data
-            setPodDetails()
+            if(data.commandstatus != 1){
+                errorToast(data.commandmessage.toString());
+            }else{
+                setPodDetails()
+            }
+
 
         }
         viewModel.relationLiveData.observe(this){ List->
@@ -132,12 +164,13 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
 
         }
         viewModel.stickerLiveData.observe(this){sticker->
-            stickerList = sticker
-            if(stickerList.size > 0){
+            rvList = sticker
+            setupRecyclerView()
+            if(rvList.size > 0){
                 activityBinding.stickerGrid.visibility =  View.VISIBLE
                 activityBinding.btnUpArrow.visibility=View.VISIBLE
                 activityBinding.btnDownArrow.visibility= View.GONE
-                setupRecyclerView()
+
             }
 
         }
@@ -156,12 +189,21 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
             }
         }
 
+        viewModel.saveLiveData .observe(this){data->
+            savePodData = data;
+            getPodDetails(savePodData?.grno.toString())
+            getScanStickerList(savePodData?.grno.toString())
+        }
+
 
     }
 
+
+
+
     private fun setupRecyclerView() {
         linearLayoutManager = LinearLayoutManager(this)
-        rvAdapter = ScanDeliveryAdapter(stickerList, this,this)
+        rvAdapter = ScanDeliveryAdapter(rvList, this,this,this)
         activityBinding.recyclerView.layoutManager = linearLayoutManager
         activityBinding.recyclerView.adapter = rvAdapter
 
@@ -179,7 +221,7 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
     }
 
     private fun setPodDetails(){
-
+        activityBinding.inputGrno.setText(podDetail?.grno.toString())
         activityBinding.inputOrigin.setText(Utils.checkNullOrEmpty(podDetail?.origin.toString()))
         activityBinding.inputDestination.setText(Utils.checkNullOrEmpty(podDetail?.destname.toString()))
         activityBinding.inputBookingDt.setText(Utils.checkNullOrEmpty(podDetail?.grdt.toString()))
@@ -204,10 +246,10 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
               activityBinding.btnDownArrow.visibility=View.VISIBLE
               activityBinding.btnUpArrow.visibility= View.GONE
           }
-          activityBinding.btnGrProceed.setOnClickListener {
-              getPodDetails()
-              getScanStickerList()
-          }
+//          activityBinding.btnGrProceed.setOnClickListener {
+//              getPodDetails()
+//              getScanStickerList()
+//          }
           activityBinding.inputDate.setOnClickListener {
               openSingleDatePicker()
           }
@@ -232,9 +274,11 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
           activityBinding.signCheck.setOnCheckedChangeListener { _, Bool ->
               if (activityBinding.signCheck.isChecked) {
                   activityBinding.signatureLayout.visibility =View.VISIBLE
+                  activityBinding.mainImgLayout.visibility =View.VISIBLE
                   signRequired = "Y"
               }else{
                   activityBinding.signatureLayout.visibility =View.GONE
+                  activityBinding.mainImgLayout.visibility =View.GONE
                   signBitmap = null
                   signRequired = "N"
                   activityBinding.signImg.setImageDrawable(getResources().getDrawable(R.drawable.image))
@@ -243,9 +287,11 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
           activityBinding.imageCheck.setOnCheckedChangeListener { buttonView, isChecked ->
               if (activityBinding.imageCheck.isChecked) {
                   activityBinding.imageLayout.visibility = View.VISIBLE
+                  activityBinding.mainImgLayout.visibility = View.VISIBLE
                   stampRequired = "Y"
               } else {
                   activityBinding.imageLayout.visibility = View.GONE
+                  activityBinding.mainImgLayout.visibility = View.GONE
                   imageBase64List.clear()
                   imageBitmapList.clear()
                   activityBinding.podImage.setImageDrawable(getResources().getDrawable(R.drawable.image))
@@ -254,7 +300,9 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
               }
 
           }
-
+          activityBinding.btnSaveSelect.setOnClickListener {
+              finalSaveWithValidation()
+          }
 
 
       }
@@ -264,31 +312,91 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
         )
     }
 
-     private fun getScanStickerList(){
+     private fun getScanStickerList(grNumber: String){
          viewModel.getStickerList(
              companyId = getCompanyId(),
              userCode = getUserCode(),
              loginBranchCode = getLoginBranchCode(),
              branchCode = getLoginBranchCode(),
              menuCode = "SCAN_DELIVERY",
-             grNo = activityBinding.inputGrno.text.toString(),
+             grNo = grNumber,
+//             grNo = activityBinding.inputGrno.text.toString(),
              sessionId =getSessionId()
          )
      }
-    private fun getPodDetails(){
-        if(activityBinding.inputGrno.text.isNullOrEmpty()){
-            errorToast("Please enter GR#.")
-            return
-        }
+    private fun getPodDetails(grNumber:String){
+//        if(activityBinding.inputGrno.text.isNullOrEmpty()){
+//            errorToast("Please enter GR#.")
+//            return
+//        }
         viewModel.getPodDetails(
             companyId = getCompanyId(),
-            grNo = activityBinding.inputGrno.text.toString()
+//            grNo = activityBinding.inputGrno.text.toString()
+            grNo = grNumber
+        )
+    }
+    private  fun removeStickerAlert (stickerNo: String){
+        CommonAlert.createAlert(
+            context = this,
+            header = "Alert!!",
+            description = " Are You Sure You Want To Remove This Sticker?",
+            callback =this,
+            alertCallType ="REMOVE_STICKER",
+            data =  stickerNo
+        )
+    }
+private  fun savePodStickerAlert (stickerNo: String){
+        CommonAlert.createAlert(
+            context = this,
+            header = "Alert!!",
+            description = " Are You Sure You Want To Save This POD?",
+            callback =this,
+            alertCallType ="SAVE_STICKER",
+            data =  stickerNo
         )
     }
 
 
+    private fun finalSaveWithValidation(){
+        rvList.forEachIndexed{index, item ->
+            if (rvList[index].scanned == "N"){
+                undeliveredStikerList.add(item)
+                navigateToUndeliveredPage(undeliveredStikerList)
+            }
+
+        }
+
+    }
+
+
+    fun navigateToUndeliveredPage(item:ArrayList<ScanStickerModel>){
+        val gson = Gson()
+        val jsonString = gson.toJson(item)
+        val intent = Intent(this, ScanAndUndeliveredActivity::class.java)
+        intent.putExtra("ARRAY_JSON", jsonString)
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish()
+    }
+    private  fun startScanningAlert(){
+        CommonAlert.createAlert(
+            context = this,
+            header = "Alert!!",
+            description = "Please Start Scanning.",
+            callback =this,
+            alertCallType ="START_SCANNING",
+            data =  ""
+        )
+    }
+
     override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {
-        TODO("Not yet implemented")
+        if (alertCallType == "REMOVE_STICKER") {
+            savePodStickerAlert(data.toString())
+        }else if(alertCallType == "SAVE_STICKER"){
+            saveStickerToPod(data.toString())
+        }else if(alertCallType == "START_SCANNING"){
+
+        }
     }
 
     override fun onItemClick(data: Any, clickType: String) {

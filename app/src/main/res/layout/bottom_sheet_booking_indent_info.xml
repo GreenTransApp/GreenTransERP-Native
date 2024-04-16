@@ -350,6 +350,35 @@
                                                     />
 
                                             </LinearLayout>
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:layout_margin="5dp"
+                                                android:layout_weight="2"
+                                                android:orientation="horizontal">
+                                                <TextView
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:text="Origin Area: "
+                                                    android:layout_gravity="center"
+                                                    android:layout_marginStart="10dp"
+                                                    android:textStyle="bold"
+                                                    android:layout_weight="1"
+                                                    />
+                                                <TextView
+                                                    android:id="@+id/tv_origin_area"
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:text=""
+                                                    android:gravity="start"
+                                                    android:layout_marginStart="5dp"
+                                                    android:textStyle="bold"
+                                                    android:textColor="@color/black"
+                                                    android:layout_weight="1"
+                                                    />
+
+                                            </LinearLayout>
                                             <LinearLayout
                                                 android:layout_width="match_parent"
                                                 android:layout_height="match_parent"
@@ -434,6 +463,35 @@
                                                     />
 
                                             </LinearLayout>
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:layout_margin="5dp"
+                                                android:layout_weight="2"
+                                                android:orientation="horizontal">
+                                                <TextView
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:text="Origin Gateway: "
+                                                    android:layout_gravity="center"
+                                                    android:layout_marginStart="10dp"
+                                                    android:textStyle="bold"
+                                                    android:layout_weight="1"
+                                                    />
+                                                <TextView
+                                                    android:id="@+id/tv_origin_gateway"
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:text=""
+                                                    android:gravity="start"
+                                                    android:layout_marginStart="5dp"
+                                                    android:textStyle="bold"
+                                                    android:textColor="@color/black"
+                                                    android:layout_weight="1"
+                                                    />
+
+                                            </LinearLayout>
                                         </LinearLayout>
                                     </androidx.cardview.widget.CardView>
                                     <androidx.cardview.widget.CardView
@@ -487,6 +545,35 @@
                                                     />
                                                 <TextView
                                                     android:id="@+id/tv_desti_pin"
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:text=""
+                                                    android:gravity="start"
+                                                    android:layout_marginStart="5dp"
+                                                    android:textStyle="bold"
+                                                    android:textColor="@color/black"
+                                                    android:layout_weight="1"
+                                                    />
+
+                                            </LinearLayout>
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:layout_margin="5dp"
+                                                android:layout_weight="2"
+                                                android:orientation="horizontal">
+                                                <TextView
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:text="Destination Area: "
+                                                    android:layout_gravity="center"
+                                                    android:layout_marginStart="10dp"
+                                                    android:textStyle="bold"
+                                                    android:layout_weight="1"
+                                                    />
+                                                <TextView
+                                                    android:id="@+id/tv_desti_area"
                                                     android:layout_width="0dp"
                                                     android:layout_height="wrap_content"
                                                     android:text=""
@@ -573,6 +660,36 @@
                                                     />
                                                 <TextView
                                                     android:id="@+id/tv_desti_oda_distance"
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:text=""
+                                                    android:gravity="start"
+                                                    android:layout_marginStart="5dp"
+                                                    android:textStyle="bold"
+                                                    android:textColor="@color/black"
+                                                    android:layout_weight="1"
+                                                    />
+
+                                            </LinearLayout>
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:layout_margin="5dp"
+                                                android:layout_weight="2"
+                                                android:orientation="horizontal">
+                                                <TextView
+
+                                                    android:layout_width="0dp"
+                                                    android:layout_height="wrap_content"
+                                                    android:text="Destination Gateway: "
+                                                    android:layout_gravity="center"
+                                                    android:layout_marginStart="10dp"
+                                                    android:textStyle="bold"
+                                                    android:layout_weight="1"
+                                                    />
+                                                <TextView
+                                                    android:id="@+id/tv_desti_gateway"
                                                     android:layout_width="0dp"
                                                     android:layout_height="wrap_content"
                                                     android:text=""

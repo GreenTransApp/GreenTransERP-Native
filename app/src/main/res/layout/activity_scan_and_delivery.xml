@@ -20,11 +20,12 @@
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@id/toolBar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/btn_loading_select"
+            app:layout_constraintBottom_toTopOf="@id/btn_save_select"
             app:layout_constraintStart_toStartOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
+
                 android:layout_height="match_parent">
                 <androidx.cardview.widget.CardView
                     android:id="@+id/sticker_card_view"
@@ -289,7 +290,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textAllCaps="true"
-
+                                android:focusable="false"
                                 android:textColor="@color/black"
                                 android:inputType="text"
                                 android:hint="Enter Gr Number"
@@ -299,17 +300,17 @@
 
                     </LinearLayout>
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_gr_proceed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="10dp"
+<!--                    <com.google.android.material.button.MaterialButton-->
+<!--                        android:id="@+id/btn_gr_proceed"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_marginTop="10dp"-->
 
-                        android:gravity="center"
-                        android:layout_gravity="center"
-                        android:text="Proceed"
-                        app:cornerRadius="10dp"
-                        />
+<!--                        android:gravity="center"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:text="Proceed"-->
+<!--                        app:cornerRadius="10dp"-->
+<!--                        />-->
 
                 </LinearLayout>
 
@@ -1013,8 +1014,10 @@
 
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/main_img_layout"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
+                    android:visibility="gone"
                     android:orientation="horizontal"
                     app:layout_constraintTop_toBottomOf="@+id/checkbox_layout"
                     app:layout_constraintStart_toStartOf="parent"
@@ -1085,7 +1088,7 @@
 
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_loading_select"
+            android:id="@+id/btn_save_select"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"

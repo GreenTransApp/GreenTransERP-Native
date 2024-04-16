@@ -17,10 +17,12 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/grid_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
@@ -86,6 +88,7 @@
                                 android:background="@drawable/table_content_cell_bg">
 
                                 <Button
+                                    android:visibility="gone"
                                     android:id="@+id/btn_remove"
                                     android:layout_height="match_parent"
                                     android:gravity="center"

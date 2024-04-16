@@ -114,14 +114,19 @@ class BookingIndentInfoBottomSheet  @Inject constructor(): BaseFragment() {
         layoutBinding.tvDestination.text = bookingIndentInfoData?.destname?:"No data available"
 
         layoutBinding.tvOriginPin.text = bookingIndentInfoData?.orgpincode?:"No data available"
+        layoutBinding.tvOriginArea.text = bookingIndentInfoData?.orgarea?:"No data available"
         layoutBinding.tvOriginLocation.text = bookingIndentInfoData?.orglocation?:"No data available"
         layoutBinding.tvOriginOda.text = bookingIndentInfoData?.orgoda?:"No data available"
         layoutBinding.tvOriginOdaDistance.text = bookingIndentInfoData?.orgodadistance?:"No data available"
+        layoutBinding.tvOriginGateway.text = bookingIndentInfoData?.orggateway?:"No data available"
 
         layoutBinding.tvDestiPin.text = bookingIndentInfoData?.destpincode?:"No data available"
+        layoutBinding.tvDestiArea.text = bookingIndentInfoData?.destarea?:"No data available"
         layoutBinding.tvDestiLocation.text = bookingIndentInfoData?.destlocation?:"No data available"
         layoutBinding.tvDestiOda.text = bookingIndentInfoData?.destoda?:"No data available"
         layoutBinding.tvDestiOdaDistance.text = bookingIndentInfoData?.destodadistance?:"No data available"
+        layoutBinding.tvDestiOdaDistance.text = bookingIndentInfoData?.destodadistance?:"No data available"
+        layoutBinding.tvDestiGateway.text = bookingIndentInfoData?.destgateway?:"No data available"
     }
 
     fun getBookingIndentInfo(){

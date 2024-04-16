@@ -3,6 +3,7 @@ package com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.adapter
 import android.content.Context
 import android.graphics.ColorSpace.Model
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
@@ -12,17 +13,18 @@ import com.greensoft.greentranserpnative.databinding.ScanStickerItemBinding
 import com.greensoft.greentranserpnative.databinding.SelectedGrItemBinding
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.ScanAndDeliveryActivity
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanStickerModel
 
 class ScanDeliveryAdapter (private val stickerList: ArrayList<ScanStickerModel>,
                            private val mContext: Context,
+                           private val activity:ScanAndDeliveryActivity,
                            private val onRowClick: OnRowClick<Any>
 ) : RecyclerView.Adapter<ScanDeliveryAdapter.ScanDeliveryViewHolder>(){
 
 
-    inner class ScanDeliveryViewHolder(private val binding: ScanStickerItemBinding) :
+    inner class ScanDeliveryViewHolder(val binding: ScanStickerItemBinding) :
         RecyclerView.ViewHolder(binding.root){
-
 
         fun bindData(model: ScanStickerModel, onRowClick: OnRowClick<Any>) {
             binding.stickerModel = model
@@ -59,24 +61,26 @@ class ScanDeliveryAdapter (private val stickerList: ArrayList<ScanStickerModel>,
     override fun onBindViewHolder(holder: ScanDeliveryViewHolder, position: Int) {
         val data = stickerList[holder.adapterPosition]
         holder.bindData(data, onRowClick)
-        if(data.scanned == "N") {
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(mContext, android.R.color.holo_green_dark))
-//            holder.itemView.setBackgroundResource(R.color.green)
-        } else {
-            holder.itemView.setBackgroundResource(R.color.white)
+        if(data.scanned == "N" ) {
+//            && activity.stickerNumber == data.stickerno) {
+            holder.binding.btnRemove.visibility = View.VISIBLE
+            holder.binding.gridLayout.setBackgroundColor(
+                ContextCompat.getColor(
+                    holder.itemView.context,
+                    R.color.success
+                )
+            )
+
         }
-//        stickerList.forEachIndexed { index, model ->
-//            if(model.scanned == "N") {
-//                holder.itemView.setBackgroundResource(R.color.green)
-//            }
-//        }
-
-//        val list = stickerList.get(position)
-//        if(stickerList[position].scanned == "Y"){
-//            holder.itemView.setBackgroundColor(Color.("#FED07A"))
-//
-//        }
-
+        else {
+            holder.binding.btnRemove.visibility = View.GONE
+            holder.binding.gridLayout.setBackgroundColor(
+                ContextCompat.getColor(
+                    holder.itemView.context,
+                    R.color.white
+                )
+            )
+        }
     }
 
 

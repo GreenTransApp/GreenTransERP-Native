@@ -913,8 +913,10 @@
                 </LinearLayout>
 
 <LinearLayout
+    android:id="@+id/main_img_layout"
     android:layout_width="match_parent"
     android:layout_height="200dp"
+    android:visibility="gone"
     android:orientation="horizontal"
     app:layout_constraintTop_toBottomOf="@+id/checkbox_layout"
     app:layout_constraintStart_toStartOf="parent"
