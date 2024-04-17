@@ -1,6 +1,7 @@
 package com.greensoft.greentranserpnative.ui.operation.scan_and_delivery
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -16,8 +17,11 @@ import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityScanAndDeliveryBinding
 import com.greensoft.greentranserpnative.model.ImageUtil
+import com.greensoft.greentranserpnative.ui.bottomsheet.common.CommonBottomSheet
+import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.signBottomSheet.BottomSheetSignature
 import com.greensoft.greentranserpnative.ui.bottomsheet.signBottomSheet.SignatureBottomSheetCompleteListener
+import com.greensoft.greentranserpnative.ui.bottomsheet.undeliveredPodBottomSheet.UndeliveredScanPodBottomSheet
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
 import com.greensoft.greentranserpnative.ui.common.alert.CommonAlert
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
@@ -335,6 +339,18 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
             grNo = grNumber
         )
     }
+
+    private fun getScanDelReasonList() {
+        viewModel.getDelReasonList(
+            loginDataModel?.companyid.toString(),
+            "gtapp_undlvreason",
+            listOf("prmusercode","prmloginbranchcode","prmsessionid"),
+            arrayListOf(getUserCode(),getLoginBranchCode(),getSessionId())
+        )
+    }
+
+
+
     private  fun removeStickerAlert (stickerNo: String){
         CommonAlert.createAlert(
             context = this,
@@ -358,23 +374,30 @@ private  fun savePodStickerAlert (stickerNo: String){
 
 
     private fun finalSaveWithValidation(){
+        undeliveredStikerList.clear()
         rvList.forEachIndexed{index, item ->
             if (rvList[index].scanned == "N"){
                 undeliveredStikerList.add(item)
-                navigateToUndeliveredPage(undeliveredStikerList)
+//                navigateToUndeliveredPage(undeliveredStikerList)
             }
 
         }
-
+        openUndeliveredBottomSheet(mContext,"",this,undeliveredStikerList)
     }
 
+    fun openUndeliveredBottomSheet(mContext: Context, title: String, bottomSheetClick: BottomSheetClick<Any>, stickerList: ArrayList<ScanStickerModel>, withAdapter: Boolean = false, index: Int = -1) {
+
+        val bottomSheetDialog = UndeliveredScanPodBottomSheet.newInstance(mContext, title, bottomSheetClick, stickerList)
+
+        bottomSheetDialog.show(supportFragmentManager, UndeliveredScanPodBottomSheet.TAG)
+    }
 
     fun navigateToUndeliveredPage(item:ArrayList<ScanStickerModel>){
         val gson = Gson()
         val jsonString = gson.toJson(item)
         val intent = Intent(this, ScanAndUndeliveredActivity::class.java)
         intent.putExtra("ARRAY_JSON", jsonString)
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+
         startActivity(intent)
         finish()
     }

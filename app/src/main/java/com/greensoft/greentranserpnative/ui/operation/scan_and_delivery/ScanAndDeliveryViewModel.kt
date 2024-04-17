@@ -48,7 +48,11 @@ class ScanAndDeliveryViewModel @Inject constructor(private val _repo: ScanAndDel
             _repo.getStickerList(companyId,userCode,loginBranchCode,branchCode, grNo, menuCode,sessionId)
         }
     }
-
+    fun getDelReasonList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>){
+        viewModelScope.launch(Dispatchers.IO) {
+            _repo.getDelReasonList(companyId,spname, param,values)
+        }
+    }
     fun saveScanDeliveryPod(
         companyId:String,
         userCode: String,

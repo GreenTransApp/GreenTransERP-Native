@@ -62,7 +62,6 @@ class ScanDeliveryAdapter (private val stickerList: ArrayList<ScanStickerModel>,
         val data = stickerList[holder.adapterPosition]
         holder.bindData(data, onRowClick)
         if(data.scanned == "N" ) {
-//            && activity.stickerNumber == data.stickerno) {
             holder.binding.btnRemove.visibility = View.VISIBLE
             holder.binding.gridLayout.setBackgroundColor(
                 ContextCompat.getColor(

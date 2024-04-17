@@ -3,6 +3,9 @@ package com.greensoft.greentranserpnative.ui.operation.scan_and_delivery
 import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.R
@@ -14,6 +17,8 @@ import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.adapter.ScanDeliveryAdapter
+import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.adapter.ScanUndeliveryAdapter
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanStickerModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -22,17 +27,23 @@ import javax.inject.Inject
 class ScanAndUndeliveredActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>,
     BottomSheetClick<Any>, AlertCallback<Any>, SignatureBottomSheetCompleteListener {
         lateinit var activityBinding:ActivityScanAndUndeliveredBinding
-    private var rvList: ArrayList<ScanStickerModel> = ArrayList()
+        lateinit var linearLayoutManager: LinearLayoutManager
+        private var rvAdapter: ScanUndeliveryAdapter? = null
+        private var rvList: ArrayList<ScanStickerModel> = ArrayList()
         
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityScanAndUndeliveredBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
+//        setSupportActionBar(activityBinding.toolBar.root)
+//        setUpToolbar("UNDELIVERED STICKER")
         getStickerData()
+        searchItem()
 
     }
+
     private fun getStickerData() {
-//        if(grList.isNotEmpty()) grList.clear()
+
         if(intent != null) {
             val jsonString = intent.getStringExtra("ARRAY_JSON")
             if(jsonString != "") {
@@ -41,13 +52,59 @@ class ScanAndUndeliveredActivity @Inject constructor() : BaseActivity(), OnRowCl
                 val resultList: ArrayList<ScanStickerModel> =
                     gson.fromJson(jsonString.toString(), listType)
                 rvList.addAll(resultList)
+                setupRecyclerView()
 
             }
         }
     }
 
 
+    private fun setupRecyclerView() {
+        if(rvList.isEmpty()) {
+            activityBinding.emptyView.visibility = View.VISIBLE
+        } else {
+            activityBinding.emptyView.visibility = View.GONE
+        }
+        linearLayoutManager = LinearLayoutManager(this)
+        rvAdapter = ScanUndeliveryAdapter(rvList, this,this)
+        activityBinding.recyclerView.layoutManager = linearLayoutManager
+        activityBinding.recyclerView.adapter = rvAdapter
 
+    }
+
+    fun searchItem(): Boolean {
+        activityBinding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                rvAdapter?.filter?.filter(query)
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                rvAdapter?.filter?.filter(newText)
+                return false
+            }
+
+        })
+        return true
+    }
+
+
+    private fun saveUndeliveredSticker(){
+        var actualStickerNoStr: String = ""
+        var actualReasonStr: String = ""
+        var adapterData: ArrayList<ScanStickerModel>? = rvAdapter?.getAdapterData()
+//        run enteredData@ {
+//            adapterData?.forEachIndexed { index, model ->
+//            }
+
+            for(i in 0 until rvList.size) {
+                val stickerNoStr=rvList[i].stickerno
+                val reasonsStr=adapterData?.get(i)?.reasons
+                actualStickerNoStr += "$stickerNoStr,"
+                actualReasonStr += "$reasonsStr,"
+            }
+
+        }
 
     override fun onComplete(clickType: String, imageBitmap: Bitmap) {
         TODO("Not yet implemented")

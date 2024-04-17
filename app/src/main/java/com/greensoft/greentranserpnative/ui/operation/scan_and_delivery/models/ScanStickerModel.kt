@@ -5,5 +5,7 @@ data class ScanStickerModel(
     val commandstatus: Int?,
     val grno: String?,
     val scanned: String?,
-    val stickerno: String?
+    val stickerno: String?,
+    var reasons: String?,
+    var reasonCode: String?
 )
