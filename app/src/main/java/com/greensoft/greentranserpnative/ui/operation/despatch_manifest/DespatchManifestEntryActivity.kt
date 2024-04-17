@@ -17,6 +17,9 @@ import com.greensoft.greentranserpnative.ui.operation.booking.BookingViewModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ContentSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.DestinationSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.DespatchManifestEnteredDataModel
+import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.FlightModeCodeModel
+import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.GroupModeCodeModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.SavePickupManifestAdapter
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.DriverSelectionModel
@@ -34,7 +37,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
     lateinit var activityBinding: ActivityDespatchManifestEntryBinding
     private val viewModel: DespatchManifestViewModel by viewModels()
 
-    var selectedLoadedBy = arrayOf("CUSTOMER", "SELF")
+
     lateinit var linearLayoutManager: LinearLayoutManager
     private var branchList: ArrayList<BranchSelectionModel> = ArrayList()
     private var locationList: ArrayList<PickupLocationModel> = ArrayList()
@@ -43,6 +46,8 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
     private var vendorList: ArrayList<VendorSelectionModel> = ArrayList()
     private var vehicleList: ArrayList<VehicleSelectionModel> = ArrayList()
     private var vehicleTypeList: ArrayList<VehicleTypeModel> = ArrayList()
+    private var groupModeList: ArrayList<GroupModeCodeModel> = ArrayList()
+    private var modeList: ArrayList<FlightModeCodeModel> = ArrayList()
 
     private val bookingViewModel: BookingViewModel by viewModels()
     private var rvAdapter: SavePickupManifestAdapter? = null
@@ -50,8 +55,8 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
     private var contentList: ArrayList<ContentSelectionModel> = ArrayList()
     private var packingList: ArrayList<PackingSelectionModel> = ArrayList()
     private var model: ManifestEnteredDataModel? = null
-
-
+    var modeTypeList = arrayOf("SURFACE", "AIR")
+    var modeTypeCode =""
     var contentCode = ""
     var content = ""
     var enteredPckgs = ""
@@ -62,6 +67,8 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
     var areaCode = ""
     var branchCode = ""
     var vehicleCode = ""
+    var groupCode = ""
+    var modeCode = ""
     var vehicleCategory = ""
     var loadedByType = ""
     var manifestDt = getSqlCurrentDate()
@@ -78,6 +85,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
         activityBinding.inputDate.setText(getViewCurrentDate())
+        activityBinding.inputAirlineDt.setText(getViewCurrentDate())
         activityBinding.inputTime.setText(getSqlCurrentTime())
         activityBinding.inputBranch.setText(userDataModel?.loginbranchname)
         branchCode = userDataModel?.loginbranchcode.toString()
@@ -87,7 +95,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
         setUpToolbar("Outstation Manifest")
         setObservers()
 
-        getVehicleTypeList()
+
         setOnclick()
 
         setSpinners()
@@ -115,14 +123,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
             }
         }
 
-        viewModel.pickupLocationLiveData.observe(this) { locationData ->
-            if (locationData.elementAt(0).commandstatus == 1) {
-                locationList = locationData
-                openPickupLocationSelectionBottomSheet(locationList)
-            } else {
-
-            }
-        }
+//
         viewModel.toStationLiveData.observe(this){ toStationData ->
             if (toStationData.elementAt(0).commandstatus == 1) {
                 toStationList = toStationData
@@ -151,12 +152,25 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
             }
 
         }
-        viewModel.vehicleTypeLiveData.observe(this) { type ->
-            vehicleTypeList = type
-            val vehicleAdapter =
-                ArrayAdapter(this, android.R.layout.simple_list_item_1, vehicleTypeList)
-            activityBinding.selectedVehicleType.adapter = vehicleAdapter
+        viewModel.groupModeLiveData.observe(this) { groupCode ->
+            if (groupCode.elementAt(0).commandstatus == 1) {
+                groupModeList = groupCode
+                openGroupModeSelectionBottomSheet(groupModeList)
+            } else {
+                errorToast(groupCode.elementAt(0).commandmessage.toString())
+            }
+
         }
+        viewModel.modeCodeLiveData.observe(this) { modeCode ->
+            if (modeCode.elementAt(0).commandstatus == 1) {
+                modeList = modeCode
+                openModeCodeSelectionBottomSheet(modeList)
+            } else {
+//                errorToast(groupCode.elementAt(0).commandmessage.toString())
+            }
+
+        }
+
 
         mPeriod.observe(this) { date ->
             activityBinding.inputDate.setText(date.viewsingleDate)
@@ -167,86 +181,43 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
         }
     }
     private fun setSpinners() {
-//        val toStationModeList = listOf("To Airport", "To Hub")
-//        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, toStationModeList)
-//        activityBinding.inputToStation.adapter = adapter
-//
-//        activityBinding.inputToStation.onItemSelectedListener =
-//            object: AdapterView.OnItemSelectedListener{
-//                override fun onItemSelected(
-//                    parent: AdapterView<*>?,
-//                    view: View?,
-//                    position: Int,
-//                    id: Long
-//                ) {
-//
-//                    toStationModeList[position]
-//
-//                }
-//
-//                override fun onNothingSelected(parent: AdapterView<*>?) {
-//                    TODO("Not yet implemented")
-//                }
-//            }
-        activityBinding.selectedVehicleType.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, modeTypeList)
+        activityBinding.selectedModeType.adapter = adapter
+
+        activityBinding.selectedModeType.onItemSelectedListener =
+            object: AdapterView.OnItemSelectedListener{
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
                     view: View?,
                     position: Int,
                     id: Long
                 ) {
-                    vehicleCategory = vehicleTypeList[position].value
-                    when (vehicleCategory) {
-                        //OWN
-                        "O" -> run {
-//                            activityBinding.inputLayoutVendorName.visibility = View.GONE
-                            activityBinding.inputVendorName.text!!.clear()
-                            activityBinding.inputVendorName.isEnabled = false
-                            activityBinding.inputVehicleNumber.text!!.clear()
-//                            vendorCode = ""
-                        }
-                        //ATTACHED
-                        "A" -> run {
-//                            activityBinding.inputLayoutVendorName.visibility = View.VISIBLE
-                            activityBinding.inputVendorName.isEnabled = true
-                            activityBinding.inputVehicleNumber.text!!.clear()
-                        }
-                        "M" -> run {
-//                            activityBinding.inputLayoutVendorName.visibility = View.GONE
-//                            vendorCode = ""
-                            activityBinding.inputVendorName.text!!.clear()
-//                            activityBinding.inputVendorName.isEnabled = false
-                            activityBinding.inputVehicleNumber.text!!.clear()
-                        }
 
-                    }
-                }
+                    var value = modeTypeList[position].toString()
+                    when(value){
+                        "SURFACE"-> run{
+                          modeTypeCode ="S"
+                            activityBinding.surfaceLayout.visibility=View.VISIBLE
+                            activityBinding.airLayout.visibility=View.GONE
+                            activityBinding.inputAirline.text= null
+                            activityBinding.inputFlight.text= null
+                            activityBinding.inputAirlineAwb.text= null
+                            activityBinding.inputAwbWeight.text= null
+                            activityBinding.inputAirlineDt.text= null
+                            modeCode= ""
+                            groupCode= ""
 
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                    TODO("Not yet implemented")
-                }
-            }
-        val loadedByAdapter =
-            ArrayAdapter(this, android.R.layout.simple_list_item_1, selectedLoadedBy)
-        activityBinding.selectedLoadedBy.adapter = loadedByAdapter
-        activityBinding.selectedLoadedBy.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    when (position) {
-                        0 -> run {
-                            //customer
-
-                            loadedByType = "C"
                         }
-                        // self
-                        1 -> kotlin.run {
-                            loadedByType = "S"
+                        "AIR" -> run{
+                            modeTypeCode="A"
+                            activityBinding.airLayout.visibility=View.VISIBLE
+                            activityBinding.surfaceLayout.visibility=View.GONE
+                            activityBinding.inputDriverName.text= null
+                            driverCode =""
+                            activityBinding.inputDriverMobile.text =null
+                            activityBinding.inputVehicleNumber.text= null
+                            vehicleCode =""
+
                         }
                     }
 
@@ -277,22 +248,23 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
     }
 
 
+    fun  getDestinationList(){
+        viewModel.getToStationList(   loginDataModel?.companyid.toString(),
+            "greentrans_showbranchOPSLOV",
+            listOf("prmbranchcode"),
+            arrayListOf(userDataModel?.loginbranchcode.toString()))
+    }
+
+
     private fun openToStationBottomSheet(rvList: ArrayList<DestinationSelectionModel>) {
         val commonList = ArrayList<CommonBottomSheetModel<Any>>()
         for (i in 0 until rvList.size) {
             commonList.add(CommonBottomSheetModel(rvList[i].stnname, rvList[i]))
 
         }
-        openCommonBottomSheet(this, "Pickup Location Selection", this, commonList)
+        openCommonBottomSheet(this, "Destination Selection", this, commonList)
     }
-    private fun getVehicleTypeList() {
-        viewModel.getVehicleType(
-            loginDataModel?.companyid.toString(),
-            "gtapp_getvehicletype",
-            listOf(),
-            arrayListOf()
-        )
-    }
+
 
     private fun openVehicleSelectionBottomSheet(rvList: ArrayList<VehicleSelectionModel>) {
         val commonList = ArrayList<CommonBottomSheetModel<Any>>()
@@ -300,6 +272,47 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
             commonList.add(CommonBottomSheetModel(rvList[i].regno, rvList[i]))
         }
         openCommonBottomSheet(this, "Vehicle Selection", this, commonList)
+    }
+
+    private fun getGroupModeCode() {
+        viewModel.getGroupModeList(
+            loginDataModel?.companyid.toString(),
+            "",
+            listOf(),
+            arrayListOf()
+        )
+    }
+
+    private fun openGroupModeSelectionBottomSheet(rvList: ArrayList<GroupModeCodeModel>) {
+        val commonList = ArrayList<CommonBottomSheetModel<Any>>()
+        for (i in 0 until rvList.size) {
+            commonList.add(CommonBottomSheetModel(rvList[i].groupname.toString(), rvList[i]))
+        }
+        openCommonBottomSheet(this, "Group Mode Selection", this, commonList)
+    }
+
+    private fun getModeCodeList() {
+        if(activityBinding.inputDestination.text.isNullOrEmpty()){
+            errorToast("Please Select Destination")
+            return
+        }else if(activityBinding.inputAirline.text.isNullOrEmpty()){
+            errorToast("Please Select Mode Group First")
+            return
+        }
+        viewModel.getGroupModeList(
+            loginDataModel?.companyid.toString(),
+            "",
+            listOf("prmdestcode","prmmodetype","prmmodegroupcode","prmorgcode","prmcharstr"),
+            arrayListOf(areaCode,modeTypeCode,groupCode,getLoginBranchCode(),"A")
+        )
+    }
+
+    private fun openModeCodeSelectionBottomSheet(rvList: ArrayList<FlightModeCodeModel>) {
+        val commonList = ArrayList<CommonBottomSheetModel<Any>>()
+        for (i in 0 until rvList.size) {
+            commonList.add(CommonBottomSheetModel(rvList[i].regno.toString(), rvList[i]))
+        }
+        openCommonBottomSheet(this, "Mode Selection", this, commonList)
     }
 
     private fun getDriverList() {
@@ -319,14 +332,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
         openCommonBottomSheet(this, "Driver Selection", this, commonList)
     }
 
-    private fun getPickupLocation() {
-        viewModel.getPickupLocation(
-            loginDataModel?.companyid.toString(),
-            "greentransapp_pickuplocationlov",
-            listOf("prmbranchcode"),
-            arrayListOf(userDataModel?.loginbranchcode.toString())
-        )
-    }
+
 
     private fun getVendorList() {
         viewModel.getVendorList(
@@ -367,10 +373,10 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
 
     private fun setOnclick() {
 
-        activityBinding.inputPickupLocation.setOnClickListener {
-            getPickupLocation()
-
-        }
+//        activityBinding.inputPickupLocation.setOnClickListener {
+//            getPickupLocation()
+//
+//        }
 
         activityBinding.inputDriverName.setOnClickListener {
             getDriverList()
@@ -383,6 +389,15 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
             getVehicleList()
 
 
+        }
+        activityBinding.inputLayoutDestination.setOnClickListener {
+            getDestinationList()
+        }
+        activityBinding.inputAirline.setOnClickListener {
+            getGroupModeCode()
+        }
+        activityBinding.inputFlight.setOnClickListener {
+            getModeCodeList()
         }
 
         activityBinding.autoManifestCheck.setOnCheckedChangeListener { compoundButton, selected ->
@@ -398,73 +413,82 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
         activityBinding.inputDate.setOnClickListener {
             openSingleDatePicker()
         }
+        activityBinding.inputAirlineDt.setOnClickListener {
+            openSingleDatePicker()
+        }
         activityBinding.inputTime.setOnClickListener {
             openTimePicker()
         }
 
         activityBinding.btnGrSelect.setOnClickListener {
-            if (activityBinding.inputBranch.text.isNullOrEmpty()) {
-                Companion.errorToast(this, "Please Select Branch")
-                return@setOnClickListener
-            } else if (!activityBinding.autoManifestCheck.isChecked) {
+           if (!activityBinding.autoManifestCheck.isChecked) {
                 if (activityBinding.inputManifestNum.text.isNullOrEmpty()) {
                     Companion.errorToast(this, "Please Enter Manifest Number")
                     return@setOnClickListener
                 }
-            } else if (activityBinding.inputDate.text.isNullOrEmpty()) {
-                Companion.errorToast(this, "Please select Date")
-                return@setOnClickListener
-            } else if (activityBinding.inputTime.text.isNullOrEmpty()) {
-                Companion.errorToast(this, "Please select Time")
-                return@setOnClickListener
-            } else if (activityBinding.inputDriverName.text.isNullOrEmpty()) {
-                Companion.errorToast(this, "Please select Driver.")
-                return@setOnClickListener
+            } else if (modeTypeCode == "S") {
+               if (activityBinding.inputDriverName.text.isNullOrEmpty()) {
+                   Companion.errorToast(this, "Please select Driver.")
+                   return@setOnClickListener
 
-            } else if (activityBinding.inputVendorName.text.isNullOrEmpty()) {
+               }  else if (activityBinding.inputVehicleNumber.text.isNullOrEmpty()) {
+                   Companion.errorToast(this, "Please select Vehicle Number.")
+                   return@setOnClickListener
+               }
+           }else if(modeTypeCode == "A"){
+               if (activityBinding.inputAirline.text.isNullOrEmpty()) {
+                   Companion.errorToast(this, "Please select Driver.")
+                   return@setOnClickListener
+
+               }  else if (activityBinding.inputAirlineAwb.text.isNullOrEmpty()) {
+                   Companion.errorToast(this, "Please select Vehicle Number.")
+                   return@setOnClickListener
+               } else if (activityBinding.inputFlight.text.isNullOrEmpty()) {
+                   Companion.errorToast(this, "Please select Vehicle Number.")
+                   return@setOnClickListener
+               }
+           } else if (activityBinding.inputVendorName.text.isNullOrEmpty()) {
                 Companion.errorToast(this, "Please select Vendor.")
                 return@setOnClickListener
             }
-            else if (activityBinding.inputVehicleNumber.text.isNullOrEmpty()) {
-                Companion.errorToast(this, "Please select Vehicle Number.")
-                return@setOnClickListener
-            }
-//            val intent = Intent(this, GrSelectionForDespatchManifestActivity::class.java)
-//            getManifestData()
-//            startActivity(intent)
+
+            val intent = Intent(this, GrSelectionForDespatchManifestActivity::class.java)
+            getManifestData()
+            startActivity(intent)
 
         }
 
     }
     private fun getManifestData() {
-        Utils.manifestModel = ManifestEnteredDataModel(
+        Utils.despatchManifestModel = DespatchManifestEnteredDataModel(
             branchName = activityBinding.inputBranch.text.toString(),
             branchCode = branchCode,
             manifestNo = activityBinding.inputManifestNum.text.toString(),
-            pickupLocation = activityBinding.inputPickupLocation.text.toString(),
+          tostation="",
             driverCode = driverCode,
             manifestDt = manifestDt,
             manifestTime = activityBinding.inputTime.text.toString(),
             driverName = activityBinding.inputDriverName.text.toString(),
             drivermobile = activityBinding.inputDriverMobile.text.toString(),
-            vehicleType = vehicleCategory,
             vendorName = activityBinding.inputVendorName.text.toString(),
             vendorCode = vendorCode,
             vehicleNo = activityBinding.inputVehicleNumber.text.toString(),
             vehicleCode = vehicleCode,
-            loadedBy = loadedByType,
-            capacity = activityBinding.inputCapacity.text.toString(),
             areaCode = areaCode,
             remark = activityBinding.inputRemark.text.toString(),
+             groupCode=groupCode,
+             modeCode =modeCode,
+             pckgs =activityBinding.inputAwbPckgs.text.toString(),
+             modeTypeCode=modeTypeCode
         )
 
     }
     override fun onItemClick(data: Any, clickType: String) {
         when (clickType) {
-            "Pickup Location Selection" -> run {
-                val selectedLocation = data as PickupLocationModel
-                activityBinding.inputPickupLocation.setText(selectedLocation.name)
-                areaCode = selectedLocation.code.toString()
+            "Destination Selection" -> run {
+                val selectedLocation = data as DestinationSelectionModel
+                activityBinding.inputDestination.setText(selectedLocation.stnname)
+                areaCode = selectedLocation.stncode
             }
 
 
@@ -478,7 +502,14 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
             "Vendor Selection" -> run {
                 val selectedVendor = data as VendorSelectionModel
                 activityBinding.inputVendorName.setText(selectedVendor.vendname)
-                vendorCode = selectedVendor.vendcode
+                if (selectedVendor.vendcode ==null){
+                    activityBinding.inputLayoutVendorGr.visibility= View.VISIBLE
+                }else{
+                    vendorCode = selectedVendor.vendcode
+                    activityBinding.inputLayoutVendorGr.visibility=View.GONE
+                }
+
+
 //              getVehicleList()
 
 
@@ -487,7 +518,20 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
                 val selectedVehicle = data as VehicleSelectionModel
                 activityBinding.inputVehicleNumber.setText(selectedVehicle.regno)
                 vehicleCode = selectedVehicle.vehiclecode
-                activityBinding.inputCapacity.setText(selectedVehicle.capacity.toString())
+//                activityBinding.inputCapacity.setText(selectedVehicle.capacity.toString())
+
+            }
+
+            "Group Mode Selection" -> run {
+                val selectedGroup = data as GroupModeCodeModel
+                activityBinding.inputAirline.setText(selectedGroup.groupname)
+                groupCode = selectedGroup.groupcode.toString()
+            }
+            "Mode Selection" -> run {
+                val selectedMode = data as FlightModeCodeModel
+                activityBinding.inputFlight.setText(selectedMode.regno)
+                modeCode = selectedMode.vehiclecode.toString()
+
 
             }
         }
