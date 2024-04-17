@@ -8,4 +8,10 @@ data class ReceivingDetailsEnteredDataModel(
     var receivingUserName: String?,
     var receivingUserCode: String?,
     var receivingRemarks: String?
-)
+) {
+    override fun toString(): String {
+        return "manifestNo: $manifestNo, receivingViewDate: $receivingViewDate, " +
+        "receivingSqlDate: $receivingSqlDate, receivingViewTime: $receivingViewTime, receivingUserName: $receivingUserName, "+
+        "receivingUserCode: $receivingUserCode, receivingRemarks: $receivingRemarks"
+    }
+}
