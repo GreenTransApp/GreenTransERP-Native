@@ -315,7 +315,9 @@ interface Api {
         @Field("prmmenucode") menuCode: String?,
         @Field("prmsessionid") sessionId: String?,
         @Field("prmstickerno") stickerNo: String?,
-        @Field("prmmanifestno") manifestNo: String?
+        @Field("prmmanifestno") manifestNo: String?,
+        @Field("prmreceivedt") receiveDt: String?,
+        @Field("prmreceivetime") receiveTime: String?
     ):Call<CommonResult>
 
     @FormUrlEncoded

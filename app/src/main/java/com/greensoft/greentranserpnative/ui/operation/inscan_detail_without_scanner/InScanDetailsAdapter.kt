@@ -2,6 +2,8 @@ package com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_sca
 
 import android.content.Context
 import android.health.connect.datatypes.units.Length
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -46,31 +48,78 @@ class InScanDetailsAdapter @Inject constructor(
     inner class InScanDetailViewHolder(
         private val  layoutBinding :ItemInscanCardDetailBinding,
         private val context: Context):RecyclerView.ViewHolder(layoutBinding.root){
-            private fun  setOnClick(model:InScanWithoutScannerModel, onRowClickLocal: OnRowClick<Any>){
-               layoutBinding.inputDamagePckgsReason.setOnClickListener{
-                   onRowClickLocal.onRowClick(model, TAG_DAMAGE_REASON_CLICK, adapterPosition)
-               }
-                layoutBinding.btnSaveCard.setOnClickListener {
-                    onRowClickLocal.onRowClick(model, TAG_SAVE_CARD_CLICK, adapterPosition)
-                }
-             }
-
-            fun onBind(inScanWithoutScannerModel: InScanWithoutScannerModel, onRowClickLocal: OnRowClick<Any>){
-                layoutBinding.inScanCardDetailModel = inScanWithoutScannerModel
-                setOnClick(inScanWithoutScannerModel, onRowClickLocal)
-//                layoutBinding.btnSaveCard.setOnClickListener {
-//                    onRowClick.onClick(inScanWithoutScannerModel,"SAVE_CARD")
-//
-//                }
+        private fun  setOnClick(model:InScanWithoutScannerModel, onRowClickLocal: OnRowClick<Any>){
+            layoutBinding.inputDamagePckgsReason.setOnClickListener{
+               onRowClickLocal.onRowClick(model, TAG_DAMAGE_REASON_CLICK, adapterPosition)
             }
+            layoutBinding.btnSaveCard.setOnClickListener {
+                onRowClickLocal.onRowClick(model, TAG_SAVE_CARD_CLICK, adapterPosition)
+            }
+        }
 
+        fun onBind(inScanWithoutScannerModel: InScanWithoutScannerModel, onRowClickLocal: OnRowClick<Any>){
+            layoutBinding.inScanCardDetailModel = inScanWithoutScannerModel
+            setOnClick(inScanWithoutScannerModel, onRowClickLocal)
+            setObservers()
+        }
+
+        private fun setObservers() {
+            layoutBinding.inputReceivePckgs.addTextChangedListener(object: TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    val enteredVal = s.toString().toIntOrNull()
+                    if (enteredVal != null) {
+                        if (enteredVal <= 0) {
+                            layoutBinding.inputReceivePckgs.setText("")
+                        }
+                    }
+                    if (enteredVal != null && enteredVal.toString().startsWith("0")) {
+//                       binding.pckgs.setText(trimLeadingZeros(p0.toString()))
+                    }
+                }
+
+            })
+
+            layoutBinding.inputDamagePckgs.addTextChangedListener(object: TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    val enteredVal = s.toString().toIntOrNull()
+                    if (enteredVal != null) {
+                        if (enteredVal < 0) {
+                            layoutBinding.inputDamagePckgs.setText("0")
+                        }
+                    }
+//                    if (enteredVal != null && enteredVal.toString().startsWith("0")) {
+//                       binding.pckgs.setText(trimLeadingZeros(p0.toString()))
+//                    }
+                }
+
+            })
+        }
+
+    }
+
+    fun getEnteredData(adapterPosition: Int): InScanWithoutScannerModel? {
+        if(adapterPosition >= inScanCardList.size) {
+            return null
+        }
+        return inScanCardList[adapterPosition]
     }
 
     fun setDamageReason(model: DamageReasonModel, adapterPosition: Int) {
         inScanCardList[adapterPosition].damagereason = model.text
         inScanCardList[adapterPosition].damagereasoncode = model.value
-        notifyItemChanged(adapterPosition)
-
+//        notifyItemChanged(adapterPosition)
     }
 
 }

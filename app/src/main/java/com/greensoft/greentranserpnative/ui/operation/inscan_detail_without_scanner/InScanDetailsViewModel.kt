@@ -25,9 +25,8 @@ class InScanDetailsViewModel @Inject constructor(private val _repo: InScanDetail
 
     val damagePckgsReasonLiveData:LiveData<ArrayList<DamageReasonModel>>
         get() = _repo.damageReasonLiveData
-val inScanSaveLiveData:LiveData<InscanDetailsSaveModel>
+    val inScanSaveLiveData:LiveData<InscanDetailsSaveModel>
         get() = _repo.inscanSaveLiveData
-
     fun getInScanDetails(companyId: String, userCode: String, branchCode: String, manifestNo:String,manifestType:String,sessionId:String){
         viewModelScope.launch(Dispatchers.IO) {
             _repo.getInScanDetails(companyId,userCode, branchCode,manifestNo,manifestType,sessionId)
@@ -38,7 +37,6 @@ val inScanSaveLiveData:LiveData<InscanDetailsSaveModel>
             _repo.getDamageReasonList(companyId)
         }
     }
-
     fun saveInScanDetailsWithoutScan(
         companyId:String,
         manifestNo:String,

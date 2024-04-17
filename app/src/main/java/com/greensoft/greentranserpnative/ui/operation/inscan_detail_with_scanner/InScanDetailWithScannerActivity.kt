@@ -11,17 +11,22 @@ import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityInScanDetailWithScannerBinding
+import com.greensoft.greentranserpnative.ui.bottomsheet.receivingDetails.ReceivingDetailsBottomSheet
+import com.greensoft.greentranserpnative.ui.bottomsheet.receivingDetails.models.ReceivingDetailsEnteredDataModel
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
+import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.InScanWithoutScannerModel
 import com.greensoft.greentranserpnative.ui.operation.unarrived.models.InscanListModel
+import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
+import java.lang.Exception
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class InScanDetailWithScannerActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>,
-    AlertCallback<Any> {
+    AlertCallback<Any>, BottomSheetClick<Any> {
     private lateinit var activityBinding: ActivityInScanDetailWithScannerBinding
     private lateinit var manager: LinearLayoutManager
     private val viewModel: InScanDetailWithScannerViewModel by viewModels()
@@ -31,6 +36,7 @@ class InScanDetailWithScannerActivity  @Inject constructor(): BaseActivity(), On
     private var inscanListData: ArrayList<InscanListModel> = ArrayList()
     private var manifestNo:String? =""
     private var inScanSelectedData: InscanListModel? = null
+    private var receivingDetail: ReceivingDetailsEnteredDataModel? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityInScanDetailWithScannerBinding.inflate(layoutInflater)
@@ -42,6 +48,46 @@ class InScanDetailWithScannerActivity  @Inject constructor(): BaseActivity(), On
         getInScanDetails()
 
         setOnClick()
+        openReceivingDetailsBottomSheet()
+    }
+
+    private fun openReceivingDetailsBottomSheet() {
+        if(receivingDetail == null) {
+            receivingDetail = ReceivingDetailsEnteredDataModel(
+                manifestNo = manifestNo,
+                receivingViewDate = getViewCurrentDate(),
+                receivingSqlDate = getSqlCurrentDate(),
+                receivingViewTime = getSqlCurrentTime(),
+                receivingUserName = userDataModel?.username,
+                receivingUserCode = getUserCode(),
+                receivingRemarks = null
+            )
+        }
+        Utils.logger(ReceivingDetailsBottomSheet.TAG, receivingDetail.toString())
+        val instance = ReceivingDetailsBottomSheet.newInstance(
+            mContext = this,
+            companyId = getCompanyId(),
+            manifestNo = manifestNo.toString(),
+            bottomSheetClick = this,
+            receivingDetailsEnteredDataModel = receivingDetail!!
+
+        )
+        instance.show(
+            supportFragmentManager,
+            ReceivingDetailsBottomSheet.TAG
+        )
+    }
+
+    override fun onItemClick(data: Any, clickType: String) {
+        if(clickType == ReceivingDetailsBottomSheet.SAVE_CLICK_TAG) {
+            try {
+                val model = data as ReceivingDetailsEnteredDataModel
+                this.receivingDetail = model
+                Utils.logger(ReceivingDetailsBottomSheet.TAG, receivingDetail?.receivingViewDate)
+            } catch (err: Exception) {
+                errorToast(err.message)
+            }
+        }
     }
 
     private fun setObservers(){
@@ -123,7 +169,9 @@ class InScanDetailWithScannerActivity  @Inject constructor(): BaseActivity(), On
             "WMSAPP_INSCANPICKUP",
             getSessionId(),
             stickerNo,
-            manifestNo.toString()
+            manifestNo.toString(),
+            receivingDetail?.receivingSqlDate.toString(),
+            receivingDetail?.receivingViewTime.toString()
         )
     }
 

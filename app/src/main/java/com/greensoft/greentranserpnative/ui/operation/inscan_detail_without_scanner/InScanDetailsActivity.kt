@@ -93,7 +93,9 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), AlertCallbac
 //            activityBinding.inputDate.setText(datePicker.viewsingleDate)
 //            sqlDate=datePicker.sqlsingleDate.toString()
 //        }
-
+        viewModel.isError.observe(this) { errMsg ->
+            errorToast(errMsg)
+        }
         timePeriod.observe(this){ timePicker->
 //            activityBinding.inputTime.setText(timePicker.viewSingleTime)
         }
@@ -109,6 +111,10 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), AlertCallbac
         viewModel.damagePckgsReasonLiveData.observe(this) { damageReasons ->
             damagePckgsReasonList = damageReasons
 //            setupRecyclerView()
+        }
+        viewModel.inScanSaveLiveData.observe(this) { inScanDetailSave ->
+            successToast(inScanDetailSave.commandmessage)
+            getInScanDetails()
         }
     }
 
@@ -159,12 +165,8 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), AlertCallbac
     }
 
     private fun openReceivingDetailsBottomSheet() {
-        val instance = ReceivingDetailsBottomSheet.newInstance(
-            mContext = this,
-            companyId = getCompanyId(),
-            manifestNo = manifestNo.toString(),
-            bottomSheetClick = this,
-            receivingDetailsEnteredDataModel = receivingDetail ?: ReceivingDetailsEnteredDataModel(
+        if(receivingDetail == null) {
+            receivingDetail = ReceivingDetailsEnteredDataModel(
                 manifestNo = manifestNo,
                 receivingViewDate = getViewCurrentDate(),
                 receivingSqlDate = getSqlCurrentDate(),
@@ -173,6 +175,14 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), AlertCallbac
                 receivingUserCode = getUserCode(),
                 receivingRemarks = null
             )
+        }
+        Utils.logger(ReceivingDetailsBottomSheet.TAG, receivingDetail.toString())
+        val instance = ReceivingDetailsBottomSheet.newInstance(
+            mContext = this,
+            companyId = getCompanyId(),
+            manifestNo = manifestNo.toString(),
+            bottomSheetClick = this,
+            receivingDetailsEnteredDataModel = receivingDetail!!
 
         )
         instance.show(
@@ -222,7 +232,26 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), AlertCallbac
     }
 
     private fun validateEnteredData(model: InScanWithoutScannerModel) {
-        if(model.damage > 0) {
+        val nullOrZeroErr = "cannot be Empty / Zero."
+        var receivePckgs: Int = 0
+        var damagePckgs: Int = 0
+        try {
+            receivePckgs = model.receivedpckgs.toInt()
+        } catch (ex: Exception) {
+            errorToast("Receive Pckgs $nullOrZeroErr")
+            return
+        }
+        try {
+            damagePckgs = model.damage.toInt()
+        } catch (ex: Exception) {
+            errorToast("Damage Pckgs $nullOrZeroErr")
+            return
+        }
+        if(receivePckgs <= 0) {
+            errorToast("Receive Pckgs $nullOrZeroErr")
+            return
+        }
+        if(damagePckgs > 0) {
             if(model.damagereason.isNullOrBlank()) {
                 errorToast("Please select a damage reason")
                 return;
@@ -245,9 +274,9 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), AlertCallbac
 
     override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {
         if (alertCallType == "SAVE_INSCAN" && alertClick == AlertClick.YES) {
-            successToast("test")
-//            val model = data as InScanWithoutScannerModel
-//            saveInscanDetailWithoutScan(model)
+//            successToast("test")
+            val model = data as InScanWithoutScannerModel
+            saveInscanDetailWithoutScan(model)
         }
     }
 
@@ -258,13 +287,13 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), AlertCallbac
             manifestNo = manifestNo.toString(),
             mawbNo = mawb.toString(),
             branchCode = getLoginBranchCode(),
-            receiveDt = "",
-            receiveTime = "",
+            receiveDt = receivingDetail?.receivingSqlDate.toString(),
+            receiveTime = receivingDetail?.receivingViewTime.toString(),
             vehicleCode = model.modecode.toString(),
-            remarks = model.remarks.toString(),
+            remarks = receivingDetail?.receivingRemarks.toString(),
             grNo = model.grno.toString(),
             mfPckgs = model.despatchpckgs.toString(),
-            pckgs = "",
+            pckgs = model.receivedpckgs.toString(),
             weight = model.despatchweight.toString(),
             damagePckgs = model.damage.toString(),
             damageReasoncode = model.damagereasoncode.toString(),

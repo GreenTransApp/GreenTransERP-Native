@@ -45,7 +45,8 @@ class ReceivingDetailsBottomSheet @Inject constructor(): BottomSheetDialogFragme
         //        var timePeriod: MutableLiveData<TimeSelection> = MutableLiveData()
         var timePeriod: MutableLiveData<String> = MutableLiveData()
         //    var timePeriod: MutableLiveData<TimeSelection?> = MutableLiveData<Any?>()
-        var TAG = Companion::class.java.name
+//        var TAG = Companion::class.java.name
+        var TAG = "RECEIVING DETAILS BOTTOM SHEET"
         var SAVE_CLICK_TAG = "RECEIVING_DETAILS_SAVE"
         fun newInstance(
             mContext: Context,
@@ -58,6 +59,7 @@ class ReceivingDetailsBottomSheet @Inject constructor(): BottomSheetDialogFragme
             instance.mContext = mContext
             instance.companyId = companyId
             instance.manifestNo = manifestNo
+            instance.bottomSheetClick = bottomSheetClick
             instance.receivingDetails = receivingDetailsEnteredDataModel
             return instance
         }
@@ -119,9 +121,20 @@ class ReceivingDetailsBottomSheet @Inject constructor(): BottomSheetDialogFragme
         layoutBinding.inputTime.setOnClickListener {
             openTimePicker()
         }
+        layoutBinding.closeBottomSheet.setOnClickListener {
+            if(receivingDetails != null) {
+                receivingDetails?.receivingRemarks = layoutBinding.inputRemark.text.toString()
+                bottomSheetClick?.onItemClick(receivingDetails!!, SAVE_CLICK_TAG)
+                dismiss()
+            } else {
+                Utils.printToast(mContext, ENV.SOMETHING_WENT_WRONG_ERR_MSG)
+            }
+        }
         layoutBinding.btnSave.setOnClickListener {
             if(receivingDetails != null) {
+                receivingDetails?.receivingRemarks = layoutBinding.inputRemark.text.toString()
                 bottomSheetClick?.onItemClick(receivingDetails!!, SAVE_CLICK_TAG)
+                dismiss()
             } else {
                 Utils.printToast(mContext, ENV.SOMETHING_WENT_WRONG_ERR_MSG)
             }
@@ -132,9 +145,12 @@ class ReceivingDetailsBottomSheet @Inject constructor(): BottomSheetDialogFragme
         mPeriod.observe(this) { period ->
             layoutBinding.inputDate.setText(period.viewsingleDate)
             sqlDate = period.sqlsingleDate.toString()
+            receivingDetails?.receivingViewDate = period.viewsingleDate
+            receivingDetails?.receivingSqlDate = period.sqlsingleDate
         }
         timePeriod.observe(this) { time ->
             layoutBinding.inputTime.setText(time)
+            receivingDetails?.receivingViewTime = time
         }
     }
 
