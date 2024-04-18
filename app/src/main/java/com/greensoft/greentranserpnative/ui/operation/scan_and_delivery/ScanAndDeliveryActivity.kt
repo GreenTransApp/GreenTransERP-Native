@@ -17,8 +17,6 @@ import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityScanAndDeliveryBinding
 import com.greensoft.greentranserpnative.model.ImageUtil
-import com.greensoft.greentranserpnative.ui.bottomsheet.common.CommonBottomSheet
-import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.signBottomSheet.BottomSheetSignature
 import com.greensoft.greentranserpnative.ui.bottomsheet.signBottomSheet.SignatureBottomSheetCompleteListener
 import com.greensoft.greentranserpnative.ui.bottomsheet.undeliveredPodBottomSheet.UndeliveredScanPodBottomSheet
@@ -27,11 +25,10 @@ import com.greensoft.greentranserpnative.ui.common.alert.CommonAlert
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.SavePickupManifestActivity
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodEntryModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.RelationListModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.adapter.ScanDeliveryAdapter
+import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanDelReasonModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanDeliverySaveModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanStickerModel
 import com.greensoft.greentranserpnative.utils.Utils
@@ -57,7 +54,8 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
     var signBitmap: Bitmap? = null
     private var relationList: ArrayList<RelationListModel> = ArrayList()
     private var rvList: ArrayList<ScanStickerModel> = ArrayList()
-    private var undeliveredStikerList: ArrayList<ScanStickerModel> = ArrayList()
+    private var undeliveredStickerList: ArrayList<ScanStickerModel> = ArrayList()
+    private var unDelReasonList: ArrayList<ScanDelReasonModel> = ArrayList()
     private val viewModel: ScanAndDeliveryViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,6 +68,7 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
         setOnClick()
         setSpinner()
         getRelationList()
+        getScanDelReasonList()
     }
 
     private fun setInitData(){
@@ -137,6 +136,9 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
             if(!stickerAlreadyExists) {
                 saveStickerToPod(stickerNo)
             }
+        }
+        viewModel.unDelReasonList.observe(this) { reasonList ->
+            unDelReasonList = reasonList
         }
         viewModel.isError.observe(this) { errMsg ->
             errorToast(errMsg)
@@ -374,20 +376,20 @@ private  fun savePodStickerAlert (stickerNo: String){
 
 
     private fun finalSaveWithValidation(){
-        undeliveredStikerList.clear()
+        undeliveredStickerList.clear()
         rvList.forEachIndexed{index, item ->
             if (rvList[index].scanned == "N"){
-                undeliveredStikerList.add(item)
+                undeliveredStickerList.add(item)
 //                navigateToUndeliveredPage(undeliveredStikerList)
             }
 
         }
-        openUndeliveredBottomSheet(mContext,"",this,undeliveredStikerList)
+        openUndeliveredBottomSheet(mContext,"",this,undeliveredStickerList,unDelReasonList)
     }
 
-    fun openUndeliveredBottomSheet(mContext: Context, title: String, bottomSheetClick: BottomSheetClick<Any>, stickerList: ArrayList<ScanStickerModel>, withAdapter: Boolean = false, index: Int = -1) {
+    fun openUndeliveredBottomSheet(mContext: Context, title: String, bottomSheetClick: BottomSheetClick<Any>, stickerList: ArrayList<ScanStickerModel>, unDelReasonList: ArrayList<ScanDelReasonModel>) {
 
-        val bottomSheetDialog = UndeliveredScanPodBottomSheet.newInstance(mContext, title, bottomSheetClick, stickerList)
+        val bottomSheetDialog = UndeliveredScanPodBottomSheet.newInstance(mContext, title, bottomSheetClick, stickerList,unDelReasonList)
 
         bottomSheetDialog.show(supportFragmentManager, UndeliveredScanPodBottomSheet.TAG)
     }

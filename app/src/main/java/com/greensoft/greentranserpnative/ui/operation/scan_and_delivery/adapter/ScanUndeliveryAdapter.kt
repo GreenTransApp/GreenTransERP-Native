@@ -18,12 +18,14 @@ import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
+import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanDelReasonModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanStickerModel
 import java.util.Locale
 
 class ScanUndeliveryAdapter (private val stickerList: ArrayList<ScanStickerModel>,
                              private val mContext: Context,
-                              private val bottomSheetClick: BottomSheetClick<Any>
+                              private val bottomSheetClick: BottomSheetClick<Any>,
+                              private val unDelReasonList: ArrayList<ScanDelReasonModel>
 ) : RecyclerView.Adapter<ScanUndeliveryAdapter.ScanUndeliveryViewHolder>(), Filterable {
     private  var filterList: ArrayList<ScanStickerModel>
 
@@ -35,14 +37,14 @@ class ScanUndeliveryAdapter (private val stickerList: ArrayList<ScanStickerModel
     }
    inner  class ScanUndeliveryViewHolder(val binding:UndeliveredStickerItemBinding ) :
         RecyclerView.ViewHolder(binding.root){
-         val reasonList = arrayOf(
-             "ADDRESS NOT AVAILABLE",
-             "DAMAGED GOODS",
-             "CONCERN PERSON NOT AVAILABLE",
-             "TRAIN LATE",
-             "FLIGHT DELAY",
-             "SUNDAY HOLIDAY"
-         )
+//         val reasonList = arrayOf(
+//             "ADDRESS NOT AVAILABLE",
+//             "DAMAGED GOODS",
+//             "CONCERN PERSON NOT AVAILABLE",
+//             "TRAIN LATE",
+//             "FLIGHT DELAY",
+//             "SUNDAY HOLIDAY"
+//         )
 
        private fun setOnClicks(model: ScanStickerModel) {
            binding.reason.onItemSelectedListener = object:
@@ -53,7 +55,8 @@ class ScanUndeliveryAdapter (private val stickerList: ArrayList<ScanStickerModel
                    position: Int,
                    id: Long
                ) {
-                   stickerList[adapterPosition].reasons = reasonList[position]
+                   stickerList[adapterPosition].reasons = unDelReasonList[position].reasonname
+                   stickerList[adapterPosition].reasonCode = unDelReasonList[position].reasoncode
                    Log.d("reasons", "onItemSelected:${ stickerList[adapterPosition].reasons} ")
 //                   when(item) {
 ////
@@ -91,7 +94,7 @@ class ScanUndeliveryAdapter (private val stickerList: ArrayList<ScanStickerModel
 
         }
        private fun setUpAdapter() {
-           val reasonAdapter = ArrayAdapter(mContext, R.layout.simple_list_item_1, reasonList)
+           val reasonAdapter = ArrayAdapter(mContext, R.layout.simple_list_item_1, unDelReasonList)
            binding.reason.adapter = reasonAdapter
 
        }

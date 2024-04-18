@@ -271,12 +271,13 @@
                                 android:id="@+id/input_receive_pckgs"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@{String.valueOf(inScanCardDetailModel.receivedpckgs)}"
+                                android:text="0"
                                 android:textAllCaps="true"
                                 android:textColor="@color/black"
                                 android:inputType="number"
                                 android:hint=""
                                 />
+<!--                                android:text="@{String.valueOf(inScanCardDetailModel.receivedpckgs)}"-->
 
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -375,12 +376,13 @@
                                 android:id="@+id/input_damage_pckgs"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@{String.valueOf(inScanCardDetailModel.damage)}"
+                                android:text="0"
                                 android:textAllCaps="true"
                                 android:textColor="@color/black"
                                 android:inputType="number"
                                 android:hint=""
                                 />
+<!--                                android:text="@{String.valueOf(inScanCardDetailModel.damage)}"-->
 
                         </com.google.android.material.textfield.TextInputLayout>
 

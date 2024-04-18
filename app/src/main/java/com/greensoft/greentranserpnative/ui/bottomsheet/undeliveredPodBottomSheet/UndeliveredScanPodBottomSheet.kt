@@ -25,6 +25,7 @@ import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.ScanAndDeliveryViewModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.adapter.ScanUndeliveryAdapter
+import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanDelReasonModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanStickerModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -39,21 +40,25 @@ class UndeliveredScanPodBottomSheet @Inject constructor(): BaseFragment() {
     private var rvAdapter: ScanUndeliveryAdapter? = null
     private var linearLayoutManager: LinearLayoutManager? = null
     private var index: Int = -1
+    private lateinit var undelReasonList: ArrayList<ScanDelReasonModel>
 
     companion object {
 
         const val TAG = "UndeliveredBottomSheet"
         var ITEM_CLICK_VIEW_TYPE = "UNDELIVERED_POD_BOTTOM_SHEET"
+        val UNDELIVERED_SAVE_CLICK_TAG = "UNDELIVERED_SAVE_CLICK_TAG"
         fun  newInstance(
             mContext: Context,
             title: String,
             bottomSheetClick: BottomSheetClick<Any>,
-            rvList: java.util.ArrayList<ScanStickerModel>
+            rvList: java.util.ArrayList<ScanStickerModel>,
+            undelReasonList: ArrayList<ScanDelReasonModel>
         ): UndeliveredScanPodBottomSheet {
             val instance: UndeliveredScanPodBottomSheet = UndeliveredScanPodBottomSheet()
             instance.mContext = mContext
             instance.rvList = rvList
             instance.bottomSheetClick = bottomSheetClick
+            instance.undelReasonList = undelReasonList
             ITEM_CLICK_VIEW_TYPE = title
             return instance
         }
@@ -106,14 +111,14 @@ class UndeliveredScanPodBottomSheet @Inject constructor(): BaseFragment() {
             var unDelReasonCodeCSV: String = ""
             rvList.forEachIndexed { index, scanStickerModel ->
                 stickerCSV += scanStickerModel.stickerno.toString() + ","
-//                unDelReasonCodeCSV += scanStickerModel.reasonsCode.toString() + ","
+                unDelReasonCodeCSV += scanStickerModel.reasonCode.toString() + ","
             }
 
-            val undeliveredDataModel: UndeliveredEnteredDataModel = UndeliveredEnteredDataModel(
+            val undeliveredDataModel = UndeliveredEnteredDataModel(
                 stickerStr = stickerCSV,
                 unDelReasonCodeStr = unDelReasonCodeCSV,
             )
-//            bottomSheetClick?.onItemClick()
+            bottomSheetClick?.onItemClick(undeliveredDataModel, UNDELIVERED_SAVE_CLICK_TAG)
             dismiss()
         }
 
@@ -129,7 +134,7 @@ class UndeliveredScanPodBottomSheet @Inject constructor(): BaseFragment() {
                 rvList,
                 mContext,
                 bottomSheetClick!!,
-
+                undelReasonList!!
             )
             linearLayoutManager = LinearLayoutManager(activity)
         }

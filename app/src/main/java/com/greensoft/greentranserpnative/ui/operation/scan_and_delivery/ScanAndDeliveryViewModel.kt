@@ -7,6 +7,7 @@ import com.greensoft.greentranserpnative.ui.operation.pod_entry.PodEntryReposito
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodEntryModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodSaveModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.RelationListModel
+import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanDelReasonModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanDeliverySaveModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanStickerModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,6 +32,8 @@ class ScanAndDeliveryViewModel @Inject constructor(private val _repo: ScanAndDel
         get() = _repo.stickerLiveData
     val saveLiveData: LiveData<ScanDeliverySaveModel>
         get() = _repo.scanPodSaveLiveData
+    val unDelReasonList: LiveData<ArrayList<ScanDelReasonModel>>
+        get() = _repo.scanDelReasonLiveData
 
     fun getPodDetails( companyId:String,grNo:String){
         viewModelScope.launch(Dispatchers.IO) {

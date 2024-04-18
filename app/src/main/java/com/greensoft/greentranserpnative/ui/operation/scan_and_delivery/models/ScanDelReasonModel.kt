@@ -8,4 +8,8 @@ data class ScanDelReasonModel(
     val imagerequired:String?,
 
 
-)
+) {
+    override fun toString(): String {
+        return reasonname.toString()
+    }
+}

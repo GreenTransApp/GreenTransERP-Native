@@ -45,7 +45,7 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), AlertCallbac
 
     private var manifestNo: String? = ""
     private var mawb: String? = ""
-    private var sqlDate: String? = null
+    //private var sqlDate: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityInscanDetailsBinding.inflate(layoutInflater)
@@ -212,7 +212,7 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), AlertCallbac
             manager = LinearLayoutManager(this)
             activityBinding.rvCardDetails.layoutManager = manager
         }
-        inScanCardAdapter = InScanDetailsAdapter(inScanCardDetailList, this)
+        inScanCardAdapter = InScanDetailsAdapter(inScanCardDetailList, this, this)
         activityBinding.rvCardDetails.adapter = inScanCardAdapter
 //    }
     }

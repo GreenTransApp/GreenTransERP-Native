@@ -66,7 +66,7 @@ class ScanAndUndeliveredActivity @Inject constructor() : BaseActivity(), OnRowCl
             activityBinding.emptyView.visibility = View.GONE
         }
         linearLayoutManager = LinearLayoutManager(this)
-        rvAdapter = ScanUndeliveryAdapter(rvList, this,this)
+//        rvAdapter = ScanUndeliveryAdapter(rvList, this,this, un)
         activityBinding.recyclerView.layoutManager = linearLayoutManager
         activityBinding.recyclerView.adapter = rvAdapter
 
