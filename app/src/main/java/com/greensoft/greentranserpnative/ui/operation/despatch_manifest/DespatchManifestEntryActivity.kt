@@ -20,6 +20,7 @@ import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSele
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.DespatchManifestEnteredDataModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.FlightModeCodeModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.GroupModeCodeModel
+import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.ToStationModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.SavePickupManifestAdapter
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.DriverSelectionModel
@@ -41,7 +42,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
     lateinit var linearLayoutManager: LinearLayoutManager
     private var branchList: ArrayList<BranchSelectionModel> = ArrayList()
     private var locationList: ArrayList<PickupLocationModel> = ArrayList()
-    private var toStationList: ArrayList<DestinationSelectionModel> = ArrayList()
+    private var toStationList: ArrayList<ToStationModel> = ArrayList()
     private var driverList: ArrayList<DriverSelectionModel> = ArrayList()
     private var vendorList: ArrayList<VendorSelectionModel> = ArrayList()
     private var vehicleList: ArrayList<VehicleSelectionModel> = ArrayList()
@@ -72,6 +73,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
     var vehicleCategory = ""
     var loadedByType = ""
     var manifestDt = getSqlCurrentDate()
+    var awbDt = getSqlCurrentDate()
     var driverCode = ""
     var destinationCode = ""
     var menuCode = ""
@@ -203,7 +205,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
                             activityBinding.inputFlight.text= null
                             activityBinding.inputAirlineAwb.text= null
                             activityBinding.inputAwbWeight.text= null
-                            activityBinding.inputAirlineDt.text= null
+                            activityBinding.inputAirlineDt.text =null
                             modeCode= ""
                             groupCode= ""
 
@@ -217,6 +219,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
                             activityBinding.inputDriverMobile.text =null
                             activityBinding.inputVehicleNumber.text= null
                             vehicleCode =""
+                            activityBinding.inputAirlineDt.setText(getViewCurrentDate())
 
                         }
                     }
@@ -249,17 +252,18 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
 
 
     fun  getDestinationList(){
-        viewModel.getToStationList(   loginDataModel?.companyid.toString(),
-            "greentrans_showbranchOPSLOV",
-            listOf("prmbranchcode"),
-            arrayListOf(userDataModel?.loginbranchcode.toString()))
+        viewModel.getToStationList(
+            getCompanyId(),
+            "greentransapp_StationMast",
+            listOf("prmbranchcode","prmusercode","prmcharstr"),
+            arrayListOf(getLoginBranchCode(),getUserCode(),""))
     }
 
 
-    private fun openToStationBottomSheet(rvList: ArrayList<DestinationSelectionModel>) {
+    private fun openToStationBottomSheet(rvList: ArrayList<ToStationModel>) {
         val commonList = ArrayList<CommonBottomSheetModel<Any>>()
         for (i in 0 until rvList.size) {
-            commonList.add(CommonBottomSheetModel(rvList[i].stnname, rvList[i]))
+            commonList.add(CommonBottomSheetModel(rvList[i].StnName.toString(), rvList[i]))
 
         }
         openCommonBottomSheet(this, "Destination Selection", this, commonList)
@@ -277,9 +281,9 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
     private fun getGroupModeCode() {
         viewModel.getGroupModeList(
             loginDataModel?.companyid.toString(),
-            "",
-            listOf(),
-            arrayListOf()
+            "greentrans_getmodegroup",
+            listOf("prmmodetype"),
+            arrayListOf(modeTypeCode)
         )
     }
 
@@ -299,11 +303,11 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
             errorToast("Please Select Mode Group First")
             return
         }
-        viewModel.getGroupModeList(
+        viewModel.getModeCode(
             loginDataModel?.companyid.toString(),
-            "",
-            listOf("prmdestcode","prmmodetype","prmmodegroupcode","prmorgcode","prmcharstr"),
-            arrayListOf(areaCode,modeTypeCode,groupCode,getLoginBranchCode(),"A")
+            "greentransapp_showmodeV2",
+            listOf("prmorgcode","prmdestcode","prmmodetype","prmmodegroupcode","prmcharstr"),
+            arrayListOf(getLoginBranchCode(),areaCode,modeTypeCode,groupCode,"a")
         )
     }
 
@@ -390,7 +394,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
 
 
         }
-        activityBinding.inputLayoutDestination.setOnClickListener {
+        activityBinding.inputDestination.setOnClickListener {
             getDestinationList()
         }
         activityBinding.inputAirline.setOnClickListener {
@@ -437,14 +441,17 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
                }
            }else if(modeTypeCode == "A"){
                if (activityBinding.inputAirline.text.isNullOrEmpty()) {
-                   Companion.errorToast(this, "Please select Driver.")
+                   Companion.errorToast(this, "Please select Airline.")
                    return@setOnClickListener
 
                }  else if (activityBinding.inputAirlineAwb.text.isNullOrEmpty()) {
-                   Companion.errorToast(this, "Please select Vehicle Number.")
+                   Companion.errorToast(this, "Please select Airline AWB.")
                    return@setOnClickListener
                } else if (activityBinding.inputFlight.text.isNullOrEmpty()) {
-                   Companion.errorToast(this, "Please select Vehicle Number.")
+                   Companion.errorToast(this, "Please select Flight.")
+                   return@setOnClickListener
+               }else if (activityBinding.inputAwbWeight.text.isNullOrEmpty()) {
+                   Companion.errorToast(this, "Please enter.")
                    return@setOnClickListener
                }
            } else if (activityBinding.inputVendorName.text.isNullOrEmpty()) {
@@ -464,7 +471,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
             branchName = activityBinding.inputBranch.text.toString(),
             branchCode = branchCode,
             manifestNo = activityBinding.inputManifestNum.text.toString(),
-          tostation="",
+            tostation=  activityBinding.inputDestination.text.toString(),
             driverCode = driverCode,
             manifestDt = manifestDt,
             manifestTime = activityBinding.inputTime.text.toString(),
@@ -479,16 +486,22 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
              groupCode=groupCode,
              modeCode =modeCode,
              pckgs =activityBinding.inputAwbPckgs.text.toString(),
-             modeTypeCode=modeTypeCode
+             modeTypeCode=modeTypeCode,
+            vendorGr = activityBinding.inputVendorGr.text.toString(),
+            awbNo=activityBinding.inputAirlineAwb.text.toString(),
+//            awbDt=activityBinding.inputAirlineDt.text.toString(),
+            awbDt=awbDt,
+            airlineawbpckgs=activityBinding.inputAwbPckgs.text.toString(),
+            airlineawbweight=activityBinding.inputAwbWeight.text.toString(),
         )
 
     }
     override fun onItemClick(data: Any, clickType: String) {
         when (clickType) {
             "Destination Selection" -> run {
-                val selectedLocation = data as DestinationSelectionModel
-                activityBinding.inputDestination.setText(selectedLocation.stnname)
-                areaCode = selectedLocation.stncode
+                val selectedLocation = data as ToStationModel
+                activityBinding.inputDestination.setText(selectedLocation.StnName)
+                areaCode = selectedLocation.StnCode.toString()
             }
 
 
@@ -540,4 +553,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
     override fun onClick(data: Any, clickType: String) {
         TODO("Not yet implemented")
     }
+
+
+
 }

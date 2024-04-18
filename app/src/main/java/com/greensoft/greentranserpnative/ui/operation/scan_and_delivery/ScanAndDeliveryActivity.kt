@@ -363,16 +363,16 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
             data =  stickerNo
         )
     }
-private  fun savePodStickerAlert (stickerNo: String){
-        CommonAlert.createAlert(
-            context = this,
-            header = "Alert!!",
-            description = " Are You Sure You Want To Save This POD?",
-            callback =this,
-            alertCallType ="SAVE_STICKER",
-            data =  stickerNo
-        )
-    }
+//private  fun savePodStickerAlert (stickerNo: String){
+//        CommonAlert.createAlert(
+//            context = this,
+//            header = "Alert!!",
+//            description = " Are You Sure You Want To Save This POD?",
+//            callback =this,
+//            alertCallType ="SAVE_STICKER",
+//            data =  stickerNo
+//        )
+//    }
 
 
     private fun finalSaveWithValidation(){
@@ -415,12 +415,14 @@ private  fun savePodStickerAlert (stickerNo: String){
     }
 
     override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {
-        if (alertCallType == "REMOVE_STICKER") {
-            savePodStickerAlert(data.toString())
-        }else if(alertCallType == "SAVE_STICKER"){
-            saveStickerToPod(data.toString())
-        }else if(alertCallType == "START_SCANNING"){
+        if(alertClick == AlertClick.YES) {
+            if (alertCallType == "REMOVE_STICKER") {
+                saveStickerToPod(data.toString())
+            } else if (alertCallType == "SAVE_STICKER") {
+                saveStickerToPod(data.toString())
+            } else if (alertCallType == "START_SCANNING") {
 
+            }
         }
     }
 

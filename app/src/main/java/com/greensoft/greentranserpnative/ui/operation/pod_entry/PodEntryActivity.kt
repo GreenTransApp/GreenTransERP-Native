@@ -21,6 +21,7 @@ import com.greensoft.greentranserpnative.ui.common.alert.CommonAlert
 import com.greensoft.greentranserpnative.ui.home.HomeActivity
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.DespatchSaveModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.GrSelectionActivity
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodEntryModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodSaveModel
@@ -144,7 +145,7 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
                 viewModel.saveLiveData.observe(this){savePod->
                     podSaveModel = savePod
                     if(podSaveModel?.commandstatus ==1){
-                        showSuccessAlert(podSaveModel?.commandmessage.toString())
+                        showSuccessAlert(savePod)
                     }else{
                         errorToast(podSaveModel?.commandmessage.toString())
                     }
@@ -339,15 +340,24 @@ pckgs= podDetail?.pckgs.toString()
         }
     }
 
-    private  fun showSuccessAlert(msg:String){
-        CommonAlert.createAlert(
-            context = this,
-            header = "Success",
-            description = msg,
-            callback =this,
-            alertCallType ="SAVE_POD",
-            data = ""
-        )
+
+
+
+    private fun showSuccessAlert(model: PodSaveModel) {
+        AlertDialog.Builder(this)
+            .setTitle("Success!!!")
+            .setMessage(model.commandmessage)
+            .setPositiveButton("Okay") { _, _ ->
+                goToHomeActivity()
+                finish()
+            }
+            .show()
+    }
+
+    private fun goToHomeActivity(){
+        val intent = Intent(this, HomeActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 
     override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {

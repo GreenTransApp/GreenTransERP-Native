@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
@@ -26,6 +27,7 @@ import com.greensoft.greentranserpnative.ui.operation.booking.models.ContentSele
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.adapters.SaveDespatchManifestAdapter
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.DespatchManifestEnteredDataModel
+import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.DespatchSaveModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.GrSelectionActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestViewModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.SavePickupManifestAdapter
@@ -33,6 +35,7 @@ import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrS
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.ManifestEnteredDataModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.SavePickupManifestModel
 import com.greensoft.greentranserpnative.utils.Utils
+import com.greensoft.greentranserpnative.utils.Utils.checkNullOrEmpty
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -53,7 +56,7 @@ class SaveDespatchManifestActivity @Inject constructor() : BaseActivity(), OnRow
     var enteredPckgs=""
     var enteredGWeight=""
     var enteredBalancePckg=""
-    var menuCode="GTAPP_NATIVEPICKUPMANIFEST"
+    var menuCode="GTAPP_LONGROUTEMANIFEST"
     var vehicleTypeTxt=""
             override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +65,7 @@ class SaveDespatchManifestActivity @Inject constructor() : BaseActivity(), OnRow
                 model= Utils.despatchManifestModel
                 setObserver()
                 setSupportActionBar(activityBinding.toolBar.root)
-                setUpToolbar("SAVE PICKUP MANIFEST")
+                setUpToolbar("SAVE OUTSTATION MANIFEST")
                 setOnClick()
                 setEnteredManifestData()
                 getContentList()
@@ -103,6 +106,9 @@ class SaveDespatchManifestActivity @Inject constructor() : BaseActivity(), OnRow
             activityBinding.selectedModeType.setText("SURFACE")
         }else if(model!!.modeTypeCode.toString()=="A"){
             activityBinding.selectedModeType.setText("AIR")
+        }else if(model?.vendorGr != null){
+            activityBinding.inputVendorGr.visibility = View.VISIBLE
+            activityBinding.inputVendorGr.setText(model?.vendorGr.toString())
         }
         activityBinding.inputBranch.setText(model!!.branchName.toString())
         activityBinding.inputManifestNum.setText(model!!.manifestNo.toString())
@@ -114,6 +120,7 @@ class SaveDespatchManifestActivity @Inject constructor() : BaseActivity(), OnRow
         activityBinding.inputVendorName.setText(model!!.vendorName.toString())
         activityBinding.inputVehicleNumber.setText(model!!.vehicleNo.toString())
         activityBinding.inputRemark.setText(model!!.remark.toString())
+        activityBinding.inputAirlineAwb.setText(model!!.awbNo.toString())
 
 
     }
@@ -154,6 +161,7 @@ class SaveDespatchManifestActivity @Inject constructor() : BaseActivity(), OnRow
             data = ""
         )
     }
+
 
 
     private fun setupRecyclerView() {
@@ -208,7 +216,7 @@ class SaveDespatchManifestActivity @Inject constructor() : BaseActivity(), OnRow
 //         }
     }
 
-    private fun showManifestCreatedAlert(model: SavePickupManifestModel) {
+    private fun showManifestCreatedAlert(model: DespatchSaveModel) {
         AlertDialog.Builder(this)
             .setTitle("Success!!!")
             .setMessage(model.commandmessage)
@@ -268,17 +276,9 @@ class SaveDespatchManifestActivity @Inject constructor() : BaseActivity(), OnRow
             openPackingSelectionBottomSheet(packingList,index)
 
         }else if(clickType =="REMOVE_SELECT"){
-//            grList.clear()
+
             val removingItem: GrSelectionModel = data as GrSelectionModel
-//            CommonAlert.createAlert(
-//                context = this,
-//                header = "Alert!!",
-//                description = " Are You Sure You Want To Remove GR #: ${removingItem.grno}",
-//                callback =this,
-//                alertCallType ="SELECT_REMOVE",
-//                data = ""
-//            )
-//
+
             if(grList.isNotEmpty() && index <= grList.size - 1) {
                 grList.removeAt(index)
                 setupRecyclerView()
@@ -291,16 +291,6 @@ class SaveDespatchManifestActivity @Inject constructor() : BaseActivity(), OnRow
 
     }
 
-    private  fun removeAt(index:Int){
-        if(grList.isNotEmpty() && index <= grList.size - 1) {
-            grList.removeAt(index)
-            setupRecyclerView()
-//                successToast("Successfully Removed. GR #: ${removingItem.grno}")
-        } else {
-            errorToast("Something went wrong.")
-        }
-
-    }
 
 
     override fun onItemClickWithAdapter(data: Any, clickType: String, index: Int) {
@@ -322,10 +312,10 @@ class SaveDespatchManifestActivity @Inject constructor() : BaseActivity(), OnRow
             when (alertClick) {
                 AlertClick.YES -> {
                     if (alertCallType == "RESELECT_SLIP") {
-                        val intent= Intent(this, GrSelectionActivity::class.java)
+                        val intent= Intent(this, GrSelectionForDespatchManifestActivity::class.java)
                         startActivity(intent)
                     }else if(alertCallType =="SELECT_SAVE"){
-//                        successToast("testing")
+                            saveOutstationManifest()
 
                     }else if(alertCallType == "SELECT_REMOVE"){
 
@@ -358,4 +348,73 @@ class SaveDespatchManifestActivity @Inject constructor() : BaseActivity(), OnRow
             data = ""
         )
     }
+
+     private fun saveOutstationManifest(){
+         var actualLoadingNo: String = ""
+         var actualPacking: String = ""
+         var actualAWeight: String = ""
+         var actualContent: String = ""
+         var actualModeCode: String = ""
+         var adapterEnteredData: ArrayList<GrSelectionModel>? = rvAdapter?.getEnteredData()
+         run enteredData@{
+             adapterEnteredData?.forEachIndexed { index, model ->
+                 if (Utils.isDecimalNotEntered(model.aweight.toString())) {
+                     errorToast("GWeight Not Entered at INPUT - ${index + 1}")
+                     return
+                 } else if (Utils.isDecimalNotEntered(model.pckgs.toString())) {
+                     errorToast("Pckgs Not Entered at INPUT - ${index + 1}")
+                     return
+                 }else if (Utils.isStringNotEntered(model.goods.toString())) {
+                     errorToast("Content Not Entered at INPUT - ${index + 1}")
+                     return
+                 }
+             }
+         }
+         for(i in 0 until grList.size){
+
+             val loadingNo = grList[i].loadingno.toString()
+             val packing = grList[i].packing.toString()
+             val content = grList[i].goods.toString()
+             val aWeight = grList[i].aweight.toString()
+
+             actualLoadingNo += "$loadingNo~"
+             actualPacking += "$packing~"
+             actualContent += "$content~"
+             actualAWeight += "$aWeight~"
+         }
+         if(checkNullOrEmpty(model?.modeCode) == "NOT AVAILABLE"){
+             actualModeCode = model?.vehicleCode.toString()
+         } else {
+            actualModeCode = model?.modeCode.toString()
+         }
+
+         viewModel.saveOutstationManifest(
+             companyid = getCompanyId(),
+             branchcode= getLoginBranchCode(),
+             dt= model?.manifestDt.toString(),
+             time= model?.manifestTime.toString(),
+             manifestno= model?.manifestNo.toString(),
+             tost= model?.tostation.toString(),
+             modetype= model?.modeTypeCode.toString(),
+//             modecode= model?.modeCode ?: model?.vehicleCode.toString(),
+             modecode= actualModeCode,
+             remarks= model?.remark.toString(),
+             drivercode= model?.driverCode.toString(),
+             drivermobileno= model?.drivermobile.toString(),
+             vendcode= model?.vendorCode.toString(),
+             loadingnostr= actualLoadingNo,
+             sessionid= getSessionId(),
+             usercode= getUserCode(),
+             menucode= "GTAPP_LONGROUTEMANIFEST",
+             loadedby= userDataModel?.username.toString(),
+             airlineawbno= model?.awbNo.toString(),
+             airlineawbdt= model?.awbDt.toString(),
+             airlineawbfreight= "0",
+             airlineawbpckgs= model?.airlineawbpckgs.toString(),
+             airlineawbweight= model?.airlineawbweight.toString(),
+             vendorcd=model?.vendorGr.toString()
+         )
+
+     }
+
 }

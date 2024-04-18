@@ -52,7 +52,7 @@ class GrSelectionForDespatchManifestActivity @Inject constructor() : BaseActivit
         activityBinding= ActivityGrSelectionForDespatchManifestBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
-        setUpToolbar("SELECT LOADING SLIP")
+        setUpToolbar("SELECT OUTSTATION LOADING SLIP")
         grDt= getSqlCurrentDate()
         setObserver()
         setOnClick()
@@ -95,11 +95,7 @@ class GrSelectionForDespatchManifestActivity @Inject constructor() : BaseActivit
             "greentransapp_grallocationlistforpickupmanifest",
             listOf("prmbranchcode","prmdt"),
             arrayListOf(userDataModel?.loginbranchcode.toString(),grDt)
-//            arrayListOf("321","2023-10-09")
-//            "gtapp_loadingallocationlist_pickupmanifest",
-//            listOf("prmbranchcode","prmdt","prmusercode","prmmenucode","prmsessionid"),
-////            arrayListOf(userDataModel?.loginbranchcode.toString())
-//            arrayListOf(userDataModel?.loginbranchcode.toString(),grDt,"GTAPP_NATIVEPICKUPMANIFEST",userDataModel?.sessionid.toString())
+
         )
     }
 
@@ -172,21 +168,13 @@ class GrSelectionForDespatchManifestActivity @Inject constructor() : BaseActivit
         mPeriod.observe(this) { date ->
             grDt = date.sqlsingleDate.toString()
             getGrList()
-//            setupRecyclerView()
-//            if(!rvAdapter!!.notCheck)
-//             {
-//                 errorToast("Please select atleast one loading slip")
-//                 return@observe
-//             }
 
         }
     }
     private fun setupRecyclerView() {
 
         linearLayoutManager = LinearLayoutManager(this)
-//        if (rvAdapter == null) {
-//            activityBinding.emptyView.visibility= View.GONE
-//        }
+
         if(grList.isEmpty()) {
             activityBinding.emptyView.visibility = View.VISIBLE
         } else {

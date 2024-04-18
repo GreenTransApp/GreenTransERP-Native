@@ -7,8 +7,10 @@ import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.ui.operation.booking.models.DestinationSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.DespatchSaveModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.FlightModeCodeModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.GroupModeCodeModel
+import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.ToStationModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.DriverSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
@@ -34,8 +36,8 @@ class DespatchManifestRepository  @Inject constructor(): BaseRepository() {
     val pickupLocationLiveData: LiveData<ArrayList<PickupLocationModel>>
         get() = pickupLocationMuteLiveData
 
-    private val toStationMuteLiveData = MutableLiveData<ArrayList<DestinationSelectionModel>>()
-    val toStationLiveData: LiveData<ArrayList<DestinationSelectionModel>>
+    private val toStationMuteLiveData = MutableLiveData<ArrayList<ToStationModel>>()
+    val toStationLiveData: LiveData<ArrayList<ToStationModel>>
         get() = toStationMuteLiveData
 
     private val driverMuteLiveData = MutableLiveData<ArrayList<DriverSelectionModel>>()
@@ -66,8 +68,8 @@ class DespatchManifestRepository  @Inject constructor(): BaseRepository() {
     val modeCodeLiveData: LiveData<ArrayList<FlightModeCodeModel>>
         get() = modeCodeMuteLiveData
 
-    private val saveManifestMuteLiveData = MutableLiveData<SavePickupManifestModel>()
-    val saveManifestLiveData: LiveData<SavePickupManifestModel>
+    private val saveManifestMuteLiveData = MutableLiveData<DespatchSaveModel>()
+    val saveManifestLiveData: LiveData<DespatchSaveModel>
         get() = saveManifestMuteLiveData
 
 
@@ -180,10 +182,10 @@ class DespatchManifestRepository  @Inject constructor(): BaseRepository() {
                     if(result.CommandStatus == 1){
                         val jsonArray = getResult(result)
                         if(jsonArray != null) {
-                            val listType = object: TypeToken<List<DestinationSelectionModel>>() {}.type
-                            val resultList: ArrayList<DestinationSelectionModel> = gson.fromJson(jsonArray.toString(), listType);
+                            val listType = object: TypeToken<List<ToStationModel>>() {}.type
+                            val resultList: ArrayList<ToStationModel> = gson.fromJson(jsonArray.toString(), listType);
 //                            destinationMuteLiveData.postValue(resultList);
-                            toStationMuteLiveData.postValue(resultList);
+                         toStationMuteLiveData.postValue(resultList);
 
                         }
                     } else {
@@ -375,61 +377,56 @@ class DespatchManifestRepository  @Inject constructor(): BaseRepository() {
         })
 
     }
-    fun savePickupManifest(
-        companyId:String,
+    fun saveOutstationManifest(
+        companyid:String,
         branchcode:String,
-        manifestdt:String,
+        dt:String,
         time:String,
         manifestno:String,
-        modecode:String,
         tost:String,
+        modetype:String,
+        modecode:String,
+        remarks:String,
         drivercode:String,
         drivermobileno:String,
-        loadedby:String,
-        remarks:String,
-        ispickupmanifest:String,
-//        grno:String,
-        loadingNo:String,
-        pckgs:String,
-        aweight:String,
-        goods:String,
-        packing:String,
-        areacode:String,
-        vendcoe:String,
-        loadedbytype:String,
-        menucode:String,
-        usercode:String,
+        vendcode:String,
+        loadingnostr:String,
         sessionid:String,
-        paymentnotapplicable:String,
-        skipinscan:String,
+        usercode:String,
+        menucode:String,
+        loadedby:String,
+        airlineawbno:String,
+        airlineawbdt:String,
+        airlineawbfreight:String,
+        airlineawbpckgs:String,
+        airlineawbweight:String,
+        vendorcd:String
     ) {
         viewDialogMutData.postValue(true)
-        api.savePickupManifest(
-            companyId,
+        api.UpdateOutstationManifest(
+            companyid,
             branchcode,
-            manifestdt,
+            dt,
             time,
             manifestno,
-            modecode,
             tost,
+            modetype,
+            modecode,
+            remarks,
             drivercode,
             drivermobileno,
-            loadedby,
-            remarks,
-            ispickupmanifest,
-            loadingNo,
-            pckgs,
-            aweight,
-            goods,
-            packing,
-            areacode,
-            vendcoe,
-            loadedbytype,
-            menucode,
-            usercode,
+            vendcode,
+            loadingnostr,
             sessionid,
-            paymentnotapplicable,
-            skipinscan
+            usercode,
+            menucode,
+            loadedby,
+            airlineawbno,
+            airlineawbdt,
+            airlineawbfreight,
+            airlineawbpckgs,
+            airlineawbweight,
+            vendorcd
         )
             .enqueue(object: Callback<CommonResult> {
                 override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
@@ -440,8 +437,8 @@ class DespatchManifestRepository  @Inject constructor(): BaseRepository() {
                             val jsonArray = getResult(result);
                             if(jsonArray != null) {
 
-                                val listType = object: TypeToken<List<SavePickupManifestModel>>() {}.type
-                                val resultList: ArrayList<SavePickupManifestModel> = gson.fromJson(jsonArray.toString(), listType);
+                                val listType = object: TypeToken<List<DespatchSaveModel>>() {}.type
+                                val resultList: ArrayList<DespatchSaveModel> = gson.fromJson(jsonArray.toString(), listType);
                                 saveManifestMuteLiveData.postValue(resultList[0])
                             }
                         } else {

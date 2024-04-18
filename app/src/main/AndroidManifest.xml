@@ -39,6 +39,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.operation.despatch_manifest.SaveDespatchManifestActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.operation.despatch_manifest.GrSelectionForDespatchManifestActivity"
             android:exported="false" />
         <activity

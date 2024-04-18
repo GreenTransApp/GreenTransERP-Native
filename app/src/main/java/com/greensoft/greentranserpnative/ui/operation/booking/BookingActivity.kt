@@ -833,7 +833,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
     private fun openDestinationSelectionBottomSheet(rvList: ArrayList<DestinationSelectionModel>) {
         val commonList = ArrayList<CommonBottomSheetModel<Any>>()
         for (i in 0 until rvList.size) {
-            commonList.add(CommonBottomSheetModel(rvList[i].stnname, rvList[i]))
+            commonList.add(CommonBottomSheetModel(rvList[i].stnname.toString(), rvList[i]))
 
         }
         openCommonBottomSheet(this, "Destination Selection", this, commonList)
