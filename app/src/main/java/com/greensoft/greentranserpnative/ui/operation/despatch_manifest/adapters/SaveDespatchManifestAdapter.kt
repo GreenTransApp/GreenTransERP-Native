@@ -76,7 +76,12 @@ class SaveDespatchManifestAdapter (private val mContext: Context,
                     after: Int) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
                 override fun afterTextChanged(s: Editable?) {
-                    activity.getGWeightValue(binding.gWeight.text.toString().toDouble())
+                    var gWeight: Double? = binding.gWeight.text.toString().toDoubleOrNull()
+                    if(gWeight != null) {
+                        activity.getGWeightValue(gWeight)
+                    } else {
+                        activity.getGWeightValue(0.00)
+                    }
 
 
 

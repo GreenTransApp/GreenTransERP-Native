@@ -20,4 +20,9 @@ data class DespatchManifestEnteredDataModel(
     var modeCode:String?,
     var pckgs:String?,
     var modeTypeCode:String,
+    var vendorGr:String,
+    var awbNo:String,
+    var awbDt:String,
+    var airlineawbpckgs:String,
+    var airlineawbweight:String,
 )

@@ -249,6 +249,7 @@
                                 android:background="@drawable/disable_txtfield_bg"
                                 android:layout_height="wrap_content"
                                 android:inputType="number"
+                                android:focusable="false"
                                 android:maxLength="20"
                                 android:textAllCaps="true"
                                 />
@@ -296,7 +297,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:hintTextColor="@color/black"
-                        android:hint="Enter Destination"
+                        android:hint=""
                         >
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -354,7 +355,6 @@
                         <com.google.android.material.textfield.TextInputLayout
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
-                            android:background="@drawable/spinner_background"
                             android:layout_height="wrap_content"
                             >
                             <com.google.android.material.textfield.TextInputEditText
@@ -410,7 +410,7 @@
                                 android:layout_height="wrap_content"
                                 android:inputType="text"
                                 android:background="@drawable/disable_txtfield_bg"
-                                android:hint="Select Vendor"
+                                android:hint=""
                                 android:focusable="false"
                                 />
                             <!--                        android:textAllCaps="true" -->
@@ -453,7 +453,7 @@
                         android:layout_height="wrap_content"
                         app:hintTextColor="@color/black"
                         android:background="@drawable/disable_txtfield_bg"
-                        android:hint="Enter Vendor Gr"
+                        android:hint=""
                         >
 
 
@@ -527,7 +527,7 @@
                                     android:textColor="@color/black"
                                     android:background="@drawable/disable_txtfield_bg"
                                     android:inputType="text"
-                                    android:hint="Select Driver"
+                                    android:hint=""
                                     />
 
                             </com.google.android.material.textfield.TextInputLayout>
@@ -572,7 +572,7 @@
                                     android:focusable="false"
                                     android:background="@drawable/disable_txtfield_bg"
                                     android:textColor="@color/black"
-                                    android:hint="Driver Mobile"
+                                    android:hint=""
                                     />
 
                             </com.google.android.material.textfield.TextInputLayout>
@@ -613,7 +613,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:hintTextColor="@color/black"
-                            android:hint="Enter Vehicle Number"
+                            android:hint=""
 
                             >
 
@@ -994,6 +994,7 @@
                             android:layout_height="wrap_content"
                             android:inputType="textMultiLine"
                             android:lines="2"
+                            android:focusable="false"
                             android:background="@drawable/disable_txtfield_bg"
                             android:maxLines="3"
                             android:gravity="top|left"

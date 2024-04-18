@@ -4,8 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.greensoft.greentranserpnative.base.BaseViewModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.DestinationSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.DespatchSaveModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.FlightModeCodeModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.GroupModeCodeModel
+import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.ToStationModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.DriverSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
@@ -32,7 +34,7 @@ class DespatchManifestViewModel @Inject constructor(private val _repo: DespatchM
         get() = _repo.branchLiveData
     val pickupLocationLiveData: LiveData<ArrayList<PickupLocationModel>>
         get() = _repo.pickupLocationLiveData
-    val toStationLiveData: LiveData<ArrayList<DestinationSelectionModel>>
+    val toStationLiveData: LiveData<ArrayList<ToStationModel>>
         get() = _repo.toStationLiveData
     val driverLiveData: LiveData<ArrayList<DriverSelectionModel>>
         get() = _repo.driverLiveData
@@ -52,7 +54,7 @@ class DespatchManifestViewModel @Inject constructor(private val _repo: DespatchM
     val modeCodeLiveData: LiveData<ArrayList<FlightModeCodeModel>>
         get() = _repo.modeCodeLiveData
 
-    val manifestLiveData: LiveData<SavePickupManifestModel>
+    val manifestLiveData: LiveData<DespatchSaveModel>
         get() = _repo.saveManifestLiveData
 
 
@@ -107,62 +109,57 @@ fun getModeCode( companyId:String,spname: String,param:List<String>, values:Arra
     }
 
 
-    fun savePickupManifest(
-        companyId:String,
-        branchcode :String ,
-        manifestdt :String ,
-        time :String ,
-        manifestno :String ,
-        modecode :String ,
-        tost :String ,
-        drivercode :String ,
-        drivermobileno :String ,
-        loadedby :String ,
-        remarks :String ,
-        ispickupmanifest :String ,
-//        grno :String ,
-        loadingNo :String ,
-        pckgs :String ,
-        aweight :String ,
-        goods :String ,
-        packing :String ,
-        areacode :String ,
-        vendcoe :String ,
-        loadedbytype :String ,
-        menucode :String ,
-        usercode :String ,
-        sessionid :String ,
-        paymentnotapplicable :String ,
-        skipinscan :String ,
+    fun saveOutstationManifest(
+        companyid:String,
+        branchcode:String,
+        dt:String,
+        time:String,
+        manifestno:String,
+        tost:String,
+        modetype:String,
+        modecode:String,
+        remarks:String,
+        drivercode:String,
+        drivermobileno:String,
+        vendcode:String,
+        loadingnostr:String,
+        sessionid:String,
+        usercode:String,
+        menucode:String,
+        loadedby:String,
+        airlineawbno:String,
+        airlineawbdt:String,
+        airlineawbfreight:String,
+        airlineawbpckgs:String,
+        airlineawbweight:String,
+        vendorcd:String
 
         ){
         viewModelScope.launch(Dispatchers.IO) {
-            _repo.savePickupManifest(
-                companyId,
+            _repo.saveOutstationManifest(
+                companyid,
                 branchcode,
-                manifestdt,
+                dt,
                 time,
                 manifestno,
-                modecode,
                 tost,
+                modetype,
+                modecode,
+                remarks,
                 drivercode,
                 drivermobileno,
-                loadedby,
-                remarks,
-                ispickupmanifest,
-                loadingNo,
-                pckgs,
-                aweight,
-                goods,
-                packing,
-                areacode,
-                vendcoe,
-                loadedbytype,
-                menucode,
-                usercode,
+                vendcode,
+                loadingnostr,
                 sessionid,
-                paymentnotapplicable,
-                skipinscan,
+                usercode,
+                menucode,
+                loadedby,
+                airlineawbno,
+                airlineawbdt,
+                airlineawbfreight,
+                airlineawbpckgs,
+                airlineawbweight,
+                vendorcd
             )
         }
     }

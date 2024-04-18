@@ -475,7 +475,7 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
     private fun openToStationBottomSheet(rvList: ArrayList<DestinationSelectionModel>) {
         val commonList = ArrayList<CommonBottomSheetModel<Any>>()
         for (i in 0 until rvList.size) {
-            commonList.add(CommonBottomSheetModel(rvList[i].stnname, rvList[i]))
+            commonList.add(CommonBottomSheetModel(rvList[i].stnname.toString(), rvList[i]))
 
         }
         openCommonBottomSheet(this, "Pickup Location Selection", this, commonList)
