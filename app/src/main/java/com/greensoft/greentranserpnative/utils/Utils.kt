@@ -6,6 +6,7 @@ import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
+import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.DespatchManifestEnteredDataModel
 import com.greensoft.greentranserpnative.ui.operation.eway_bill.ItemEwayBillModel
 import com.greensoft.greentranserpnative.ui.operation.eway_bill.models.EwayBillDetailResponse
 import com.greensoft.greentranserpnative.ui.operation.grList.models.GrListModel
@@ -17,6 +18,7 @@ object Utils {
     var grModel: GrListModel? = null
     var menuModel: UserMenuModel? = null
     var manifestModel: ManifestEnteredDataModel? = null
+    var despatchManifestModel: DespatchManifestEnteredDataModel? = null
     var custCode = ""
     var fromDate = ""
     var toDate = ""

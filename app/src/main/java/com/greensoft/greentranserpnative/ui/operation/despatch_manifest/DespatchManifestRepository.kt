@@ -7,6 +7,8 @@ import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.ui.operation.booking.models.DestinationSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.FlightModeCodeModel
+import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.GroupModeCodeModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.DriverSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
@@ -55,6 +57,14 @@ class DespatchManifestRepository  @Inject constructor(): BaseRepository() {
     private val vehicleTypeMuteLiveData = MutableLiveData<ArrayList<VehicleTypeModel>>()
     val vehicleTypeLiveData: LiveData<ArrayList<VehicleTypeModel>>
         get() = vehicleTypeMuteLiveData
+
+    private val groupModeMuteLiveData = MutableLiveData<ArrayList<GroupModeCodeModel>>()
+    val groupModeLiveData: LiveData<ArrayList<GroupModeCodeModel>>
+        get() = groupModeMuteLiveData
+
+    private val modeCodeMuteLiveData = MutableLiveData<ArrayList<FlightModeCodeModel>>()
+    val modeCodeLiveData: LiveData<ArrayList<FlightModeCodeModel>>
+        get() = modeCodeMuteLiveData
 
     private val saveManifestMuteLiveData = MutableLiveData<SavePickupManifestModel>()
     val saveManifestLiveData: LiveData<SavePickupManifestModel>
@@ -263,7 +273,8 @@ class DespatchManifestRepository  @Inject constructor(): BaseRepository() {
 
     }
 
-    fun getVehicleTypeList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
+
+    fun getGrList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
         viewDialogMutData.postValue(true)
         api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
@@ -273,9 +284,9 @@ class DespatchManifestRepository  @Inject constructor(): BaseRepository() {
                     if(result.CommandStatus == 1){
                         val jsonArray = getResult(result);
                         if(jsonArray != null) {
-                            val listType = object: TypeToken<List<VehicleTypeModel>>() {}.type
-                            val resultList: ArrayList<VehicleTypeModel> = gson.fromJson(jsonArray.toString(), listType);
-                            vehicleTypeMuteLiveData.postValue(resultList);
+                            val listType = object: TypeToken<List<GrSelectionModel>>() {}.type
+                            val resultList: ArrayList<GrSelectionModel> = gson.fromJson(jsonArray.toString(), listType);
+                            grMuteLiveData.postValue(resultList);
 
                         }
                     } else {
@@ -296,7 +307,8 @@ class DespatchManifestRepository  @Inject constructor(): BaseRepository() {
         })
 
     }
-    fun getGrList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
+
+    fun getGroupModeList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
         viewDialogMutData.postValue(true)
         api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
@@ -306,9 +318,43 @@ class DespatchManifestRepository  @Inject constructor(): BaseRepository() {
                     if(result.CommandStatus == 1){
                         val jsonArray = getResult(result);
                         if(jsonArray != null) {
-                            val listType = object: TypeToken<List<GrSelectionModel>>() {}.type
-                            val resultList: ArrayList<GrSelectionModel> = gson.fromJson(jsonArray.toString(), listType);
-                            grMuteLiveData.postValue(resultList);
+                            val listType = object: TypeToken<List<GroupModeCodeModel>>() {}.type
+                            val resultList: ArrayList<GroupModeCodeModel> = gson.fromJson(jsonArray.toString(), listType);
+                            groupModeMuteLiveData.postValue(resultList);
+
+                        }
+                    } else {
+                        isError.postValue(result.CommandMessage.toString());
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR);
+                }
+                viewDialogMutData.postValue(false)
+
+            }
+
+            override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
+
+    }
+
+    fun getModeCodeList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
+        viewDialogMutData.postValue(true)
+        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
+                if(response.body() != null){
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if(result.CommandStatus == 1){
+                        val jsonArray = getResult(result);
+                        if(jsonArray != null) {
+                            val listType = object: TypeToken<List<FlightModeCodeModel>>() {}.type
+                            val resultList: ArrayList<FlightModeCodeModel> = gson.fromJson(jsonArray.toString(), listType);
+                            modeCodeMuteLiveData.postValue(resultList);
 
                         }
                     } else {

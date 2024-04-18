@@ -4,7 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.greensoft.greentranserpnative.base.BaseViewModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.DestinationSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestRepository
+import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.FlightModeCodeModel
+import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.GroupModeCodeModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.DriverSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
@@ -19,7 +20,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DespatchManifestViewModel @Inject constructor(private val _repo: PickupManifestRepository) : BaseViewModel() {
+class DespatchManifestViewModel @Inject constructor(private val _repo: DespatchManifestRepository) : BaseViewModel() {
 
     init {
         isError = _repo.isError
@@ -46,6 +47,10 @@ class DespatchManifestViewModel @Inject constructor(private val _repo: PickupMan
         get() = _repo.grLiveData
     val vehicleTypeLiveData: LiveData<ArrayList<VehicleTypeModel>>
         get() = _repo.vehicleTypeLiveData
+ val groupModeLiveData: LiveData<ArrayList<GroupModeCodeModel>>
+        get() = _repo.groupModeLiveData
+    val modeCodeLiveData: LiveData<ArrayList<FlightModeCodeModel>>
+        get() = _repo.modeCodeLiveData
 
     val manifestLiveData: LiveData<SavePickupManifestModel>
         get() = _repo.saveManifestLiveData
@@ -84,16 +89,23 @@ class DespatchManifestViewModel @Inject constructor(private val _repo: PickupMan
         }
     }
 
+    fun getGroupModeList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>){
+        viewModelScope.launch(Dispatchers.IO) {
+            _repo.getGroupModeList(companyId,spname, param,values)
+        }
+    }
+fun getModeCode( companyId:String,spname: String,param:List<String>, values:ArrayList<String>){
+        viewModelScope.launch(Dispatchers.IO) {
+            _repo.getModeCodeList(companyId,spname, param,values)
+        }
+    }
+
     fun getGrList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>){
         viewModelScope.launch(Dispatchers.IO) {
             _repo.getGrList(companyId,spname, param,values)
         }
     }
-    fun getVehicleType( companyId:String,spname: String,param:List<String>, values:ArrayList<String>){
-        viewModelScope.launch(Dispatchers.IO) {
-            _repo.getVehicleTypeList(companyId,spname, param,values)
-        }
-    }
+
 
     fun savePickupManifest(
         companyId:String,
