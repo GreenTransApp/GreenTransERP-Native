@@ -300,7 +300,7 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), AlertCallbac
 //            detailRemarks = activityBinding.inputRemark.toString(),
             detailRemarks = "",
             userCode = userDataModel?.usercode.toString(),
-            menuCode = "",
+            menuCode = "GTAPP_PICKUPARRIVAL",
             sessionId = getSessionId(),
             fromstnCode = model.orgcode.toString(),
 

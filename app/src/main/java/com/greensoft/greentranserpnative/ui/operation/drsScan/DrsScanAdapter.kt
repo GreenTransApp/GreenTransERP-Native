@@ -12,6 +12,10 @@ import javax.inject.Inject
 class DrsScanAdapter @Inject constructor(
     private val scannedDrsList: ArrayList<ScannedDrsModel>,
     private val onRowClick: OnRowClick<Any>):RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    companion object {
+        val REMOVE_STICKER_TAG = "REMOVE_STICKER_TAG"
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val layoutBinding = ItemScannedDrsBinding.inflate(inflater,parent, false)
@@ -34,8 +38,10 @@ class DrsScanAdapter @Inject constructor(
             fun onBind(scannedDrsModel:ScannedDrsModel, onRowClick: OnRowClick<Any>){
 
                 layoutBinding.index = adapterPosition
+                layoutBinding.grNo.text = scannedDrsModel.grno.toString()
+                layoutBinding.stickerNO.text = scannedDrsModel.stickerno.toString()
                 layoutBinding.removeBtn.setOnClickListener {
-                    onRowClick.onClick(scannedDrsModel,"REMOVE_STICKER")
+                    onRowClick.onClick(scannedDrsModel, REMOVE_STICKER_TAG)
                 }
             }
 

@@ -6,6 +6,7 @@ import com.greensoft.greentranserpnative.base.BaseViewModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.vehicleSelection.model.VehicleModelDRS
 import com.greensoft.greentranserpnative.ui.operation.drs.model.SaveDRSModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.vendorSelection.model.VendorModelDRS
+import com.greensoft.greentranserpnative.ui.operation.drs.model.DrsDataModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,7 +18,6 @@ class DRSViewModel @Inject constructor(private val _repo:DRSRepository): BaseVie
     init {
         isError = _repo.isError
     }
-
     val vendorLiveData: LiveData<ArrayList<VendorModelDRS>>
         get() = _repo.vendorLiveData
 
@@ -27,6 +27,11 @@ class DRSViewModel @Inject constructor(private val _repo:DRSRepository): BaseVie
     val saveDRSLiveData:LiveData<SaveDRSModel>
         get() = _repo.saveDRSLiveData
 
+    val viewDialogLiveData: LiveData<Boolean>
+        get()= _repo.viewDialogLiveData
+
+    val drsPreFillLiveData:LiveData<DrsDataModel>
+        get() = _repo.drsPreFillLiveData
 
     fun getVendorList( companyId:String,charStr:String,category:String){
         viewModelScope.launch(Dispatchers.IO) {
@@ -52,5 +57,11 @@ class DRSViewModel @Inject constructor(private val _repo:DRSRepository): BaseVie
                 executiveId, deliveredBy, dlvAgentCode, dlvVehicleNo,)
         }
 
+    }
+
+    fun getDrsData(companyId:String,userCode:String,loginBranchCode:String,manifestNo:String,sessionId:String){
+        viewModelScope.launch(Dispatchers.IO){
+            _repo.getDrsDataWithDrsNo(companyId,userCode,loginBranchCode,manifestNo,sessionId)
+        }
     }
 }

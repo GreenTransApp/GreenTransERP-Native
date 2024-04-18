@@ -472,6 +472,24 @@ interface Api {
         @Field("prmstickerno")stickerNo:String?,
         @Field("prmsessionid")sessionId:String?,
     ):Call<CommonResult>
+
+    @GET("WMS/DrsSticker_GetStickerList")
+    fun getDrsStickerList(
+        @Query("prmconnstring") companyId: String,
+        @Query("prmusercode")userCode:String?,
+        @Query("prmloginbranchcode")loginBranchCode:String?,
+        @Query("prmmanifestno")manifestNo:String?,
+        @Query("prmsessionid")sessionId:String?,
+    ): Call<CommonResult>
+
+    @GET("WMS/WMSAPP_GETDRSDATA")
+    fun getDrsData(
+        @Query("prmconnstring") companyId: String,
+        @Query("prmusercode")userCode:String?,
+        @Query("prmloginbranchcode")loginBranchCode:String?,
+        @Query("prmmanifestno")manifestNo:String?,
+        @Query("prmsessionid")sessionId:String?,
+    ): Call<CommonResult>
   @FormUrlEncoded
     @POST("WMS/SaveDelivery_Scan_Stickers")
     fun updateScanDeliverySticker(
@@ -483,5 +501,59 @@ interface Api {
         @Field("prmmenucode")menuCode:String?,
         @Field("prmsessionid")sessionId:String?,
     ):Call<CommonResult>
+
+    @FormUrlEncoded
+    @POST("WMS/SaveInscanDetailWithoutScan_Outstation")
+    fun saveInscanDetailWithoutScan_Outstation(
+        @Field("prmconnstring") companyId: String,
+        @Field("prmmanifestno")manifestNo:String,
+        @Field("prmmawbno")mawbNo:String,
+        @Field("prmbranchcode")branchCode:String,
+        @Field("prmreceivedt")receiveDt:String,
+        @Field("prmreceivetime")receiveTime:String,
+        @Field("prmvehiclecode")vehicleCode:String,
+        @Field("prmremarks")remarks:String,
+        @Field("prmgrno")grNo:String,
+        @Field("prmmfpckgs")mfPckgs:String,
+        @Field("prmpckgs")pckgs:String,
+        @Field("prmweight")weight:String,
+        @Field("prmdamagepckgs")damagePckgs:String,
+        @Field("prmdamagereasoncode")damageReasoncode:String,
+        @Field("prmdetailremarks")detailRemarks:String,
+        @Field("prmusercode")userCode:String,
+        @Field("prmmenucode")menuCode:String,
+        @Field("prmsessionid")sessionId:String,
+        @Field("prmfromstncode")fromstnCode:String,
+    ):Call<CommonResult>
+
+    @FormUrlEncoded
+    @POST("ManifestAPI/WMSAPP_CREATEOUTSTATIONMANIFEST")
+    fun UpdateOutstationManifest(
+        @Field("prmconnstring") companyid:String?,
+        @Field("prmbranchcode") branchcode:String?,
+        @Field("prmdt") dt:String?,
+        @Field("prmtime") time:String?,
+        @Field("prmmanifestno")manifestno :String?,
+        @Field("prmtost")tost :String?,
+        @Field("prmmodetype") modetype:String?,
+        @Field("prmmodecode")modecode :String?,
+        @Field("prmremarks")remarks :String?,
+        @Field("prmdrivercode")drivercode :String?,
+        @Field("prmdrivermobileno") drivermobileno:String?,
+        @Field("prmvendcode") vendcode:String?,
+        @Field("prmloadingnostr")loadingnostr :String?,
+        @Field("prmsessionid") sessionid:String?,
+        @Field("prmusercode") usercode:String?,
+        @Field("prmmenucode")menucode :String?,
+        @Field("prmloadedby") loadedby:String?,
+        @Field("prmairlineawbno") airlineawbno:String?,
+        @Field("prmairlineawbdt") airlineawbdt:String?,
+        @Field("prmairlineawbfreight") airlineawbfreight:String?,
+        @Field("prmairlineawbpckgs") airlineawbpckgs:String?,
+        @Field("prmairlineawbweight") airlineawbweight:String?,
+        @Field("prmvendorcd")vendorcd :String?,
+
+        ):Call<CommonResult>
+
 
 }

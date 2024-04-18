@@ -9,6 +9,10 @@ import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.ui.bottomsheet.vehicleSelection.model.VehicleModelDRS
 import com.greensoft.greentranserpnative.ui.operation.drs.model.SaveDRSModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.vendorSelection.model.VendorModelDRS
+import com.greensoft.greentranserpnative.ui.operation.drs.model.DrsDataModel
+import com.greensoft.greentranserpnative.ui.operation.drsScan.model.ScannedDrsModel
+import com.greensoft.greentranserpnative.utils.Utils
+import okhttp3.internal.Util
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,6 +23,10 @@ class DRSRepository @Inject constructor(): BaseRepository() {
     private val vendorMuteLiveData = MutableLiveData<ArrayList<VendorModelDRS>>()
     private val vehicleMuteLiveData = MutableLiveData<ArrayList<VehicleModelDRS>>()
     private val saveDRSMuteLiveData = MutableLiveData<SaveDRSModel>()
+    private val drsPreFillMuteLiveData = MutableLiveData<DrsDataModel>()
+
+    val viewDialogLiveData: LiveData<Boolean>
+        get() = viewDialogMutData
 
 
     val vendorLiveData: LiveData<ArrayList<VendorModelDRS>>
@@ -29,6 +37,9 @@ class DRSRepository @Inject constructor(): BaseRepository() {
 
     val saveDRSLiveData: LiveData<SaveDRSModel>
         get() = saveDRSMuteLiveData
+
+    val drsPreFillLiveData: LiveData<DrsDataModel>
+        get() = drsPreFillMuteLiveData
 
     fun getVendorList( companyId:String,charStr:String,category:String) {
         viewDialogMutData.postValue(true)
@@ -137,4 +148,40 @@ class DRSRepository @Inject constructor(): BaseRepository() {
         })
 
     }
+
+    fun getDrsDataWithDrsNo(companyId:String,userCode:String,loginBranchCode:String, drsNo:String,sessionId:String) {
+        viewDialogMutData.postValue(true)
+        api.getDrsData( companyId,userCode,loginBranchCode,drsNo,sessionId,).enqueue(object:Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
+                if(response.body() != null){
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if(result.CommandStatus == 1){
+                        val jsonArray = getResult(result);
+                        if(jsonArray != null) {
+                            Utils.logger("DRS_DATA", jsonArray.toString())
+                            val listType = object: TypeToken<List<DrsDataModel>>() {}.type
+                            val resultList: ArrayList<DrsDataModel> = gson.fromJson(jsonArray.toString(), listType);
+                            if(resultList.size > 0) {
+                                drsPreFillMuteLiveData.postValue(resultList[0])
+                            }
+                        }
+                    } else {
+                        isError.postValue(result.CommandMessage.toString());
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR);
+                }
+                viewDialogMutData.postValue(false)
+
+            }
+
+            override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
+    }
+
 }

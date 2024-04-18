@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
+import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityDrsBinding
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
@@ -63,16 +64,47 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
     override fun onResume() {
         super.onResume()
         drsNo = Utils.drsNo
-        if (drsNo!=null||drsNo==""){
+        if(ENV.DEBUGGING) {
+            drsNo = "1040108654"
+        }
+        if (drsNo!=null && drsNo!=""){
             getDrsData(drsNo)
         }
     }
 
-    fun getDrsData(drsNo:String?){
-
+    private fun getDrsData(drsNo:String?){
+        if(drsNo == "" || drsNo == null) {
+            return
+        }
+        viewModel.getDrsData(
+            getCompanyId(),
+            getUserCode(),
+            getLoginBranchCode(),
+            drsNo,
+            getSessionId()
+        )
     }
 
     private fun setObservers(){
+        viewModel.drsPreFillLiveData.observe(this) { saveDRSModel ->
+            activityBinding.inputDate.setText(saveDRSModel.drsdate)
+            activityBinding.inputTime.setText(saveDRSModel.drstime)
+            activityBinding.inputVendorName.setText(saveDRSModel.vendorname)
+            activityBinding.inputVehicleName.setText(saveDRSModel.vehicleno)
+            activityBinding.inputRemark.setText(saveDRSModel.remarks)
+        }
+        viewModel.isError.observe(this) { errMsg ->
+            errorToast(errMsg)
+        }
+        viewModel.viewDialogLiveData.observe(this) { show ->
+//            progressBar.visibility = if(show) View.VISIBLE else View.GONE
+            if (show) {
+                showProgressDialog()
+            } else {
+                hideProgressDialog()
+            }
+        }
+
         mPeriod.observe(this) { date ->
             activityBinding.inputDate.setText(date.viewsingleDate)
             drsDate = date.sqlsingleDate.toString()
@@ -112,8 +144,11 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
         }
         openCommonBottomSheet(this, "Vehicle Selection", this, commonList)
     }
+
+
     private fun setSpinners() {
-        val deliveryModeList = listOf("AGENT", "MARKET VEHICLE","JEENA STAFF","OFFICE/AIRPORT DROP")
+//        val deliveryModeList = listOf("AGENT", "MARKET VEHICLE","JEENA STAFF","OFFICE/AIRPORT DROP")
+        val deliveryModeList = listOf("JEENA STAFF")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, deliveryModeList)
         activityBinding.deliveryBy.adapter = adapter
 
@@ -157,6 +192,7 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
             try {
                 var model= DrsDataModel(
                     commandstatus = 1,
+                    commandmessage = "",
                     drsdate = drsDate,
                     drstime = activityBinding.inputTime.text.toString(),
                     deliveredby = spinnerValue,
@@ -164,8 +200,9 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
                     vendcode = vendorCode,
                     vehicleno = activityBinding.inputVehicleName.text.toString(),
                     vehiclecode = vehicleCode,
-                    driver = activityBinding.deliveryBoyName.text.toString(),
-                    remark = activityBinding.inputRemark.text.toString()
+                    username = activityBinding.deliveryBoyName.text.toString(),
+                    usercode = getUserCode(),
+                    remarks = activityBinding.inputRemark.text.toString()
                 )
                 val jsonString = gson.toJson(model)
                 val intent = Intent(this, DrsScanActivity::class.java)
@@ -196,33 +233,33 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
         )
     }
 
-    private fun saveDRS(){
-        viewModel.saveDRS(
-            getCompanyId(),
-            getLoginBranchCode(),
-            drsDt = activityBinding.inputDate.text.toString(),
-            drsTime = activityBinding.inputTime.text.toString(),
-            "",
-            driverName = activityBinding.deliveryBoyName.text.toString(),
-            "",
-            "A9531",
-            remarks = activityBinding.inputRemark.text.toString(),
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            getUserCode(),
-            getSessionId(),
-            "GTAPP_drs",
-            userDataModel?.executiveid.toString(),
-            deliveredBy = activityBinding.deliveryBy.toString(),
-            vendorCode,
-            dlvVehicleNo = activityBinding.inputVehicleName.toString(),
-
-        )
-    }
+//    private fun saveDRS(){
+//        viewModel.saveDRS(
+//            getCompanyId(),
+//            getLoginBranchCode(),
+//            drsDt = activityBinding.inputDate.text.toString(),
+//            drsTime = activityBinding.inputTime.text.toString(),
+//            "",
+//            driverName = activityBinding.deliveryBoyName.text.toString(),
+//            "",
+//            "A9531",
+//            remarks = activityBinding.inputRemark.text.toString(),
+//            "",
+//            "",
+//            "",
+//            "",
+//            "",
+//            "",
+//            getUserCode(),
+//            getSessionId(),
+//            "GTAPP_drs",
+//            userDataModel?.executiveid.toString(),
+//            deliveredBy = activityBinding.deliveryBy.toString(),
+//            vendorCode,
+//            dlvVehicleNo = activityBinding.inputVehicleName.toString(),
+//
+//        )
+//    }
 
 //    private fun setupRecyclerView() {
 //        if (rvAdapter == null) {
@@ -310,6 +347,7 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
         }
         return dataList
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

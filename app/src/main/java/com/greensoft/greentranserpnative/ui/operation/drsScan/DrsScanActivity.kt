@@ -2,11 +2,11 @@ package com.greensoft.greentranserpnative.ui.operation.drsScan
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityDrsScanBinding
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
@@ -18,6 +18,7 @@ import com.greensoft.greentranserpnative.ui.operation.drs.model.DrsDataModel
 import com.greensoft.greentranserpnative.ui.operation.drsScan.model.ScannedDrsModel
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.internal.Util
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -26,8 +27,7 @@ class DrsScanActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, Al
     private val viewModel: DrsScanViewModel by viewModels()
     private var rvAdapter: DrsScanAdapter? = null
     private lateinit var manager: LinearLayoutManager
-    private var updateStickersDrsList: ArrayList<ScannedDrsModel> = ArrayList()
-    private var stickerNo:String=""
+    private var rvList: ArrayList<ScannedDrsModel> = ArrayList()
     private var drsActivityData:DrsDataModel?= null
 
     private var drsDate:String = ""
@@ -49,18 +49,53 @@ class DrsScanActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, Al
         setUpToolbar("DRS Scan")
         this.drsNo = Utils.drsNo ?: ""
         getDrsActivityDataByIntent()
-
-        updateStickersDrsList = generateSimpleList()
         setupRecyclerView()
         setObservers()
         setOnClick()
+        getDrsStickerList()
     }
 
     private fun setOnClick(){
         activityBinding.submitBtn.setOnClickListener {
-//            updateSticker(stickerNo)
-            errorToast("updateSticker fun call here")
+            var stickerNo = activityBinding.inputSticker.text.toString()
+            if(stickerNo == "") {
+                errorToast("Please enter a sticker number to submit.")
+            } else {
+                var stickerAlreadyExists: Boolean = false
+                for (scannedDrsList in rvList) {
+                    if (scannedDrsList.stickerno == stickerNo) {
+                        stickerAlreadyExists = true
+                        removeSticker(stickerNo)
+                        break
+                    }
+                }
+                if (!stickerAlreadyExists) {
+                    updateSticker(stickerNo)
+                }
+            }
+//            errorToast("updateSticker fun call here")
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+//        if(Utils.drsNo != "" || Utils.drsNo != null) {
+//            drsNo = Utils.drsNo!!
+//            getDrsData(drsNo)
+//        }
+    }
+
+    private fun getDrsData(drsNo:String?){
+        if(drsNo == "" || drsNo == null) {
+            return
+        }
+        viewModel.getDrsData(
+            getCompanyId(),
+            getUserCode(),
+            getLoginBranchCode(),
+            drsNo,
+            getSessionId()
+        )
     }
 
     private fun getDrsActivityDataByIntent() {
@@ -80,8 +115,8 @@ class DrsScanActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, Al
                     vendCode = drsActivityData?.vendcode.toString()
                     vehicleNo = drsActivityData?.vehicleno.toString()
                     vehicleCode = drsActivityData?.vehiclecode.toString()
-                    deliveryBoy = drsActivityData?.driver.toString()
-                    remark = drsActivityData?.remark.toString()
+                    deliveryBoy = drsActivityData?.username.toString()
+                    remark = drsActivityData?.remarks.toString()
 
                 } else {
                     Log.e("DrsScanActivity", "data was corrupted.")
@@ -92,15 +127,70 @@ class DrsScanActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, Al
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        Utils.drsNo = drsNo
+    }
+
     private fun setObservers(){
-        mScanner.observe(this){ stickerData->
-            stickerNo = stickerData
-//            updateSticker(stickerData)
-            Toast.makeText(this, "sticker no $stickerData", Toast.LENGTH_SHORT).show()
+        viewModel.isError.observe(this) { errMsg ->
+            errorToast(errMsg)
         }
-        viewModel.updateStickerLiveData.observe(this){updateSticker->
-            updateStickersDrsList = updateSticker
-            setupRecyclerView()
+        viewModel.viewDialogLiveData.observe(this) { show ->
+//            progressBar.visibility = if(show) View.VISIBLE else View.GONE
+            if (show) {
+                showProgressDialog()
+            } else {
+                hideProgressDialog()
+            }
+        }
+        mScanner.observe(this){ scannedStickerNo->
+            var stickerAlreadyExists: Boolean = false
+            for(scannedDrsList in rvList) {
+                if(scannedDrsList.stickerno == scannedStickerNo) {
+                    stickerAlreadyExists = true
+                    removeSticker(scannedStickerNo)
+                    break
+                }
+            }
+            if(!stickerAlreadyExists) {
+                updateSticker(scannedStickerNo)
+            }
+//            Utils.debugToast(this, "sticker no $scannedStickerNo")
+//            Toast.makeText(this, "sticker no $stickerData", Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.updateStickerLiveData.observe(this){ updateSticker->
+            if(updateSticker.commandstatus == 1) {
+                if(updateSticker.drsno != null && updateSticker.drsno != "") {
+                    drsNo = updateSticker.drsno.toString()
+                }
+                getDrsStickerList()
+                if(updateSticker.commandmessage != null) {
+                    successToast(updateSticker.commandmessage.toString())
+                } else {
+                    successToast("Added Sticker Successfully.")
+                }
+            }
+        }
+        viewModel.removeStickerLiveData.observe(this) { removeSticker ->
+            if(removeSticker.commandstatus == 1) {
+                if(removeSticker.drsno != null && removeSticker.drsno != "") {
+                    drsNo = removeSticker.drsno.toString()
+                }
+                getDrsStickerList()
+                if(removeSticker.commandmessage != null) {
+                    successToast(removeSticker.commandmessage.toString())
+                } else {
+                    successToast("Removed Sticker Successfully.")
+                }
+            }
+        }
+        viewModel.stickerListLiveData.observe(this) { stickerList ->
+            if(stickerList.size > 0) {
+                rvList = stickerList
+                setupRecyclerView()
+            }
         }
     }
 
@@ -125,7 +215,7 @@ class DrsScanActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, Al
         )
     }
 
-    private fun removeSticker(){
+    private fun removeSticker(stickerNo: String){
         viewModel.removeSticker(
             getCompanyId(),
             getUserCode(),
@@ -136,23 +226,37 @@ class DrsScanActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, Al
         )
     }
 
+    private fun getDrsStickerList(){
+        if(drsNo == "") {
+            Utils.logger("DRS SCAN ACTIVITY", "DRS IS NULL")
+            return
+        }
+        viewModel.getDrsStickers(
+            getCompanyId(),
+            getUserCode(),
+            getLoginBranchCode(),
+            drsNo,
+            getSessionId()
+        )
+    }
+
     private fun setupRecyclerView() {
         if (rvAdapter == null) {
             manager = LinearLayoutManager(this)
             activityBinding.rvScanDRS.layoutManager = manager
         }
-        rvAdapter = DrsScanAdapter(updateStickersDrsList, this)
+        rvAdapter = DrsScanAdapter(rvList, this)
         activityBinding.rvScanDRS.adapter = rvAdapter
     }
 
-    private  fun showAlert(){
+    private  fun showRemoveStickerAlert(drsStickerModel: ScannedDrsModel){
         CommonAlert.createAlert(
             context = this,
             header = "Alert!!",
             description = " Are You Sure You Want To Remove Sticker?",
             callback =this,
-            alertCallType ="REMOVE_STICKER",
-            data = ""
+            alertCallType = DrsScanAdapter.REMOVE_STICKER_TAG,
+            data = drsStickerModel
         )
     }
 
@@ -161,9 +265,15 @@ class DrsScanActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, Al
         try {
           when(alertClick){
               AlertClick.YES->{
-                  if (alertCallType=="REMOVE_STICKER"){
-//                      removeSticker()
-                  errorToast("removeAPI fun call here")
+                  if (alertCallType == DrsScanAdapter.REMOVE_STICKER_TAG){
+                      try {
+                          successToast("ALERT CLICK YES TILL DONE")
+//                          val drsStickerModel: ScannedDrsModel = data as ScannedDrsModel
+//                          removeSticker(drsStickerModel.stickerno.toString())
+                      } catch (ex: Exception) {
+                          errorToast(ENV.SOMETHING_WENT_WRONG_ERR_MSG)
+                          return
+                      }
                   }
               }
               AlertClick.NO -> {
@@ -180,18 +290,26 @@ class DrsScanActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, Al
     }
 
     override fun onClick(data: Any, clickType: String) {
-        if (clickType=="REMOVE_STICKER"){
-            showAlert()
+        if (clickType==DrsScanAdapter.REMOVE_STICKER_TAG){
+            try {
+                val drsStickerModel: ScannedDrsModel = data as ScannedDrsModel
+                showRemoveStickerAlert(drsStickerModel)
+            } catch (ex: Exception) {
+                errorToast(ENV.SOMETHING_WENT_WRONG_ERR_MSG)
+                return
+            }
         }
     }
 
-    private fun generateSimpleList(): ArrayList<ScannedDrsModel> {
-        val dataList: ArrayList<ScannedDrsModel> =
-            java.util.ArrayList<ScannedDrsModel>()
-        for (i in 1..100) {
-            dataList.add(ScannedDrsModel("",i,(100+i).toString(),"",""))
-        }
-        return dataList
+    override fun onStop() {
+        super.onStop()
+        Utils.logger("DRS_ACTIVITY_CYCLE", "DRS SCAN ACTIVITY onStop")
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Utils.logger("DRS_ACTIVITY_CYCLE", "DRS SCAN ACTIVITY onDestroy")
+    }
+
 
 }
