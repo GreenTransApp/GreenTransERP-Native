@@ -469,7 +469,7 @@
                             android:layout_height="wrap_content"
                             android:textAllCaps="true"
                             android:textColor="@color/black"
-                            android:focusable="false"
+
                             android:inputType="number"
                             />
 
@@ -938,7 +938,7 @@
                                 android:layout_height="wrap_content"
                                 android:textAllCaps="true"
                                 android:textColor="@color/black"
-                                android:focusable="false"
+
                                 android:inputType="number"
                                 />
 
@@ -1015,7 +1015,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:padding="15dp"
-            android:text="Select Gr"
+            android:text="Select Loading Number"
             app:cornerRadius="10dp"
             />
 

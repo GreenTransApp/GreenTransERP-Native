@@ -25,4 +25,8 @@ data class DespatchManifestEnteredDataModel(
     var awbDt:String,
     var airlineawbpckgs:String,
     var airlineawbweight:String,
+    var flight:String,
+    var groupName:String,
+    var awbViewDt:String,
+
 )

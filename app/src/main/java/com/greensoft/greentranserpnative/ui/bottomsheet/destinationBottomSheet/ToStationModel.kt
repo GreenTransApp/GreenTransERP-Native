@@ -1,4 +1,4 @@
-package com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models
+package com.greensoft.greentranserpnative.ui.bottomsheet.destinationBottomSheet
 
 data class ToStationModel(
     val Active: String?,

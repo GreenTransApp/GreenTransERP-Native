@@ -1,9 +1,8 @@
-package com.greensoft.greentranserpnative.ui.bottomsheet.modeCode
+package com.greensoft.greentranserpnative.ui.bottomsheet.destinationBottomSheet
 
 import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,58 +12,43 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseFragment
-import com.greensoft.greentranserpnative.databinding.BottomsheetVehicleSelectionBinding
-import com.greensoft.greentranserpnative.databinding.ModeCodeSelectionBottomSheetBinding
-import com.greensoft.greentranserpnative.ui.bottomsheet.vehicleSelection.VehicleSelectionAdapter
-import com.greensoft.greentranserpnative.ui.bottomsheet.vehicleSelection.VehicleSelectionBottomSheet
-import com.greensoft.greentranserpnative.ui.bottomsheet.vehicleSelection.VehicleSelectionViewModel
-import com.greensoft.greentranserpnative.ui.bottomsheet.vendorSelection.VendorSelectionBottomSheet
+import com.greensoft.greentranserpnative.databinding.DestinationSelectionBottomSheetBinding
+import com.greensoft.greentranserpnative.ui.bottomsheet.modeCode.ModeCodeSelectionBottomSheet
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@AndroidEntryPoint
-class ModeCodeSelectionBottomSheet @Inject constructor(): BaseFragment(), OnRowClick<Any> {
-    private lateinit var layoutBinding:ModeCodeSelectionBottomSheetBinding
-    private var modeList: ArrayList<ModeCodeSelectionModel> = ArrayList()
 
-    private val viewModel: ModeCodeSelectionViewModel by viewModels()
-    private var onRowClick: OnRowClick<Any> = this
+class DestinationSelectionBottomSheet @Inject constructor(): BaseFragment(), OnRowClick<Any>{
+   lateinit var  layoutBinding:DestinationSelectionBottomSheetBinding
+    private var toStationList: ArrayList<ToStationModel> = ArrayList()
+    private val viewModel: DestinationSelectionViewModel by viewModels()
+    private var onRowClick: DestinationSelectionBottomSheet = this
     private var selectedItem: OnRowClick<Any>? = null
     private var title: String = "Selection"
-    private var orgCode: String = ""
     private var modeCode: String = ""
-    private var groupCode: String = ""
-    private var rvAdapter: ModeCodeAdapter? = null
+    private var rvAdapter: DestinationSelectionAdapter? = null
     private lateinit var manager: LinearLayoutManager
-
-
-    companion object{
-        const val TAG = "ModeCodeBottomSheet"
-        const val CLICK_TYPE = "MODE_CODE_SELECTION"
+    companion object {
+        const val TAG = "DestinationBottomSheet"
+        const val CLICK_TYPE = "DESTINATION_SELECTION"
 
         fun newInstance(
             mContext: Context,
             title: String,
-            orgCode:String,
             modeCode:String,
-            groupCode:String,
             onSelectedItem: OnRowClick<Any>
-        ): ModeCodeSelectionBottomSheet {
-            val instance: ModeCodeSelectionBottomSheet = ModeCodeSelectionBottomSheet()
+        ): DestinationSelectionBottomSheet {
+            val instance: DestinationSelectionBottomSheet = DestinationSelectionBottomSheet()
             instance.mContext = mContext
             instance.title = title
-            instance.orgCode=orgCode
             instance.modeCode=modeCode
-            instance.groupCode=groupCode
             instance.selectedItem = onSelectedItem
             return instance
 
         }
-    }
 
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -74,8 +58,9 @@ class ModeCodeSelectionBottomSheet @Inject constructor(): BaseFragment(), OnRowC
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        layoutBinding = ModeCodeSelectionBottomSheetBinding.inflate(layoutInflater)
-        return layoutBinding.root
+        layoutBinding = DestinationSelectionBottomSheetBinding.inflate(layoutInflater)
+        return  layoutBinding.root
+
 
     }
 
@@ -107,7 +92,7 @@ class ModeCodeSelectionBottomSheet @Inject constructor(): BaseFragment(), OnRowC
 
             override fun onQueryTextChange(newText: String?): Boolean {
 
-               getModeCodeList(newText)
+                getDestinationList(newText)
                 return false
             }
 
@@ -115,7 +100,6 @@ class ModeCodeSelectionBottomSheet @Inject constructor(): BaseFragment(), OnRowC
 
         close()
     }
-
     fun close(){
         layoutBinding.closeBottomSheet.setOnClickListener {
             dismiss()
@@ -126,21 +110,10 @@ class ModeCodeSelectionBottomSheet @Inject constructor(): BaseFragment(), OnRowC
         super.onDetach()
         selectedItem = null
     }
-    private   fun  setObservers (){
-        viewModel.modeCodeLiveData.observe(this) { modeCode ->
-            if (modeCode.elementAt(0).commandstatus == 1) {
-                modeList = modeCode
-                setupRecyclerView()
 
-            } else {
-//                errorToast(groupCode.elementAt(0).commandmessage.toString())
-            }
 
-        }
-
-    }
     private fun setupRecyclerView() {
-        if(modeList.isEmpty()) {
+        if(toStationList.isEmpty()) {
             layoutBinding.emptyView.visibility = View.VISIBLE
         } else {
             layoutBinding.emptyView.visibility = View.GONE
@@ -149,28 +122,34 @@ class ModeCodeSelectionBottomSheet @Inject constructor(): BaseFragment(), OnRowC
             manager = LinearLayoutManager(mContext)
             layoutBinding.recyclerView.layoutManager = manager
         }
-        rvAdapter = ModeCodeAdapter(modeList, onRowClick)
+        rvAdapter = DestinationSelectionAdapter(toStationList, onRowClick)
         layoutBinding.recyclerView.adapter = rvAdapter
     }
 
-    private fun getModeCodeList(query:String?) {
+    fun setObservers(){
+       viewModel.toStationLiveData.observe(this){ toStationData ->
+           if (toStationData.elementAt(0).commandstatus == 1) {
+               toStationList = toStationData
+               setupRecyclerView()
+           }
+       }
+   }
 
-        viewModel.getModeCode(
-            loginDataModel?.companyid.toString(),
-            "greentransapp_showmodeV2",
-            listOf("prmorgcode","prmdestcode","prmmodetype","prmmodegroupcode","prmcharstr"),
-            arrayListOf(getLoginBranchCode(),orgCode,modeCode,groupCode,query.toString())
-
-        )
+    fun  getDestinationList(query:String?){
+        viewModel.getToStationList(
+            getCompanyId(),
+            "greentransapp_StationMast",
+            listOf("prmbranchcode","prmusercode","prmcharstr"),
+            arrayListOf(getLoginBranchCode(),getUserCode(),query.toString()))
     }
-
 
     override fun onClick(data: Any, clickType: String) {
         if(selectedItem != null) {
-            if(clickType == ModeCodeAdapter.MODE_CODE_SELECTION_ROW_CLICK) {
-                selectedItem?.onClick(data, ModeCodeSelectionBottomSheet.CLICK_TYPE)
+            if(clickType == DestinationSelectionAdapter.DESTINATION_SELECTION_ROW_CLICK) {
+                selectedItem?.onClick(data, DestinationSelectionBottomSheet.CLICK_TYPE)
                 dismiss()
             }
         }
     }
+
 }

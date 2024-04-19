@@ -7,9 +7,7 @@ import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.DespatchSaveModel
-import com.greensoft.greentranserpnative.ui.bottomsheet.modeCode.ModeCodeSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.GroupModeCodeModel
-import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.ToStationModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.DriverSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
@@ -34,9 +32,7 @@ class DespatchManifestRepository  @Inject constructor(): BaseRepository() {
     val pickupLocationLiveData: LiveData<ArrayList<PickupLocationModel>>
         get() = pickupLocationMuteLiveData
 
-    private val toStationMuteLiveData = MutableLiveData<ArrayList<ToStationModel>>()
-    val toStationLiveData: LiveData<ArrayList<ToStationModel>>
-        get() = toStationMuteLiveData
+
 
     private val driverMuteLiveData = MutableLiveData<ArrayList<DriverSelectionModel>>()
     val driverLiveData: LiveData<ArrayList<DriverSelectionModel>>
@@ -62,9 +58,7 @@ class DespatchManifestRepository  @Inject constructor(): BaseRepository() {
     val groupModeLiveData: LiveData<ArrayList<GroupModeCodeModel>>
         get() = groupModeMuteLiveData
 
-    private val modeCodeMuteLiveData = MutableLiveData<ArrayList<ModeCodeSelectionModel>>()
-    val modeCodeLiveData: LiveData<ArrayList<ModeCodeSelectionModel>>
-        get() = modeCodeMuteLiveData
+
 
     private val saveManifestMuteLiveData = MutableLiveData<DespatchSaveModel>()
     val saveManifestLiveData: LiveData<DespatchSaveModel>
@@ -170,37 +164,6 @@ class DespatchManifestRepository  @Inject constructor(): BaseRepository() {
 
         })
 
-    }
-    fun getDestinationList(companyId: String, spname: String, param: List<String>, values: ArrayList<String>){
-        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
-            override fun onResponse(call: Call<CommonResult>, response: Response<CommonResult>) {
-                if(response.body() != null){
-                    val result = response.body()!!
-                    val gson = Gson()
-                    if(result.CommandStatus == 1){
-                        val jsonArray = getResult(result)
-                        if(jsonArray != null) {
-                            val listType = object: TypeToken<List<ToStationModel>>() {}.type
-                            val resultList: ArrayList<ToStationModel> = gson.fromJson(jsonArray.toString(), listType);
-//                            destinationMuteLiveData.postValue(resultList);
-                         toStationMuteLiveData.postValue(resultList);
-
-                        }
-                    } else {
-                        isError.postValue(result.CommandMessage.toString());
-                    }
-                } else {
-                    isError.postValue(SERVER_ERROR)
-                }
-                viewDialogMutData.postValue(false)
-            }
-
-            override fun onFailure(call: Call<CommonResult>, t: Throwable) {
-                viewDialogMutData.postValue(false)
-                isError.postValue(t.message)
-            }
-
-        })
     }
 
 
@@ -342,39 +305,7 @@ class DespatchManifestRepository  @Inject constructor(): BaseRepository() {
 
     }
 
-    fun getModeCodeList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
-        viewDialogMutData.postValue(true)
-        api.commonApiWMS(companyId,spname, param,values).enqueue(object: Callback<CommonResult> {
-            override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
-                if(response.body() != null){
-                    val result = response.body()!!
-                    val gson = Gson()
-                    if(result.CommandStatus == 1){
-                        val jsonArray = getResult(result);
-                        if(jsonArray != null) {
-                            val listType = object: TypeToken<List<ModeCodeSelectionModel>>() {}.type
-                            val resultList: ArrayList<ModeCodeSelectionModel> = gson.fromJson(jsonArray.toString(), listType);
-                            modeCodeMuteLiveData.postValue(resultList);
 
-                        }
-                    } else {
-                        isError.postValue(result.CommandMessage.toString());
-                    }
-                } else {
-                    isError.postValue(SERVER_ERROR);
-                }
-                viewDialogMutData.postValue(false)
-
-            }
-
-            override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
-                viewDialogMutData.postValue(false)
-                isError.postValue(t.message)
-            }
-
-        })
-
-    }
     fun saveOutstationManifest(
         companyid:String,
         branchcode:String,
