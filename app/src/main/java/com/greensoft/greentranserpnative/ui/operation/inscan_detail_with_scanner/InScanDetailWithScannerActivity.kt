@@ -128,6 +128,9 @@ class InScanDetailWithScannerActivity  @Inject constructor(): BaseActivity(), On
         activityBinding.cardExpendBtn.setOnClickListener {
             toggleCardVisibility()
         }
+        activityBinding.receivingDetailEdit.setOnClickListener {
+            openReceivingDetailsBottomSheet()
+        }
 
     }
     private fun getInScanMfHeadFromIntent() {

@@ -45,14 +45,14 @@ class InScanDetailsAdapter @Inject constructor(
         private val  layoutBinding :ItemInscanCardDetailBinding,
         private val context: Context):RecyclerView.ViewHolder(layoutBinding.root){
         private fun  setOnClick(model:InScanWithoutScannerModel, onRowClickLocal: OnRowClick<Any>){
-            layoutBinding.inputDamagePckgsReason.setOnClickListener{
-               onRowClickLocal.onRowClick(model, TAG_DAMAGE_REASON_CLICK, adapterPosition)
-            }
+//            layoutBinding.inputDamagePckgsReason.setOnClickListener{
+//               onRowClickLocal.onRowClick(model, TAG_DAMAGE_REASON_CLICK, adapterPosition)
+//            }
             layoutBinding.btnSaveCard.setOnClickListener {
                 var receivedPckgs: String? = layoutBinding.inputReceivePckgs.text.toString()
-                var damagePckgs: String? = layoutBinding.inputDamagePckgs.text.toString()
+//                var damagePckgs: String? = layoutBinding.inputDamagePckgs.text.toString()
                 var receivePckgsParsed: Int? = 0
-                var damagePckgsParsed: Int? = 0
+//                var damagePckgsParsed: Int? = 0
                 if(receivedPckgs != null || receivedPckgs != "") {
                     try {
                         receivePckgsParsed = receivedPckgs?.toIntOrNull()
@@ -61,28 +61,28 @@ class InScanDetailsAdapter @Inject constructor(
                     }
                 }
 
-                if(damagePckgs != null || damagePckgs != "") {
-                    try {
-                        damagePckgsParsed = damagePckgs?.toIntOrNull()
-                    } catch (ex: Exception) {
-                        damagePckgsParsed = 0
-                    }
-                }
+//                if(damagePckgs != null || damagePckgs != "") {
+//                    try {
+//                        damagePckgsParsed = damagePckgs?.toIntOrNull()
+//                    } catch (ex: Exception) {
+//                        damagePckgsParsed = 0
+//                    }
+//                }
 
                 if(receivePckgsParsed != null && receivePckgsParsed!! < 0) {
                     mActivity.errorToast("Received Pckgs cannot be Empty.")
                     return@setOnClickListener
                 }
-                if(damagePckgsParsed != null && damagePckgsParsed!! < 0) {
-                    mActivity.errorToast("Damage Pckgs cannot be Empty")
-                    return@setOnClickListener
-                }
+//                if(damagePckgsParsed != null && damagePckgsParsed!! < 0) {
+//                    mActivity.errorToast("Damage Pckgs cannot be Empty")
+//                    return@setOnClickListener
+//                }
 //                if(receivePckgsParsed!! + damagePckgsParsed!! > model.despatchpckgs) {
 //                    mActivity.errorToast("Received + Damage cannot be more than Despatch.")
 //                    return@setOnClickListener
 //                }
                 model.receivedpckgs = receivePckgsParsed!!.toDouble()
-                model.damage = damagePckgsParsed!!.toDouble()
+//                model.damage = damagePckgsParsed!!.toDouble()
                 onRowClickLocal.onRowClick(model, TAG_SAVE_CARD_CLICK, adapterPosition)
             }
         }
@@ -102,14 +102,14 @@ class InScanDetailsAdapter @Inject constructor(
                     }
                 }
             }
-            layoutBinding.inputDamagePckgs.setOnFocusChangeListener { view, focused ->
-                if(focused) {
-                    var damagePckgs = layoutBinding.inputDamagePckgs.text.toString().toIntOrNull()
-                    if(damagePckgs != null && damagePckgs == 0){
-                        layoutBinding.inputDamagePckgs.setText("")
-                    }
-                }
-            }
+//            layoutBinding.inputDamagePckgs.setOnFocusChangeListener { view, focused ->
+//                if(focused) {
+//                    var damagePckgs = layoutBinding.inputDamagePckgs.text.toString().toIntOrNull()
+//                    if(damagePckgs != null && damagePckgs == 0){
+//                        layoutBinding.inputDamagePckgs.setText("")
+//                    }
+//                }
+//            }
             layoutBinding.inputReceivePckgs.addTextChangedListener(object: TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 }
@@ -134,30 +134,30 @@ class InScanDetailsAdapter @Inject constructor(
 
             })
 
-            layoutBinding.inputDamagePckgs.addTextChangedListener(object: TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-                    val enteredVal = s.toString().toIntOrNull()
-                    if (enteredVal != null) {
-                        if (enteredVal < 0) {
-                            layoutBinding.inputDamagePckgs.setText("0")
-                        } else {
-                            inScanCardList[adapterPosition].damage = enteredVal.toDouble()
-                        }
-                    } else {
-                        inScanCardList[adapterPosition].damage = 0.0
-                    }
-//                    if (enteredVal != null && enteredVal.toString().startsWith("0")) {
-//                       binding.pckgs.setText(trimLeadingZeros(p0.toString()))
+//            layoutBinding.inputDamagePckgs.addTextChangedListener(object: TextWatcher {
+//                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+//                }
+//
+//                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//                }
+//
+//                override fun afterTextChanged(s: Editable?) {
+//                    val enteredVal = s.toString().toIntOrNull()
+//                    if (enteredVal != null) {
+//                        if (enteredVal < 0) {
+//                            layoutBinding.inputDamagePckgs.setText("0")
+//                        } else {
+//                            inScanCardList[adapterPosition].damage = enteredVal.toDouble()
+//                        }
+//                    } else {
+//                        inScanCardList[adapterPosition].damage = 0.0
 //                    }
-                }
-
-            })
+////                    if (enteredVal != null && enteredVal.toString().startsWith("0")) {
+////                       binding.pckgs.setText(trimLeadingZeros(p0.toString()))
+////                    }
+//                }
+//
+//            })
         }
 
     }

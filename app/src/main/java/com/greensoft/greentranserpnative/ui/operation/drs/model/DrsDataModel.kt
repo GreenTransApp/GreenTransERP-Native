@@ -12,6 +12,7 @@ data class DrsDataModel(
     val vehicleno:String?,
     val usercode:String?,
     val username:String?,
+    val dlvagentcode:String?,
     val remarks:String?
 
 )

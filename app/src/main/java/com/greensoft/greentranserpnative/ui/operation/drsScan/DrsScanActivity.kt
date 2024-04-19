@@ -28,7 +28,7 @@ class DrsScanActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, Al
     private var rvAdapter: DrsScanAdapter? = null
     private lateinit var manager: LinearLayoutManager
     private var rvList: ArrayList<ScannedDrsModel> = ArrayList()
-    private var drsActivityData:DrsDataModel?= null
+    private var drsActivityData: DrsDataModel? = null
 
     private var drsDate:String = ""
     private var drsTime:String = ""
@@ -47,7 +47,9 @@ class DrsScanActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, Al
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
         setUpToolbar("DRS Scan")
-        this.drsNo = Utils.drsNo ?: ""
+        Utils.drsNo?.let { nullSafeDrsNo ->
+            drsNo = nullSafeDrsNo
+        }
         getDrsActivityDataByIntent()
         setupRecyclerView()
         setObservers()

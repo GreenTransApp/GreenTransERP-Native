@@ -5,6 +5,8 @@ data class InScanWithoutScannerModel(
     val airlinecode: Any,
     val bookedpckgs: Double,
     val branchname: String,
+    val custname: String,
+    val custcode: String,
     val cnge: String,
     val cngr: String,
     val commandmessage: Any,
