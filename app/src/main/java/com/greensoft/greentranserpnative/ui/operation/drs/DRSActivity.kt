@@ -147,8 +147,8 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
 
 
     private fun setSpinners() {
-//        val deliveryModeList = listOf("AGENT", "MARKET VEHICLE","JEENA STAFF","OFFICE/AIRPORT DROP")
-        val deliveryModeList = listOf("JEENA STAFF")
+        val deliveryModeList = listOf("AGENT", "MARKET VEHICLE","JEENA STAFF","OFFICE/AIRPORT DROP")
+//        val deliveryModeList = listOf("JEENA STAFF")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, deliveryModeList)
         activityBinding.deliveryBy.adapter = adapter
 

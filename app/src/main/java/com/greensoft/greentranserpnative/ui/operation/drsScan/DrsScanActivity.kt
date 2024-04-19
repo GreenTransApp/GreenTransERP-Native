@@ -102,12 +102,12 @@ class DrsScanActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, Al
         if(intent != null) {
             val jsonString = intent.getStringExtra("DrsModelData")
             if(jsonString != "") {
-                val gson = Gson()
-                val listType = object : TypeToken<DrsDataModel>() {}.type
-                val resultList: DrsDataModel =
-                    gson.fromJson(jsonString.toString(), listType)
-                drsActivityData = resultList;
-                if(drsActivityData != null) {
+                try {
+                    val gson = Gson()
+                    val listType = object : TypeToken<DrsDataModel>() {}.type
+                    val drsData: DrsDataModel =
+                        gson.fromJson(jsonString.toString(), listType)
+                    drsActivityData = drsData;
                     drsDate = drsActivityData?.drsdate.toString()
                     drsTime = drsActivityData?.drstime.toString()
                     deliveredBy = drsActivityData?.deliveredby.toString()
@@ -117,8 +117,7 @@ class DrsScanActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, Al
                     vehicleCode = drsActivityData?.vehiclecode.toString()
                     deliveryBoy = drsActivityData?.username.toString()
                     remark = drsActivityData?.remarks.toString()
-
-                } else {
+                } catch (ex: Exception) {
                     Log.e("DrsScanActivity", "data was corrupted.")
                     errorToast("Something went wrong, Please try again.")
                     finish()
