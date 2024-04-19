@@ -68,7 +68,7 @@ class VehicleSelectionBottomSheet  @Inject constructor(): BaseFragment(), OnRowC
         return layoutBinding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         layoutBinding.toolbarTitle.text = title
         dialog!!.setOnShowListener { dialog ->

@@ -776,7 +776,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:hintTextColor="@color/black"
-                            android:hint="Enter Airline AWB#"
+                            android:hint=""
                             >
 
 
@@ -887,7 +887,7 @@
                                     android:inputType="text"
                                     android:background="@drawable/disable_txtfield_bg"
                                     android:textColor="@color/black"
-                                    android:hint=" Airline AWB Weight"
+                                    android:hint=" "
                                     />
 
                             </com.google.android.material.textfield.TextInputLayout>

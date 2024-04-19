@@ -1,5 +1,6 @@
 package com.greensoft.greentranserpnative.ui.operation.despatch_manifest
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -11,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityDespatchManifestEntryBinding
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
+import com.greensoft.greentranserpnative.ui.bottomsheet.destinationBottomSheet.DestinationSelectionBottomSheet
+import com.greensoft.greentranserpnative.ui.bottomsheet.modeCode.ModeCodeSelectionBottomSheet
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.booking.BookingViewModel
@@ -19,7 +22,7 @@ import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSele
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.DespatchManifestEnteredDataModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.modeCode.ModeCodeSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.GroupModeCodeModel
-import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.ToStationModel
+import com.greensoft.greentranserpnative.ui.bottomsheet.destinationBottomSheet.ToStationModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.SavePickupManifestAdapter
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.DriverSelectionModel
@@ -41,13 +44,12 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
     lateinit var linearLayoutManager: LinearLayoutManager
     private var branchList: ArrayList<BranchSelectionModel> = ArrayList()
     private var locationList: ArrayList<PickupLocationModel> = ArrayList()
-    private var toStationList: ArrayList<ToStationModel> = ArrayList()
+
     private var driverList: ArrayList<DriverSelectionModel> = ArrayList()
     private var vendorList: ArrayList<VendorSelectionModel> = ArrayList()
     private var vehicleList: ArrayList<VehicleSelectionModel> = ArrayList()
     private var vehicleTypeList: ArrayList<VehicleTypeModel> = ArrayList()
     private var groupModeList: ArrayList<GroupModeCodeModel> = ArrayList()
-    private var modeList: ArrayList<ModeCodeSelectionModel> = ArrayList()
 
     private val bookingViewModel: BookingViewModel by viewModels()
     private var rvAdapter: SavePickupManifestAdapter? = null
@@ -57,6 +59,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
     private var model: ManifestEnteredDataModel? = null
     var modeTypeList = arrayOf("SURFACE", "AIR")
     var modeTypeCode =""
+    var categoryType =""
     var contentCode = ""
     var content = ""
     var enteredPckgs = ""
@@ -74,7 +77,6 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
     var manifestDt = getSqlCurrentDate()
     var awbDt = getSqlCurrentDate()
     var driverCode = ""
-    var destinationCode = ""
     var menuCode = ""
 
 
@@ -125,12 +127,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
         }
 
 //
-        viewModel.toStationLiveData.observe(this){ toStationData ->
-            if (toStationData.elementAt(0).commandstatus == 1) {
-                toStationList = toStationData
-                openToStationBottomSheet(toStationList)
-            }
-        }
+
         viewModel.driverLiveData.observe(this) { driverData ->
             if (driverData.elementAt(0).commandstatus == 1) {
                 driverList = driverData
@@ -162,15 +159,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
             }
 
         }
-        viewModel.modeCodeLiveData.observe(this) { modeCode ->
-            if (modeCode.elementAt(0).commandstatus == 1) {
-                modeList = modeCode
-                openModeCodeSelectionBottomSheet(modeList)
-            } else {
-//                errorToast(groupCode.elementAt(0).commandmessage.toString())
-            }
 
-        }
 
 
         mPeriod.observe(this) { date ->
@@ -198,6 +187,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
                     when(value){
                         "SURFACE"-> run{
                           modeTypeCode ="S"
+                            categoryType = "CO-LOADING"
                             activityBinding.surfaceLayout.visibility=View.VISIBLE
                             activityBinding.airLayout.visibility=View.GONE
                             activityBinding.inputAirline.text= null
@@ -211,6 +201,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
                         }
                         "AIR" -> run{
                             modeTypeCode="A"
+                            categoryType = "AIR CO-LOADING"
                             activityBinding.airLayout.visibility=View.VISIBLE
                             activityBinding.surfaceLayout.visibility=View.GONE
                             activityBinding.inputDriverName.text= null
@@ -250,23 +241,16 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
     }
 
 
-    fun  getDestinationList(){
-        viewModel.getToStationList(
-            getCompanyId(),
-            "greentransapp_StationMast",
-            listOf("prmbranchcode","prmusercode","prmcharstr"),
-            arrayListOf(getLoginBranchCode(),getUserCode(),""))
-    }
 
 
-    private fun openToStationBottomSheet(rvList: ArrayList<ToStationModel>) {
-        val commonList = ArrayList<CommonBottomSheetModel<Any>>()
-        for (i in 0 until rvList.size) {
-            commonList.add(CommonBottomSheetModel(rvList[i].StnName.toString(), rvList[i]))
-
-        }
-        openCommonBottomSheet(this, "Destination Selection", this, commonList)
-    }
+//    private fun openToStationBottomSheet(rvList: ArrayList<ToStationModel>) {
+//        val commonList = ArrayList<CommonBottomSheetModel<Any>>()
+//        for (i in 0 until rvList.size) {
+//            commonList.add(CommonBottomSheetModel(rvList[i].StnName.toString(), rvList[i]))
+//
+//        }
+//        openCommonBottomSheet(this, "Destination Selection", this, commonList)
+//    }
 
 
     private fun openVehicleSelectionBottomSheet(rvList: ArrayList<VehicleSelectionModel>) {
@@ -294,29 +278,15 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
         openCommonBottomSheet(this, "Group Mode Selection", this, commonList)
     }
 
-    private fun getModeCodeList() {
-        if(activityBinding.inputDestination.text.isNullOrEmpty()){
-            errorToast("Please Select Destination")
-            return
-        }else if(activityBinding.inputAirline.text.isNullOrEmpty()){
-            errorToast("Please Select Mode Group First")
-            return
-        }
-        viewModel.getModeCode(
-            loginDataModel?.companyid.toString(),
-            "greentransapp_showmodeV2",
-            listOf("prmorgcode","prmdestcode","prmmodetype","prmmodegroupcode","prmcharstr"),
-            arrayListOf(getLoginBranchCode(),areaCode,modeTypeCode,groupCode,"a")
-        )
-    }
 
-    private fun openModeCodeSelectionBottomSheet(rvList: ArrayList<ModeCodeSelectionModel>) {
-        val commonList = ArrayList<CommonBottomSheetModel<Any>>()
-        for (i in 0 until rvList.size) {
-            commonList.add(CommonBottomSheetModel(rvList[i].regno.toString(), rvList[i]))
-        }
-        openCommonBottomSheet(this, "Mode Selection", this, commonList)
-    }
+
+//    private fun openModeCodeSelectionBottomSheet(rvList: ArrayList<ModeCodeSelectionModel>) {
+//        val commonList = ArrayList<CommonBottomSheetModel<Any>>()
+//        for (i in 0 until rvList.size) {
+//            commonList.add(CommonBottomSheetModel(rvList[i].regno.toString(), rvList[i]))
+//        }
+//        openCommonBottomSheet(this, "Mode Selection", this, commonList)
+//    }
 
     private fun getDriverList() {
         viewModel.getDriverList(
@@ -342,7 +312,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
             loginDataModel?.companyid.toString(),
             "greentrans_vendlist",
             listOf("prmvendorcategory", "prmmenucode"),
-            arrayListOf("VEHICLE VENDOR", menuCode)
+            arrayListOf(categoryType, menuCode)
         )
     }
     private fun openVendorSelectionBottomSheet(rvList: ArrayList<VendorSelectionModel>) {
@@ -394,13 +364,22 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
 
         }
         activityBinding.inputDestination.setOnClickListener {
-            getDestinationList()
+//            getDestinationList()
+            openDestinationBottomSheet(this,"Destination Selection", this)
+
         }
         activityBinding.inputAirline.setOnClickListener {
             getGroupModeCode()
         }
         activityBinding.inputFlight.setOnClickListener {
-            getModeCodeList()
+            if(activityBinding.inputAirline.text.isNullOrEmpty()){
+                errorToast("Select mode group first")
+                return@setOnClickListener
+            }else  if (activityBinding.inputDestination.text.isNullOrEmpty()){
+                errorToast("Select destination first")
+                return@setOnClickListener
+            }
+            openModeCodeBottomSheet(this,"Mode selection",this)
         }
 
         activityBinding.autoManifestCheck.setOnCheckedChangeListener { compoundButton, selected ->
@@ -446,11 +425,15 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
                }  else if (activityBinding.inputAirlineAwb.text.isNullOrEmpty()) {
                    Companion.errorToast(this, "Please select Airline AWB.")
                    return@setOnClickListener
-               } else if (activityBinding.inputFlight.text.isNullOrEmpty()) {
-                   Companion.errorToast(this, "Please select Flight.")
+               }else if (activityBinding.inputFlight.text.isNullOrEmpty()) {
+                   Companion.errorToast(this, "Please select flight.")
+                   return@setOnClickListener
+               }
+               else if (activityBinding.inputAwbPckgs.text.isNullOrEmpty()) {
+                   Companion.errorToast(this, "Please enter Awb packages.")
                    return@setOnClickListener
                }else if (activityBinding.inputAwbWeight.text.isNullOrEmpty()) {
-                   Companion.errorToast(this, "Please enter.")
+                   Companion.errorToast(this, "Please enter Awb weight.")
                    return@setOnClickListener
                }
            } else if (activityBinding.inputVendorName.text.isNullOrEmpty()) {
@@ -464,6 +447,16 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
 
         }
 
+    }
+
+    private fun openModeCodeBottomSheet(mContext: Context, title:String, onRowClick: OnRowClick<Any>) {
+        val bottomSheetDialog = ModeCodeSelectionBottomSheet.newInstance(mContext,title,areaCode,modeTypeCode,groupCode,onRowClick)
+        bottomSheetDialog.show(supportFragmentManager, ModeCodeSelectionBottomSheet.TAG)
+    }
+
+    private fun openDestinationBottomSheet(mContext: Context, title:String, onRowClick: OnRowClick<Any>) {
+        val bottomSheetDialog = DestinationSelectionBottomSheet.newInstance(mContext,title,modeTypeCode,onRowClick)
+        bottomSheetDialog.show(supportFragmentManager, DestinationSelectionBottomSheet.TAG)
     }
     private fun getManifestData() {
         Utils.despatchManifestModel = DespatchManifestEnteredDataModel(
@@ -489,6 +482,9 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
             vendorGr = activityBinding.inputVendorGr.text.toString(),
             awbNo=activityBinding.inputAirlineAwb.text.toString(),
 //            awbDt=activityBinding.inputAirlineDt.text.toString(),
+            awbViewDt=activityBinding.inputAirlineDt.text.toString(),
+            groupName=activityBinding.inputAirline.text.toString(),
+            flight=activityBinding.inputFlight.text.toString(),
             awbDt=awbDt,
             airlineawbpckgs=activityBinding.inputAwbPckgs.text.toString(),
             airlineawbweight=activityBinding.inputAwbWeight.text.toString(),
@@ -497,14 +493,6 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
     }
     override fun onItemClick(data: Any, clickType: String) {
         when (clickType) {
-            "Destination Selection" -> run {
-                val selectedLocation = data as ToStationModel
-                activityBinding.inputDestination.setText(selectedLocation.StnName)
-                areaCode = selectedLocation.StnCode.toString()
-            }
-
-
-
             "Driver Selection" -> run {
                 val selectedDriver = data as DriverSelectionModel
                 activityBinding.inputDriverName.setText(selectedDriver.drivername)
@@ -514,7 +502,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
             "Vendor Selection" -> run {
                 val selectedVendor = data as VendorSelectionModel
                 activityBinding.inputVendorName.setText(selectedVendor.vendname)
-                if (selectedVendor.vendcode ==null){
+                if (selectedVendor.vendcode.isNotEmpty()){
                     activityBinding.inputLayoutVendorGr.visibility= View.VISIBLE
                 }else{
                     vendorCode = selectedVendor.vendcode
@@ -544,15 +532,26 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
                 activityBinding.inputFlight.setText(selectedMode.regno)
                 modeCode = selectedMode.vehiclecode.toString()
 
-
             }
         }
     }
 
     override fun onClick(data: Any, clickType: String) {
-        TODO("Not yet implemented")
+        when (clickType) {
+            DestinationSelectionBottomSheet.CLICK_TYPE -> run {
+                val selectedLocation = data as ToStationModel
+                activityBinding.inputDestination.setText(selectedLocation.StnName)
+                areaCode = selectedLocation.StnCode.toString()
+            }
+            ModeCodeSelectionBottomSheet.CLICK_TYPE -> run {
+                val selectedMode = data as ModeCodeSelectionModel
+                activityBinding.inputFlight.setText(selectedMode.regno)
+                modeCode = selectedMode.vehiclecode.toString()
+
+            }
+
+        }
+
+
     }
-
-
-
 }

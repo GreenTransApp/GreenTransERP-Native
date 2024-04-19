@@ -104,8 +104,12 @@ class SaveDespatchManifestActivity @Inject constructor() : BaseActivity(), OnRow
     private fun setEnteredManifestData(){
         if (model!!.modeTypeCode.toString()=="S"){
             activityBinding.selectedModeType.setText("SURFACE")
+            activityBinding.surfaceLayout.visibility=View.VISIBLE
+            activityBinding.airLayout.visibility = View.GONE
         }else if(model!!.modeTypeCode.toString()=="A"){
             activityBinding.selectedModeType.setText("AIR")
+            activityBinding.surfaceLayout.visibility=View.GONE
+            activityBinding.airLayout.visibility = View.VISIBLE
         }else if(model?.vendorGr != null){
             activityBinding.inputVendorGr.visibility = View.VISIBLE
             activityBinding.inputVendorGr.setText(model?.vendorGr.toString())
@@ -121,6 +125,10 @@ class SaveDespatchManifestActivity @Inject constructor() : BaseActivity(), OnRow
         activityBinding.inputVehicleNumber.setText(model!!.vehicleNo.toString())
         activityBinding.inputRemark.setText(model!!.remark.toString())
         activityBinding.inputAirlineAwb.setText(model!!.awbNo.toString())
+        activityBinding.inputFlight.setText(model?.flight.orEmpty())
+        activityBinding.inputAirlineAwb.setText(model?.groupName.orEmpty())
+        activityBinding.inputAirlineDt.setText(model?.awbViewDt.orEmpty())
+        activityBinding.inputAwbWeight.setText(model?.airlineawbweight.toString())
 
 
     }

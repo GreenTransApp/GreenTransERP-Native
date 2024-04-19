@@ -4,9 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.greensoft.greentranserpnative.base.BaseViewModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.DespatchSaveModel
-import com.greensoft.greentranserpnative.ui.bottomsheet.modeCode.ModeCodeSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.GroupModeCodeModel
-import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.ToStationModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.DriverSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
@@ -32,8 +30,7 @@ class DespatchManifestViewModel @Inject constructor(private val _repo: DespatchM
         get() = _repo.branchLiveData
     val pickupLocationLiveData: LiveData<ArrayList<PickupLocationModel>>
         get() = _repo.pickupLocationLiveData
-    val toStationLiveData: LiveData<ArrayList<ToStationModel>>
-        get() = _repo.toStationLiveData
+
     val driverLiveData: LiveData<ArrayList<DriverSelectionModel>>
         get() = _repo.driverLiveData
 
@@ -49,8 +46,6 @@ class DespatchManifestViewModel @Inject constructor(private val _repo: DespatchM
         get() = _repo.vehicleTypeLiveData
  val groupModeLiveData: LiveData<ArrayList<GroupModeCodeModel>>
         get() = _repo.groupModeLiveData
-    val modeCodeLiveData: LiveData<ArrayList<ModeCodeSelectionModel>>
-        get() = _repo.modeCodeLiveData
 
     val manifestLiveData: LiveData<DespatchSaveModel>
         get() = _repo.saveManifestLiveData
@@ -66,11 +61,7 @@ class DespatchManifestViewModel @Inject constructor(private val _repo: DespatchM
             _repo.getPickupLocation(companyId,spname, param,values)
         }
     }
-    fun getToStationList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>){
-        viewModelScope.launch(Dispatchers.IO) {
-            _repo.getDestinationList(companyId,spname, param,values)
-        }
-    }
+
 
     fun getDriverList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>){
         viewModelScope.launch(Dispatchers.IO) {
@@ -94,11 +85,7 @@ class DespatchManifestViewModel @Inject constructor(private val _repo: DespatchM
             _repo.getGroupModeList(companyId,spname, param,values)
         }
     }
-fun getModeCode( companyId:String,spname: String,param:List<String>, values:ArrayList<String>){
-        viewModelScope.launch(Dispatchers.IO) {
-            _repo.getModeCodeList(companyId,spname, param,values)
-        }
-    }
+
 
     fun getGrList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>){
         viewModelScope.launch(Dispatchers.IO) {
