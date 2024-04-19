@@ -105,47 +105,93 @@
 
                 </LinearLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/input_layout_time"
-                    android:layout_width="match_parent"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/submit_btn"
+                    android:text="Submit"
+                    android:textSize="10sp"
+                    android:textAllCaps="false"
+                    app:cornerRadius="10sp"
+                    android:padding="15dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_gravity="bottom"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="5dp"
-                    android:orientation="vertical">
+                    android:layout_width="wrap_content"
+                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                    />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/submit_btn"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="10dp"
-                        android:layout_marginTop="20dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        android:padding="15dp"
-                        android:text="Submit"
-                        app:cornerRadius="10dp" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                <!--                <RelativeLayout-->
+<!--                    android:layout_width="150dop"-->
+<!--                    android:background="@drawable/table_content_cell_bg"-->
+<!--                    android:layout_height="match_parent">-->
+
+<!--                    -->
+<!--                </RelativeLayout>-->
+
+<!--                <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                    android:id="@+id/input_layout_time"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:layout_marginStart="5dp"-->
+<!--                    android:orientation="vertical">-->
+
+<!--                    <com.google.android.material.button.MaterialButton-->
+<!--                        android:id="@+id/submit_btn"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginHorizontal="10dp"-->
+<!--                        android:layout_marginTop="20dp"-->
+<!--                        android:background="@color/colorPrimary"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintTop_toTopOf="parent"-->
+<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                        android:padding="15dp"-->
+<!--                        android:text="Submit"-->
+<!--                        app:cornerRadius="10dp" />-->
+
+<!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 
             </LinearLayout>
 
-            <androidx.cardview.widget.CardView
+<!--            <androidx.cardview.widget.CardView-->
+<!--                android:layout_below="@+id/input_stiker_layout"-->
+<!--                android:id="@+id/search_layout"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="45sp"-->
+<!--                android:layout_margin="6sp">-->
+
+<!--                <androidx.appcompat.widget.SearchView-->
+<!--                    android:id="@+id/search_view"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:iconifiedByDefault="false"-->
+<!--                    app:queryHint="Search here..." />-->
+<!--            </androidx.cardview.widget.CardView>-->
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/input_stiker_layout"
                 android:id="@+id/search_layout"
-                android:layout_width="match_parent"
-                android:layout_height="45sp"
-                android:layout_margin="6sp">
+                app:strokeColor="@color/black"
+                app:strokeWidth="2dp"
+                android:layout_marginVertical="2dp"
+                android:layout_marginHorizontal="4dp"
+                app:cardCornerRadius="30dp"
+                >
 
                 <androidx.appcompat.widget.SearchView
                     android:id="@+id/search_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     app:iconifiedByDefault="false"
-                    app:queryHint="Search here..." />
-            </androidx.cardview.widget.CardView>
+                    app:queryHint="Search Here..."
+                    />
+
+            </com.google.android.material.card.MaterialCardView>
 
             <HorizontalScrollView
                 android:layout_below="@id/search_layout"

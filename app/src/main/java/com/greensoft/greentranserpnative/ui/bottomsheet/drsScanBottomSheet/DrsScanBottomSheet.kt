@@ -9,17 +9,14 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.base.BaseFragment
 import com.greensoft.greentranserpnative.databinding.BottomSheetDrsScanBinding
-import com.greensoft.greentranserpnative.databinding.BottomsheetVendorSelectionBinding
-import com.greensoft.greentranserpnative.ui.bottomsheet.vendorSelection.VendorSelectionAdapter
-import com.greensoft.greentranserpnative.ui.bottomsheet.vendorSelection.VendorSelectionBottomSheet
-import com.greensoft.greentranserpnative.ui.bottomsheet.vendorSelection.VendorSelectionViewModel
-import com.greensoft.greentranserpnative.ui.bottomsheet.vendorSelection.model.VendorModelDRS
+import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.drs.model.DrsDataModel
 import com.greensoft.greentranserpnative.ui.operation.drsScan.DrsScanAdapter
@@ -27,12 +24,15 @@ import com.greensoft.greentranserpnative.ui.operation.drsScan.DrsScanViewModel
 import com.greensoft.greentranserpnative.ui.operation.drsScan.model.ScannedDrsModel
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class DrsScanBottomSheet @Inject constructor(): BaseFragment(), OnRowClick<Any> {
     private lateinit var layoutBinding: BottomSheetDrsScanBinding
     private var onRowClick: OnRowClick<Any> = this
+    private lateinit var bottomSheetClick: BottomSheetClick<Any>
     private var title: String = "DRS SCAN"
     private val viewModel: DrsScanViewModel by viewModels()
     private var rvAdapter: DrsScanAdapter? = null
@@ -44,15 +44,18 @@ class DrsScanBottomSheet @Inject constructor(): BaseFragment(), OnRowClick<Any> 
     companion object{
         const val TAG = "VendorBottomSheet"
         const val DRS_STICKER_DELETE = "DRS_STICKER_DELETE"
+        const val DRS_NO_SAVED_TAG = "DRS_SAVED_TAG"
 
         fun newInstance(
             mContext: Context,
-            onRowClick: OnRowClick<Any>,
-            drsNo: String?
+            onBottomSheetClick: BottomSheetClick<Any>,
+            drsNo: String?,
+            drsDetails: DrsDataModel
         ): DrsScanBottomSheet {
             val instance = DrsScanBottomSheet()
             instance.mContext = mContext
-            instance.onRowClick = onRowClick
+            instance.bottomSheetClick = onBottomSheetClick
+            instance.drsDetails = drsDetails
             drsNo?.let { nullSafeDrsNo ->
                 instance.drsNo = nullSafeDrsNo
             }
@@ -122,6 +125,13 @@ class DrsScanBottomSheet @Inject constructor(): BaseFragment(), OnRowClick<Any> 
     }
 
     private fun setObservers(){
+        layoutBinding.swipeRefreshLayout.setOnRefreshListener {
+            getDrsStickerList()
+            lifecycleScope.launch {
+                delay(1500)
+                layoutBinding.swipeRefreshLayout.isRefreshing = false
+            }
+        }
         viewModel.isError.observe(this) { errMsg ->
             errorToast(errMsg)
         }
@@ -240,11 +250,16 @@ class DrsScanBottomSheet @Inject constructor(): BaseFragment(), OnRowClick<Any> 
     }
 
     override fun onClick(data: Any, clickType: String) {
-//        if (onVendorSelected!=null){
-//            if (clickType== VendorSelectionAdapter.VENDOR_SELECTION_ROW_CLICK){
-//                onVendorSelected?.onClick(data, VENDOR_CLICK_TYPE)
-//                dismiss()
-//            }
-//        }
+        when(clickType) {
+            DrsScanAdapter.REMOVE_STICKER_TAG -> run {
+                try {
+                    val scannedDrsData = data as ScannedDrsModel
+                    removeSticker(scannedDrsData.stickerno.toString())
+                } catch (ex: Exception) {
+                    errorToast(ENV.SOMETHING_WENT_WRONG_ERR_MSG)
+                }
+            }
+        }
     }
+
 }

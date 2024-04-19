@@ -13,6 +13,7 @@ import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityDrsBinding
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
+import com.greensoft.greentranserpnative.ui.bottomsheet.drsScanBottomSheet.DrsScanBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.vehicleSelection.VehicleSelectionBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.vehicleSelection.model.VehicleModelDRS
 import com.greensoft.greentranserpnative.ui.bottomsheet.vendorSelection.VendorSelectionBottomSheet
@@ -202,12 +203,20 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
                     vehiclecode = vehicleCode,
                     username = activityBinding.deliveryBoyName.text.toString(),
                     usercode = getUserCode(),
+                    dlvagentcode = vendorCode,
                     remarks = activityBinding.inputRemark.text.toString()
                 )
-                val jsonString = gson.toJson(model)
-                val intent = Intent(this, DrsScanActivity::class.java)
-                intent.putExtra("DrsModelData", jsonString)
-                startActivity(intent)
+//                val jsonString = gson.toJson(model)
+//                val intent = Intent(this, DrsScanActivity::class.java)
+//                intent.putExtra("DrsModelData", jsonString)
+//                startActivity(intent)
+                val drsScanBottomSheet = DrsScanBottomSheet.newInstance(
+                    mContext = this,
+                    drsNo = drsNo,
+                    drsDetails = model,
+                    onBottomSheetClick = this
+                )
+                drsScanBottomSheet.show(supportFragmentManager, DrsScanBottomSheet.TAG)
             } catch (ex: java.lang.Exception) {
                 errorToast("Data Conversion Error: " + ex.message)
             }
@@ -318,6 +327,10 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
                 val selectedVendor = data as VendorModelDRS
                 activityBinding.inputVendorName.setText(selectedVendor.vendname)
                 vendorCode = selectedVendor.vendcode
+            }
+            DrsScanBottomSheet.DRS_NO_SAVED_TAG -> run {
+                val drsNo = data as String
+                this.drsNo = drsNo
             }
 //            "Vehicle Selection" ->run {
 //                val selectedVehicle = data as VehicleModelDRS
