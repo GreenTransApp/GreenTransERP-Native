@@ -15,10 +15,9 @@ import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.booking.BookingViewModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ContentSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.DestinationSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.DespatchManifestEnteredDataModel
-import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.FlightModeCodeModel
+import com.greensoft.greentranserpnative.ui.bottomsheet.modeCode.ModeCodeSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.GroupModeCodeModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.ToStationModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.SavePickupManifestAdapter
@@ -48,7 +47,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
     private var vehicleList: ArrayList<VehicleSelectionModel> = ArrayList()
     private var vehicleTypeList: ArrayList<VehicleTypeModel> = ArrayList()
     private var groupModeList: ArrayList<GroupModeCodeModel> = ArrayList()
-    private var modeList: ArrayList<FlightModeCodeModel> = ArrayList()
+    private var modeList: ArrayList<ModeCodeSelectionModel> = ArrayList()
 
     private val bookingViewModel: BookingViewModel by viewModels()
     private var rvAdapter: SavePickupManifestAdapter? = null
@@ -311,7 +310,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
         )
     }
 
-    private fun openModeCodeSelectionBottomSheet(rvList: ArrayList<FlightModeCodeModel>) {
+    private fun openModeCodeSelectionBottomSheet(rvList: ArrayList<ModeCodeSelectionModel>) {
         val commonList = ArrayList<CommonBottomSheetModel<Any>>()
         for (i in 0 until rvList.size) {
             commonList.add(CommonBottomSheetModel(rvList[i].regno.toString(), rvList[i]))
@@ -541,7 +540,7 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
                 groupCode = selectedGroup.groupcode.toString()
             }
             "Mode Selection" -> run {
-                val selectedMode = data as FlightModeCodeModel
+                val selectedMode = data as ModeCodeSelectionModel
                 activityBinding.inputFlight.setText(selectedMode.regno)
                 modeCode = selectedMode.vehiclecode.toString()
 

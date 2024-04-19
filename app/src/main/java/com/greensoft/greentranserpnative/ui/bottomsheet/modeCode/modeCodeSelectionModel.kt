@@ -1,6 +1,6 @@
-package com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models
+package com.greensoft.greentranserpnative.ui.bottomsheet.modeCode
 
-data class FlightModeCodeModel(
+data class ModeCodeSelectionModel(
     val commandstatus:Int?,
     val commandmessage:String?,
     val regno:String?,

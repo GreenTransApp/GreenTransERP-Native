@@ -26,6 +26,7 @@ import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.GrSelectio
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodEntryModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodSaveModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.RelationListModel
+import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.getGrNoModel
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -36,6 +37,7 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
     lateinit var  activityBinding:ActivityPodEntryBinding
     private var podDetail: PodEntryModel? = null
     private var podSaveModel: PodSaveModel? = null
+    private var getGrData: getGrNoModel? = null
     var relationType = ""
     var stampRequired =""
     var signRequired =""
@@ -106,7 +108,17 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
                             hideProgressDialog()
                         }
                     })
+                    mScanner.observe(this) { stickerNo ->
+                        successToast(stickerNo)
+                        getGrNumberFromStickerNo(stickerNo)
 
+                    }
+
+                    viewModel.podGrNoLiveData.observe(this){data->
+                        getGrData = data
+//                        getGrDetails()
+
+                    }
                     mPeriod.observe(this) { date ->
                     activityBinding.inputDate.setText(date.viewsingleDate)
                     podDt = date.sqlsingleDate.toString()
@@ -155,9 +167,16 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
     }
 
 
+     private fun getGrNumberFromStickerNo(stickerNo:String){
+       viewModel.getGrNo(
+           getCompanyId(),
+           stickerNo
+       )
+     }
+
      private fun setOnClick(){
          activityBinding.btnGrProceed.setOnClickListener {
-             getGrDetails()
+             getGrDetails(activityBinding.inputGrno.text.toString())
          }
          activityBinding.inputDate.setOnClickListener {
              openSingleDatePicker()
@@ -288,14 +307,15 @@ pckgs= podDetail?.pckgs.toString()
             companyId = getCompanyId()
         )
     }
-    private fun getGrDetails(){
+    private fun getGrDetails(grNo:String){
         if(activityBinding.inputGrno.text.isNullOrEmpty()){
             errorToast("Please enter GR#.")
             return
         }
         viewModel.getPodDetails(
             companyId = getCompanyId(),
-            grNo = activityBinding.inputGrno.text.toString()
+            grNo = grNo
+//            grNo = activityBinding.inputGrno.text.toString()
         )
     }
 

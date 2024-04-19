@@ -9,6 +9,7 @@ import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodEntryModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodSaveModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.RelationListModel
+import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.getGrNoModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,10 +20,14 @@ class PodEntryRepository  @Inject constructor(): BaseRepository() {
         get() = viewDialogMutData
 
     private val podMuteLiveData = MutableLiveData<PodEntryModel>()
+    private val grNoMuteLiveData = MutableLiveData<getGrNoModel>()
     private val podSaveMuteLiveData = MutableLiveData<PodSaveModel>()
     private val relationListMuteLiveData = MutableLiveData<ArrayList<RelationListModel>>()
     val podLiveData: LiveData<PodEntryModel>
         get() = podMuteLiveData
+
+    val grNoLiveData: LiveData<getGrNoModel>
+        get() = grNoMuteLiveData
 
     val podSaveLiveData: LiveData<PodSaveModel>
         get() = podSaveMuteLiveData
@@ -41,6 +46,41 @@ class PodEntryRepository  @Inject constructor(): BaseRepository() {
                             val listType = object: TypeToken<List<PodEntryModel>>() {}.type
                             val resultList: ArrayList<PodEntryModel> = gson.fromJson(jsonArray.toString(), listType);
                             podMuteLiveData.postValue(resultList[0]);
+
+                        }
+                    } else {
+                        isError.postValue(result.CommandMessage.toString());
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR);
+                }
+                viewDialogMutData.postValue(false)
+
+            }
+
+            override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
+
+    }
+
+
+    fun getGrFromSticker(companyId:String, stickerno:String) {
+        viewDialogMutData.postValue(true)
+        api.getPodDetails(companyId,stickerno).enqueue(object: Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
+                if(response.body() != null){
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if(result.CommandStatus == 1){
+                        val jsonArray = getResult(result);
+                        if(jsonArray != null) {
+                            val listType = object: TypeToken<List<getGrNoModel>>() {}.type
+                            val resultList: ArrayList<getGrNoModel> = gson.fromJson(jsonArray.toString(), listType);
+                            grNoMuteLiveData.postValue(resultList[0]);
 
                         }
                     } else {

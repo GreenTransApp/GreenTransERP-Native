@@ -6,16 +6,14 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
-import com.greensoft.greentranserpnative.ui.operation.booking.models.DestinationSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.DespatchSaveModel
-import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.FlightModeCodeModel
+import com.greensoft.greentranserpnative.ui.bottomsheet.modeCode.ModeCodeSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.GroupModeCodeModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.ToStationModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.DriverSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.PickupLocationModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.SavePickupManifestModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.VehicleSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.VehicleTypeModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.VendorSelectionModel
@@ -64,8 +62,8 @@ class DespatchManifestRepository  @Inject constructor(): BaseRepository() {
     val groupModeLiveData: LiveData<ArrayList<GroupModeCodeModel>>
         get() = groupModeMuteLiveData
 
-    private val modeCodeMuteLiveData = MutableLiveData<ArrayList<FlightModeCodeModel>>()
-    val modeCodeLiveData: LiveData<ArrayList<FlightModeCodeModel>>
+    private val modeCodeMuteLiveData = MutableLiveData<ArrayList<ModeCodeSelectionModel>>()
+    val modeCodeLiveData: LiveData<ArrayList<ModeCodeSelectionModel>>
         get() = modeCodeMuteLiveData
 
     private val saveManifestMuteLiveData = MutableLiveData<DespatchSaveModel>()
@@ -354,8 +352,8 @@ class DespatchManifestRepository  @Inject constructor(): BaseRepository() {
                     if(result.CommandStatus == 1){
                         val jsonArray = getResult(result);
                         if(jsonArray != null) {
-                            val listType = object: TypeToken<List<FlightModeCodeModel>>() {}.type
-                            val resultList: ArrayList<FlightModeCodeModel> = gson.fromJson(jsonArray.toString(), listType);
+                            val listType = object: TypeToken<List<ModeCodeSelectionModel>>() {}.type
+                            val resultList: ArrayList<ModeCodeSelectionModel> = gson.fromJson(jsonArray.toString(), listType);
                             modeCodeMuteLiveData.postValue(resultList);
 
                         }

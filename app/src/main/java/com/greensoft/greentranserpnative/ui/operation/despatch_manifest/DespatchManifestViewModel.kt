@@ -3,16 +3,14 @@ package com.greensoft.greentranserpnative.ui.operation.despatch_manifest
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.greensoft.greentranserpnative.base.BaseViewModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.DestinationSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.DespatchSaveModel
-import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.FlightModeCodeModel
+import com.greensoft.greentranserpnative.ui.bottomsheet.modeCode.ModeCodeSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.GroupModeCodeModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.ToStationModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.DriverSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.PickupLocationModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.SavePickupManifestModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.VehicleSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.VehicleTypeModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.VendorSelectionModel
@@ -51,7 +49,7 @@ class DespatchManifestViewModel @Inject constructor(private val _repo: DespatchM
         get() = _repo.vehicleTypeLiveData
  val groupModeLiveData: LiveData<ArrayList<GroupModeCodeModel>>
         get() = _repo.groupModeLiveData
-    val modeCodeLiveData: LiveData<ArrayList<FlightModeCodeModel>>
+    val modeCodeLiveData: LiveData<ArrayList<ModeCodeSelectionModel>>
         get() = _repo.modeCodeLiveData
 
     val manifestLiveData: LiveData<DespatchSaveModel>

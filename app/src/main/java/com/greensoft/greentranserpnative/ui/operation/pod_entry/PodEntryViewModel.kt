@@ -6,6 +6,7 @@ import com.greensoft.greentranserpnative.base.BaseViewModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodEntryModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodSaveModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.RelationListModel
+import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.getGrNoModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,6 +24,9 @@ class PodEntryViewModel  @Inject constructor(private val _repo: PodEntryReposito
 
     val podDetailsLiveData: LiveData<PodEntryModel>
         get() = _repo.podLiveData
+
+    val podGrNoLiveData: LiveData<getGrNoModel>
+        get() = _repo.grNoLiveData
    val relationLiveData: LiveData<ArrayList<RelationListModel>>
         get() = _repo.relationLiveData
 
@@ -33,6 +37,12 @@ class PodEntryViewModel  @Inject constructor(private val _repo: PodEntryReposito
     fun getPodDetails( companyId:String,grNo:String){
         viewModelScope.launch(Dispatchers.IO) {
             _repo.getGrDetail(companyId,grNo)
+        }
+    }
+
+    fun getGrNo( companyId:String,stickerno:String){
+        viewModelScope.launch(Dispatchers.IO) {
+            _repo.getGrFromSticker(companyId,stickerno)
         }
     }
     fun getRelation( companyId:String){
