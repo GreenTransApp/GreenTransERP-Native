@@ -367,6 +367,16 @@ interface Api {
 
     ): Call<CommonResult>
 
+    @GET("WMS/WMSAPP_GETGRNOFROMSTICKER")
+    fun getGrnoFromSticker(
+        @Query("prmcompanyid") companyId: String?,
+        @Query("prmusercode") userCode: String?,
+        @Query("prmbranchcode") branchCode: String?,
+        @Query("prmmenucode") menuCode: String?,
+        @Query("prmstickerno") stickerNo: String?,
+        @Query("prmsessionid") sessionId: String?
+    ): Call<CommonResult>
+
     @GET("PODAPI/gerRelations")
     fun getRelationList(
         @Query("prmconnstring") companyId: String,

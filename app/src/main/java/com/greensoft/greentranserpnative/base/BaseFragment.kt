@@ -114,6 +114,7 @@ open class BaseFragment @Inject constructor(): BottomSheetDialogFragment() {
     }
 
     private fun setObservers() {
+
 //        capturedImage.observe(this) { imageUri ->
 //            successToast("BASE_ACTIVITY ${imageUri.path}")
 //        }

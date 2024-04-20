@@ -68,9 +68,9 @@ class PodEntryRepository  @Inject constructor(): BaseRepository() {
     }
 
 
-    fun getGrFromSticker(companyId:String, stickerno:String) {
+    fun getGrFromSticker(companyId:String, userCode: String, branchCode: String, menuCode: String, stickerNo:String, sessionId: String) {
         viewDialogMutData.postValue(true)
-        api.getPodDetails(companyId,stickerno).enqueue(object: Callback<CommonResult> {
+        api.getGrnoFromSticker(companyId, userCode, branchCode, menuCode, stickerNo, sessionId).enqueue(object: Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!

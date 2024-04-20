@@ -37,7 +37,6 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
     lateinit var  activityBinding:ActivityPodEntryBinding
     private var podDetail: PodEntryModel? = null
     private var podSaveModel: PodSaveModel? = null
-    private var getGrData: getGrNoModel? = null
     var relationType = ""
     var stampRequired =""
     var signRequired =""
@@ -109,15 +108,16 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
                         }
                     })
                     mScanner.observe(this) { stickerNo ->
-                        successToast(stickerNo)
+//                        successToast(stickerNo)
                         getGrNumberFromStickerNo(stickerNo)
 
                     }
 
                     viewModel.podGrNoLiveData.observe(this){data->
-                        getGrData = data
-//                        getGrDetails()
-
+                        data.grno?.let { grNo ->
+                            activityBinding.inputGrno.setText(grNo)
+                            getGrDetails(data.grno)
+                        }
                     }
                     mPeriod.observe(this) { date ->
                     activityBinding.inputDate.setText(date.viewsingleDate)
@@ -168,9 +168,13 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
 
 
      private fun getGrNumberFromStickerNo(stickerNo:String){
-       viewModel.getGrNo(
-           getCompanyId(),
-           stickerNo
+       viewModel.getGrFromSticker(
+           companyId = getCompanyId(),
+           userCode = getUserCode(),
+           branchCode = getLoginBranchCode(),
+           menuCode = "GTAPP_DELIVERYNATIVE",
+           stickerNo = stickerNo,
+           sessionId = getSessionId()
        )
      }
 

@@ -1,7 +1,6 @@
 package com.greensoft.greentranserpnative.ui.operation.drs
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -9,7 +8,6 @@ import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
-import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityDrsBinding
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
@@ -25,7 +23,8 @@ import com.greensoft.greentranserpnative.ui.operation.drs.model.DrsDataModel
 import com.greensoft.greentranserpnative.ui.operation.drs.model.GrDetailModelDRS
 import com.greensoft.greentranserpnative.ui.operation.drs.model.SaveDRSModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.vendorSelection.model.VendorModelDRS
-import com.greensoft.greentranserpnative.ui.operation.drsScan.DrsScanActivity
+import com.greensoft.greentranserpnative.ui.common.alert.CommonAlert
+import com.greensoft.greentranserpnative.ui.operation.drs.model.DeliverByModel
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -44,18 +43,26 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
     private val viewModel: DRSViewModel by viewModels()
     var vendorCode = ""
     var vehicleCode = ""
-    var spinnerValue = ""
+    var deliverByCode = "M"
     private var drsNo:String? = ""
+    private val deliveryModeList: ArrayList<DeliverByModel> = ArrayList()
+
+    companion object {
+        const val COMPLETE_DRS_TAG = "COMPLETE_DRS_TAG"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityDrsBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
         setUpToolbar("DRS")
+        deliveryModeList.add(DeliverByModel(name = "AGENT", code = "V"))
+        deliveryModeList.add(DeliverByModel(name = "MARKET VEHICLE", code = "M"))
+        deliveryModeList.add(DeliverByModel(name = "JEENA STAFF", code = "S"))
+        deliveryModeList.add(DeliverByModel(name = "OFFICE / AIRPORT DROP", code = "O"))
         activityBinding.inputDate.setText(getViewCurrentDate())
-        activityBinding.inputTime.setText(getSqlCurrentTime())
+//        activityBinding.inputTime.setText(getSqlCurrentTime())
         activityBinding.deliveryBoyName.setText(userDataModel?.username.toString())
-        grDetailList = generateSimpleList()
         setSpinners()
         setOnClick()
         setObservers()
@@ -65,9 +72,6 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
     override fun onResume() {
         super.onResume()
         drsNo = Utils.drsNo
-        if(ENV.DEBUGGING) {
-            drsNo = "1040108654"
-        }
         if (drsNo!=null && drsNo!=""){
             getDrsData(drsNo)
         }
@@ -87,6 +91,9 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
     }
 
     private fun setObservers(){
+        mScanner.observe(this) { scanSticker ->
+            DrsScanBottomSheet.sendStickerToFragment(scanSticker)
+        }
         viewModel.drsPreFillLiveData.observe(this) { saveDRSModel ->
             activityBinding.inputDate.setText(saveDRSModel.drsdate)
             activityBinding.inputTime.setText(saveDRSModel.drstime)
@@ -128,6 +135,11 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
         }
 
     }
+
+    private fun changeVisibilityCompleteBtn(showBtn: Boolean) {
+        activityBinding.completeBtn.visibility = if(showBtn) View.VISIBLE else View.GONE
+    }
+
     private fun openVendorSelectionBottomSheet(rvList: ArrayList<VendorModelDRS>) {
         val commonList = ArrayList<CommonBottomSheetModel<Any>>()
         for (i in 0 until rvList.size) {
@@ -148,11 +160,10 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
 
 
     private fun setSpinners() {
-        val deliveryModeList = listOf("AGENT", "MARKET VEHICLE","JEENA STAFF","OFFICE/AIRPORT DROP")
+//        val deliveryModeList = listOf("AGENT", "MARKET VEHICLE","JEENA STAFF","OFFICE/AIRPORT DROP")
 //        val deliveryModeList = listOf("JEENA STAFF")
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, deliveryModeList)
         activityBinding.deliveryBy.adapter = adapter
-
         activityBinding.deliveryBy.onItemSelectedListener =
             object: AdapterView.OnItemSelectedListener{
                 override fun onItemSelected(
@@ -161,16 +172,53 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
                     position: Int,
                     id: Long
                 ) {
+                    deliverByCode = deliveryModeList[position].code
+                    vendorCode = ""
+                    vehicleCode = ""
+                    when(deliverByCode) {
+                        "V" -> run {
+                            activityBinding.inputVendorName.setText("")
+                            activityBinding.inputVehicleName.setText("")
+                            activityBinding.agentVendorHeader.setText("Select Agent")
+                            activityBinding.agentVendorPlaceholder.setHint("Select Agent")
+                            activityBinding.inputLayoutVendor.visibility = View.VISIBLE
+                            activityBinding.inputLayoutVehicleNumber.visibility = View.GONE
 
-                    spinnerValue = deliveryModeList[position].toString()
+                        }
+                        "M" -> run {
+                            activityBinding.inputVendorName.setText("")
+                            activityBinding.agentVendorHeader.setText("Select Vendor")
+                            activityBinding.agentVendorPlaceholder.setHint("Select Vendor")
+                            activityBinding.inputLayoutVendor.visibility = View.VISIBLE
+                            activityBinding.inputLayoutVehicleNumber.visibility = View.VISIBLE
+                        }
+                        "S" -> run {
+                            activityBinding.inputVehicleName.setText("")
+                            activityBinding.inputVendorName.setText("")
+                            activityBinding.inputLayoutVendor.visibility = View.GONE
+                            activityBinding.inputLayoutVehicleNumber.visibility = View.GONE
+                            activityBinding.inputLayoutVehicleNumber.visibility = View.GONE
+                        }
+                        "O" -> run {
+                            activityBinding.inputVehicleName.setText("")
+                            activityBinding.inputVendorName.setText("")
+                            activityBinding.inputLayoutVendor.visibility = View.GONE
+                            activityBinding.inputLayoutVehicleNumber.visibility = View.GONE
+                            activityBinding.inputLayoutVehicleNumber.visibility = View.GONE
+                        }
+                        else -> {
+
+                        }
+                    }
 
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
-                    TODO("Not yet implemented")
                 }
             }
 
+
+        activityBinding.deliveryBy.setSelection(1)
     }
     private fun setOnClick(){
         activityBinding.inputDate.setOnClickListener {
@@ -188,38 +236,84 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
             vehicleBottomSheet(this,"Vehicle Selection",this)
         }
         activityBinding.scanDrsBtn.setOnClickListener {
+            validateSelectedDataForScan()
+        }
+        activityBinding.completeBtn.setOnClickListener {
+            if(drsNo == "") {
+                errorToast("Please scan some stickers to save this DRS!!!")
+            } else {
+                showCompleteAlert()
+            }
+        }
+    }
 
-            val gson = Gson()
-            try {
-                var model= DrsDataModel(
-                    commandstatus = 1,
-                    commandmessage = "",
-                    drsdate = drsDate,
-                    drstime = activityBinding.inputTime.text.toString(),
-                    deliveredby = spinnerValue,
-                    vendorname = activityBinding.inputVendorName.text.toString(),
-                    vendcode = vendorCode,
-                    vehicleno = activityBinding.inputVehicleName.text.toString(),
-                    vehiclecode = vehicleCode,
-                    username = activityBinding.deliveryBoyName.text.toString(),
-                    usercode = getUserCode(),
-                    dlvagentcode = vendorCode,
-                    remarks = activityBinding.inputRemark.text.toString()
-                )
+    private fun validateSelectedDataForScan() {
+        val drsTime = activityBinding.inputTime.text.toString()
+        if(drsTime == null || drsTime == "") {
+            errorToast("Please select time.")
+            return
+        }
+        when(deliverByCode) {
+            "V" -> run {
+                if(vendorCode == "") {
+                    errorToast("Please select agent.")
+                } else {
+                    openScanDrsBottomSheet()
+                }
+            }
+            "M" -> run {
+                if(vendorCode == "") {
+                    errorToast("Please select vendor.")
+                } else if(vehicleCode == "") {
+                    errorToast("Please select vehicle.")
+                } else {
+                    openScanDrsBottomSheet()
+                }
+            }
+            "S" -> run {
+                openScanDrsBottomSheet()
+            }
+            "O" -> run {
+                openScanDrsBottomSheet()
+            }
+            else -> {
+
+            }
+        }
+    }
+
+    private fun openScanDrsBottomSheet() {
+
+        val gson = Gson()
+        try {
+            var model= DrsDataModel(
+                commandstatus = 1,
+                commandmessage = "",
+                drsdate = drsDate,
+                drstime = activityBinding.inputTime.text.toString(),
+                deliveredby = deliverByCode,
+                vendorname = activityBinding.inputVendorName.text.toString(),
+                vendcode = vendorCode,
+                vehicleno = activityBinding.inputVehicleName.text.toString(),
+                vehiclecode = vehicleCode,
+                username = activityBinding.deliveryBoyName.text.toString(),
+                usercode = getUserCode(),
+                dlvagentcode = vendorCode,
+                remarks = activityBinding.inputRemark.text.toString()
+            )
 //                val jsonString = gson.toJson(model)
 //                val intent = Intent(this, DrsScanActivity::class.java)
 //                intent.putExtra("DrsModelData", jsonString)
 //                startActivity(intent)
-                val drsScanBottomSheet = DrsScanBottomSheet.newInstance(
-                    mContext = this,
-                    drsNo = drsNo,
-                    drsDetails = model,
-                    onBottomSheetClick = this
-                )
-                drsScanBottomSheet.show(supportFragmentManager, DrsScanBottomSheet.TAG)
-            } catch (ex: java.lang.Exception) {
-                errorToast("Data Conversion Error: " + ex.message)
-            }
+            val drsScanBottomSheet = DrsScanBottomSheet.newInstance(
+                mContext = this,
+                drsNo = drsNo,
+                drsDetails = model,
+                onBottomSheetClick = this
+            )
+            drsScanBottomSheet.show(supportFragmentManager, DrsScanBottomSheet.TAG)
+        } catch (ex: java.lang.Exception) {
+            errorToast("Data Conversion Error: " + ex.message)
         }
     }
 
@@ -286,7 +380,7 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
             try {
                 val selectedVendor = data as VendorModelDRS
                 activityBinding.inputVendorName.setText(selectedVendor.vendname)
-                vendorCode = selectedVendor.vendcode
+                vendorCode = selectedVendor . vendcode
             } catch (ex:Exception){
                 errorToast(ex.message)
             }
@@ -318,7 +412,28 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
         }
     }
     override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {
-        TODO("Not yet implemented")
+        when(alertClick) {
+            AlertClick.YES -> run {
+                when(alertCallType) {
+                    COMPLETE_DRS_TAG -> run {
+                        if(drsNo == null || drsNo == "") {
+                            errorToast("Please scan some stickers before completing.")
+                        } else {
+                            finish()
+                        }
+                    }
+                    else -> {
+
+                    }
+                }
+            }
+            AlertClick.NO -> run {
+
+            }
+            else -> {
+
+            }
+        }
     }
 
     override fun onItemClick(data: Any, clickType: String) {
@@ -331,6 +446,8 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
             DrsScanBottomSheet.DRS_NO_SAVED_TAG -> run {
                 val drsNo = data as String
                 this.drsNo = drsNo
+                Utils.logger(classLoader.javaClass.name, "DRS # created $drsNo")
+                changeVisibilityCompleteBtn(true)
             }
 //            "Vehicle Selection" ->run {
 //                val selectedVehicle = data as VehicleModelDRS
@@ -347,23 +464,30 @@ class DRSActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertC
         bottomSheetDialog.show(supportFragmentManager, VehicleSelectionBottomSheet.TAG)
     }
 
-    private fun vendorBottomSheet(mContext: Context, title:String, onRowClick: OnRowClick<Any>) {
-        val bottomSheetDialog = VendorSelectionBottomSheet.newInstance(mContext,title,onRowClick)
+    private fun vendorBottomSheet(mContext: Context, title: String, onRowClick: OnRowClick<Any>) {
+        val bottomSheetDialog = VendorSelectionBottomSheet.newInstance(mContext,title,onRowClick,if(deliverByCode == "M") "VEHICLE VENDOR" else "PUD VENDOR")
         bottomSheetDialog.show(supportFragmentManager, VendorSelectionBottomSheet.TAG)
     }
 
-    private fun generateSimpleList(): ArrayList<GrDetailModelDRS> {
-        val dataList: ArrayList<GrDetailModelDRS> =
-            java.util.ArrayList<GrDetailModelDRS>()
-        for (i in 0..9) {
-            dataList.add(GrDetailModelDRS(i,"",1,(100+i).toString()))
-        }
-        return dataList
+    private  fun showCompleteAlert(){
+        CommonAlert.createAlert(
+            context = this,
+            header = "Complete Alert!!",
+            description = "Are you sure to save this DRS?",
+            callback =this,
+            alertCallType = COMPLETE_DRS_TAG,
+            data = drsNo
+        )
     }
 
+//    private fun generateSimpleList(): ArrayList<GrDetailModelDRS> {
+//        val dataList: ArrayList<GrDetailModelDRS> =
+//            java.util.ArrayList<GrDetailModelDRS>()
+//        for (i in 0..9) {
+//            dataList.add(GrDetailModelDRS(i,"",1,(100+i).toString()))
+//        }
+//        return dataList
+//    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Utils.drsNo = null
-    }
+
     }

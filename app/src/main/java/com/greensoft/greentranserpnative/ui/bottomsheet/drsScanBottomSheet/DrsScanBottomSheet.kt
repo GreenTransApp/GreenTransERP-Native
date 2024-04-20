@@ -16,6 +16,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.base.BaseFragment
 import com.greensoft.greentranserpnative.databinding.BottomSheetDrsScanBinding
+import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
+import com.greensoft.greentranserpnative.ui.common.alert.CommonAlert
+import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.drs.model.DrsDataModel
@@ -29,7 +32,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class DrsScanBottomSheet @Inject constructor(): BaseFragment(), OnRowClick<Any> {
+class DrsScanBottomSheet @Inject constructor(): BaseFragment(), OnRowClick<Any>, AlertCallback<Any> {
     private lateinit var layoutBinding: BottomSheetDrsScanBinding
     private var onRowClick: OnRowClick<Any> = this
     private lateinit var bottomSheetClick: BottomSheetClick<Any>
@@ -45,6 +48,7 @@ class DrsScanBottomSheet @Inject constructor(): BaseFragment(), OnRowClick<Any> 
         const val TAG = "VendorBottomSheet"
         const val DRS_STICKER_DELETE = "DRS_STICKER_DELETE"
         const val DRS_NO_SAVED_TAG = "DRS_SAVED_TAG"
+        private var instance: DrsScanBottomSheet? = null
 
         fun newInstance(
             mContext: Context,
@@ -52,14 +56,19 @@ class DrsScanBottomSheet @Inject constructor(): BaseFragment(), OnRowClick<Any> 
             drsNo: String?,
             drsDetails: DrsDataModel
         ): DrsScanBottomSheet {
-            val instance = DrsScanBottomSheet()
-            instance.mContext = mContext
-            instance.bottomSheetClick = onBottomSheetClick
-            instance.drsDetails = drsDetails
+            val drsScanBottomSheet = DrsScanBottomSheet()
+            drsScanBottomSheet.mContext = mContext
+            drsScanBottomSheet.bottomSheetClick = onBottomSheetClick
+            drsScanBottomSheet.drsDetails = drsDetails
             drsNo?.let { nullSafeDrsNo ->
-                instance.drsNo = nullSafeDrsNo
+                drsScanBottomSheet.drsNo = nullSafeDrsNo
             }
-            return instance
+            instance = drsScanBottomSheet
+            return drsScanBottomSheet
+        }
+
+        fun sendStickerToFragment(stickerNo: String) {
+            instance?.mScanner?.postValue(stickerNo)
         }
 
     }
@@ -121,7 +130,7 @@ class DrsScanBottomSheet @Inject constructor(): BaseFragment(), OnRowClick<Any> 
             }
 
         })
-        close()
+        setOnClicks()
     }
 
     private fun setObservers(){
@@ -163,6 +172,7 @@ class DrsScanBottomSheet @Inject constructor(): BaseFragment(), OnRowClick<Any> 
             if(updateSticker.commandstatus == 1) {
                 if(updateSticker.drsno != null && updateSticker.drsno != "") {
                     drsNo = updateSticker.drsno.toString()
+                    bottomSheetClick.onItemClick(drsNo, DRS_NO_SAVED_TAG)
                 }
                 getDrsStickerList()
                 if(updateSticker.commandmessage != null) {
@@ -208,10 +218,39 @@ class DrsScanBottomSheet @Inject constructor(): BaseFragment(), OnRowClick<Any> 
         super.onDetach()
     }
 
+    private  fun showRemoveStickerAlert(drsStickerModel: ScannedDrsModel){
+        CommonAlert.createAlert(
+            context = mContext,
+            header = "REMOVE ALERT!!",
+            description = " Are You Sure You Want To Remove Sticker# ${drsStickerModel.stickerno} of GR# ${drsStickerModel.grno}?",
+            callback = this,
+            alertCallType = DrsScanAdapter.REMOVE_STICKER_TAG,
+            data = drsStickerModel
+        )
+    }
 
-    fun close(){
+    fun setOnClicks(){
         layoutBinding.closeBottomSheet.setOnClickListener {
             dismiss()
+        }
+        layoutBinding.submitBtn.setOnClickListener {
+            var scannedStickerNo = layoutBinding.inputSticker.text.toString()
+            if(scannedStickerNo.isBlank()) {
+                errorToast("No Sticker# entered to submit. Please enter a sticker# to submit.")
+            } else {
+                var stickerAlreadyExists = false
+                for (scannedDrsModel in rvList) {
+                    if (scannedDrsModel.stickerno == scannedStickerNo) {
+                        stickerAlreadyExists = true
+                        showRemoveStickerAlert(scannedDrsModel)
+//                        removeSticker(scannedStickerNo)
+                        break
+                    }
+                }
+                if (!stickerAlreadyExists) {
+                    updateSticker(scannedStickerNo)
+                }
+            }
         }
     }
 
@@ -258,6 +297,32 @@ class DrsScanBottomSheet @Inject constructor(): BaseFragment(), OnRowClick<Any> 
                 } catch (ex: Exception) {
                     errorToast(ENV.SOMETHING_WENT_WRONG_ERR_MSG)
                 }
+            }
+        }
+    }
+
+    override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {
+        when(alertClick) {
+            AlertClick.YES -> run {
+                when(alertCallType) {
+                    DrsScanAdapter.REMOVE_STICKER_TAG -> {
+                        try {
+                            var scannedStickerModel = data as ScannedDrsModel
+                            scannedStickerModel.stickerno?.let { removeSticker(it) }
+                        } catch (ex: Exception) {
+                            errorToast(ENV.SOMETHING_WENT_WRONG_ERR_MSG)
+                        }
+                    }
+                    else -> {
+                        errorToast(ENV.SOMETHING_WENT_WRONG_ERR_MSG)
+                    }
+                }
+            }
+            AlertClick.NO -> run {
+
+            }
+            else -> {
+                errorToast(ENV.SOMETHING_WENT_WRONG_ERR_MSG)
             }
         }
     }

@@ -40,9 +40,9 @@ class PodEntryViewModel  @Inject constructor(private val _repo: PodEntryReposito
         }
     }
 
-    fun getGrNo( companyId:String,stickerno:String){
+    fun getGrFromSticker(companyId:String, userCode: String, branchCode: String, menuCode: String, stickerNo:String, sessionId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            _repo.getGrFromSticker(companyId,stickerno)
+            _repo.getGrFromSticker(companyId,userCode, branchCode, menuCode, stickerNo, sessionId)
         }
     }
     fun getRelation( companyId:String){

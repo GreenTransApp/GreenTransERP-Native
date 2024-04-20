@@ -34,6 +34,7 @@ class VendorSelectionBottomSheet @Inject constructor(): BaseFragment(), OnRowCli
     private lateinit var manager: LinearLayoutManager
     private var vendorList:ArrayList<VendorModelDRS> = ArrayList()
     private var vendorName:String = ""
+    private var vendorCategory:String = ""
 
     companion object{
         const val TAG = "VendorBottomSheet"
@@ -42,12 +43,14 @@ class VendorSelectionBottomSheet @Inject constructor(): BaseFragment(), OnRowCli
         fun newInstance(
             mContext: Context,
             title: String,
-            onVendorSelected: OnRowClick<Any>
+            onVendorSelected: OnRowClick<Any>,
+            vendorCategoryType: String
         ):VendorSelectionBottomSheet{
             val instance:VendorSelectionBottomSheet = VendorSelectionBottomSheet()
             instance.mContext = mContext
             instance.title = title
             instance.onVendorSelected = onVendorSelected
+            instance.vendorCategory = vendorCategoryType
             return instance
         }
     }
@@ -117,7 +120,7 @@ class VendorSelectionBottomSheet @Inject constructor(): BaseFragment(), OnRowCli
             viewModel.getVendorList(
                 getCompanyId(),
                 query,
-                "",
+                vendorCategory,
             )
         }
 
