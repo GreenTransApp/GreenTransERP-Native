@@ -321,6 +321,20 @@ interface Api {
     ):Call<CommonResult>
 
     @FormUrlEncoded
+    @POST("WMS/AddInScanStickerUnArrived_Outstation")
+    fun addInScanStickerUnArrived_outstation(
+        @Field("prmcompanyid") companyId: String,
+        @Field("prmusercode") userCode: String?,
+        @Field("prmbranchcode") branchCode: String?,
+        @Field("prmmenucode") menuCode: String?,
+        @Field("prmsessionid") sessionId: String?,
+        @Field("prmstickerno") stickerNo: String?,
+        @Field("prmmanifestno") manifestNo: String?,
+        @Field("prmreceivedt") receiveDt: String?,
+        @Field("prmreceivetime") receiveTime: String?
+    ):Call<CommonResult>
+
+    @FormUrlEncoded
     @POST("WMS/SaveInscanDetailWithoutScan")
     fun saveInscanDetailWithoutScan(
         @Field("prmconnstring") companyId: String,
@@ -342,6 +356,30 @@ interface Api {
         @Field("prmmenucode")menuCode:String,
         @Field("prmsessionid")sessionId:String,
         @Field("prmfromstncode")fromstnCode:String,
+    ):Call<CommonResult>
+
+    @FormUrlEncoded
+    @POST("WMS/SaveInscanDetailWithoutScan_Outstation")
+    fun saveOutstationInscanDetailWithoutScan(
+        @Field("prmconnstring") companyid: String,
+        @Field("prmmanifestno")manifestno:String,
+        @Field("prmmawbno")mawbno:String,
+        @Field("prmbranchcode")branchcode:String,
+        @Field("prmreceivedt")receivedt:String,
+        @Field("prmreceivetime")receivetime:String,
+        @Field("prmvehiclecode")vehiclecode:String,
+        @Field("prmremarks")remarks:String,
+        @Field("prmgrno")grno:String,
+        @Field("prmmfpckgs")mfpckgs:String,
+        @Field("prmpckgs")pckgs:String,
+        @Field("prmweight")weight:String,
+        @Field("prmdamagepckgs")damagepckgs:String,
+        @Field("prmdamagereasoncode")damagereasoncode:String,
+        @Field("prmdetailremarks")detailremarks:String,
+        @Field("prmusercode")usercode:String,
+        @Field("prmmenucode")menucode:String,
+        @Field("prmsessionid")sessionid:String,
+        @Field("prmfromstncode")fromstncode:String,
     ):Call<CommonResult>
 
     @GET("ManifestAPI/GetVendorListV2")

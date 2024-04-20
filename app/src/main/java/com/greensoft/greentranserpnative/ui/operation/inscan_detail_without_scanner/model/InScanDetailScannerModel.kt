@@ -1,6 +1,6 @@
 package com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model
 
-data class InScanWithoutScannerModel(
+data class InScanDetailScannerModel(
     val airline: Any,
     val airlinecode: Any,
     val bookedpckgs: Double,

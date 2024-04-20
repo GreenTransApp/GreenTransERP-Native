@@ -1,4 +1,4 @@
-package com.greensoft.greentranserpnative.ui.operation.inscan_detail_with_scanner
+package com.greensoft.greentranserpnative.ui.operation.outstation_inscan_detail_with_scanner
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +13,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import javax.inject.Inject
 
-class InScanDetailWithScannerRepository @Inject constructor(): BaseRepository() {
+class OutstationInscanDetailWithScannerRepository @Inject constructor(): BaseRepository() {
     private val inScanDetailMutData = MutableLiveData<InScanDetailScannerModel>()
     private val inScanDetailsCardMutData = MutableLiveData<ArrayList<InScanDetailScannerModel>>()
     private val insertStickerMutData = MutableLiveData<InScanAddStickerModel>()
@@ -22,7 +22,7 @@ class InScanDetailWithScannerRepository @Inject constructor(): BaseRepository() 
         get() = inScanDetailMutData
     val inScanCardLiveData: LiveData<ArrayList<InScanDetailScannerModel>>
         get() = inScanDetailsCardMutData
-    val inScanAddStickerLiveData :LiveData<InScanAddStickerModel>
+    val inScanAddStickerLiveData : LiveData<InScanAddStickerModel>
         get() = insertStickerMutData
 
     fun getInScanDetails(companyId: String, userCode: String, branchCode: String, manifestNo:String,manifestType:String,sessionId:String){
@@ -62,7 +62,7 @@ class InScanDetailWithScannerRepository @Inject constructor(): BaseRepository() 
 
     fun addInScanSticker(companyId: String, userCode: String, branchCode: String,menuCode:String, sessionId:String,stickerNo:String,manifestNo: String,receiveDt: String, receiveTime: String){
         viewDialogMutData.postValue(true)
-        api.addInScanStickerUnArrived(companyId,userCode, branchCode,menuCode,sessionId,stickerNo,manifestNo, receiveDt, receiveTime).enqueue(object:
+        api.addInScanStickerUnArrived_outstation(companyId,userCode, branchCode,menuCode,sessionId,stickerNo,manifestNo, receiveDt, receiveTime).enqueue(object:
             Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
@@ -93,5 +93,6 @@ class InScanDetailWithScannerRepository @Inject constructor(): BaseRepository() 
 
         })
     }
+
 
 }

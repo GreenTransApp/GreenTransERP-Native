@@ -58,6 +58,7 @@ import com.greensoft.greentranserpnative.ui.operation.inscan_detail_with_scanner
 import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.InScanDetailsActivity
 import com.greensoft.greentranserpnative.ui.operation.loadingSlip.newScanLoad.NewScanAndLoadActivity
 import com.greensoft.greentranserpnative.ui.operation.loadingSlip.newScanLoad.NewScanLoadStickerAdapter
+import com.greensoft.greentranserpnative.ui.operation.outstation_unarrived.OutstationInscanListActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestEntryActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceActivity
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.PodEntryActivity
@@ -451,7 +452,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
                 startActivity(intent)
             }
             "GTAPP_LONGROUTEARRIVAL" -> run {
-                val intent = Intent(this, PickupManifestEntryActivity::class.java)
+                val intent = Intent(this, OutstationInscanListActivity::class.java)
                 intent.putExtra("MENU_DATA", jsonSerialized)
                 startActivity(intent)
             }

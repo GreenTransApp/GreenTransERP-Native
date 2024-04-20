@@ -1,4 +1,4 @@
-package com.greensoft.greentranserpnative.ui.operation.inscan_detail_with_scanner
+package com.greensoft.greentranserpnative.ui.operation.outstation_inscan_detail_with_scanner
 
 import android.os.Bundle
 import android.util.Log
@@ -17,32 +17,37 @@ import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.inscan_detail_with_scanner.InScanWithScannerAdapter
 import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.InScanDetailScannerModel
+import com.greensoft.greentranserpnative.ui.operation.outstation_inscan_detail_with_scanner.adapter.OutstationInscanDetailsWithScannerAdapter
 import com.greensoft.greentranserpnative.ui.operation.unarrived.models.InscanListModel
 import com.greensoft.greentranserpnative.utils.Utils
-import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Exception
 import javax.inject.Inject
 
-@AndroidEntryPoint
-class InScanDetailWithScannerActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>,
+class OutstationInscanDetailWithScannerActivity  @Inject constructor(): BaseActivity(),
+    OnRowClick<Any>,
     AlertCallback<Any>, BottomSheetClick<Any> {
-    private lateinit var activityBinding: ActivityInScanDetailWithScannerBinding
-    private lateinit var manager: LinearLayoutManager
-    private val viewModel: InScanDetailWithScannerViewModel by viewModels()
-    private var inScanCardAdapterList: InScanWithScannerAdapter? = null
-    private var inScanCardDetailList:ArrayList<InScanDetailScannerModel> = ArrayList()
-    private  var inScanDetailData: InScanDetailScannerModel? = null
-    private var inscanListData: ArrayList<InscanListModel> = ArrayList()
-    private var manifestNo:String? =""
-    private var inScanSelectedData: InscanListModel? = null
-    private var receivingDetail: ReceivingDetailsEnteredDataModel? = null
+        lateinit var activityBinding:ActivityInScanDetailWithScannerBinding
+        private lateinit var manager: LinearLayoutManager
+        private val viewModel: OutstationInscanDetailWithScannerViewModel by viewModels()
+        private var inScanCardAdapterList: OutstationInscanDetailsWithScannerAdapter? = null
+        private var inScanCardDetailList:ArrayList<InScanDetailScannerModel> = ArrayList()
+        private  var inScanDetailData: InScanDetailScannerModel? = null
+        private var inscanListData: ArrayList<InscanListModel> = ArrayList()
+        private var manifestNo:String? =""
+        private var inScanSelectedData: InscanListModel? = null
+        private var receivingDetail: ReceivingDetailsEnteredDataModel? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityInScanDetailWithScannerBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
+        activityBinding = ActivityInScanDetailWithScannerBinding.inflate(layoutInflater)
+        setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
-        setUpToolbar("In-Scan Detail With Scan")
+        setUpToolbar(" Outstation In-Scan Detail With Scan")
         getInScanMfHeadFromIntent()
         setObservers()
         getInScanDetails()
@@ -183,7 +188,7 @@ class InScanDetailWithScannerActivity  @Inject constructor(): BaseActivity(), On
             manager = LinearLayoutManager(this)
             activityBinding.rvCardDetails.layoutManager = manager
         }
-        inScanCardAdapterList = InScanWithScannerAdapter(inScanCardDetailList, this)
+        inScanCardAdapterList = OutstationInscanDetailsWithScannerAdapter(inScanCardDetailList, this)
         activityBinding.rvCardDetails.adapter = inScanCardAdapterList
 //    }
     }

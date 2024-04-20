@@ -1,4 +1,4 @@
-package com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner
+package com.greensoft.greentranserpnative.ui.operation.outstation_inscan_detail_without_scanner
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,14 +14,13 @@ import retrofit2.Callback
 import retrofit2.Response
 import javax.inject.Inject
 
-class InScanDetailsRepository @Inject constructor(): BaseRepository(){
-
+class OutstationInscanDetailWithoutScannerRepository @Inject constructor(): BaseRepository(){
     private val inScanDetailMutData = MutableLiveData<InScanDetailScannerModel>()
     private val inScanDetailsCardMutData = MutableLiveData<ArrayList<InScanDetailScannerModel>>()
     private val damageReasonMutData = MutableLiveData<ArrayList<DamageReasonModel>>()
     private val inscanSaveMutableLiveData = MutableLiveData<InscanDetailsSaveModel>()
 
-    val inScanDetailLiveData:LiveData<InScanDetailScannerModel>
+    val inScanDetailLiveData: LiveData<InScanDetailScannerModel>
         get() = inScanDetailMutData
     val inScanCardLiveData: LiveData<ArrayList<InScanDetailScannerModel>>
         get() = inScanDetailsCardMutData
@@ -34,7 +33,8 @@ class InScanDetailsRepository @Inject constructor(): BaseRepository(){
 
     fun getInScanDetails(companyId: String, userCode: String, branchCode: String, manifestNo:String,manifestType:String,sessionId:String){
         viewDialogMutData.postValue(true)
-        api.getInScanDetail(companyId,userCode, branchCode,manifestNo,manifestType,sessionId).enqueue(object: Callback<CommonResult> {
+        api.getInScanDetail(companyId,userCode, branchCode,manifestNo,manifestType,sessionId).enqueue(object:
+            Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -101,49 +101,52 @@ class InScanDetailsRepository @Inject constructor(): BaseRepository(){
 
 
     fun saveInscanDetails(
-        companyId:String,
-        manifestNo:String,
-        mawbNo:String,
-        branchCode:String,
-        receiveDt:String,
-        receiveTime:String,
-        vehicleCode:String,
+        companyid:String,
+        manifestno:String,
+        mawbno:String,
+        branchcode:String,
+        receivedt:String,
+        receivetime:String,
+        vehiclecode:String,
         remarks:String,
-        grNo:String,
-        mfPckgs:String,
+        grno:String,
+        mfpckgs:String,
         pckgs:String,
         weight:String,
-        damagePckgs:String,
-        damageReasoncode:String,
-        detailRemarks:String,
-        userCode:String,
-        menuCode:String,
-        sessionId:String,
-        fromstnCode:String
+        damagepckgs:String,
+        damagereasoncode:String,
+        detailremarks:String,
+        usercode:String,
+        menucode:String,
+        sessionid:String,
+        fromstncode:String,
+
+
 
         ) {
         viewDialogMutData.postValue(true)
-        api.saveInscanDetailWithoutScan(
-            companyId,
-            manifestNo,
-            mawbNo,
-            branchCode,
-            receiveDt,
-            receiveTime,
-            vehicleCode,
+        api.saveOutstationInscanDetailWithoutScan(
+            companyid,
+            manifestno,
+            mawbno,
+            branchcode,
+            receivedt,
+            receivetime,
+            vehiclecode,
             remarks,
-            grNo,
-            mfPckgs,
+            grno,
+            mfpckgs,
             pckgs,
             weight,
-            damagePckgs,
-            damageReasoncode,
-            detailRemarks,
-            userCode,
-            menuCode,
-            sessionId,
-            fromstnCode
-        )
+            damagepckgs,
+            damagereasoncode,
+            detailremarks,
+            usercode,
+            menucode,
+            sessionid,
+            fromstncode,
+
+            )
             .enqueue(object: Callback<CommonResult> {
                 override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                     if(response.body() != null){
@@ -175,6 +178,5 @@ class InScanDetailsRepository @Inject constructor(): BaseRepository(){
             })
 
     }
-
 
 }

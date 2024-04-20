@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.greensoft.greentranserpnative.databinding.ItemInscanCardDetailBinding
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.DamageReasonModel
-import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.InScanWithoutScannerModel
+import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.InScanDetailScannerModel
 import javax.inject.Inject
 
 class InScanDetailsAdapter @Inject constructor(
-    private val inScanCardList: ArrayList<InScanWithoutScannerModel>,
+    private val inScanCardList: ArrayList<InScanDetailScannerModel>,
     private val onRowClick: OnRowClick<Any>,
     private val mActivity: InScanDetailsActivity
 ): RecyclerView.Adapter<RecyclerView.ViewHolder> () {
@@ -33,7 +33,7 @@ class InScanDetailsAdapter @Inject constructor(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val dataViewHolder = holder as InScanDetailsAdapter.InScanDetailViewHolder
-        val dataModel:InScanWithoutScannerModel = inScanCardList[position]
+        val dataModel:InScanDetailScannerModel = inScanCardList[position]
         dataViewHolder.onBind(dataModel, onRowClick)
     }
 
@@ -44,7 +44,10 @@ class InScanDetailsAdapter @Inject constructor(
     inner class InScanDetailViewHolder(
         private val  layoutBinding :ItemInscanCardDetailBinding,
         private val context: Context):RecyclerView.ViewHolder(layoutBinding.root){
-        private fun  setOnClick(model:InScanWithoutScannerModel, onRowClickLocal: OnRowClick<Any>){
+
+
+
+        private fun  setOnClick(model:InScanDetailScannerModel, onRowClickLocal: OnRowClick<Any>){
 //            layoutBinding.inputDamagePckgsReason.setOnClickListener{
 //               onRowClickLocal.onRowClick(model, TAG_DAMAGE_REASON_CLICK, adapterPosition)
 //            }
@@ -87,7 +90,7 @@ class InScanDetailsAdapter @Inject constructor(
             }
         }
 
-        fun onBind(inScanWithoutScannerModel: InScanWithoutScannerModel, onRowClickLocal: OnRowClick<Any>){
+        fun onBind(inScanWithoutScannerModel: InScanDetailScannerModel, onRowClickLocal: OnRowClick<Any>){
             layoutBinding.inScanCardDetailModel = inScanWithoutScannerModel
             setOnClick(inScanWithoutScannerModel, onRowClickLocal)
             setObservers()

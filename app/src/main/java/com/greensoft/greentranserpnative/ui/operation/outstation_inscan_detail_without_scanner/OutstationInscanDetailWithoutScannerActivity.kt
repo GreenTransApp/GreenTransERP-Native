@@ -1,5 +1,6 @@
-package com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner
+package com.greensoft.greentranserpnative.ui.operation.outstation_inscan_detail_without_scanner
 
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,7 +10,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
-import com.greensoft.greentranserpnative.databinding.ActivityInscanDetailsBinding
+import com.greensoft.greentranserpnative.databinding.ActivityOutstationInscanDetailWithoutScannerBinding
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.receivingDetails.ReceivingDetailsBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.receivingDetails.models.ReceivingDetailsEnteredDataModel
@@ -18,21 +19,25 @@ import com.greensoft.greentranserpnative.ui.common.alert.CommonAlert
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.InScanDetailsAdapter
+import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.InScanDetailsViewModel
 import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.DamageReasonModel
 import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.InScanDetailScannerModel
+import com.greensoft.greentranserpnative.ui.operation.outstation_inscan_detail_with_scanner.OutstationInscanDetailWithScannerViewModel
 import com.greensoft.greentranserpnative.ui.operation.unarrived.models.InscanListModel
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Exception
 import javax.inject.Inject
-
 @AndroidEntryPoint
-class InScanDetailsActivity  @Inject constructor(): BaseActivity(), AlertCallback<Any> , OnRowClick<Any>,
+class OutstationInscanDetailWithoutScannerActivity @Inject constructor(): BaseActivity(),
+    AlertCallback<Any>, OnRowClick<Any>,
     BottomSheetClick<Any> {
-    private lateinit var activityBinding: ActivityInscanDetailsBinding
+        lateinit var activityBinding:ActivityOutstationInscanDetailWithoutScannerBinding
+
     private lateinit var manager: LinearLayoutManager
-    private val viewModel: InScanDetailsViewModel by viewModels()
-    private var inScanCardAdapter: InScanDetailsAdapter? = null
+    private val viewModel: OutstationInscanDetailWithoutScannerViewModel by viewModels()
+    private var inScanCardAdapter: OutstationInscanDetailWithoutScannerAdapter? = null
     private var inScanCardDetailList: ArrayList<InScanDetailScannerModel> = ArrayList()
     private var damagePckgsReasonList: ArrayList<DamageReasonModel> = ArrayList()
     private var inScanDetailData: InScanDetailScannerModel? = null
@@ -41,20 +46,13 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), AlertCallbac
 
     private var manifestNo: String? = ""
     private var mawb: String? = ""
-    //private var sqlDate: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityBinding = ActivityInscanDetailsBinding.inflate(layoutInflater)
+        activityBinding = ActivityOutstationInscanDetailWithoutScannerBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
-        setUpToolbar("In-Scan W/O Scanner")
-//        activityBinding.inputDate.inputType = InputType.TYPE_NULL;
-//        activityBinding.inputTime.inputType = InputType.TYPE_NULL;
-//        activityBinding.inputDate.setText(getViewCurrentDate())
-//        sqlDate = getSqlCurrentDate()
-//        activityBinding.inputTime.setText(getSqlCurrentTime())
-//        activityBinding.inputAgent.setText(userDataModel?.username)
-//        activityBinding.inputAgent.isEnabled = false
+        setUpToolbar(" OutstationIn-Scan W/O Scanner")
+
         getInscanData()
         getDamagePckgsReasonList()
         setObservers()
@@ -123,17 +121,7 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), AlertCallbac
         openCommonBottomSheet(this, "Damage Reason Selection", this, commonList, true, index)
 
     }
-//    private fun setInScanData() {
 //
-//        activityBinding.inputMawb.text = inScanDetailData?.mawbno.toString()
-//        activityBinding.inputManifest.text = inScanDetailData?.manifestno
-//        activityBinding.inputAirline.text = inScanDetailData?.airline.toString()
-//        activityBinding.inputVehicle.text = inScanDetailData?.modename
-//        activityBinding.inputDispatchOn.text = inScanDetailData?.manifestdt.toString()
-//        activityBinding.inputFromStation.text = inScanDetailData?.origin
-//        activityBinding.inputToStation.text = inScanDetailData?.tostation
-//    }
-
     private fun setInScanData() {
         activityBinding.inputMawb.text = inScanDetailData?.mawbno ?: "No data available"
         activityBinding.inputManifest.text = inScanDetailData?.manifestno ?: "No data available"
@@ -208,7 +196,7 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), AlertCallbac
             manager = LinearLayoutManager(this)
             activityBinding.rvCardDetails.layoutManager = manager
         }
-        inScanCardAdapter = InScanDetailsAdapter(inScanCardDetailList, this, this)
+        inScanCardAdapter = OutstationInscanDetailWithoutScannerAdapter(inScanCardDetailList, this, this)
         activityBinding.rvCardDetails.adapter = inScanCardAdapter
 //    }
     }
@@ -279,27 +267,25 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), AlertCallbac
     private fun saveInscanDetailWithoutScan(model: InScanDetailScannerModel) {
 
         viewModel.saveInScanDetailsWithoutScan(
-            companyId = getCompanyId(),
-            manifestNo = manifestNo.toString(),
-            mawbNo = mawb.toString(),
-            branchCode = getLoginBranchCode(),
-            receiveDt = receivingDetail?.receivingSqlDate.toString(),
-            receiveTime = receivingDetail?.receivingViewTime.toString(),
-            vehicleCode = model.modecode.toString(),
-            remarks = receivingDetail?.receivingRemarks.toString(),
-            grNo = model.grno.toString(),
-            mfPckgs = model.despatchpckgs.toString(),
-            pckgs = model.receivedpckgs.toString(),
-            weight = model.despatchweight.toString(),
-            damagePckgs = model.damage.toString(),
-            damageReasoncode = model.damagereasoncode.toString(),
-//            detailRemarks = activityBinding.inputRemark.toString(),
-            detailRemarks = "",
-            userCode = userDataModel?.usercode.toString(),
-            menuCode = "GTAPP_PICKUPARRIVAL",
-            sessionId = getSessionId(),
-            fromstnCode = model.orgcode.toString(),
-
+            companyid = getCompanyId(),
+            manifestno=manifestNo.toString(),
+            mawbno=mawb.toString(),
+            branchcode=getLoginBranchCode(),
+            receivedt=receivingDetail?.receivingSqlDate.toString(),
+            receivetime=receivingDetail?.receivingViewTime.toString(),
+            vehiclecode=model.modecode.toString(),
+            remarks=receivingDetail?.receivingRemarks.toString(),
+            grno=model.grno.toString(),
+            mfpckgs= model.despatchpckgs.toString(),
+            pckgs=model.receivedpckgs.toString(),
+            weight=model.despatchweight.toString(),
+            damagepckgs= model.damage.toString(),
+            damagereasoncode=model.damagereasoncode.toString(),
+            detailremarks = "",
+            usercode=userDataModel?.usercode.toString(),
+            menucode="GTAPP_LONGROUTEARRIVAL",
+            sessionid=getSessionId(),
+            fromstncode=model.orgcode.toString()
             )
     }
 
@@ -349,7 +335,7 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), AlertCallbac
     override fun onRowClick(data: Any, clickType: String, index: Int) {
 //        if (clickType == "DAMAGE_REASON_SELECT") {
         if (clickType == InScanDetailsAdapter.TAG_DAMAGE_REASON_CLICK) {
-           openDamagePckgsReasonBottomSheet(damagePckgsReasonList, index)
+            openDamagePckgsReasonBottomSheet(damagePckgsReasonList, index)
         } else if (clickType == InScanDetailsAdapter.TAG_SAVE_CARD_CLICK) {
             try {
                 val model = data as InScanDetailScannerModel
@@ -357,7 +343,7 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), AlertCallbac
             } catch (err: Exception) {
                 errorToast(err.message)
             }
-           // saveInscanDetailWithoutScan(index)
+            // saveInscanDetailWithoutScan(index)
         }
     }
 
@@ -369,7 +355,4 @@ class InScanDetailsActivity  @Inject constructor(): BaseActivity(), AlertCallbac
         }
     }
 }
-
-
-
 

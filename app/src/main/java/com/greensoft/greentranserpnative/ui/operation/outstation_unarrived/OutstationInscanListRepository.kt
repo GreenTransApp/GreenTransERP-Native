@@ -1,4 +1,4 @@
-package com.greensoft.greentranserpnative.ui.bottomsheet.bookingIndentInfoBottomSheet
+package com.greensoft.greentranserpnative.ui.operation.outstation_unarrived
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,23 +6,21 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
-import com.greensoft.greentranserpnative.ui.bottomsheet.bookingIndentInfoBottomSheet.model.BookingIndentInfoModel
-
+import com.greensoft.greentranserpnative.ui.operation.unarrived.models.InscanListModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import javax.inject.Inject
 
-class BookingIndentInfoRepository@Inject constructor(): BaseRepository() {
+class OutstationInscanListRepository  @Inject constructor(): BaseRepository() {
+    private val inscanListMuteLiveData = MutableLiveData<ArrayList<InscanListModel>>()
+    val inscanListLiveData: LiveData<ArrayList<InscanListModel>>
+        get() = inscanListMuteLiveData
 
-    private val bookingIndentInfoMutData = MutableLiveData<BookingIndentInfoModel>()
-
-    val bookingIndentLiveData: LiveData<BookingIndentInfoModel>
-        get() = bookingIndentInfoMutData
-
-    fun getBookingInScanDetails(companyId: String,transactionId:String){
+    fun getOutstationInscanList(companyId: String, userCode:String, branchCode: String,sessionId:String, fromBranchCode:String,fromDt:String,toDt:String,manifestType:String,modeType:String){
         viewDialogMutData.postValue(true)
-        api.getBookingIndentInfo(companyId,transactionId).enqueue(object:Callback<CommonResult> {
+        api.getInscanList(companyId, userCode, branchCode,sessionId, fromBranchCode, fromDt, toDt, manifestType, modeType).enqueue(object:
+            Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!
@@ -30,11 +28,10 @@ class BookingIndentInfoRepository@Inject constructor(): BaseRepository() {
                     if(result.CommandStatus == 1){
                         val jsonArray = getResult(result);
                         if(jsonArray != null) {
-                            val listType = object: TypeToken<List<BookingIndentInfoModel>>() {}.type
-                            val resultList: ArrayList<BookingIndentInfoModel> = gson.fromJson(jsonArray.toString(), listType);
-                            bookingIndentInfoMutData.postValue(resultList[0]);
+                            val listType = object: TypeToken<List<InscanListModel>>() {}.type
+                            val resultList: ArrayList<InscanListModel> = gson.fromJson(jsonArray.toString(), listType);
+                            inscanListMuteLiveData.postValue(resultList);
                         }
-
                     } else {
                         isError.postValue(result.CommandMessage.toString());
                     }
@@ -45,8 +42,7 @@ class BookingIndentInfoRepository@Inject constructor(): BaseRepository() {
 
             }
 
-            override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
-                viewDialogMutData.postValue(false)
+            override fun onFailure(call: Call<CommonResult?>, t: Throwable) { viewDialogMutData.postValue(false)
                 isError.postValue(t.message)
             }
 

@@ -1,4 +1,4 @@
-package com.greensoft.greentranserpnative.ui.operation.inscan_detail_with_scanner
+package com.greensoft.greentranserpnative.ui.operation.outstation_inscan_detail_with_scanner
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
@@ -11,10 +11,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class InScanDetailWithScannerViewModel @Inject constructor(private val _repo: InScanDetailWithScannerRepository):
-    BaseViewModel(){
-
-
+class OutstationInscanDetailWithScannerViewModel @Inject constructor(private val _repo: OutstationInscanDetailWithScannerRepository):
+    BaseViewModel() {
     init {
         isError = _repo.isError
     }
@@ -24,7 +22,7 @@ class InScanDetailWithScannerViewModel @Inject constructor(private val _repo: In
     val inScanCardLiveData: LiveData<ArrayList<InScanDetailScannerModel>>
         get() = _repo.inScanCardLiveData
 
-    val inScanAddStickerLiveData:LiveData<InScanAddStickerModel>
+    val inScanAddStickerLiveData: LiveData<InScanAddStickerModel>
         get() = _repo.inScanAddStickerLiveData
 
     fun getInScanDetails(companyId: String, userCode: String, branchCode: String, manifestNo:String,manifestType:String,sessionId:String){
