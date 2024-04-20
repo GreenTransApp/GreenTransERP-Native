@@ -1,8 +1,9 @@
-package com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner
+package com.greensoft.greentranserpnative.ui.operation.outstation_inscan_detail_without_scanner
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.greensoft.greentranserpnative.base.BaseViewModel
+import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.InScanDetailsRepository
 import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.DamageReasonModel
 import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.InScanDetailScannerModel
 import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.InscanDetailsSaveModel
@@ -10,22 +11,22 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 @HiltViewModel
-class InScanDetailsViewModel @Inject constructor(private val _repo: InScanDetailsRepository):BaseViewModel() {
+class OutstationInscanDetailWithoutScannerViewModel @Inject constructor(private val _repo: OutstationInscanDetailWithoutScannerRepository):
+    BaseViewModel(){
 
     init {
         isError = _repo.isError
     }
 
-    val inScanDetailLiveData:LiveData<InScanDetailScannerModel>
+    val inScanDetailLiveData: LiveData<InScanDetailScannerModel>
         get() = _repo.inScanDetailLiveData
-    val inScanCardLiveData:LiveData<ArrayList<InScanDetailScannerModel>>
+    val inScanCardLiveData: LiveData<ArrayList<InScanDetailScannerModel>>
         get() = _repo.inScanCardLiveData
 
-    val damagePckgsReasonLiveData:LiveData<ArrayList<DamageReasonModel>>
+    val damagePckgsReasonLiveData: LiveData<ArrayList<DamageReasonModel>>
         get() = _repo.damageReasonLiveData
-    val inScanSaveLiveData:LiveData<InscanDetailsSaveModel>
+    val inScanSaveLiveData: LiveData<InscanDetailsSaveModel>
         get() = _repo.inscanSaveLiveData
     fun getInScanDetails(companyId: String, userCode: String, branchCode: String, manifestNo:String,manifestType:String,sessionId:String){
         viewModelScope.launch(Dispatchers.IO) {
@@ -38,46 +39,48 @@ class InScanDetailsViewModel @Inject constructor(private val _repo: InScanDetail
         }
     }
     fun saveInScanDetailsWithoutScan(
-        companyId:String,
-        manifestNo:String,
-        mawbNo:String,
-        branchCode:String,
-        receiveDt:String,
-        receiveTime:String,
-        vehicleCode:String,
+        companyid:String,
+        manifestno:String,
+        mawbno:String,
+        branchcode:String,
+        receivedt:String,
+        receivetime:String,
+        vehiclecode:String,
         remarks:String,
-        grNo:String,
-        mfPckgs:String,
+        grno:String,
+        mfpckgs:String,
         pckgs:String,
         weight:String,
-        damagePckgs:String,
-        damageReasoncode:String,
-        detailRemarks:String,
-        userCode:String,
-        menuCode:String,
-        sessionId:String,
-        fromstnCode:String){
+        damagepckgs:String,
+        damagereasoncode:String,
+        detailremarks:String,
+        usercode:String,
+        menucode:String,
+        sessionid:String,
+        fromstncode:String,
+    ){
         viewModelScope.launch(Dispatchers.IO) {
             _repo.saveInscanDetails(
-                companyId,
-                manifestNo,
-                mawbNo,
-                branchCode,
-                receiveDt,
-                receiveTime,
-                vehicleCode,
+                companyid,
+                manifestno,
+                mawbno,
+                branchcode,
+                receivedt,
+                receivetime,
+                vehiclecode,
                 remarks,
-                grNo,
-                mfPckgs,
+                grno,
+                mfpckgs,
                 pckgs,
                 weight,
-                damagePckgs,
-                damageReasoncode,
-                detailRemarks,
-                userCode,
-                menuCode,
-                sessionId,
-                fromstnCode)
+                damagepckgs,
+                damagereasoncode,
+                detailremarks,
+                usercode,
+                menucode,
+                sessionid,
+                fromstncode,
+            )
         }
     }
 }

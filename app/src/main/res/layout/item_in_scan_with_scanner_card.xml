@@ -5,7 +5,7 @@
     <data>
         <variable
             name="inScanCardDetailModel"
-            type="com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.InScanWithoutScannerModel" />
+            type="com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.InScanDetailScannerModel" />
 
     </data>
 

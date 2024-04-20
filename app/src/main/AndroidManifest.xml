@@ -39,6 +39,20 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.operation.outstation_inscan_detail_without_scanner.OutstationInscanDetailWithoutScannerActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.operation.outstation_unarrived.OutstationInscanListActivity" />
+        <activity
+            android:name=".ui.operation.outstation_inscan_detail_with_scanner.OutstationInscanDetailWithScannerActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.operation.outstation_unarrived.OutstationInscanListActivity"
+            />
+        <activity
+            android:name=".ui.operation.outstation_unarrived.OutstationInscanListActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity"
+            />
+        <activity
             android:name=".ui.operation.despatch_manifest.SaveDespatchManifestActivity"
             android:exported="false" />
         <activity
