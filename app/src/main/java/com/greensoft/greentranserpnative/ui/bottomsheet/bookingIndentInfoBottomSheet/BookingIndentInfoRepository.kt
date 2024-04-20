@@ -7,7 +7,7 @@ import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.ui.bottomsheet.bookingIndentInfoBottomSheet.model.BookingIndentInfoModel
-import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.model.InScanWithoutScannerModel
+
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

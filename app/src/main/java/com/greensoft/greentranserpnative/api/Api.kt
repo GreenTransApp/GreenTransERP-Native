@@ -321,6 +321,20 @@ interface Api {
     ):Call<CommonResult>
 
     @FormUrlEncoded
+    @POST("WMS/AddInScanStickerUnArrived_Outstation")
+    fun addInScanStickerUnArrived_outstation(
+        @Field("prmcompanyid") companyId: String,
+        @Field("prmusercode") userCode: String?,
+        @Field("prmbranchcode") branchCode: String?,
+        @Field("prmmenucode") menuCode: String?,
+        @Field("prmsessionid") sessionId: String?,
+        @Field("prmstickerno") stickerNo: String?,
+        @Field("prmmanifestno") manifestNo: String?,
+        @Field("prmreceivedt") receiveDt: String?,
+        @Field("prmreceivetime") receiveTime: String?
+    ):Call<CommonResult>
+
+    @FormUrlEncoded
     @POST("WMS/SaveInscanDetailWithoutScan")
     fun saveInscanDetailWithoutScan(
         @Field("prmconnstring") companyId: String,
