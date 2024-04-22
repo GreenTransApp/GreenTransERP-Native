@@ -26,6 +26,9 @@ class PendingDeliveryDrsListAdapter  @Inject constructor(
         fun onBind(model: DrsPendingListModel, onRowClick: OnRowClick<Any>) {
             layoutBinding.model = model
             layoutBinding.index = adapterPosition
+            layoutBinding.btn.setOnClickListener {
+                onRowClick.onClick(model, "POD_SELECT")
+            }
 
         }
     }

@@ -39,15 +39,16 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.operation.multiple_pod_entry_list.MultiplePodEntryListActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.operation.upload_image.UploadBookingImageActivity"
             android:exported="false"
-            android:parentActivityName=".ui.home.HomeActivity"
-            />
+            android:parentActivityName=".ui.home.HomeActivity" />
         <activity
             android:name=".ui.operation.upload_image.UploadPodImageActivity"
             android:exported="false"
-            android:parentActivityName=".ui.home.HomeActivity"
-            />
+            android:parentActivityName=".ui.home.HomeActivity" />
         <activity
             android:name=".ui.operation.outstation_inscan_detail_without_scanner.OutstationInscanDetailWithoutScannerActivity"
             android:exported="false"
@@ -108,11 +109,10 @@
         <activity
             android:name=".ui.operation.inscan_detail_with_scanner.InScanDetailWithScannerActivity"
             android:exported="false"
-            android:parentActivityName=".ui.home.HomeActivity" />
-<!--        <activity-->
-<!--            android:name=".ui.operation.inscan_detail_with_scanner.InScanDetailWithScannerActivity"-->
-<!--            android:exported="false"-->
-<!--            android:parentActivityName=".ui.home.HomeActivity" />-->
+            android:parentActivityName=".ui.home.HomeActivity" /> <!-- <activity -->
+        <!-- android:name=".ui.operation.inscan_detail_with_scanner.InScanDetailWithScannerActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:parentActivityName=".ui.home.HomeActivity" /> -->
         <activity
             android:name=".ui.operation.unarrived.InscanListActivity"
             android:exported="false"
@@ -219,7 +219,6 @@
             android:name=".ui.operation.loadingSlip.summary.SummaryScanLoadActivity"
             android:exported="false"
             android:parentActivityName=".ui.operation.grList.GrListActivity" />
-
         <activity
             android:name=".ui.operation.pending_for_delivery_update_list.PendingDeliveryDrsListActivity"
             android:exported="false" />
