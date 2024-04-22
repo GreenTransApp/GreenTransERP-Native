@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="index"
+            type="Integer" />
+        <variable
+            name="model"
+            type="com.greensoft.greentranserpnative.ui.operation.pending_for_delivery_update_list.models.DrsPendingListModel"/>
+    </data>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/sNo"
+                android:layout_width="50sp"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal|center_vertical"
+                android:background="@drawable/table_content_cell_bg"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:text="@{String.valueOf(index+1)}" />
+
+
+            <TextView
+                android:id="@+id/drs_no"
+                android:layout_width="100sp"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal|center_vertical"
+                android:textColor="@color/black"
+                android:background="@drawable/table_content_cell_bg"
+                android:textSize="12sp"
+                android:text="@{String.valueOf(model.documentno)}" />
+
+
+            <TextView
+                android:id="@+id/drs_dt"
+                android:layout_width="100sp"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal|center_vertical"
+                android:textColor="@color/black"
+                android:background="@drawable/table_content_cell_bg"
+                android:textSize="12sp"
+                android:text="@{String.valueOf(model.date)}" />
+
+            <TextView
+                android:id="@+id/origin_name"
+                android:layout_width="200sp"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal|center_vertical"
+                android:textColor="@color/black"
+                android:background="@drawable/table_content_cell_bg"
+                android:textSize="12sp"
+                android:text="@{String.valueOf(model.origin)}" />
+
+            <TextView
+                android:id="@+id/dest_name"
+                android:layout_width="200sp"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal|center_vertical"
+                android:textColor="@color/black"
+                android:background="@drawable/table_content_cell_bg"
+                android:textSize="12sp"
+                android:text="@{String.valueOf(model.destination)}" />
+
+
+
+            <RelativeLayout
+                android:layout_width="150sp"
+                android:background="@drawable/table_content_cell_bg"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn"
+                    android:text="POD"
+                    android:textSize="10sp"
+                    android:textAllCaps="false"
+                    app:cornerRadius="10sp"
+                    android:layout_centerInParent="true"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+</layout>

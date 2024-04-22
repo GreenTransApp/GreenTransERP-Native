@@ -10,6 +10,7 @@ import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.pending_for_delivery_update_list.PendingDeliveryDrsListActivity
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.PodEntryActivity
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.ScanAndDeliveryActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,7 +37,8 @@ class DeliveryOptionActivity @Inject constructor() : BaseActivity(), OnRowClick<
              startActivity(intent)
          }
          activityBinding.btnPodEntry.setOnClickListener {
-             val intent= Intent(this,PodEntryActivity::class.java)
+//             val intent= Intent(this,PodEntryActivity::class.java)
+             val intent= Intent(this,PendingDeliveryDrsListActivity::class.java)
              startActivity(intent)
          }
 

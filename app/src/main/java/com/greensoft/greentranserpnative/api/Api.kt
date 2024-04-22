@@ -538,6 +538,16 @@ interface Api {
         @Query("prmmanifestno")manifestNo:String?,
         @Query("prmsessionid")sessionId:String?,
     ): Call<CommonResult>
+
+    @GET("WMS/pendingForDeliveryUpdate_Native")
+    fun getDrsPendingList(
+        @Query("prmconnstring") companyId: String,
+        @Query("prmusercode")userCode:String?,
+        @Query("prmloginbranchcode")loginBranchCode:String?,
+        @Query("prmfromdt")fromDt:String?,
+        @Query("prmtodt")toDt:String?,
+        @Query("prmsessionid")sessionId:String?,
+    ): Call<CommonResult>
   @FormUrlEncoded
     @POST("WMS/SaveDelivery_Scan_Stickers")
     fun updateScanDeliverySticker(
@@ -602,6 +612,36 @@ interface Api {
         @Field("prmvendorcd")vendorcd :String?,
 
         ):Call<CommonResult>
+    @GET("PODAPI/ValidateforPodUpload")
+    fun validateGrForPOD(
+        @Query("prmconnstring") companyId: String,
+        @Query("prmgrno") grNo:String?
+    ): Call<CommonResult>
 
+    @FormUrlEncoded
+    @POST("BookingAPI/UploadPodImage")
+    fun uploadPodImage(
+        @Field("prmconnstring") companyId: String?,
+        @Field("prmgrno") grNo: String?,
+        @Field("prmpodimage") podImageBase64: String?,
+        @Field("prmsignimage") signImageBase64: String?,
+        @Field("prmusercode") userCode: String?,
+        @Field("prmmenucode") menuCode: String?,
+        @Field("prmsessionid") sessionId: String?
+    ):Call<CommonResult>
+
+    @FormUrlEncoded
+    @POST("BookingAPI/UploadBookingImage")
+    fun uploadBookingImage(
+        @Field("prmconnstring") companyId: String?,
+        @Field("prmtransactionid") transactionId: String?,
+        @Field("prmtitlename") titleName: String?,
+        @Field("prmimagepath") imageInBase64: String?,
+        @Field("prmusercode") userCode: String?,
+        @Field("prmsessionid") sessionId: String?,
+        @Field("prmmenucode") menuCode: String?,
+        @Field("prmmastercode") masterCode: String?,
+        @Field("prmbranchcode") branchCode: String?
+    ):Call<CommonResult>
 
 }
