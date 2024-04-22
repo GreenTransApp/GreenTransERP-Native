@@ -154,8 +154,6 @@ class GrListActivity @Inject constructor() : BaseActivity(), OnRowClick<Any> {
     private fun setObservers(){
 
         mPeriod.observe(this) { it ->
-//            successToast(it.getSqlFromDate());
-//            successToast(it.getSqlToDate());
             fromDate = it.sqlFromDate.toString()
             toDate = it.sqlToDate.toString()
             refreshData()
