@@ -13,8 +13,6 @@ import android.os.Looper
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -23,16 +21,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
-import androidx.compose.ui.unit.dp
 import androidx.core.view.GravityCompat
-import androidx.core.view.marginEnd
-import androidx.core.view.setMargins
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.badge.BadgeDrawable
-import com.google.android.material.badge.BadgeUtils
-import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.navigation.NavigationView
@@ -53,16 +45,13 @@ import com.greensoft.greentranserpnative.ui.operation.delivery.DeliveryOptionAct
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.DespatchManifestEntryActivity
 import com.greensoft.greentranserpnative.ui.operation.drs.DRSActivity
 import com.greensoft.greentranserpnative.ui.operation.notificationPanel.model.NotificationPanelBottomSheetModel
-import com.greensoft.greentranserpnative.ui.operation.grList.GrListActivity
-import com.greensoft.greentranserpnative.ui.operation.inscan_detail_with_scanner.InScanDetailWithScannerActivity
-import com.greensoft.greentranserpnative.ui.operation.inscan_detail_without_scanner.InScanDetailsActivity
 import com.greensoft.greentranserpnative.ui.operation.loadingSlip.newScanLoad.NewScanAndLoadActivity
-import com.greensoft.greentranserpnative.ui.operation.loadingSlip.newScanLoad.NewScanLoadStickerAdapter
 import com.greensoft.greentranserpnative.ui.operation.outstation_unarrived.OutstationInscanListActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestEntryActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceActivity
-import com.greensoft.greentranserpnative.ui.operation.pod_entry.PodEntryActivity
 import com.greensoft.greentranserpnative.ui.operation.unarrived.InscanListActivity
+import com.greensoft.greentranserpnative.ui.operation.upload_image.UploadBookingImageActivity
+import com.greensoft.greentranserpnative.ui.operation.upload_image.UploadPodImageActivity
 import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -369,7 +358,14 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
 
     }
     private fun setOnClicks() {
-//        activityBinding.notificationBtn.setOnClickListener {
+        activityBinding.btnUploadPodImage.setOnClickListener {
+            val intent=Intent(this,UploadPodImageActivity::class.java)
+            startActivity(intent)
+        }
+        activityBinding.btnUploadBookingImage.setOnClickListener {
+            val intent=Intent(this, UploadBookingImageActivity::class.java)
+            startActivity(intent)
+        }
         activityBinding.notiImg.setOnClickListener {
 //            showNotificationModelBottomSheet()
 //            openNotificationBottomSheet(notificationDetailList)

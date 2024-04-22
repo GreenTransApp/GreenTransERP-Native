@@ -191,14 +191,46 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_marginHorizontal="0dp"
-                        android:layout_marginVertical="30dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginBottom="5dp"
                         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toTopOf="@id/btn_upload_pod_image"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:spanCount="2"
                         tools:listitem="@layout/menu_items" />
+                    
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btn_upload_pod_image"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:padding="15dp"
+                        android:text="POD IMAGE"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:backgroundTint="@color/green"
+                        android:textColor="@color/black"
+                        app:layout_constraintEnd_toStartOf="@id/btn_upload_booking_image"
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btn_upload_booking_image"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:padding="15dp"
+                        android:text="BOOKING IMAGE"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/btn_upload_pod_image"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:backgroundTint="@color/purple_200"
+                        android:textColor="@color/black"
+                        />
+
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/notification_btn"

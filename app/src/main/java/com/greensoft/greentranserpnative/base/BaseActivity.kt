@@ -37,7 +37,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -47,6 +46,7 @@ import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.common.PeriodSelection
+import com.greensoft.greentranserpnative.model.SingleDatePickerWIthViewTypeModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.acceptPickup.AcceptPickupBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.CommonBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
@@ -101,6 +101,10 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
 
     private var materialDatePicker: MaterialDatePicker<*>? = null
     private var singleDatePicker: MaterialDatePicker<*>? = null
+
+    var singleDatePeriodWithViewType: MutableLiveData<SingleDatePickerWIthViewTypeModel> = MutableLiveData()
+    private var singleDatePickerWithViewType: MaterialDatePicker<*>? = null
+
 //    var timePicker: TimePicker? = null
     var loginDataModel: LoginDataModel? = null
     var userDataModel: UserDataModel? = null
@@ -671,6 +675,36 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
                 return;
             }
             singleDatePicker!!.show(supportFragmentManager, "DATE_PICKER");
+        }
+    }
+
+    open fun openSingleDatePickerWithViewType(viewType: String, withAdapter: Boolean = false, index: Int = -1) {
+        Log.d("BASE ACTIVITY", "SINGLE PERIOD SELECTION")
+        val materialDateBuilder: MaterialDatePicker.Builder<*> =
+            MaterialDatePicker.Builder.datePicker()
+        materialDateBuilder.setTitleText("SELECT A DATE")
+        singleDatePickerWithViewType = materialDateBuilder.build()
+        singleDatePickerWithViewType!!.addOnPositiveButtonClickListener{ selection: Any ->
+            val viewFormat = SimpleDateFormat("dd-MM-yyyy")
+            val sqlFormat = SimpleDateFormat("yyyy-MM-dd")
+            val selectedDate = selection
+            val singleDate = Date(selectedDate as Long)
+            val periodSelection = PeriodSelection()
+            periodSelection.sqlsingleDate = sqlFormat.format(singleDate)
+            periodSelection.viewsingleDate = viewFormat.format(singleDate)
+            val singleDatePickerWIthViewTypeModel = SingleDatePickerWIthViewTypeModel(
+                viewType,
+                periodSelection,
+                withAdapter,
+                index
+            )
+            singleDatePeriodWithViewType.postValue(singleDatePickerWIthViewTypeModel)
+        }
+        if(singleDatePickerWithViewType != null) {
+            if (singleDatePickerWithViewType!!.isVisible) {
+                return;
+            }
+            singleDatePickerWithViewType!!.show(supportFragmentManager, "DATE_PICKER");
         }
     }
 
