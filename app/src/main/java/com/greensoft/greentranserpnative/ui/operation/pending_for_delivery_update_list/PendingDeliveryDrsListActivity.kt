@@ -1,5 +1,6 @@
 package com.greensoft.greentranserpnative.ui.operation.pending_for_delivery_update_list
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -7,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityPendingDeliveryDrsListBinding
@@ -14,10 +16,15 @@ import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.booking.BookingActivity
+import com.greensoft.greentranserpnative.ui.operation.multiple_pod_entry_list.MultiplePodEntryListActivity
+import com.greensoft.greentranserpnative.ui.operation.pending_for_delivery_update_list.models.PodEntryListModel
 import com.greensoft.greentranserpnative.ui.operation.pending_for_delivery_update_list.models.DrsPendingListModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.PickupRefModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import javax.inject.Inject
 @AndroidEntryPoint
 class PendingDeliveryDrsListActivity  @Inject constructor(): BaseActivity(),
@@ -27,22 +34,27 @@ class PendingDeliveryDrsListActivity  @Inject constructor(): BaseActivity(),
         lateinit var  activityBinding:ActivityPendingDeliveryDrsListBinding
         private  val viewModel:PendingDeliveryDrsListViewModel by viewModels()
         private  var rvList:ArrayList<DrsPendingListModel> = ArrayList()
+        private  var podGrList:ArrayList<PodEntryListModel> = ArrayList()
         private var rvAdapter :PendingDeliveryDrsListAdapter? =null
         private lateinit var manager: LinearLayoutManager
         private var fromDate: String = getSqlDate()!!
         private var toDate:String = getSqlDate()!!
-
+        private var drsNo:String? =""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityPendingDeliveryDrsListBinding.inflate(layoutInflater)
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
         setUpToolbar("Pending Delivery Drs List")
-//        getPendingDrsList()
-         setObservers()
+        getUserData()
+        setObservers()
+        getPendingDrsList()
     }
 
      private fun setObservers(){
+         activityBinding.swipeRefreshLayout.setOnRefreshListener {
+             refreshData()
+         }
        viewModel.drsPendingListLiveData.observe(this){ drsData ->
            rvList =drsData
            setupRecyclerView()
@@ -64,6 +76,22 @@ class PendingDeliveryDrsListActivity  @Inject constructor(): BaseActivity(),
                  hideProgressDialog()
              }
          })
+         viewModel.podListLiveData.observe(this){ data ->
+             podGrList = data
+
+             if(podGrList.size !=0){
+                 hideProgressDialog()
+                 val gson = Gson()
+                 val jsonString = gson.toJson(podGrList)
+                 val intent = Intent(this,MultiplePodEntryListActivity::class.java)
+                 intent.putExtra("ARRAY_JSON", jsonString)
+                 startActivity(intent)
+             }
+             else{
+
+                 successToast(mContext,"data not send")
+             }
+         }
      }
 
     private fun refreshData() {
@@ -81,12 +109,9 @@ class PendingDeliveryDrsListActivity  @Inject constructor(): BaseActivity(),
         if(rvAdapter== null) {
             manager = LinearLayoutManager(this)
             activityBinding.recyclerView.layoutManager = manager
-            rvAdapter = PendingDeliveryDrsListAdapter(rvList, this)
         }
+        rvAdapter = PendingDeliveryDrsListAdapter(rvList, this)
         activityBinding.recyclerView.adapter = rvAdapter
-
-
-
     }
 
     private fun getPendingDrsList(){
@@ -94,12 +119,21 @@ class PendingDeliveryDrsListActivity  @Inject constructor(): BaseActivity(),
           companyId = getCompanyId(),
           userCode = getUserCode(),
           loginBranchCode = getLoginBranchCode(),
-          fromDt = "2023-08-15",
+          fromDt = "2023-08-30",
           toDt = "2024-08-31",
 //          fromDt = fromDate,
 //          toDt = toDate,
           sessionId = getSessionId()
       )
+    }
+
+
+    private  fun  getPodGrList(drsNo:String?){
+        viewModel.getPodEntryList(
+            companyId =  getCompanyId(),
+            drsNo = drsNo.toString()
+        )
+
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
@@ -125,6 +159,12 @@ class PendingDeliveryDrsListActivity  @Inject constructor(): BaseActivity(),
     }
 
     override fun onClick(data: Any, clickType: String) {
-        TODO("Not yet implemented")
+        when (clickType) {
+            "POD_SELECT" -> run {
+                val model: DrsPendingListModel = data as DrsPendingListModel
+                drsNo=model.documentno.toString()
+                getPodGrList(drsNo)
+            }
+        }
     }
 }

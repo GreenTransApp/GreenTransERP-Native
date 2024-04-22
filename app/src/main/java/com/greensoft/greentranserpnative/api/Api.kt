@@ -643,5 +643,10 @@ interface Api {
         @Field("prmmastercode") masterCode: String?,
         @Field("prmbranchcode") branchCode: String?
     ):Call<CommonResult>
+    @GET("ManifestAPI/EditDRSList")
+    fun getPodList(
+        @Query("prmconnstring") companyId: String,
+        @Query("prmdrsno") drsNo:String?
+    ): Call<CommonResult>
 
 }
