@@ -10,6 +10,7 @@
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
@@ -86,9 +87,10 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/btn_save"
+                    android:scaleType="centerInside"
+                    android:adjustViewBounds="true"
                     android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/input_gr_layout"
-                    android:src="@drawable/baseline_add_a_photo_24"
                     />
 
                 <com.google.android.material.button.MaterialButton
