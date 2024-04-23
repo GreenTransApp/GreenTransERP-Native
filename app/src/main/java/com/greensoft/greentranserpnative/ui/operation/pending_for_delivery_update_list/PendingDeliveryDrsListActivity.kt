@@ -116,7 +116,8 @@ class PendingDeliveryDrsListActivity  @Inject constructor(): BaseActivity(),
 
     private fun getPendingDrsList(){
       viewModel.getDrsPendingList(
-          companyId = getCompanyId(),
+//          companyId = getCompanyId(),
+          companyId ="10",
           userCode = getUserCode(),
           loginBranchCode = getLoginBranchCode(),
           fromDt = "2023-08-30",

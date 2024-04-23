@@ -54,6 +54,7 @@ class PendingDeliveryDrsListRepository @Inject constructor() : BaseRepository() 
             override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
                 viewDialogMutData.postValue(false)
                 isError.postValue(t.message)
+                isError.postValue(t.message)
             }
 
         })

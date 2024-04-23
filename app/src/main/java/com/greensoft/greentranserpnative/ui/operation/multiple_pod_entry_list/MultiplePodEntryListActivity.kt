@@ -14,6 +14,7 @@ import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.multiple_pod_entry_list.adapters.MultiplePodEntryAdapter
 import com.greensoft.greentranserpnative.ui.operation.pending_for_delivery_update_list.models.PodEntryListModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.PickupRefModel
 import javax.inject.Inject
 
 class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
@@ -36,20 +37,17 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
 
       private fun getDrsDetails(){
           if(intent != null) {
-              val jsonString = intent.getStringExtra("ManifestNo")
+              val jsonString = intent.getStringExtra("ARRAY_JSON")
               if(jsonString != "") {
                   val gson = Gson()
-                  val listType = object : TypeToken<PodEntryListModel>() {}.type
-                  val resultList: PodEntryListModel =
-                      gson.fromJson(jsonString.toString(), listType)
-                  drsSelectedData = resultList;
-                  if(drsSelectedData != null) {
-//                      drsNo = drsSelectedData?.drsno
-
-                  } else {
-                      errorToast("Something went wrong, Please try again.")
-                      finish()
-                  }
+//                  val listType = object : TypeToken<List<PickupRefModel>>() {}.type
+//                  val resultList: ArrayList<PickupRefModel> =
+//                      gson.fromJson(jsonString.toString(), listType)
+//                  pickupRefData.addAll(resultList)
+//                  pickupRefData.forEachIndexed { _, element ->
+//                      transactionId=element.transactionid.toString()
+//                      getSingleRefData()
+//                  }
               }
           }
     }
