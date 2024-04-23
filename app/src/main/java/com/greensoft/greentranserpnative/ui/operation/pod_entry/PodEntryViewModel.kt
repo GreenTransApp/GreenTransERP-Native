@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.greensoft.greentranserpnative.base.BaseViewModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodEntryModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodSaveModel
-import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.RelationListModel
+import com.greensoft.greentranserpnative.ui.operation.multiple_pod_entry_list.models.RelationListModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.getGrNoModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

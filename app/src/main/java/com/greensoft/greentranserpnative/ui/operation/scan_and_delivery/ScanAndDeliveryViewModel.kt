@@ -3,10 +3,8 @@ package com.greensoft.greentranserpnative.ui.operation.scan_and_delivery
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.greensoft.greentranserpnative.base.BaseViewModel
-import com.greensoft.greentranserpnative.ui.operation.pod_entry.PodEntryRepository
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodEntryModel
-import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodSaveModel
-import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.RelationListModel
+import com.greensoft.greentranserpnative.ui.operation.multiple_pod_entry_list.models.RelationListModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanDelReasonModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanDeliverySaveModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanStickerModel

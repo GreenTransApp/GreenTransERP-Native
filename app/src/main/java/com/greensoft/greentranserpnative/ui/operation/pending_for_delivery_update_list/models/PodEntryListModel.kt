@@ -16,9 +16,9 @@ data class PodEntryListModel(
     val deliveredby: String?,
     val deliverystatus: String?,
     val dest: String?,
-    val dlvagentcode: Any?,
-    val dlvagentname: Any?,
-    val dlvvehicleno: Any?,
+    val dlvagentcode: String?,
+    val dlvagentname: String?,
+    val dlvvehicleno: String?,
     val documenttype: String?,
     val drdt: Any?,
     val drivercode: Any?,
@@ -55,5 +55,11 @@ data class PodEntryListModel(
     val smsmobileno: Any?,
     val topay: Double?,
     val vendcode: Any?,
-    val vendname: Any?
+    val vendname: Any?,
+
+
+    val poddt: Any?,
+    val podtime: Any?,
+    val receivedby: Any?,
+    var relation: Any?,
 )
