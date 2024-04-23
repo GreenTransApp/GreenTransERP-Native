@@ -142,6 +142,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
         setupUi()
         setObserver()
         setOnClicks()
+        requestCameraPermission()
         if(!isScannerWorking()) {
             errorToast(ENV.SCANNER_NOT_WORKING_MSG)
         }

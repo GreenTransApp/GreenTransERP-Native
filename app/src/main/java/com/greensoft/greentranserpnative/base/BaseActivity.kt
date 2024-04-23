@@ -905,15 +905,61 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
         requestPermissions(storagePermission, BaseActivity.STORAGE_REQUEST)
     }
     // checking camera permissions
-    private fun checkCameraPermission(): Boolean {
-        val result = ContextCompat.checkSelfPermission(this,
-            Manifest.permission.CAMERA
-        ) == PackageManager.PERMISSION_GRANTED
-        val result1 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-        return result && result1
+//    private fun checkCameraPermission(): Boolean {
+//        val result = ContextCompat.checkSelfPermission(this,
+//            Manifest.permission.CAMERA,
+//        ) == PackageManager.PERMISSION_GRANTED
+//        val result1 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+//        return result && result1
+//    }
+    private fun ifPermissionGranted(permission: String): Boolean {
+        return ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
     }
-    private fun requestCameraPermission() {
-        requestPermissions(cameraPermission, BaseActivity.CAMERA_REQUEST)
+    private fun checkCameraPermission(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            return ifPermissionGranted(Manifest.permission.READ_MEDIA_IMAGES)
+                    && ifPermissionGranted(Manifest.permission.READ_MEDIA_VIDEO)
+                    && ifPermissionGranted(Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED)
+                    && ifPermissionGranted(Manifest.permission.CAMERA)
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return ifPermissionGranted(Manifest.permission.READ_MEDIA_IMAGES)
+                    && ifPermissionGranted(Manifest.permission.READ_MEDIA_VIDEO)
+                    && ifPermissionGranted(Manifest.permission.CAMERA)
+        } else {
+            return ifPermissionGranted(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    && ifPermissionGranted(Manifest.permission.CAMERA)
+        }
+
+    }
+    fun requestCameraPermission() {
+        if(checkCameraPermission()) {
+            return
+        }
+        var permissions: Array<String>? = null
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            permissions = arrayOf(
+                Manifest.permission.READ_MEDIA_IMAGES,
+                Manifest.permission.READ_MEDIA_VIDEO,
+                Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED,
+                Manifest.permission.CAMERA
+                )
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissions = arrayOf(
+                Manifest.permission.READ_MEDIA_IMAGES,
+                Manifest.permission.READ_MEDIA_VIDEO,
+                Manifest.permission.CAMERA
+            )
+        } else {
+            permissions = arrayOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA
+            )
+        }
+        if(permissions != null) {
+            requestPermissions(permissions, CAMERA_REQUEST)
+        } else {
+            errorToast("Something went wrong. Please reinstall the app.")
+        }
     }
 
     private fun pickFromGallery() {
