@@ -8,7 +8,7 @@ import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodEntryModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodSaveModel
-import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.RelationListModel
+import com.greensoft.greentranserpnative.ui.operation.multiple_pod_entry_list.models.RelationListModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.getGrNoModel
 import retrofit2.Call
 import retrofit2.Callback

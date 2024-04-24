@@ -1,4 +1,4 @@
-package com.greensoft.greentranserpnative.ui.operation.pod_entry.models
+package com.greensoft.greentranserpnative.ui.operation.multiple_pod_entry_list.models
 
 data class RelationListModel(
     val commandmessage: Any?,

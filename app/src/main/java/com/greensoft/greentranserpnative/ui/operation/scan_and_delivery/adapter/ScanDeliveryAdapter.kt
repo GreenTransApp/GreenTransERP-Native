@@ -1,18 +1,14 @@
 package com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.adapter
 
 import android.content.Context
-import android.graphics.ColorSpace.Model
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.ui.graphics.Color
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.databinding.ScanStickerItemBinding
-import com.greensoft.greentranserpnative.databinding.SelectedGrItemBinding
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.ScanAndDeliveryActivity
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanStickerModel
 
