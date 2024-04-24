@@ -10,14 +10,9 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Filter
 import android.widget.Filterable
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.greensoft.greentranserpnative.databinding.ScanStickerItemBinding
 import com.greensoft.greentranserpnative.databinding.UndeliveredStickerItemBinding
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
-import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanDelReasonModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanStickerModel
 import java.util.Locale

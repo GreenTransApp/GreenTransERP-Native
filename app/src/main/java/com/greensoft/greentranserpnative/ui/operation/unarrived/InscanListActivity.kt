@@ -109,12 +109,12 @@ class InscanListActivity @Inject constructor(): BaseActivity(), OnRowClick<Any> 
               branchCode = getLoginBranchCode(),
              sessionId = getSessionId(),
              "ALL",
-             //fromDt = fromDt,
-             fromDt = "2023-11-01",
-             //toDt = toDt,
-             toDt = "2024-04-01",
-             manifestType = "O",
-             modeType = "A",
+             fromDt = fromDt,
+             toDt = toDt,
+//             fromDt = "2023-11-01",
+//             toDt = "2024-04-01",
+             manifestType = "I",
+             modeType = "S",
 
          );
      }

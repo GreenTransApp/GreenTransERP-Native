@@ -650,4 +650,14 @@ interface Api {
         @Query("prmdrsno") drsNo:String?
     ): Call<CommonResult>
 
+    @GET("WMS/getLoadingList_native")
+    fun getLoadingList(
+        @Query("prmconnstring") companyId: String,
+        @Query("prmusercode") userCode:String?,
+        @Query("prmbranchcode") branchCode:String?,
+        @Query("prmsessionid") sessionId:String?,
+        @Query("prmmftype") mfType:String?,
+        @Query("prmdt") dt:String?,
+    ): Call<CommonResult>
+
 }

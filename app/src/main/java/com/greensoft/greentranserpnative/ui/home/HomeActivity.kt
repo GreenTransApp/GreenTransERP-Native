@@ -34,6 +34,8 @@ import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityHomeBinding
 import com.greensoft.greentranserpnative.ui.bottomsheet.bookingIndentInfoBottomSheet.BookingIndentInfoBottomSheet
+import com.greensoft.greentranserpnative.ui.bottomsheet.printGR.PrintGrBottomSheet
+import com.greensoft.greentranserpnative.ui.bottomsheet.vehicleSelection.VehicleSelectionBottomSheet
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.login.LoginActivity
 import com.greensoft.greentranserpnative.ui.navDrawer.ProfileActivity
@@ -358,6 +360,10 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
 //        openBookingIndentInfoBottomSheet(this,"Booking Indent Information",this,)
 
     }
+    private fun printGrBottomSheet(mContext: Context, title:String) {
+        val bottomSheetDialog = PrintGrBottomSheet.newInstance(mContext,title)
+        bottomSheetDialog.show(supportFragmentManager, PrintGrBottomSheet.TAG)
+    }
     private fun setOnClicks() {
         activityBinding.btnUploadPodImage.setOnClickListener {
             val intent=Intent(this,UploadPodImageActivity::class.java)
@@ -380,7 +386,8 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
             }
         }
         activityBinding.testDebugging.setOnClickListener {
-            testFunction()
+//            testFunction()
+            printGrBottomSheet(this,"Print GR")
         }
 //        activityBinding.btnLogOut.setOnClickListener {
 //           logOut()
