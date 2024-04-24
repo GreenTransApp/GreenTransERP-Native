@@ -2,7 +2,6 @@ package com.greensoft.greentranserpnative.ui.operation.despatch_manifest
 
 import android.app.AlertDialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -14,7 +13,6 @@ import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivitySaveDespatchManifestBinding
-import com.greensoft.greentranserpnative.databinding.ActivitySavePickupManifestBinding
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
 import com.greensoft.greentranserpnative.ui.common.alert.CommonAlert
@@ -28,12 +26,8 @@ import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSele
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.adapters.SaveDespatchManifestAdapter
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.DespatchManifestEnteredDataModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.DespatchSaveModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.GrSelectionActivity
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.PickupManifestViewModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.SavePickupManifestAdapter
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.ManifestEnteredDataModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.SavePickupManifestModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.LoadingListModel
 import com.greensoft.greentranserpnative.utils.Utils
 import com.greensoft.greentranserpnative.utils.Utils.checkNullOrEmpty
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,7 +41,7 @@ class SaveDespatchManifestActivity @Inject constructor() : BaseActivity(), OnRow
     private val viewModel: DespatchManifestViewModel by viewModels()
     private val bookingViewModel: BookingViewModel by viewModels()
     private var rvAdapter: SaveDespatchManifestAdapter? = null
-    private var grList: ArrayList<GrSelectionModel> = ArrayList()
+    private var rvList: ArrayList<LoadingListModel> = ArrayList()
     private var contentList: ArrayList<ContentSelectionModel> = ArrayList()
     private var packingList: ArrayList<PackingSelectionModel> = ArrayList()
     private var model: DespatchManifestEnteredDataModel? = null
@@ -174,7 +168,7 @@ class SaveDespatchManifestActivity @Inject constructor() : BaseActivity(), OnRow
 
     private fun setupRecyclerView() {
         linearLayoutManager = LinearLayoutManager(this)
-        rvAdapter = SaveDespatchManifestAdapter(this,this,grList, this)
+        rvAdapter = SaveDespatchManifestAdapter(this,this,rvList, this)
         activityBinding.recyclerView.apply {
             layoutManager = linearLayoutManager
             adapter = rvAdapter
@@ -246,10 +240,10 @@ class SaveDespatchManifestActivity @Inject constructor() : BaseActivity(), OnRow
             val jsonString = intent.getStringExtra("ARRAY_JSON")
             if(jsonString != "") {
                 val gson = Gson()
-                val listType = object : TypeToken<List<GrSelectionModel>>() {}.type
-                val resultList: ArrayList<GrSelectionModel> =
+                val listType = object : TypeToken<List<LoadingListModel>>() {}.type
+                val resultList: ArrayList<LoadingListModel> =
                     gson.fromJson(jsonString.toString(), listType)
-                grList.addAll(resultList)
+                rvList.addAll(resultList)
                 setupRecyclerView()
             }
         }
@@ -287,8 +281,8 @@ class SaveDespatchManifestActivity @Inject constructor() : BaseActivity(), OnRow
 
             val removingItem: GrSelectionModel = data as GrSelectionModel
 
-            if(grList.isNotEmpty() && index <= grList.size - 1) {
-                grList.removeAt(index)
+            if(rvList.isNotEmpty() && index <= rvList.size - 1) {
+                rvList.removeAt(index)
                 setupRecyclerView()
                 successToast("Successfully Removed. GR #: ${removingItem.grno}")
             } else {
@@ -303,17 +297,17 @@ class SaveDespatchManifestActivity @Inject constructor() : BaseActivity(), OnRow
 
     override fun onItemClickWithAdapter(data: Any, clickType: String, index: Int) {
         super.onItemClickWithAdapter(data, clickType, index)
-        if (clickType == "Content Selection") {
-            val selectedContent=data as ContentSelectionModel
-            rvAdapter?.setContent(selectedContent, index)
-            contentCode=selectedContent.itemcode
-            content=selectedContent.itemname
+//        if (clickType == "Content Selection") {
+//            val selectedContent=data as ContentSelectionModel
+//            rvAdapter?.setContent(selectedContent, index)
+//            contentCode=selectedContent.itemcode
+//            content=selectedContent.itemname
 
-        }else if(clickType=="Packing Selection"){
-            val selectedPckg=data as PackingSelectionModel
-            rvAdapter?.setPacking(selectedPckg, index)
-
-        }
+//        }else if(clickType=="Packing Selection"){
+//            val selectedPckg=data as PackingSelectionModel
+//            rvAdapter?.setPacking(selectedPckg, index)
+//
+//        }
     }
     override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {
         try {
@@ -359,36 +353,36 @@ class SaveDespatchManifestActivity @Inject constructor() : BaseActivity(), OnRow
 
      private fun saveOutstationManifest(){
          var actualLoadingNo: String = ""
-         var actualPacking: String = ""
-         var actualAWeight: String = ""
-         var actualContent: String = ""
+         var actualPacking: String = "~"
+         var actualAWeight: String = "~"
+         var actualContent: String = "~"
          var actualModeCode: String = ""
-         var adapterEnteredData: ArrayList<GrSelectionModel>? = rvAdapter?.getEnteredData()
+         var adapterEnteredData: ArrayList<LoadingListModel>? = rvAdapter?.getEnteredData()
          run enteredData@{
              adapterEnteredData?.forEachIndexed { index, model ->
-                 if (Utils.isDecimalNotEntered(model.aweight.toString())) {
-                     errorToast("GWeight Not Entered at INPUT - ${index + 1}")
-                     return
-                 } else if (Utils.isDecimalNotEntered(model.pckgs.toString())) {
-                     errorToast("Pckgs Not Entered at INPUT - ${index + 1}")
-                     return
-                 }else if (Utils.isStringNotEntered(model.goods.toString())) {
-                     errorToast("Content Not Entered at INPUT - ${index + 1}")
-                     return
-                 }
+//                 if (Utils.isDecimalNotEntered(model.aweight.toString())) {
+//                     errorToast("GWeight Not Entered at INPUT - ${index + 1}")
+//                     return
+//                 } else if (Utils.isDecimalNotEntered(model.pckgs.toString())) {
+//                     errorToast("Pckgs Not Entered at INPUT - ${index + 1}")
+//                     return
+//                 }else if (Utils.isStringNotEntered(model.goods.toString())) {
+//                     errorToast("Content Not Entered at INPUT - ${index + 1}")
+//                     return
+//                 }
              }
          }
-         for(i in 0 until grList.size){
+         for(i in 0 until rvList.size){
 
-             val loadingNo = grList[i].loadingno.toString()
-             val packing = grList[i].packing.toString()
-             val content = grList[i].goods.toString()
-             val aWeight = grList[i].aweight.toString()
+             val loadingNo = rvList[i].loadingno.toString()
+//             val packing = grList[i].packing.toString()
+//             val content = grList[i].goods.toString()
+//             val aWeight = grList[i].aweight.toString()
 
              actualLoadingNo += "$loadingNo~"
-             actualPacking += "$packing~"
-             actualContent += "$content~"
-             actualAWeight += "$aWeight~"
+//             actualPacking += "$packing~"
+//             actualContent += "$content~"
+//             actualAWeight += "$aWeight~"
          }
          if(checkNullOrEmpty(model?.modeCode) == "NOT AVAILABLE"){
              actualModeCode = model?.vehicleCode.toString()

@@ -50,6 +50,10 @@ class PickupManifestRepository @Inject constructor(): BaseRepository(){
     val vehicleTypeLiveData: LiveData<ArrayList<VehicleTypeModel>>
         get() = vehicleTypeMuteLiveData
 
+private val loadingMuteLiveData = MutableLiveData<ArrayList<LoadingListModel>>()
+    val loadingLiveData: LiveData<ArrayList<LoadingListModel>>
+        get() = loadingMuteLiveData
+
     private val saveManifestMuteLiveData = MutableLiveData<SavePickupManifestModel>()
     val saveManifestLiveData: LiveData<SavePickupManifestModel>
         get() = saveManifestMuteLiveData
@@ -323,6 +327,40 @@ class PickupManifestRepository @Inject constructor(): BaseRepository(){
         })
 
     }
+    fun getLoadingList( companyId:String,userCode:String,branchCode:String,sessionId:String,mfType:String,dt:String) {
+        viewDialogMutData.postValue(true)
+        api.getLoadingList(companyId,userCode, branchCode,sessionId,mfType,dt).enqueue(object: Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
+                if(response.body() != null){
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if(result.CommandStatus == 1){
+                        val jsonArray = getResult(result);
+                        if(jsonArray != null) {
+                            val listType = object: TypeToken<List<LoadingListModel>>() {}.type
+                            val resultList: ArrayList<LoadingListModel> = gson.fromJson(jsonArray.toString(), listType);
+                            loadingMuteLiveData.postValue(resultList);
+
+                        }
+                    } else {
+                        isError.postValue(result.CommandMessage.toString());
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR);
+                }
+                viewDialogMutData.postValue(false)
+
+            }
+
+            override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
+
+    }
+
     fun savePickupManifest(
         companyId:String,
         branchcode:String,

@@ -1,5 +1,6 @@
 package com.greensoft.greentranserpnative.ui.operation.pickup_manifest
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -13,6 +14,8 @@ import com.greensoft.greentranserpnative.base.BaseActivity
 
 import com.greensoft.greentranserpnative.databinding.ActivityPickupManifestEntryBinding
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
+import com.greensoft.greentranserpnative.ui.bottomsheet.destinationBottomSheet.DestinationSelectionBottomSheet
+import com.greensoft.greentranserpnative.ui.bottomsheet.destinationBottomSheet.ToStationModel
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.booking.BookingViewModel
@@ -187,6 +190,7 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
 
 
         }
+
 
         activityBinding.autoManifestCheck.setOnCheckedChangeListener { compoundButton, selected ->
             activityBinding.inputManifestNum.setText("")
@@ -539,9 +543,6 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
         openCommonBottomSheet(this, "Vehicle Selection", this, commonList)
     }
 
-    override fun onClick(data: Any, clickType: String) {
-        TODO("Not yet implemented")
-    }
 
     private fun getManifestData() {
         Utils.manifestModel = ManifestEnteredDataModel(
@@ -610,4 +611,10 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
             }
         }
     }
+
+    override fun onClick(data: Any, clickType: String) {
+        TODO("Not yet implemented")
+    }
+
+
 }

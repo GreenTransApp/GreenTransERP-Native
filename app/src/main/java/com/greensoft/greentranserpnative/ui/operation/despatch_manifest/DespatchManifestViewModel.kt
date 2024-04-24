@@ -8,6 +8,7 @@ import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.G
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.DriverSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.LoadingListModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.PickupLocationModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.VehicleSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.VehicleTypeModel
@@ -44,9 +45,17 @@ class DespatchManifestViewModel @Inject constructor(private val _repo: DespatchM
         get() = _repo.grLiveData
     val vehicleTypeLiveData: LiveData<ArrayList<VehicleTypeModel>>
         get() = _repo.vehicleTypeLiveData
- val groupModeLiveData: LiveData<ArrayList<GroupModeCodeModel>>
+    val loadingListLiveData: LiveData<ArrayList<LoadingListModel>>
+        get() = _repo.loadingLiveData
+
+    val groupModeLiveData: LiveData<ArrayList<GroupModeCodeModel>>
         get() = _repo.groupModeLiveData
 
+    fun getLoadingList( companyId:String,userCode:String,branchCode:String,sessionId:String,mfType:String,dt:String){
+        viewModelScope.launch(Dispatchers.IO) {
+            _repo.getLoadingList(companyId,userCode, branchCode,sessionId,mfType,dt)
+        }
+    }
     val manifestLiveData: LiveData<DespatchSaveModel>
         get() = _repo.saveManifestLiveData
 

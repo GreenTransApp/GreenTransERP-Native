@@ -7,5 +7,6 @@ data class LoadingListModel(
     val loadingno: String?,
     val loadingtime: String?,
     val loadingviewdt: String?,
-    val noofgr: Int?
+    val noofgr: Int,
+    var isSelected: Boolean = false,
 )

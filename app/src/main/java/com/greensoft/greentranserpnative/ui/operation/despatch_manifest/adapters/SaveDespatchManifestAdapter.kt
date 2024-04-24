@@ -17,17 +17,18 @@ import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.SaveDesp
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.SavePickupManifestActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.SavePickupManifestAdapter
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.LoadingListModel
 import java.util.Locale
 import kotlin.math.roundToInt
 
 class SaveDespatchManifestAdapter (private val mContext: Context,
                                    private val activity: SaveDespatchManifestActivity,
-                                   private val manifestList: ArrayList<GrSelectionModel>,
+                                   private val manifestList: ArrayList<LoadingListModel>,
                                    private val onRowClick: OnRowClick<Any>,
 
                                    ) : RecyclerView.Adapter<SaveDespatchManifestAdapter.DespatchManifestViewHolder>() ,
     Filterable {
-    private  var filterList: ArrayList<GrSelectionModel> = ArrayList()
+    private  var filterList: ArrayList<LoadingListModel> = ArrayList()
 
     init {
         filterList=manifestList
@@ -36,63 +37,63 @@ class SaveDespatchManifestAdapter (private val mContext: Context,
     inner class DespatchManifestViewHolder(private val binding: SavePickupManifestItemBinding) :
         RecyclerView.ViewHolder(binding.root){
 
-        fun setOnClick(model: GrSelectionModel){
-            binding.content.setOnClickListener {
-                onRowClick.onRowClick(model, "CONTENT_SELECT", adapterPosition)
-
-            }
-            binding.packing.setOnClickListener {
-                onRowClick.onRowClick(model, "PACKING_SELECT", adapterPosition)
-
-            }
-            binding.pckgs.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-                override fun afterTextChanged(s: Editable?) {
-
-                    var pckgsValue=""
-                    if(binding.pckgs.text.isNotEmpty()){
-                        pckgsChange(adapterPosition,binding)
-                        pckgsValue=binding.pckgs.text.toString()
-                    }else{
-                        pckgsValue=binding.balancePckgs.text.toString()
-                    }
-                    activity.getPckgsValue(pckgsValue.toInt())
-
-
-
-                }
-            })
+        fun setOnClick(model: LoadingListModel){
+//            binding.content.setOnClickListener {
+//                onRowClick.onRowClick(model, "CONTENT_SELECT", adapterPosition)
+//
+//            }
+//            binding.packing.setOnClickListener {
+//                onRowClick.onRowClick(model, "PACKING_SELECT", adapterPosition)
+//
+//            }
+//            binding.pckgs.addTextChangedListener(object : TextWatcher {
+//                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+//                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+//                override fun afterTextChanged(s: Editable?) {
+//
+//                    var pckgsValue=""
+//                    if(binding.pckgs.text.isNotEmpty()){
+//                        pckgsChange(adapterPosition,binding)
+//                        pckgsValue=binding.pckgs.text.toString()
+//                    }else{
+//                        pckgsValue=binding.balancePckgs.text.toString()
+//                    }
+//                    activity.getPckgsValue(pckgsValue.toInt())
+//
+//
+//
+//                }
+//            })
+//
+//            binding.gWeight.addTextChangedListener ( object : TextWatcher {
+//                override fun beforeTextChanged(
+//                    s: CharSequence?,
+//                    start: Int,
+//                    count: Int,
+//                    after: Int) {}
+//                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+//                override fun afterTextChanged(s: Editable?) {
+//                    var gWeight: Double? = binding.gWeight.text.toString().toDoubleOrNull()
+//                    if(gWeight != null) {
+//                        activity.getGWeightValue(gWeight)
+//                    } else {
+//                        activity.getGWeightValue(0.00)
+//                    }
+//
+//
+//
+//                }
+//
+//            } )
             binding.btnRemove.setOnClickListener {
                 onRowClick.onRowClick(model, "REMOVE_SELECT", adapterPosition)
 //                 removeItem(model, adapterPosition)
             }
 
-            binding.gWeight.addTextChangedListener ( object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int) {}
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-                override fun afterTextChanged(s: Editable?) {
-                    var gWeight: Double? = binding.gWeight.text.toString().toDoubleOrNull()
-                    if(gWeight != null) {
-                        activity.getGWeightValue(gWeight)
-                    } else {
-                        activity.getGWeightValue(0.00)
-                    }
-
-
-
-                }
-
-            } )
-
         }
-        fun bindData(model: GrSelectionModel, onRowClick: OnRowClick<Any>) {
-            model.pckgs = model.pckgs.toString().toDouble().roundToInt()
-            model.mfpckg = model.mfpckg.toString().toDouble().roundToInt()
+        fun bindData(model: LoadingListModel, onRowClick: OnRowClick<Any>) {
+//            model.pckgs = model.pckgs.toString().toDouble().roundToInt()
+//            model.mfpckg = model.mfpckg.toString().toDouble().roundToInt()
             binding.grModel = model
             binding.index = adapterPosition
             setOnClick(model)
@@ -114,50 +115,50 @@ class SaveDespatchManifestAdapter (private val mContext: Context,
 
     }
 
-    fun pckgsChange(index: Int, layoutBinding: SavePickupManifestItemBinding){
-        val pckgs:Int?=layoutBinding.pckgs.text.toString().toIntOrNull()
-        val balancePckgs:Int?=layoutBinding.balancePckgs.text.toString().toIntOrNull()
-        if (pckgs != null && balancePckgs != null) {
-            if(pckgs >= 0 && pckgs > balancePckgs){
-//               layoutBinding.pckgs.text= layoutBinding.balancePckgs.text
-                if(balancePckgs.toString() != layoutBinding.pckgs.text.toString()) {
-                    layoutBinding.pckgs.setText(balancePckgs.toString())
-                    Toast.makeText(mContext, "pckgs can not be greater than balance pckgs", Toast.LENGTH_SHORT).show()
-                }
-                activity.getBalancepckg(layoutBinding.balancePckgs.text.toString().toInt())
+//    fun pckgsChange(index: Int, layoutBinding: SavePickupManifestItemBinding){
+//        val pckgs:Int?=layoutBinding.pckgs.text.toString().toIntOrNull()
+//        val balancePckgs:Int?=layoutBinding.balancePckgs.text.toString().toIntOrNull()
+//        if (pckgs != null && balancePckgs != null) {
+//            if(pckgs >= 0 && pckgs > balancePckgs){
+////               layoutBinding.pckgs.text= layoutBinding.balancePckgs.text
+//                if(balancePckgs.toString() != layoutBinding.pckgs.text.toString()) {
+//                    layoutBinding.pckgs.setText(balancePckgs.toString())
+//                    Toast.makeText(mContext, "pckgs can not be greater than balance pckgs", Toast.LENGTH_SHORT).show()
+//                }
+//                activity.getBalancepckg(layoutBinding.balancePckgs.text.toString().toInt())
+//
+//            }
+//            else if( pckgs == 0){
+//                layoutBinding.pckgs.setText(layoutBinding.balancePckgs.text.toString())
+////                   Toast.makeText(mContext, "went something wrong", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//    }
 
-            }
-            else if( pckgs == 0){
-                layoutBinding.pckgs.setText(layoutBinding.balancePckgs.text.toString())
-//                   Toast.makeText(mContext, "went something wrong", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    fun getEnteredData(): ArrayList<GrSelectionModel>{
+    fun getEnteredData(): ArrayList<LoadingListModel>{
         return manifestList
     }
-    fun setContent(contentModel: ContentSelectionModel, adapterPosition: Int) {
-//        manifestList[adapterPosition].goods = contentModel.itemname
-        manifestList.forEachIndexed { index, grSelectionModel ->
-            if(grSelectionModel.grno == filterList[adapterPosition].grno) {
-                grSelectionModel.goods = contentModel.itemname
-                filterList[adapterPosition].goods = contentModel.itemname
-            }
-        }
-        notifyItemChanged(adapterPosition)
-    }
-    fun setPacking(pckgsModel: PackingSelectionModel, adapterPosition: Int) {
-//        manifestList[adapterPosition].packing = pckgsModel.packingname
-
-        manifestList.forEachIndexed { index, grSelectionModel ->
-            if(grSelectionModel.grno == filterList[adapterPosition].grno) {
-                grSelectionModel.packing = pckgsModel.packingname
-                filterList[adapterPosition].packing = pckgsModel.packingname
-            }
-        }
-        notifyItemChanged(adapterPosition)
-    }
+//    fun setContent(contentModel: ContentSelectionModel, adapterPosition: Int) {
+////        manifestList[adapterPosition].goods = contentModel.itemname
+//        manifestList.forEachIndexed { index, grSelectionModel ->
+//            if(grSelectionModel.grno == filterList[adapterPosition].grno) {
+//                grSelectionModel.goods = contentModel.itemname
+//                filterList[adapterPosition].goods = contentModel.itemname
+//            }
+//        }
+//        notifyItemChanged(adapterPosition)
+//    }
+//    fun setPacking(pckgsModel: PackingSelectionModel, adapterPosition: Int) {
+////        manifestList[adapterPosition].packing = pckgsModel.packingname
+//
+//        manifestList.forEachIndexed { index, grSelectionModel ->
+//            if(grSelectionModel.grno == filterList[adapterPosition].grno) {
+//                grSelectionModel.packing = pckgsModel.packingname
+//                filterList[adapterPosition].packing = pckgsModel.packingname
+//            }
+//        }
+//        notifyItemChanged(adapterPosition)
+//    }
 
 
     override fun getFilter(): Filter {
@@ -167,14 +168,14 @@ class SaveDespatchManifestAdapter (private val mContext: Context,
                 if (charString.isEmpty()) {
                     filterList = manifestList
                 } else {
-                    val filteredList: ArrayList<GrSelectionModel> = ArrayList()
+                    val filteredList: ArrayList<LoadingListModel> = ArrayList()
                     for (row in manifestList) {
                         if(
 //                             row.custname.lowercase().contains(charString.lowercase(Locale.getDefault()))
-                            row.grno.toString().contains(charString.lowercase(Locale.getDefault()))
-                            ||row.grdt.contains(charString.lowercase(Locale.getDefault()))
-                            ||row.custname!!.lowercase().contains(charString.lowercase(Locale.getDefault()))
-                            ||row.destname.lowercase().contains(charString.lowercase(Locale.getDefault()))
+                            row.loadingno.toString().toString().contains(charString.lowercase(Locale.getDefault()))
+//                            ||row.grdt.contains(charString.lowercase(Locale.getDefault()))
+//                            ||row.custname!!.lowercase().contains(charString.lowercase(Locale.getDefault()))
+//                            ||row.destname.lowercase().contains(charString.lowercase(Locale.getDefault()))
                         ){
                             filteredList.add(row)
                         }
@@ -190,7 +191,7 @@ class SaveDespatchManifestAdapter (private val mContext: Context,
                 charSequence: CharSequence?,
                 filterResults: FilterResults
             ) {
-                filterList = filterResults.values as ArrayList<GrSelectionModel>
+                filterList = filterResults.values as ArrayList<LoadingListModel>
                 notifyDataSetChanged()
             }
         }

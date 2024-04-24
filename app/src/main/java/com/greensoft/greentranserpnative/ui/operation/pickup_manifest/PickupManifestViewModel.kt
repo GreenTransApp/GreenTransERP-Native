@@ -39,6 +39,9 @@ class PickupManifestViewModel @Inject constructor(private val _repo: PickupManif
     val vehicleTypeLiveData: LiveData<ArrayList<VehicleTypeModel>>
         get() = _repo.vehicleTypeLiveData
 
+    val loadingListLiveData: LiveData<ArrayList<LoadingListModel>>
+        get() = _repo.loadingLiveData
+
     val manifestLiveData: LiveData<SavePickupManifestModel>
         get() = _repo.saveManifestLiveData
 
@@ -83,6 +86,12 @@ class PickupManifestViewModel @Inject constructor(private val _repo: PickupManif
     fun getVehicleType( companyId:String,spname: String,param:List<String>, values:ArrayList<String>){
         viewModelScope.launch(Dispatchers.IO) {
             _repo.getVehicleTypeList(companyId,spname, param,values)
+        }
+    }
+
+    fun getLoadingList( companyId:String,userCode:String,branchCode:String,sessionId:String,mfType:String,dt:String){
+        viewModelScope.launch(Dispatchers.IO) {
+            _repo.getLoadingList(companyId,userCode, branchCode,sessionId,mfType,dt)
         }
     }
 

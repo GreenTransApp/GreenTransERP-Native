@@ -4,7 +4,7 @@
     <data>
       <variable
         name="grModel"
-        type="com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel" />
+        type="com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.LoadingListModel" />
       <variable
           name="index"
           type="Integer" />
@@ -57,122 +57,122 @@
                         android:background="@drawable/disable_table_content_cell_bg"
                         android:textSize="16sp" />
 
-                    <EditText
-                        android:id="@+id/gr_no"
-                        android:layout_width="150sp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:focusable="false"
-                        android:text="@{String.valueOf(grModel.grno)}"
-                        android:background="@drawable/disable_table_content_cell_bg"
-                        android:textSize="16sp" />
+<!--                    <EditText-->
+<!--                        android:id="@+id/gr_no"-->
+<!--                        android:layout_width="150sp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:gravity="center"-->
+<!--                        android:focusable="false"-->
+<!--                        android:text="@{String.valueOf(grModel.grno)}"-->
+<!--                        android:background="@drawable/disable_table_content_cell_bg"-->
+<!--                        android:textSize="16sp" />-->
 
 
-                    <EditText
-                        android:id="@+id/allocated_dt"
-                        android:layout_width="150sp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:focusable="false"
-                        android:text="@{String.valueOf(grModel.grdt)}"
-                        android:background="@drawable/disable_table_content_cell_bg"
-                        android:textSize="16sp" />
+<!--                    <EditText-->
+<!--                        android:id="@+id/allocated_dt"-->
+<!--                        android:layout_width="150sp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:gravity="center"-->
+<!--                        android:focusable="false"-->
+<!--                        android:text="@{String.valueOf(grModel.grdt)}"-->
+<!--                        android:background="@drawable/disable_table_content_cell_bg"-->
+<!--                        android:textSize="16sp" />-->
 
-                    <EditText
-                        android:id="@+id/cust_name"
-                        android:layout_width="200sp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:textColor="@color/black"
-                        android:focusable="false"
-                        android:text="@{grModel.custname ==null ?`Data not found`:String.valueOf(grModel.custname)}"
-                        android:background="@drawable/disable_table_content_cell_bg"
-                        android:textSize="16sp" />
+<!--                    <EditText-->
+<!--                        android:id="@+id/cust_name"-->
+<!--                        android:layout_width="200sp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:gravity="center"-->
+<!--                        android:textColor="@color/black"-->
+<!--                        android:focusable="false"-->
+<!--                        android:text="@{grModel.custname ==null ?`Data not found`:String.valueOf(grModel.custname)}"-->
+<!--                        android:background="@drawable/disable_table_content_cell_bg"-->
+<!--                        android:textSize="16sp" />-->
 
-                    <EditText
-                        android:id="@+id/cngr_name"
-                        android:layout_width="200sp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:focusable="false"
-                        android:text="@{String.valueOf(grModel.cngrname)}"
-                        android:background="@drawable/disable_table_content_cell_bg"
-                        android:textSize="16sp" />
+<!--                    <EditText-->
+<!--                        android:id="@+id/cngr_name"-->
+<!--                        android:layout_width="200sp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:gravity="center"-->
+<!--                        android:focusable="false"-->
+<!--                        android:text="@{String.valueOf(grModel.cngrname)}"-->
+<!--                        android:background="@drawable/disable_table_content_cell_bg"-->
+<!--                        android:textSize="16sp" />-->
 
-                    <EditText
-                        android:id="@+id/cnge_name"
-                        android:layout_width="200sp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:textColor="@color/black"
-                        android:focusable="false"
-                        android:text="@{String.valueOf(grModel.cngename)}"
-                        android:background="@drawable/disable_table_content_cell_bg"
-                        android:textSize="16sp" />
+<!--                    <EditText-->
+<!--                        android:id="@+id/cnge_name"-->
+<!--                        android:layout_width="200sp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:gravity="center"-->
+<!--                        android:textColor="@color/black"-->
+<!--                        android:focusable="false"-->
+<!--                        android:text="@{String.valueOf(grModel.cngename)}"-->
+<!--                        android:background="@drawable/disable_table_content_cell_bg"-->
+<!--                        android:textSize="16sp" />-->
 
-                    <EditText
-                        android:id="@+id/dest_name"
-                        android:layout_width="200sp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:focusable="false"
-                        android:text="@{String.valueOf(grModel.destname)}"
-                        android:background="@drawable/disable_table_content_cell_bg"
-                        android:textSize="16sp" />
-
-
-
-                    <EditText
-                        android:id="@+id/content"
-                        android:layout_width="200sp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:focusable="false"
-                        android:text="@{grModel.goods ==null ?`select content`:String.valueOf(grModel.goods)}"
-                        android:background="@drawable/table_content_cell_bg"
-                        android:textSize="16sp" />
+<!--                    <EditText-->
+<!--                        android:id="@+id/dest_name"-->
+<!--                        android:layout_width="200sp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:gravity="center"-->
+<!--                        android:focusable="false"-->
+<!--                        android:text="@{String.valueOf(grModel.destname)}"-->
+<!--                        android:background="@drawable/disable_table_content_cell_bg"-->
+<!--                        android:textSize="16sp" />-->
 
 
-                    <EditText
-                        android:id="@+id/packing"
-                        android:layout_width="150sp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:focusable="false"
-                        android:text="@{String.valueOf(grModel.packing)}"
-                        android:background="@drawable/table_content_cell_bg"
-                        android:textSize="16sp" />
 
-                    <EditText
-                        android:id="@+id/balance_pckgs"
-                        android:layout_width="150sp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:focusable="false"
-                        android:inputType="number"
-                        android:text="@{String.valueOf(grModel.pckgs)}"
-                        android:background="@drawable/disable_table_content_cell_bg"
-                        android:textSize="16sp"/>
-
-                    <EditText
-                        android:id="@+id/pckgs"
-                        android:layout_width="150sp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:inputType="number"
-                        android:text="@{String.valueOf(grModel.mfpckg)}"
-                        android:background="@drawable/table_content_cell_bg"
-                        android:textSize="16sp" />
+<!--                    <EditText-->
+<!--                        android:id="@+id/content"-->
+<!--                        android:layout_width="200sp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:gravity="center"-->
+<!--                        android:focusable="false"-->
+<!--                        android:text="@{grModel.goods ==null ?`select content`:String.valueOf(grModel.goods)}"-->
+<!--                        android:background="@drawable/table_content_cell_bg"-->
+<!--                        android:textSize="16sp" />-->
 
 
-                    <EditText
-                        android:id="@+id/g_weight"
-                        android:layout_width="150sp"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="@{String.valueOf(grModel.aweight)}"
-                        android:background="@drawable/table_content_cell_bg"
-                        android:textSize="16sp" />
+<!--                    <EditText-->
+<!--                        android:id="@+id/packing"-->
+<!--                        android:layout_width="150sp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:gravity="center"-->
+<!--                        android:focusable="false"-->
+<!--                        android:text="@{String.valueOf(grModel.packing)}"-->
+<!--                        android:background="@drawable/table_content_cell_bg"-->
+<!--                        android:textSize="16sp" />-->
+
+<!--                    <EditText-->
+<!--                        android:id="@+id/balance_pckgs"-->
+<!--                        android:layout_width="150sp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:gravity="center"-->
+<!--                        android:focusable="false"-->
+<!--                        android:inputType="number"-->
+<!--                        android:text="@{String.valueOf(grModel.pckgs)}"-->
+<!--                        android:background="@drawable/disable_table_content_cell_bg"-->
+<!--                        android:textSize="16sp"/>-->
+
+<!--                    <EditText-->
+<!--                        android:id="@+id/pckgs"-->
+<!--                        android:layout_width="150sp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:gravity="center"-->
+<!--                        android:inputType="number"-->
+<!--                        android:text="@{String.valueOf(grModel.mfpckg)}"-->
+<!--                        android:background="@drawable/table_content_cell_bg"-->
+<!--                        android:textSize="16sp" />-->
+
+
+<!--                    <EditText-->
+<!--                        android:id="@+id/g_weight"-->
+<!--                        android:layout_width="150sp"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:gravity="center"-->
+<!--                        android:text="@{String.valueOf(grModel.aweight)}"-->
+<!--                        android:background="@drawable/table_content_cell_bg"-->
+<!--                        android:textSize="16sp" />-->
 
 
                     <LinearLayout
