@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.ui.operation.unarrived.models.InscanListModel
@@ -70,8 +71,12 @@ class UploadImageRepository @Inject constructor(): BaseRepository() {
                         val jsonArray = getResult(result);
                         if(jsonArray != null) {
                             val listType = object: TypeToken<List<SaveUploadImageModel>>() {}.type
-                            val saveUploadImageModel: SaveUploadImageModel = gson.fromJson(jsonArray.toString(), listType);
-                            uploadImageMutableLiveData.postValue(saveUploadImageModel);
+                            val saveUploadImageModel: List<SaveUploadImageModel> = gson.fromJson(jsonArray.toString(), listType);
+                            if(saveUploadImageModel.size > 0) {
+                                uploadImageMutableLiveData.postValue(saveUploadImageModel[0])
+                            } else {
+                                isError.postValue(ENV.SOMETHING_WENT_WRONG_ERR_MSG)
+                            }
                         }
                     } else {
                         isError.postValue(result.CommandMessage.toString());
@@ -112,8 +117,12 @@ class UploadImageRepository @Inject constructor(): BaseRepository() {
                         val jsonArray = getResult(result);
                         if(jsonArray != null) {
                             val listType = object: TypeToken<List<SaveUploadImageModel>>() {}.type
-                            val saveUploadImageModel: SaveUploadImageModel = gson.fromJson(jsonArray.toString(), listType);
-                            uploadImageMutableLiveData.postValue(saveUploadImageModel);
+                            val saveUploadImageModel: List<SaveUploadImageModel> = gson.fromJson(jsonArray.toString(), listType);
+                            if(saveUploadImageModel.size > 0) {
+                                uploadImageMutableLiveData.postValue(saveUploadImageModel[0]);
+                            } else {
+                                isError.postValue(ENV.SOMETHING_WENT_WRONG_ERR_MSG)
+                            }
                         }
                     } else {
                         isError.postValue(result.CommandMessage.toString());

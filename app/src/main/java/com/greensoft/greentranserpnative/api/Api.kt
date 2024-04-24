@@ -620,7 +620,7 @@ interface Api {
     ): Call<CommonResult>
 
     @FormUrlEncoded
-    @POST("BookingAPI/UploadPodImage")
+    @POST("PODAPI/UpdatePODImage")
     fun uploadPodImage(
         @Field("prmconnstring") companyId: String?,
         @Field("prmgrno") grNo: String?,
