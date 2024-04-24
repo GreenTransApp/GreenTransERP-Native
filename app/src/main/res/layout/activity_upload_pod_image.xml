@@ -87,7 +87,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/btn_save"
-                    android:scaleType="centerInside"
+                    android:scaleType="fitCenter"
                     android:adjustViewBounds="true"
                     android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/input_gr_layout"

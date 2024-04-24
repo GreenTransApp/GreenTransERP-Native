@@ -612,10 +612,11 @@ interface Api {
         @Field("prmvendorcd")vendorcd :String?,
 
         ):Call<CommonResult>
-    @GET("PODAPI/ValidateforPodUpload")
+    @FormUrlEncoded
+    @POST("PODAPI/ValidateforPodUpload")
     fun validateGrForPOD(
-        @Query("prmconnstring") companyId: String,
-        @Query("prmgrno") grNo:String?
+        @Field("prmconnstring") companyId: String,
+        @Field("prmgrno") grNo:String?
     ): Call<CommonResult>
 
     @FormUrlEncoded
