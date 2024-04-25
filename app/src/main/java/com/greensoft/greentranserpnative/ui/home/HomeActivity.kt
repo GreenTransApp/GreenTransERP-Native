@@ -360,10 +360,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
 //        openBookingIndentInfoBottomSheet(this,"Booking Indent Information",this,)
 
     }
-    private fun printGrBottomSheet(mContext: Context, title:String) {
-        val bottomSheetDialog = PrintGrBottomSheet.newInstance(mContext,title)
-        bottomSheetDialog.show(supportFragmentManager, PrintGrBottomSheet.TAG)
-    }
+
     private fun setOnClicks() {
         activityBinding.btnUploadPodImage.setOnClickListener {
             val intent=Intent(this,UploadPodImageActivity::class.java)
@@ -386,8 +383,8 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
             }
         }
         activityBinding.testDebugging.setOnClickListener {
-//            testFunction()
-            printGrBottomSheet(this,"Print GR")
+            testFunction()
+
         }
 //        activityBinding.btnLogOut.setOnClickListener {
 //           logOut()

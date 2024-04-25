@@ -659,4 +659,24 @@ interface Api {
         @Query("prmdt") dt:String?,
     ): Call<CommonResult>
 
+    @GET("JeenaAPI/PrintStickers")
+    fun getPrintStickers(
+        @Query("prmcompanyid") companyId: String,
+        @Query("prmgrno") grNo:String?,
+        @Query("prmfromstickerno") fromStickerNo:String?,
+        @Query("prmtostickerno") toStickerNo:String?,
+
+    ): Call<CommonResult>
+
+    @GET("JeenaAPI/GetGrDetailForPrint")
+    fun getGrPrintDetail(
+        @Query("prmcompanyid") companyId: String,
+        @Query("prmusercode") userCode:String?,
+        @Query("prmbranchcode") branchCode:String?,
+        @Query("prmsessionid") sessionId:String?,
+        @Query("prmgrno") grNo:String?,
+    ): Call<CommonResult>
+
+
+
 }

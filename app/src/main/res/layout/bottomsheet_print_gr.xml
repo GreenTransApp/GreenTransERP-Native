@@ -15,10 +15,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:minHeight="400dp"
-            >
-            <!--        android:theme="@style/BottomSheetDialog"-->
+            android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolBar"
@@ -28,7 +25,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:popupTheme="@style/Toolbar_Popup"
-                android:layout_weight="2"
+                android:layout_weight="5"
                 android:background="@color/colorPrimary"
                 >
                 <com.google.android.material.button.MaterialButton
@@ -41,6 +38,18 @@
                     android:textColor="@color/white"
                     app:iconGravity="end"
                     app:icon="@drawable/close_img"
+                    android:layout_weight="1"
+                    />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btConnectBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Connect"
+                    android:textColor="@color/white"
+                    android:layout_gravity="start"
+                    android:layout_weight="1"
+                    app:iconGravity="end"
+                    app:icon="@drawable/baseline_print_24"
                     />
                 <TextView
                     android:layout_width="wrap_content"
@@ -49,43 +58,124 @@
                     android:id="@+id/toolbar_title"
                     android:textColor="@color/white"
                     android:textSize="20sp"
+                    android:layout_gravity="center"
+                    android:layout_weight="3"
                     />
             </androidx.appcompat.widget.Toolbar>
 
-            <com.google.android.material.card.MaterialCardView
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_grno"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/toolBar"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginHorizontal="40dp"
+                android:layout_marginTop="20dp"
+                android:hint="Gr #"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:id="@+id/cardView_SearchLayout"
-                app:strokeColor="@color/black"
-                app:strokeWidth="2dp"
-                android:layout_marginVertical="2dp"
-                android:layout_marginHorizontal="4dp"
-                app:cardCornerRadius="30dp"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolBar"
                 >
 
-                <androidx.appcompat.widget.SearchView
-                    android:id="@+id/searchView"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_gr"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:iconifiedByDefault="false"
-                    app:queryHint="Search Here..."
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:enabled="false"
                     />
 
-            </com.google.android.material.card.MaterialCardView>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_pckgs"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/cardView_SearchLayout"
+                android:layout_marginHorizontal="40dp"
+                android:layout_marginTop="20dp"
+                android:hint="Pckgs"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/input_layout_grno">
 
-                tools:listitem="@layout/item_vehicle_selection"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_pckgs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:enabled="false"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_from_sticker"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="40dp"
+                android:layout_marginTop="20dp"
+                android:hint="From Sticker"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/input_layout_pckgs">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_from"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:inputType="number"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_to_sticker"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="40dp"
+                android:layout_marginTop="20dp"
+                android:hint="To Sticker"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/input_layout_from_sticker"
+                app:layout_constraintBottom_toTopOf="@id/saveBtn">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_to"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:textAllCaps="true"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/saveBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:padding="15dp"
+                android:backgroundTint="@color/success"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/input_layout_to_sticker"
+                android:layout_marginTop="10dp"
                 />
 
+
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <View
             android:id="@+id/extraSpace"
             android:layout_width="match_parent"
