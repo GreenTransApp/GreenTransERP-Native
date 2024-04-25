@@ -125,6 +125,7 @@ class MultiplePodEntryAdapter  @Inject constructor(
         fun onBind(model: PodEntryListModel, onRowClick: OnRowClick<Any>) {
             layoutBinding.model = model
             layoutBinding.index = adapterPosition
+            model.dlvdt = activity.currentDt.toString()
             setOnclick(model)
 
         }
@@ -143,6 +144,7 @@ class MultiplePodEntryAdapter  @Inject constructor(
 
     override fun onBindViewHolder(holder: MultiplePodEntryViewHolder, position: Int) {
         holder.onBind(podList[position], onRowClick)
+
     }
 
     fun setRelation(model: RelationListModel, adapterPosition: Int) {
@@ -157,7 +159,7 @@ class MultiplePodEntryAdapter  @Inject constructor(
     }
 //    fun setSelectedDt(model: PodEntryListModel, adapterPosition: Int) {
     fun setSelectedDt(model: PeriodSelection, adapterPosition: Int) {
-        podList[adapterPosition].poddt = model.viewsingleDate
+        podList[adapterPosition].dlvdt = model.viewsingleDate
         podList[adapterPosition].sqlpoddt = model.sqlsingleDate
 //        podList.forEachIndexed { index,podModel  ->
 //            if(podModel.grno == podList[adapterPosition].grno) {
@@ -169,7 +171,7 @@ class MultiplePodEntryAdapter  @Inject constructor(
     }
 
     fun setSelectedTime(time: String, adapterPosition: Int) {
-        podList[adapterPosition].podtime = time
+        podList[adapterPosition].dlvtime = time
         notifyItemChanged(adapterPosition)
     }
 

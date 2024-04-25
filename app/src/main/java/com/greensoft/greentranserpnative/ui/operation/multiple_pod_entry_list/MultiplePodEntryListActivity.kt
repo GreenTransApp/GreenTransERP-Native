@@ -24,6 +24,7 @@ import com.greensoft.greentranserpnative.ui.operation.booking.BookingActivity
 import com.greensoft.greentranserpnative.ui.operation.multiple_pod_entry_list.adapters.MultiplePodEntryAdapter
 import com.greensoft.greentranserpnative.ui.operation.multiple_pod_entry_list.models.RelationListModel
 import com.greensoft.greentranserpnative.ui.operation.pending_for_delivery_update_list.models.PodEntryListModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
 import javax.inject.Inject
 
 class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
@@ -46,6 +47,7 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
     var signBitmap: Bitmap? = null
     var deliveryDt =""
     var deliveryTime =""
+    var currentDt = getViewCurrentDate()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityMultiplePodEntryListBinding.inflate(layoutInflater)
@@ -237,18 +239,37 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
         )
     }
 
-    private fun savePod(index: Int){
-        var grNo:String =rvList[index].grno.toString()
-        var podTime:String =rvList[index].podtime.toString()
-        var PodDt:String =rvList[index].poddt.toString()
+    private fun savePod(index: Int) {
+        var grNo: String = rvList[index].grno.toString()
+        var podTime: String = rvList[index].dlvtime.toString()
+        var PodDt: String = rvList[index].dlvdt.toString()
 
-        var stampRequired:String =rvList[index].stampRequired.toString()
-        var signRequired:String =rvList[index].signRequired.toString()
-        var remark:String =""
+        var stampRequired: String = rvList[index].stampRequired.toString()
+        var signRequired: String = rvList[index].signRequired.toString()
+        var remark: String = ""
         var dataIdStr = "";
         var enteredQtyStr = "";
+        var adapterEnteredData: ArrayList<PodEntryListModel>? = rvAdapter?.getEnteredData()
 
-
+                if (rvList[index].mobileno.isNullOrEmpty()) {
+                    errorToast("Mobile No. Not Entered at INPUT - ${index + 1}")
+                    return
+                } else if(rvList[index].receivedby.isNullOrEmpty()){
+                    errorToast(" received By Not Entered at INPUT - ${index + 1}")
+                    return
+                }else if(rvList[index].relation.isNullOrEmpty()){
+                    errorToast(" relation Not Selected at INPUT - ${index + 1}")
+                    return
+                }else if(rvList[index].dlvtime.isNullOrEmpty()){
+                    errorToast(" delivery time Not Selected at INPUT - ${index + 1}")
+                    return
+                }else if( rvList[index].podImg == null){
+                    errorToast(" pod image not attached at INPUT - ${index + 1}")
+                    return
+                }else if( rvList[index].signImg == null){
+                    errorToast(" sign image not attached at INPUT - ${index + 1}")
+                    return
+                }
 
 
         viewModel.savePodEntry(
@@ -272,11 +293,12 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
             deliveryBoy ="",
             boyId = getExecutiveId(),
             podDt = getSqlCurrentDate(),
+
             pckgs = "",
             pckgsStr = enteredQtyStr,
             dataIdStr = dataIdStr
 
         )
+        }
     }
 
-}

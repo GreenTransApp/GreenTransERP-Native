@@ -105,7 +105,7 @@
                             android:drawableEnd="@drawable/calendar"
                             android:drawableTint="@color/colorPrimary"
                             android:focusable="false"
-                            android:text="@{model.poddt ==null ?`Select Date`:String.valueOf(model.poddt)}"
+                            android:text="@{model.dlvdt ==null ?``:String.valueOf(model.dlvdt)}"
                             android:textAllCaps="true" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -148,7 +148,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:focusable="false"
-                            android:text="@{model.podtime ==null ?`Enter time`:String.valueOf(model.podtime)}"
+                            android:text="@{model.dlvtime ==null ?`Enter time`:String.valueOf(model.dlvtime)}"
                             android:drawableRight="@drawable/clock"
                             android:drawableTint="@color/colorPrimary"
                             android:textAllCaps="true" />
