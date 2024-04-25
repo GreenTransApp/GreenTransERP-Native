@@ -3,6 +3,7 @@ package com.greensoft.greentranserpnative.ui.operation.pickup_manifest
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.greensoft.greentranserpnative.base.BaseViewModel
+import com.greensoft.greentranserpnative.model.LoadingGrListModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.DestinationSelectionModel
 
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.*
@@ -44,6 +45,9 @@ class PickupManifestViewModel @Inject constructor(private val _repo: PickupManif
 
     val manifestLiveData: LiveData<SavePickupManifestModel>
         get() = _repo.saveManifestLiveData
+
+    val loadingGrListLiveData: LiveData<ArrayList<LoadingGrListModel>>
+        get() = _repo.loadingGrListLiveData
 
     fun getBranchList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>){
         viewModelScope.launch(Dispatchers.IO) {
@@ -92,6 +96,12 @@ class PickupManifestViewModel @Inject constructor(private val _repo: PickupManif
     fun getLoadingList( companyId:String,userCode:String,branchCode:String,sessionId:String,mfType:String,dt:String){
         viewModelScope.launch(Dispatchers.IO) {
             _repo.getLoadingList(companyId,userCode, branchCode,sessionId,mfType,dt)
+        }
+    }
+
+    fun getLoadingGrList(companyId: String, userCode: String, branchCode: String, menuCode: String, sessionId: String, loadingNo: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _repo.getLoadingGrList(companyId, userCode, branchCode, menuCode, sessionId, loadingNo)
         }
     }
 

@@ -104,6 +104,7 @@ class PickupManifestEntryActivity @Inject constructor() : BaseActivity(), OnRowC
         setSpinners()
 //        val data=Utils.selectedGrList
 //        getIntentData()
+        activityBinding.autoManifestCheck.isChecked = true
 
 
     }

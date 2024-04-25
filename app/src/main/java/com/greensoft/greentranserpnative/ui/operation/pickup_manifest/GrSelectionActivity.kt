@@ -12,9 +12,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
+import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityGrSelectionBinding
+import com.greensoft.greentranserpnative.ui.bottomsheet.loadingGrList.LoadingGrListBottomSheet
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
@@ -244,16 +246,67 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
     }
     override fun onClick(data: Any, clickType: String) {
        when (clickType) {
-            "CHECK_SELECTED" -> run {
-
-                val model: GrSelectionModel = data as GrSelectionModel
-                grList.add(model)
-
-
-                val gson = Gson()
+            GrSelectionAdapter.CHECK_ALL_CLICK_TAG -> run {
+                try {
+                    val model: LoadingListModel = data as LoadingListModel
+//                    grList.add(model)
+                } catch (ex: Exception) {
+                    errorToast(ex.message)
+                }
 
             }
+            GrSelectionAdapter.LOADING_NO_CLICK_TAG -> run {
+               try {
+                   val model: LoadingListModel = data as LoadingListModel
+                   openLoadingGrListBottomSheet(model)
+               } catch (ex: Exception) {
+                   errorToast(ex.message)
+               }
+            }
 
+        }
+    }
+
+    override fun onRowClick(data: Any, clickType: String, index: Int) {
+        when (clickType) {
+            GrSelectionAdapter.CHECK_ALL_CLICK_TAG -> run {
+                try {
+                    val model: LoadingListModel = data as LoadingListModel
+//                    grList.add(model)
+                } catch (ex: Exception) {
+                    errorToast(ex.message)
+                }
+
+            }
+            GrSelectionAdapter.LOADING_NO_CLICK_TAG -> run {
+                try {
+                    val model: LoadingListModel = data as LoadingListModel
+                    openLoadingGrListBottomSheet(model)
+                } catch (ex: Exception) {
+                    errorToast(ex.message)
+                }
+            }
+
+        }
+    }
+
+    private fun openLoadingGrListBottomSheet(model: LoadingListModel) {
+        if(model.loadingno == null || model.loadingno == "") {
+            errorToast("Loading # is not available, Please try again.")
+            return
+        }
+        if(userDataModel == null) {
+            errorToast(ENV.SOMETHING_WENT_WRONG_ERR_MSG)
+            return
+        }
+        val bottomSheet: LoadingGrListBottomSheet = LoadingGrListBottomSheet.newInstance(
+            mContext,
+            this,
+            model.loadingno,
+            userDataModel!!
+        )
+        if(!bottomSheet.isVisible) {
+            bottomSheet.show(supportFragmentManager, Companion::class.java.name)
         }
     }
 

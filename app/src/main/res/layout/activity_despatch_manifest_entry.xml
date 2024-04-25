@@ -784,10 +784,10 @@
                                 android:id="@+id/input_airline_awb"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:textAllCaps="true"
                                 android:textColor="@color/black"
-                                android:inputType="number"
                                 />
+<!--                                android:textAllCaps="true"-->
+<!--                                android:inputType="number"-->
 
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
