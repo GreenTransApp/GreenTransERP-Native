@@ -679,5 +679,16 @@ interface Api {
     ): Call<CommonResult>
 
 
+    @GET("WMS/WMSAPP_GETLOADINGGRLIST")
+    fun getLoadingGrList(
+        @Query("prmcompanyid") companyId: String,
+        @Query("prmusercode") userCode:String?,
+        @Query("prmbranchcode") branchCode:String?,
+        @Query("prmmenucode") menuCode: String?,
+        @Query("prmsessionid") sessionId: String?,
+        @Query("prmloadingno") loadingNo: String?,
+    ): Call<CommonResult>
+
+
 
 }
