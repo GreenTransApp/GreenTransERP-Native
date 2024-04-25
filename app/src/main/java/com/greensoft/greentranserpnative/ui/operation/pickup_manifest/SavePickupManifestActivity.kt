@@ -22,9 +22,9 @@ import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.booking.BookingViewModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ContentSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.PackingSelectionModel
-import com.greensoft.greentranserpnative.ui.operation.booking.models.SaveBookingModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.SavePickupManifestAdapter
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.LoadingListModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.ManifestEnteredDataModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.SavePickupManifestModel
 import com.greensoft.greentranserpnative.utils.Utils
@@ -39,7 +39,7 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
     private val viewModel: PickupManifestViewModel by viewModels()
     private val bookingViewModel: BookingViewModel by viewModels()
     private var rvAdapter: SavePickupManifestAdapter? = null
-    private var grList: ArrayList<GrSelectionModel> = ArrayList()
+    private var rvList: ArrayList<LoadingListModel> = ArrayList()
     private var contentList: ArrayList<ContentSelectionModel> = ArrayList()
     private var packingList: ArrayList<PackingSelectionModel> = ArrayList()
     private var model: ManifestEnteredDataModel? = null
@@ -195,7 +195,7 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
 
     private fun setupRecyclerView() {
         linearLayoutManager = LinearLayoutManager(this)
-        rvAdapter = SavePickupManifestAdapter(this,this,grList, this@SavePickupManifestActivity)
+        rvAdapter = SavePickupManifestAdapter(this,this,rvList, this@SavePickupManifestActivity)
         activityBinding.recyclerView.apply {
             layoutManager = linearLayoutManager
             adapter = rvAdapter
@@ -267,10 +267,10 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
             val jsonString = intent.getStringExtra("ARRAY_JSON")
             if(jsonString != "") {
                 val gson = Gson()
-                val listType = object : TypeToken<List<GrSelectionModel>>() {}.type
-                val resultList: ArrayList<GrSelectionModel> =
+                val listType = object : TypeToken<List<LoadingListModel>>() {}.type
+                val resultList: ArrayList<LoadingListModel> =
                     gson.fromJson(jsonString.toString(), listType)
-                grList.addAll(resultList)
+                rvList.addAll(resultList)
                 setupRecyclerView()
             }
         }
@@ -316,8 +316,8 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
 //                data = ""
 //            )
 //
-            if(grList.isNotEmpty() && index <= grList.size - 1) {
-                grList.removeAt(index)
+            if(rvList.isNotEmpty() && index <= rvList.size - 1) {
+                rvList.removeAt(index)
                 setupRecyclerView()
                 successToast("Successfully Removed. GR #: ${removingItem.grno}")
             } else {
@@ -329,8 +329,8 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
     }
 
  private  fun removeAt(index:Int){
-     if(grList.isNotEmpty() && index <= grList.size - 1) {
-                grList.removeAt(index)
+     if(rvList.isNotEmpty() && index <= rvList.size - 1) {
+                rvList.removeAt(index)
                 setupRecyclerView()
 //                successToast("Successfully Removed. GR #: ${removingItem.grno}")
             } else {
@@ -342,17 +342,17 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
 
     override fun onItemClickWithAdapter(data: Any, clickType: String, index: Int) {
         super.onItemClickWithAdapter(data, clickType, index)
-        if (clickType == "Content Selection") {
-            val selectedContent=data as ContentSelectionModel
-            rvAdapter?.setContent(selectedContent, index)
-            contentCode=selectedContent.itemcode
-            content=selectedContent.itemname
-
-        }else if(clickType=="Packing Selection"){
-            val selectedPckg=data as PackingSelectionModel
-            rvAdapter?.setPacking(selectedPckg, index)
-
-        }
+//        if (clickType == "Content Selection") {
+//            val selectedContent=data as ContentSelectionModel
+//            rvAdapter?.setContent(selectedContent, index)
+//            contentCode=selectedContent.itemcode
+//            content=selectedContent.itemname
+//
+//        }else if(clickType=="Packing Selection"){
+//            val selectedPckg=data as PackingSelectionModel
+//            rvAdapter?.setPacking(selectedPckg, index)
+//
+//        }
     }
     override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {
         try {
@@ -398,35 +398,35 @@ class SavePickupManifestActivity @Inject constructor() : BaseActivity(), OnRowCl
     private fun savePickupManifest(){
 
         var actualLoadingNo: String = ""
-        var actualPacking: String = ""
-        var actualAWeight: String = ""
-        var actualContent: String = ""
-        var adapterEnteredData: ArrayList<GrSelectionModel>? = rvAdapter?.getEnteredData()
+        var actualPacking: String = "~"
+        var actualAWeight: String = "~"
+        var actualContent: String = "~"
+        var adapterEnteredData: ArrayList<LoadingListModel>? = rvAdapter?.getEnteredData()
         run enteredData@{
-            adapterEnteredData?.forEachIndexed { index, model ->
-                if (Utils.isDecimalNotEntered(model.aweight.toString())) {
-                    errorToast("GWeight Not Entered at INPUT - ${index + 1}")
-                    return
-                } else if (Utils.isDecimalNotEntered(model.pckgs.toString())) {
-                    errorToast("Pckgs Not Entered at INPUT - ${index + 1}")
-                    return
-                }else if (Utils.isStringNotEntered(model.goods.toString())) {
-                    errorToast("Content Not Entered at INPUT - ${index + 1}")
-                    return
-                }
-            }
+//            adapterEnteredData?.forEachIndexed { index, model ->
+//                if (Utils.isDecimalNotEntered(model.aweight.toString())) {
+//                    errorToast("GWeight Not Entered at INPUT - ${index + 1}")
+//                    return
+//                } else if (Utils.isDecimalNotEntered(model.pckgs.toString())) {
+//                    errorToast("Pckgs Not Entered at INPUT - ${index + 1}")
+//                    return
+//                }else if (Utils.isStringNotEntered(model.goods.toString())) {
+//                    errorToast("Content Not Entered at INPUT - ${index + 1}")
+//                    return
+//                }
+//            }
         }
-    for(i in 0 until grList.size){
+    for(i in 0 until rvList.size){
 //        val grNo = grList[i].grno.toString()
-        val loadingNo = grList[i].loadingno.toString()
-        val packing = grList[i].packing.toString()
-        val content = grList[i].goods.toString()
-        val aWeight = grList[i].aweight.toString()
+        val loadingNo = rvList[i].loadingno.toString()
+//        val packing = grList[i].packing.toString()
+//        val content = grList[i].goods.toString()
+//        val aWeight = grList[i].aweight.toString()
 
         actualLoadingNo += "$loadingNo~"
-        actualPacking += "$packing~"
-        actualContent += "$content~"
-        actualAWeight += "$aWeight~"
+//        actualPacking += "$packing~"
+//        actualContent += "$content~"
+//        actualAWeight += "$aWeight~"
     }
 
          viewModel.savePickupManifest(

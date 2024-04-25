@@ -10,13 +10,14 @@ import com.greensoft.greentranserpnative.databinding.SelectedGrItemBinding
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.GrSelectionAdapter
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.LoadingListModel
 import java.util.Locale
 
-class GrSelectionForDespatchAdapter (private val grList: ArrayList<GrSelectionModel>,
+class GrSelectionForDespatchAdapter (private val grList: ArrayList<LoadingListModel>,
                                      private val mContext: Context,
                                      private val onRowClick: OnRowClick<Any>
 ) : RecyclerView.Adapter<GrSelectionForDespatchAdapter.GrSelectionForDespatchViewHolder>() , Filterable {
-    private  var filterList: ArrayList<GrSelectionModel>
+    private  var filterList: ArrayList<LoadingListModel>
     var isAllCheck:Boolean=false
     var notCheck:Boolean=true
     init {
@@ -28,7 +29,7 @@ class GrSelectionForDespatchAdapter (private val grList: ArrayList<GrSelectionMo
 
 
 
-        fun bindData(model: GrSelectionModel, onRowClick: OnRowClick<Any>) {
+        fun bindData(model: LoadingListModel, onRowClick: OnRowClick<Any>) {
             binding.grModel = model
             binding.index = adapterPosition
 //            binding.selectCheck.isChecked = isAllCheck
@@ -40,8 +41,8 @@ class GrSelectionForDespatchAdapter (private val grList: ArrayList<GrSelectionMo
 
         }
     }
-    fun getSelectedItems(): ArrayList<GrSelectionModel> {
-        val selectedItems: ArrayList<GrSelectionModel> = ArrayList()
+    fun getSelectedItems(): ArrayList<LoadingListModel> {
+        val selectedItems: ArrayList<LoadingListModel> = ArrayList()
         grList.forEachIndexed { index, grSelectionModel ->
             if(grSelectionModel.isSelected) {
                 selectedItems.add(grSelectionModel)
@@ -77,15 +78,15 @@ class GrSelectionForDespatchAdapter (private val grList: ArrayList<GrSelectionMo
                 if (charString.isEmpty()) {
                     filterList = grList
                 } else {
-                    val filteredList: ArrayList<GrSelectionModel> = ArrayList()
+                    val filteredList: ArrayList<LoadingListModel> = ArrayList()
                     for (row in grList) {
                         if (
-                            row.grno.contains(charString.lowercase(Locale.getDefault()))
-                            || row.custname?.contains(charString.lowercase(Locale.getDefault())) == true
-                            || row.picktime.lowercase()
-                                .contains(charString.lowercase(Locale.getDefault()))
-                            || row.destname.lowercase()
-                                .contains(charString.lowercase(Locale.getDefault()))
+                            row.loadingno.toString().contains(charString.lowercase(Locale.getDefault()))
+//                            || row.custname?.contains(charString.lowercase(Locale.getDefault())) == true
+//                            || row.picktime.lowercase()
+//                                .contains(charString.lowercase(Locale.getDefault()))
+//                            || row.destname.lowercase()
+//                                .contains(charString.lowercase(Locale.getDefault()))
                         ) {
                             filteredList.add(row)
                         }
@@ -101,7 +102,7 @@ class GrSelectionForDespatchAdapter (private val grList: ArrayList<GrSelectionMo
                 charSequence: CharSequence?,
                 filterResults: FilterResults
             ) {
-                filterList = filterResults.values as ArrayList<GrSelectionModel>
+                filterList = filterResults.values as ArrayList<LoadingListModel>
                 notifyDataSetChanged()
             }
         }

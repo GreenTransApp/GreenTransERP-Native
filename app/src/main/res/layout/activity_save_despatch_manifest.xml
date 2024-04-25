@@ -1084,117 +1084,117 @@
                                         android:text="Loading Date"
                                         android:textSize="12sp" />
 
-                                    <TextView
-                                        android:id="@+id/gr_no_txt"
-                                        android:layout_width="150sp"
-                                        android:layout_height="match_parent"
-                                        android:gravity="center_horizontal"
-                                        android:textColor="@color/white"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:text="GR #"
-                                        android:textSize="12sp" />
+<!--                                    <TextView-->
+<!--                                        android:id="@+id/gr_no_txt"-->
+<!--                                        android:layout_width="150sp"-->
+<!--                                        android:layout_height="match_parent"-->
+<!--                                        android:gravity="center_horizontal"-->
+<!--                                        android:textColor="@color/white"-->
+<!--                                        android:background="@drawable/table_header_cell_bg"-->
+<!--                                        android:text="GR #"-->
+<!--                                        android:textSize="12sp" />-->
 
 
-                                    <TextView
-                                        android:id="@+id/allocated_dt_txt"
-                                        android:layout_width="150sp"
-                                        android:layout_height="match_parent"
-                                        android:gravity="center_horizontal"
-                                        android:textColor="@color/white"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:text="Allocate Date"
-                                        android:textSize="12sp" />
+<!--                                    <TextView-->
+<!--                                        android:id="@+id/allocated_dt_txt"-->
+<!--                                        android:layout_width="150sp"-->
+<!--                                        android:layout_height="match_parent"-->
+<!--                                        android:gravity="center_horizontal"-->
+<!--                                        android:textColor="@color/white"-->
+<!--                                        android:background="@drawable/table_header_cell_bg"-->
+<!--                                        android:text="Allocate Date"-->
+<!--                                        android:textSize="12sp" />-->
 
 
-                                    <TextView
-                                        android:id="@+id/cust_txt"
-                                        android:layout_width="200sp"
-                                        android:layout_height="match_parent"
-                                        android:gravity="center_horizontal"
-                                        android:textColor="@color/white"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:text="Customer"
-                                        android:textSize="12sp" />
+<!--                                    <TextView-->
+<!--                                        android:id="@+id/cust_txt"-->
+<!--                                        android:layout_width="200sp"-->
+<!--                                        android:layout_height="match_parent"-->
+<!--                                        android:gravity="center_horizontal"-->
+<!--                                        android:textColor="@color/white"-->
+<!--                                        android:background="@drawable/table_header_cell_bg"-->
+<!--                                        android:text="Customer"-->
+<!--                                        android:textSize="12sp" />-->
 
-                                    <TextView
-                                        android:id="@+id/cngr_txt"
-                                        android:layout_width="200sp"
-                                        android:layout_height="match_parent"
-                                        android:gravity="center_horizontal"
-                                        android:textColor="@color/white"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:text="Consignor"
-                                        android:textSize="12sp" />
+<!--                                    <TextView-->
+<!--                                        android:id="@+id/cngr_txt"-->
+<!--                                        android:layout_width="200sp"-->
+<!--                                        android:layout_height="match_parent"-->
+<!--                                        android:gravity="center_horizontal"-->
+<!--                                        android:textColor="@color/white"-->
+<!--                                        android:background="@drawable/table_header_cell_bg"-->
+<!--                                        android:text="Consignor"-->
+<!--                                        android:textSize="12sp" />-->
 
-                                    <TextView
-                                        android:id="@+id/cnge_txt"
-                                        android:layout_width="200sp"
-                                        android:layout_height="match_parent"
-                                        android:gravity="center_horizontal"
-                                        android:textColor="@color/white"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:text="Consignee"
-                                        android:textSize="12sp" />
+<!--                                    <TextView-->
+<!--                                        android:id="@+id/cnge_txt"-->
+<!--                                        android:layout_width="200sp"-->
+<!--                                        android:layout_height="match_parent"-->
+<!--                                        android:gravity="center_horizontal"-->
+<!--                                        android:textColor="@color/white"-->
+<!--                                        android:background="@drawable/table_header_cell_bg"-->
+<!--                                        android:text="Consignee"-->
+<!--                                        android:textSize="12sp" />-->
 
-                                    <TextView
-                                        android:id="@+id/destination_txt"
-                                        android:layout_width="200sp"
-                                        android:layout_height="match_parent"
-                                        android:gravity="center_horizontal"
-                                        android:textColor="@color/white"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:text="Destination"
-                                        android:textSize="12sp" />
+<!--                                    <TextView-->
+<!--                                        android:id="@+id/destination_txt"-->
+<!--                                        android:layout_width="200sp"-->
+<!--                                        android:layout_height="match_parent"-->
+<!--                                        android:gravity="center_horizontal"-->
+<!--                                        android:textColor="@color/white"-->
+<!--                                        android:background="@drawable/table_header_cell_bg"-->
+<!--                                        android:text="Destination"-->
+<!--                                        android:textSize="12sp" />-->
 
-                                    <TextView
-                                        android:id="@+id/content_txt"
-                                        android:layout_width="200sp"
-                                        android:layout_height="match_parent"
-                                        android:gravity="center_horizontal"
-                                        android:textColor="@color/white"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:text="Content"
-                                        android:textSize="12sp" />
+<!--                                    <TextView-->
+<!--                                        android:id="@+id/content_txt"-->
+<!--                                        android:layout_width="200sp"-->
+<!--                                        android:layout_height="match_parent"-->
+<!--                                        android:gravity="center_horizontal"-->
+<!--                                        android:textColor="@color/white"-->
+<!--                                        android:background="@drawable/table_header_cell_bg"-->
+<!--                                        android:text="Content"-->
+<!--                                        android:textSize="12sp" />-->
 
-                                    <TextView
-                                        android:id="@+id/packing_txt"
-                                        android:layout_width="150sp"
-                                        android:layout_height="match_parent"
-                                        android:gravity="center_horizontal"
-                                        android:textColor="@color/white"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:text="Packing"
-                                        android:textSize="12sp" />
+<!--                                    <TextView-->
+<!--                                        android:id="@+id/packing_txt"-->
+<!--                                        android:layout_width="150sp"-->
+<!--                                        android:layout_height="match_parent"-->
+<!--                                        android:gravity="center_horizontal"-->
+<!--                                        android:textColor="@color/white"-->
+<!--                                        android:background="@drawable/table_header_cell_bg"-->
+<!--                                        android:text="Packing"-->
+<!--                                        android:textSize="12sp" />-->
 
-                                    <TextView
-                                        android:id="@+id/balance_pckgs_txt"
-                                        android:layout_width="150sp"
-                                        android:layout_height="match_parent"
-                                        android:gravity="center_horizontal"
-                                        android:textColor="@color/white"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:text="Balance Pckgs"
-                                        android:textSize="12sp" />
+<!--                                    <TextView-->
+<!--                                        android:id="@+id/balance_pckgs_txt"-->
+<!--                                        android:layout_width="150sp"-->
+<!--                                        android:layout_height="match_parent"-->
+<!--                                        android:gravity="center_horizontal"-->
+<!--                                        android:textColor="@color/white"-->
+<!--                                        android:background="@drawable/table_header_cell_bg"-->
+<!--                                        android:text="Balance Pckgs"-->
+<!--                                        android:textSize="12sp" />-->
 
-                                    <TextView
-                                        android:id="@+id/pckgs_txt"
-                                        android:layout_width="150sp"
-                                        android:layout_height="match_parent"
-                                        android:gravity="center_horizontal"
-                                        android:textColor="@color/white"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:text="Pckgs"
-                                        android:textSize="12sp" />
+<!--                                    <TextView-->
+<!--                                        android:id="@+id/pckgs_txt"-->
+<!--                                        android:layout_width="150sp"-->
+<!--                                        android:layout_height="match_parent"-->
+<!--                                        android:gravity="center_horizontal"-->
+<!--                                        android:textColor="@color/white"-->
+<!--                                        android:background="@drawable/table_header_cell_bg"-->
+<!--                                        android:text="Pckgs"-->
+<!--                                        android:textSize="12sp" />-->
 
-                                    <TextView
-                                        android:id="@+id/g_weight_txt"
-                                        android:layout_width="150sp"
-                                        android:layout_height="match_parent"
-                                        android:gravity="center_horizontal"
-                                        android:textColor="@color/white"
-                                        android:background="@drawable/table_header_cell_bg"
-                                        android:text="Gross Weight"
-                                        android:textSize="12sp" />
+<!--                                    <TextView-->
+<!--                                        android:id="@+id/g_weight_txt"-->
+<!--                                        android:layout_width="150sp"-->
+<!--                                        android:layout_height="match_parent"-->
+<!--                                        android:gravity="center_horizontal"-->
+<!--                                        android:textColor="@color/white"-->
+<!--                                        android:background="@drawable/table_header_cell_bg"-->
+<!--                                        android:text="Gross Weight"-->
+<!--                                        android:textSize="12sp" />-->
 
 
 

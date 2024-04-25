@@ -27,6 +27,7 @@ import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.SavePickup
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.GrSelectionAdapter
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.LoadingListModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.ManifestEnteredDataModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -42,6 +43,7 @@ class GrSelectionForDespatchManifestActivity @Inject constructor() : BaseActivit
     private val viewModel: DespatchManifestViewModel by viewModels()
     private var rvAdapter: GrSelectionForDespatchAdapter? = null
     private var grList: ArrayList<GrSelectionModel> = ArrayList()
+    private var rvList: ArrayList<LoadingListModel> = ArrayList()
     private var selectedGrList: ArrayList<GrSelectionModel> = ArrayList()
     private var branchList: ArrayList<BranchSelectionModel> = ArrayList()
     var grDt=""
@@ -89,19 +91,31 @@ class GrSelectionForDespatchManifestActivity @Inject constructor() : BaseActivit
         return super.onOptionsItemSelected(item)
     }
 
-    private fun getGrList(){
-        viewModel.getGrList(
-            loginDataModel?.companyid.toString(),
-            "greentransapp_grallocationlistforpickupmanifest",
-            listOf("prmbranchcode","prmdt"),
-            arrayListOf(userDataModel?.loginbranchcode.toString(),grDt)
+//    private fun getGrList(){
+//        viewModel.getGrList(
+//            loginDataModel?.companyid.toString(),
+//            "greentransapp_grallocationlistforpickupmanifest",
+//            listOf("prmbranchcode","prmdt"),
+//            arrayListOf(userDataModel?.loginbranchcode.toString(),grDt)
+//
+//        )
+//    }
+
+    private fun getLoadingList(){
+        viewModel.getLoadingList(
+            getCompanyId(),
+            getUserCode(),
+            getLoginBranchCode(),
+            getSessionId(),
+            "O",
+            grDt
 
         )
     }
 
     private fun refreshData(){
-        getGrList()
-
+//        getGrList()
+        getLoadingList()
     }
     private fun setOnClick(){
         activityBinding.btnContinue.setOnClickListener {
@@ -111,7 +125,7 @@ class GrSelectionForDespatchManifestActivity @Inject constructor() : BaseActivit
                 errorToast(noLoadingGRSelectedErrMsg)
                 return@setOnClickListener
             }
-            val selectedItems: ArrayList<GrSelectionModel> = rvAdapter!!.getSelectedItems()
+            val selectedItems: ArrayList<LoadingListModel> = rvAdapter!!.getSelectedItems()
             if (selectedItems.size == 0) {
                 errorToast(noLoadingGRSelectedErrMsg)
                 return@setOnClickListener
@@ -157,18 +171,19 @@ class GrSelectionForDespatchManifestActivity @Inject constructor() : BaseActivit
             }
         })
 
-
-
-        viewModel.grLiveData.observe(this) { data ->
-            grList = data
+        viewModel.loadingListLiveData.observe(this) { data ->
+            rvList = data
             setupRecyclerView()
-
-
         }
+
+//        viewModel.grLiveData.observe(this) { data ->
+//            grList = data
+//            setupRecyclerView()
+//        }
         mPeriod.observe(this) { date ->
             grDt = date.sqlsingleDate.toString()
-            getGrList()
-
+//            getGrList()
+            getLoadingList()
         }
     }
     private fun setupRecyclerView() {
@@ -180,7 +195,7 @@ class GrSelectionForDespatchManifestActivity @Inject constructor() : BaseActivit
         } else {
             activityBinding.emptyView.visibility = View.GONE
         }
-        rvAdapter = GrSelectionForDespatchAdapter(grList, this,this)
+        rvAdapter = GrSelectionForDespatchAdapter(rvList, this,this)
         activityBinding.recyclerView.layoutManager = linearLayoutManager
         activityBinding.recyclerView.adapter = rvAdapter
 

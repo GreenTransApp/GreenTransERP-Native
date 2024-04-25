@@ -272,7 +272,7 @@
 <!--            android:layout_height="wrap_content"-->
 <!--            android:layout_marginHorizontal="10dp"-->
 <!--            android:layout_marginVertical="5dp"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/input_layout_pickup_location"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/input_layout_manifest_num"-->
 <!--            app:layout_constraintStart_toStartOf="parent"-->
 <!--            app:layout_constraintEnd_toEndOf="parent"-->
 <!--            android:orientation="vertical">-->
@@ -296,26 +296,25 @@
 <!--            <com.google.android.material.textfield.TextInputLayout-->
 
 <!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"-->
-<!--                android:background="@drawable/spinner_background"-->
 <!--                android:layout_width="match_parent"-->
 <!--                android:layout_height="wrap_content"-->
 <!--                app:hintTextColor="@color/black"-->
 <!--                android:hint="@string/enter_to_station"-->
 <!--                >-->
 
-<!--&lt;!&ndash;                <com.google.android.material.textfield.TextInputEditText&ndash;&gt;-->
-<!--&lt;!&ndash;                    android:id="@+id/input_to_station"&ndash;&gt;-->
-<!--&lt;!&ndash;                    android:layout_width="match_parent"&ndash;&gt;-->
-<!--&lt;!&ndash;                    android:layout_height="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;                    android:inputType="text"&ndash;&gt;-->
-<!--&lt;!&ndash;                    android:focusable="false"&ndash;&gt;-->
-<!--&lt;!&ndash;                    android:textAllCaps="true" />&ndash;&gt;-->
-<!--                <Spinner-->
-<!--                    android:focusable="false"-->
-<!--                    android:id="@+id/inputToStation"-->
+<!--                <com.google.android.material.textfield.TextInputEditText-->
+<!--                    android:id="@+id/input_to_station"-->
 <!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="55sp"-->
-<!--                    />-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:inputType="text"-->
+<!--                    android:focusable="false"-->
+<!--                    android:textAllCaps="true" />-->
+<!--&lt;!&ndash;                <Spinner&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:focusable="false"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:id="@+id/inputToStation"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_height="55sp"&ndash;&gt;-->
+<!--&lt;!&ndash;                    />&ndash;&gt;-->
 
 <!--            </com.google.android.material.textfield.TextInputLayout>-->
 <!--        </LinearLayout>-->

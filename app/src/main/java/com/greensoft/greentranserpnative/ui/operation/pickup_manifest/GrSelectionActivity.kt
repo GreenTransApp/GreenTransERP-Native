@@ -22,6 +22,7 @@ import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.adapter.GrSelectionAdapter
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.BranchSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.LoadingListModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.ManifestEnteredDataModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -36,6 +37,7 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
     private val viewModel: PickupManifestViewModel by viewModels()
     private var rvAdapter: GrSelectionAdapter? = null
     private var grList: ArrayList<GrSelectionModel> = ArrayList()
+    private var rvList: ArrayList<LoadingListModel> = ArrayList()
     private var selectedGrList: ArrayList<GrSelectionModel> = ArrayList()
     private var branchList: ArrayList<BranchSelectionModel> = ArrayList()
      var grDt=""
@@ -124,9 +126,21 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
         )
     }
 
-    private fun refreshData(){
-        getGrList()
+    private fun getLoadingList(){
+        viewModel.getLoadingList(
+            getCompanyId(),
+            getUserCode(),
+            getLoginBranchCode(),
+            getSessionId(),
+            "I",
+            grDt
 
+        )
+    }
+
+    private fun refreshData(){
+//        getGrList()
+        getLoadingList()
     }
 
      private fun setOnClick(){
@@ -137,7 +151,7 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
                  errorToast(noLoadingGRSelectedErrMsg)
                  return@setOnClickListener
              }
-             val selectedItems: ArrayList<GrSelectionModel> = rvAdapter!!.getSelectedItems()
+             val selectedItems: ArrayList<LoadingListModel> = rvAdapter!!.getSelectedItems()
              if (selectedItems.size == 0) {
                  errorToast(noLoadingGRSelectedErrMsg)
                  return@setOnClickListener
@@ -188,13 +202,17 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
 
         viewModel.grLiveData.observe(this) { data ->
            grList = data
+//            setupRecyclerView()
+        }
+
+        viewModel.loadingListLiveData.observe(this) { data ->
+           rvList = data
             setupRecyclerView()
-
-
         }
         mPeriod.observe(this) { date ->
             grDt = date.sqlsingleDate.toString()
-            getGrList()
+//            getGrList()
+            getLoadingList()
 //            setupRecyclerView()
 //            if(!rvAdapter!!.notCheck)
 //             {
@@ -210,12 +228,12 @@ class GrSelectionActivity @Inject constructor() : BaseActivity(), OnRowClick<Any
 //        if (rvAdapter == null) {
 //            activityBinding.emptyView.visibility= View.GONE
 //        }
-        if(grList.isEmpty()) {
+        if(rvList.isEmpty()) {
             activityBinding.emptyView.visibility = View.VISIBLE
         } else {
             activityBinding.emptyView.visibility = View.GONE
         }
-        rvAdapter = GrSelectionAdapter(grList, this,this@GrSelectionActivity)
+        rvAdapter = GrSelectionAdapter(rvList, this,this@GrSelectionActivity)
         activityBinding.recyclerView.layoutManager = linearLayoutManager
         activityBinding.recyclerView.adapter = rvAdapter
 

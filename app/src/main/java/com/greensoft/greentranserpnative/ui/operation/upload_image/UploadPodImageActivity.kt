@@ -90,6 +90,7 @@ class UploadPodImageActivity @Inject constructor() : BaseActivity() {
         }
         viewModel.validateGrForPodLiveData.observe(this) { isGrValidated ->
             this.isGrValidated = isGrValidated
+            openGRImage()
         }
         viewModel.isError.observe(this) { errMsg ->
             errorToast(errMsg)
@@ -109,12 +110,21 @@ class UploadPodImageActivity @Inject constructor() : BaseActivity() {
         }
     }
 
+    private fun openGRImage() {
+        imageBase64 = ""
+        activityBinding.inputGr.isEnabled = false
+        activityBinding.ivAddImage.visibility = View.VISIBLE
+        activityBinding.btnSave.visibility = View.VISIBLE
+//        activityBinding.ivAddImage.setImageResource(R.drawable.baseline_add_a_photo_24)
+    }
+
     private fun resetPage() {
         imageBase64 = ""
         isGrValidated = false
         activityBinding.inputGr.setText("")
         activityBinding.ivAddImage.visibility = View.GONE
         activityBinding.ivAddImage.setImageResource(R.drawable.baseline_add_a_photo_24)
+        activityBinding.btnSave.visibility = View.GONE
     }
 
     private fun onRefresh() {

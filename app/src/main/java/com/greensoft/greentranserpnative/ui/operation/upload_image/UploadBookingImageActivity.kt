@@ -32,7 +32,7 @@ class UploadBookingImageActivity @Inject constructor() : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        onRefresh()
+//        onRefresh()
     }
 
     private fun uploadBookingImage(base64Image: String, grNo: String) {
