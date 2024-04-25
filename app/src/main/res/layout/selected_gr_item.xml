@@ -32,7 +32,7 @@
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -85,6 +85,16 @@
                                 android:gravity="center"
                                 android:textColor="@color/black"
                                 android:text="@{grModel.loadingviewdt}"
+                                android:background="@drawable/table_content_cell_bg"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/loading_noofgr"
+                                android:layout_width="150sp"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:textColor="@color/black"
+                                android:text="@{String.valueOf(grModel.noofgr)}"
                                 android:background="@drawable/table_content_cell_bg"
                                 android:textSize="16sp" />
 

@@ -146,6 +146,17 @@
                                     android:background="@drawable/table_header_cell_bg"
                                     android:text="Loading Date"
                                     android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/loading_noofgr"
+                                    android:layout_width="150sp"
+                                    android:gravity="center"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:textColor="@color/white"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:text="No of GR"
+                                    android:textSize="12sp" />
                                 <!--                                <TextView-->
                                 <!--                                    android:id="@+id/gr_num_txt"-->
                                 <!--                                    android:layout_width="150sp"-->
@@ -158,46 +169,46 @@
                                 <!--                                    android:textSize="12sp" />-->
 
 
-                                <TextView
-                                    android:id="@+id/date_txt"
-                                    android:layout_width="150sp"
-                                    android:layout_height="match_parent"
-                                    android:layout_gravity="center"
-                                    android:gravity="center"
-                                    android:textColor="@color/white"
-                                    android:background="@drawable/table_header_cell_bg"
-                                    android:text="Date"
-                                    android:textSize="12sp" />
+<!--                                <TextView-->
+<!--                                    android:id="@+id/date_txt"-->
+<!--                                    android:layout_width="150sp"-->
+<!--                                    android:layout_height="match_parent"-->
+<!--                                    android:layout_gravity="center"-->
+<!--                                    android:gravity="center"-->
+<!--                                    android:textColor="@color/white"-->
+<!--                                    android:background="@drawable/table_header_cell_bg"-->
+<!--                                    android:text="Date"-->
+<!--                                    android:textSize="12sp" />-->
 
-                                <TextView
-                                    android:id="@+id/time_txt"
-                                    android:layout_width="150sp"
-                                    android:layout_height="match_parent"
-                                    android:textColor="@color/white"
-                                    android:gravity="center"
-                                    android:background="@drawable/table_header_cell_bg"
-                                    android:text="Time"
-                                    android:textSize="12sp" />
+<!--                                <TextView-->
+<!--                                    android:id="@+id/time_txt"-->
+<!--                                    android:layout_width="150sp"-->
+<!--                                    android:layout_height="match_parent"-->
+<!--                                    android:textColor="@color/white"-->
+<!--                                    android:gravity="center"-->
+<!--                                    android:background="@drawable/table_header_cell_bg"-->
+<!--                                    android:text="Time"-->
+<!--                                    android:textSize="12sp" />-->
 
-                                <TextView
-                                    android:id="@+id/cust_txt"
-                                    android:layout_width="200sp"
-                                    android:layout_height="match_parent"
-                                    android:gravity="center"
-                                    android:textColor="@color/white"
-                                    android:background="@drawable/table_header_cell_bg"
-                                    android:text="Customer"
-                                    android:textSize="12sp" />
+<!--                                <TextView-->
+<!--                                    android:id="@+id/cust_txt"-->
+<!--                                    android:layout_width="200sp"-->
+<!--                                    android:layout_height="match_parent"-->
+<!--                                    android:gravity="center"-->
+<!--                                    android:textColor="@color/white"-->
+<!--                                    android:background="@drawable/table_header_cell_bg"-->
+<!--                                    android:text="Customer"-->
+<!--                                    android:textSize="12sp" />-->
 
-                                <TextView
-                                    android:id="@+id/cnge_txt"
-                                    android:layout_width="200sp"
-                                    android:layout_height="match_parent"
-                                    android:gravity="center"
-                                    android:textColor="@color/white"
-                                    android:background="@drawable/table_header_cell_bg"
-                                    android:text="Consingee"
-                                    android:textSize="12sp" />
+<!--                                <TextView-->
+<!--                                    android:id="@+id/cnge_txt"-->
+<!--                                    android:layout_width="200sp"-->
+<!--                                    android:layout_height="match_parent"-->
+<!--                                    android:gravity="center"-->
+<!--                                    android:textColor="@color/white"-->
+<!--                                    android:background="@drawable/table_header_cell_bg"-->
+<!--                                    android:text="Consingee"-->
+<!--                                    android:textSize="12sp" />-->
 
                             </LinearLayout>
 

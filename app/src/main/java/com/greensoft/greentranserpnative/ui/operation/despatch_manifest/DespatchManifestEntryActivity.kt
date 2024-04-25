@@ -3,6 +3,7 @@ package com.greensoft.greentranserpnative.ui.operation.despatch_manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputFilter.AllCaps
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -91,7 +92,10 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
         activityBinding.inputAirlineDt.setText(getViewCurrentDate())
         activityBinding.inputTime.setText(getSqlCurrentTime())
         activityBinding.inputBranch.setText(userDataModel?.loginbranchname)
+//        activityBinding.inputUsername.filters = activityBinding.inputUsername.filters + AllCaps()
+        activityBinding.inputAirlineAwb.filters = activityBinding.inputAirlineAwb.filters + AllCaps()
         branchCode = userDataModel?.loginbranchcode.toString()
+
         activityBinding.inputManifestNum.hint = "Enter Manifest #"
         menuCode =
             if (Utils.menuModel == null) " " else Utils.menuModel?.menucode.toString()
@@ -102,6 +106,8 @@ class DespatchManifestEntryActivity @Inject constructor() : BaseActivity(), OnRo
         setOnclick()
 
         setSpinners()
+
+        activityBinding.autoManifestCheck.isChecked = true
 
     }
     private fun setObservers() {

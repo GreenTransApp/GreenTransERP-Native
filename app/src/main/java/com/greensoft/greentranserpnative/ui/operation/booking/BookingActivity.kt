@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -28,6 +29,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.ENV.Companion.DEBUGGING
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
@@ -36,8 +38,12 @@ import com.greensoft.greentranserpnative.ui.bottomsheet.attachedImages.AttachedI
 import com.greensoft.greentranserpnative.ui.bottomsheet.attachedImages.OnAddImageClickListener
 import com.greensoft.greentranserpnative.ui.bottomsheet.bookingIndentInfoBottomSheet.BookingIndentInfoBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
+import com.greensoft.greentranserpnative.ui.bottomsheet.printGR.PrintGrBottomSheet
+import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
+import com.greensoft.greentranserpnative.ui.common.alert.CommonAlert
 import com.greensoft.greentranserpnative.ui.common.viewImage.ViewImage
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
+import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.booking.models.*
@@ -53,7 +59,8 @@ import kotlin.math.round
 
 
 @AndroidEntryPoint
-class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, BottomSheetClick<Any> , OnAddImageClickListener{
+class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, BottomSheetClick<Any> , OnAddImageClickListener,
+    AlertCallback<Any> {
 
     lateinit var activityBinding: ActivityBookingBinding
     lateinit var linearLayoutManager: LinearLayoutManager
@@ -140,6 +147,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
     companion object {
         val JEENA_PACKING: String = "Jeena Packing"
+        const val PRINT_GR_TAG = "PRINT_GR_TAG"
     }
 
 
@@ -188,6 +196,9 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
     override fun onResume() {
         super.onResume()
+        if(ENV.DEBUGGING) {
+            showPrintGrAlert("4000039185")
+        }
 //        refreshData()
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -607,7 +618,8 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         viewModel.saveBookingLiveData.observe(this){ data->
             if(data != null) {
                 if(data.commandstatus == 1) {
-                    showGrCreatedAlert(data)
+//                    showGrCreatedAlert(data)
+                    showPrintGrAlert(data.grno.toString())
 //                    successToast(data.commandmessage.toString())
                 } else {
                     errorToast(data.commandmessage.toString())
@@ -1710,5 +1722,48 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
         )
 //        hideProgressDialog()
         bottomSheetDialog.show(supportFragmentManager, BookingIndentInfoBottomSheet.TAG)
+    }
+
+    private  fun showPrintGrAlert(grNo:String){
+        CommonAlert.createAlert(
+            context = this,
+            header = "Alert!!",
+            description = "Are you sure to print GR#: $grNo ?",
+            callback =this,
+            alertCallType = PRINT_GR_TAG,
+            data = grNo
+        )
+    }
+    override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {
+        when(alertClick) {
+            AlertClick.YES -> run {
+                when(alertCallType) {
+                    PRINT_GR_TAG -> run {
+                        try {
+                            var grNo: String = data as String
+                            grNo.let {
+                                openPrintGrBottomSheet(this,"Print Gr BottomSheet",grNo)
+                            }
+                        } catch (ex: Exception) {
+                            errorToast(ex.message)
+                        }
+                    }
+                    else -> {
+                        Log.d(Companion::class.java.name, alertCallType)
+                    }
+                }
+            }
+            AlertClick.NO -> run {
+                finish()
+            }
+            else -> {
+
+            }
+        }
+    }
+
+    private fun openPrintGrBottomSheet(mContext: Context, title:String,grNo: String) {
+        val bottomSheetDialog = PrintGrBottomSheet.newInstance(mContext,title,grNo)
+        bottomSheetDialog.show(supportFragmentManager, PrintGrBottomSheet.TAG)
     }
 }

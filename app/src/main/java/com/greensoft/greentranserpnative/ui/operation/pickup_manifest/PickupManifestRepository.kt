@@ -6,7 +6,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
-import com.greensoft.greentranserpnative.ui.login.models.LoginDataModel
+import com.greensoft.greentranserpnative.model.LoadingGrListModel
 import com.greensoft.greentranserpnative.ui.operation.booking.models.DestinationSelectionModel
 import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.*
 import retrofit2.Call
@@ -50,13 +50,17 @@ class PickupManifestRepository @Inject constructor(): BaseRepository(){
     val vehicleTypeLiveData: LiveData<ArrayList<VehicleTypeModel>>
         get() = vehicleTypeMuteLiveData
 
-private val loadingMuteLiveData = MutableLiveData<ArrayList<LoadingListModel>>()
+    private val loadingMuteLiveData = MutableLiveData<ArrayList<LoadingListModel>>()
     val loadingLiveData: LiveData<ArrayList<LoadingListModel>>
         get() = loadingMuteLiveData
 
     private val saveManifestMuteLiveData = MutableLiveData<SavePickupManifestModel>()
     val saveManifestLiveData: LiveData<SavePickupManifestModel>
         get() = saveManifestMuteLiveData
+
+    private val loadingGrListMuteLiveData = MutableLiveData<ArrayList<LoadingGrListModel>>()
+    val loadingGrListLiveData: LiveData<ArrayList<LoadingGrListModel>>
+        get() = loadingGrListMuteLiveData
 
 
     fun getBranchList( companyId:String,spname: String,param:List<String>, values:ArrayList<String>) {
@@ -449,5 +453,37 @@ private val loadingMuteLiveData = MutableLiveData<ArrayList<LoadingListModel>>()
 
     }
 
+    fun getLoadingGrList(companyId:String, userCode:String, branchCode:String, menuCode: String, sessionId:String, loadingNo:String) {
+        viewDialogMutData.postValue(true)
+        api.getLoadingGrList(companyId,userCode, branchCode, menuCode, sessionId, loadingNo).enqueue(object: Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
+                if(response.body() != null){
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if(result.CommandStatus == 1){
+                        val jsonArray = getResult(result);
+                        if(jsonArray != null) {
+                            val listType = object: TypeToken<List<LoadingGrListModel>>() {}.type
+                            val resultList: ArrayList<LoadingGrListModel> = gson.fromJson(jsonArray.toString(), listType);
+                            loadingGrListMuteLiveData.postValue(resultList);
+                        }
+                    } else {
+                        isError.postValue(result.CommandMessage.toString());
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR);
+                }
+                viewDialogMutData.postValue(false)
+
+            }
+
+            override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
+
+    }
 
 }

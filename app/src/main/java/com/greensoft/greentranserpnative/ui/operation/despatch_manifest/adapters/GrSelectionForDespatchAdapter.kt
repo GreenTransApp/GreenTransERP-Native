@@ -20,6 +20,12 @@ class GrSelectionForDespatchAdapter (private val grList: ArrayList<LoadingListMo
     private  var filterList: ArrayList<LoadingListModel>
     var isAllCheck:Boolean=false
     var notCheck:Boolean=true
+
+    companion object {
+        val LOADING_NO_CLICK_TAG = "LOADING_NO_CLICK_TAG"
+        val CHECK_ALL_CLICK_TAG = "CHECK_ALL_CLICK_TAG"
+     }
+
     init {
         filterList=grList
     }
@@ -33,6 +39,9 @@ class GrSelectionForDespatchAdapter (private val grList: ArrayList<LoadingListMo
             binding.grModel = model
             binding.index = adapterPosition
 //            binding.selectCheck.isChecked = isAllCheck
+            binding.loadingNoTxt.setOnClickListener {
+                onRowClick.onRowClick(model, GrSelectionAdapter.LOADING_NO_CLICK_TAG, adapterPosition)
+            }
             binding.selectCheck.setOnCheckedChangeListener { _, isChecked ->
                 model.isSelected = isChecked
                 binding.grModel = model
