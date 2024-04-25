@@ -11,15 +11,21 @@
     type="com.greensoft.greentranserpnative.ui.operation.pending_for_delivery_update_list.models.PodEntryListModel" />
     </data>
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="20dp"
-        android:layout_margin="5dp">
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/black"
+        android:layout_marginVertical="10dp"
+        android:layout_marginHorizontal="10dp"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            >
 
             <TextView
                 android:id="@+id/header"
@@ -99,7 +105,7 @@
                             android:drawableEnd="@drawable/calendar"
                             android:drawableTint="@color/colorPrimary"
                             android:focusable="false"
-                            android:text="@{String.valueOf(model.poddt)}"
+                            android:text="@{model.poddt ==null ?`Select Date`:String.valueOf(model.poddt)}"
                             android:textAllCaps="true" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -141,10 +147,10 @@
                             android:id="@+id/input_time"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@{String.valueOf(model.podtime) ==null ? `` : String.valueOf(model.podtime) }"
+                            android:focusable="false"
+                            android:text="@{model.podtime ==null ?`Enter time`:String.valueOf(model.podtime)}"
                             android:drawableRight="@drawable/clock"
                             android:drawableTint="@color/colorPrimary"
-                            android:focusable="false"
                             android:textAllCaps="true" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -180,17 +186,17 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="">
+                    android:hint="Enter Received By">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/input_receiver_by"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+
+                        android:inputType="text"
+                        android:text="@{model.receivedby ==null ?``:String.valueOf(model.receivedby)}"
                         android:textAllCaps="true"
-                        android:focusable="false"
-                        android:text="@{String.valueOf(model.receivedby)}"
-                        android:textColor="@color/black"
-                        android:inputType="text" />
+                        android:textColor="@color/black" />
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
@@ -228,8 +234,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAllCaps="true"
-                        android:text="@{String.valueOf(model.mobileno)}"
-                        android:focusable="false"
+                        android:text="@{model.mobileno ==null ?``:String.valueOf(model.mobileno)}"
                         android:textColor="@color/black"
                         android:inputType="text" />
 
@@ -272,7 +277,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:hintTextColor="@color/black"
-                    android:hint="Relation">
+                    android:hint="">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/input_relation"
@@ -280,7 +285,7 @@
                         android:layout_height="wrap_content"
                         android:textAllCaps="true"
                         android:focusable="false"
-                        android:text="@{String.valueOf(model.relation)}"
+                        android:text="@{model.relation ==null ?`Select Relation`:String.valueOf(model.relation)}"
                         android:textColor="@color/black"
                         android:inputType="text" />
 
@@ -350,7 +355,7 @@
                 </LinearLayout>
 
             </LinearLayout>
-
+<!--            android:visibility="gone"-->
             <LinearLayout
                 android:id="@+id/main_img_layout"
                 android:layout_width="match_parent"
@@ -365,6 +370,7 @@
                     android:id="@+id/signature_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:visibility="gone"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -385,7 +391,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:src="@drawable/image" />
+                            android:src="@{model.signImg ==null ?`@drawable/image`:String.valueOf(model.signImg)}"
+
+                            />
 
                     </LinearLayout>
 
@@ -395,6 +403,7 @@
                     android:id="@+id/image_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:visibility="gone"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -435,5 +444,5 @@
                 android:text="Save"
                 app:cornerRadius="10dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </layout>

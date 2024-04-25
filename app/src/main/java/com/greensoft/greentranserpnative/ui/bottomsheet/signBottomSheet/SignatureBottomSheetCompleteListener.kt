@@ -4,4 +4,5 @@ import android.graphics.Bitmap
 
 interface SignatureBottomSheetCompleteListener {
     fun onComplete(clickType: String, imageBitmap: Bitmap)
+
 }

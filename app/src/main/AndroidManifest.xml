@@ -232,7 +232,9 @@
             android:parentActivityName=".ui.operation.grList.GrListActivity" />
         <activity
             android:name=".ui.operation.pending_for_delivery_update_list.PendingDeliveryDrsListActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity"
+            />
 
         <provider
             android:name="androidx.core.content.FileProvider"

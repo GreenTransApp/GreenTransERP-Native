@@ -43,6 +43,7 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
     var dlvSqlDt=""
 
 
+
     private var relationList: ArrayList<RelationListModel> = ArrayList()
     private val viewModel: PodEntryViewModel by viewModels()
     var podDt = getSqlCurrentDate()
@@ -241,7 +242,7 @@ class PodEntryActivity  @Inject constructor(): BaseActivity(), OnRowClick<Any>, 
 //                 return
 //             }
 //         }else
-             if(activityBinding.inputDeliveryTime.text.isNullOrEmpty()){
+         if(activityBinding.inputDeliveryTime.text.isNullOrEmpty()){
              errorToast("Please select delivery time.")
               return
          }else if(signBitmap == null){
@@ -318,6 +319,8 @@ pckgs= podDetail?.pckgs.toString()
 //            grNo = activityBinding.inputGrno.text.toString()
         )
     }
+
+
 
     private fun savePod(){
 

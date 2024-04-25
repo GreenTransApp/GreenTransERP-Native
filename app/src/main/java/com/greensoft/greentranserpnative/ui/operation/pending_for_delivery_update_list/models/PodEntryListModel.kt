@@ -56,10 +56,13 @@ data class PodEntryListModel(
     val topay: Double?,
     val vendcode: Any?,
     val vendname: Any?,
-
-
-    val poddt: Any?,
-    val podtime: Any?,
+    var poddt: Any?,
+    var sqlpoddt: Any?,
+    var podtime: Any?,
     val receivedby: Any?,
     var relation: Any?,
+    var signImg:Any?,
+    var podImg:Any?,
+    var stampRequired:String?,
+    var signRequired :String?
 )

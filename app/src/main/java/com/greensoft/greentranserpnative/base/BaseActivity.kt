@@ -47,6 +47,7 @@ import com.greensoft.greentranserpnative.ENV
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.common.PeriodSelection
 import com.greensoft.greentranserpnative.model.SingleDatePickerWIthViewTypeModel
+import com.greensoft.greentranserpnative.model.TimePickerWithViewType
 import com.greensoft.greentranserpnative.ui.bottomsheet.acceptPickup.AcceptPickupBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.CommonBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
@@ -104,6 +105,8 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
 
     var singleDatePeriodWithViewType: MutableLiveData<SingleDatePickerWIthViewTypeModel> = MutableLiveData()
     private var singleDatePickerWithViewType: MaterialDatePicker<*>? = null
+
+    var timeSelectionWithViewType: MutableLiveData<TimePickerWithViewType> = MutableLiveData()
 
 //    var timePicker: TimePicker? = null
     var loginDataModel: LoginDataModel? = null
@@ -705,6 +708,38 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
                 return;
             }
             singleDatePickerWithViewType!!.show(supportFragmentManager, "DATE_PICKER");
+        }
+    }
+
+
+    open fun openTimePickerWithViewType(viewType: String, withAdapter: Boolean = false, index: Int = -1) {
+        val materialTimePicker: MaterialTimePicker = MaterialTimePicker.Builder()
+            .setTitleText("SELECT YOUR TIMING")
+            .setHour(12)
+            .setMinute(10)
+            .setTimeFormat(TimeFormat.CLOCK_24H)
+            .build()
+
+        materialTimePicker.show(supportFragmentManager, "TIME_SELECTION")
+        materialTimePicker.addOnPositiveButtonClickListener {
+
+            val pickedHour: Int = materialTimePicker.hour
+            val pickedMinute: Int = materialTimePicker.minute
+            val formattedTime: String = when {
+                (pickedMinute < 10)-> {
+                    "${materialTimePicker.hour}:0${materialTimePicker.minute}"
+                }
+                else -> {
+                    "${materialTimePicker.hour}:${materialTimePicker.minute}"
+                }
+            }
+            val singleTimePickerWIthViewTypeModel = TimePickerWithViewType(
+                viewType,
+                formattedTime,
+                withAdapter,
+                index
+            )
+            timeSelectionWithViewType.postValue(singleTimePickerWIthViewTypeModel)
         }
     }
 
