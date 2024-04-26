@@ -133,7 +133,7 @@ class PrintGrBottomSheet @Inject constructor(): BaseFragment() {
         }
 
         layoutBinding.saveBtn.setOnClickListener {
-//            if (isPrinterConnected()) {
+            if (isPrinterConnected()) {
                 val from: String =
                     java.lang.String.valueOf(layoutBinding.inputFrom.text)
                 val to: String = java.lang.String.valueOf(layoutBinding.inputTo.text)
@@ -151,7 +151,7 @@ class PrintGrBottomSheet @Inject constructor(): BaseFragment() {
                     return@setOnClickListener
                 }
             printGrDetail?.let { it1 -> printConfirmationAlert(it1, from, to) }
-//            }
+            }
         }
     }
 
