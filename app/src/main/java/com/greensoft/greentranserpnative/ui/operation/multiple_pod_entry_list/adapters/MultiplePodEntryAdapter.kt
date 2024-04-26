@@ -182,6 +182,7 @@ class MultiplePodEntryAdapter  @Inject constructor(
 
     fun setSignatureImage(bitmap: Bitmap, adapterPosition: Int) {
         podList[adapterPosition].signImg = bitmap
+        podList[adapterPosition].signImg = bitmap
         notifyItemChanged(adapterPosition)
     }
 
