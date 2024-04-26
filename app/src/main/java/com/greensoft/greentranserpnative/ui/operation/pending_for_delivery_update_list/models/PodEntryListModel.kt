@@ -62,6 +62,7 @@ data class PodEntryListModel(
     val receivedby: String?,
     var relation: String?,
     var signImg:Any?,
+    var signImgBase64: String?,
     var podImg:Any?,
     var stampRequired:String?,
     var signRequired :String?

@@ -212,16 +212,15 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
         if(clickType == BottomSheetSignature.COMPLETED_CLICK_LISTENER_TAG) {
             signBitmap = imageBitmap
             signPath = ImageUtil.convert(signBitmap!!)
+        }
+    }
 
-//            if(signBitmap != null){
-//                rvAdapter?.setSignatureImage(bitmap = signBitmap!!,index)
-//            }
-            rvList.forEachIndexed { index,podModel  ->
-                if(podModel.grno == rvList[index].grno) {
-//                    podModel.signImg = signBitmap
-                    rvAdapter?.setSignatureImage(signBitmap!!,index)
-                }
-            }
+    override fun onCompleteWithAdapter(clickType: String, imageBitmap: Bitmap, index: Int) {
+        super.onCompleteWithAdapter(clickType, imageBitmap, index)
+        if(clickType == BottomSheetSignature.COMPLETED_CLICK_LISTENER_TAG) {
+            signBitmap = imageBitmap
+            signPath = ImageUtil.convert(signBitmap!!)
+            rvAdapter?.setSignatureImage(signBitmap!!, index)
         }
     }
 

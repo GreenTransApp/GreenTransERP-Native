@@ -1,10 +1,8 @@
 package com.greensoft.greentranserpnative.ui.bottomsheet.signBottomSheet
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -25,6 +23,7 @@ class BottomSheetSignature: BottomSheetDialogFragment() {
     var signPad: SignaturePad? = null
     var signBitmap: Bitmap? = null
     var completeListener: SignatureBottomSheetCompleteListener? = null
+    var adapterPosition = -1
 
     companion object {
         var TAG = Companion::class.java.name
@@ -33,13 +32,15 @@ class BottomSheetSignature: BottomSheetDialogFragment() {
             mContext: Context,
             companyId: String,
             completeListener: SignatureBottomSheetCompleteListener,
-            signBitmap: Bitmap?
+            signBitmap: Bitmap?,
+            index: Int = -1
         ): BottomSheetSignature {
             val instance = BottomSheetSignature()
             instance.mContext = mContext
             instance.companyId = companyId
             instance.completeListener = completeListener
             instance.signBitmap = signBitmap
+            instance.adapterPosition = index
             return instance
         }
     }
@@ -112,6 +113,7 @@ class BottomSheetSignature: BottomSheetDialogFragment() {
     fun returnImageBitmap(bitmap: Bitmap) {
         if(completeListener != null) {
             completeListener!!.onComplete(COMPLETED_CLICK_LISTENER_TAG, bitmap)
+            completeListener!!.onCompleteWithAdapter(COMPLETED_CLICK_LISTENER_TAG, bitmap, adapterPosition)
             closeBottomSheet()
         }
     }
