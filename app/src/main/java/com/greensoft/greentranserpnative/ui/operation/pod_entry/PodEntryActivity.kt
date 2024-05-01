@@ -354,7 +354,7 @@ pckgs= podDetail?.pckgs.toString()
         )
     }
 
-    override fun onComplete(clickType: String, imageBitmap: Bitmap) {
+    override fun onSignComplete(clickType: String, imageBitmap: Bitmap) {
         if(clickType == BottomSheetSignature.COMPLETED_CLICK_LISTENER_TAG) {
             signBitmap = imageBitmap
             activityBinding.signImg.setImageBitmap(signBitmap);

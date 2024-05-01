@@ -1,5 +1,7 @@
 package com.greensoft.greentranserpnative.ui.operation.pending_for_delivery_update_list.models
 
+import android.graphics.Bitmap
+
 data class PodEntryListModel(
     val arrivalatstn: String?,
     val arrivalatstncode: String?,
@@ -61,9 +63,10 @@ data class PodEntryListModel(
     var dlvtime: String?,
     val receivedby: String?,
     var relation: String?,
-    var signImg:Any?,
+    var signImg: Bitmap?,
     var signImgBase64: String?,
-    var podImg:Any?,
+    var podImg: Bitmap?,
+    var podImgBase64: String?,
     var stampRequired:String?,
     var signRequired :String?
 )

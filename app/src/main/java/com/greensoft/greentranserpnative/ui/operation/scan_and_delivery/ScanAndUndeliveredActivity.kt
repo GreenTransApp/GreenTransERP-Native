@@ -102,7 +102,7 @@ class ScanAndUndeliveredActivity @Inject constructor() : BaseActivity(), OnRowCl
 
         }
 
-    override fun onComplete(clickType: String, imageBitmap: Bitmap) {
+    override fun onSignComplete(clickType: String, imageBitmap: Bitmap) {
         TODO("Not yet implemented")
     }
 

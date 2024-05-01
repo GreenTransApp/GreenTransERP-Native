@@ -112,8 +112,8 @@ class BottomSheetSignature: BottomSheetDialogFragment() {
 
     fun returnImageBitmap(bitmap: Bitmap) {
         if(completeListener != null) {
-            completeListener!!.onComplete(COMPLETED_CLICK_LISTENER_TAG, bitmap)
-            completeListener!!.onCompleteWithAdapter(COMPLETED_CLICK_LISTENER_TAG, bitmap, adapterPosition)
+            completeListener!!.onSignComplete(COMPLETED_CLICK_LISTENER_TAG, bitmap)
+            completeListener!!.onSignCompleteWithAdapter(COMPLETED_CLICK_LISTENER_TAG, bitmap, adapterPosition)
             closeBottomSheet()
         }
     }

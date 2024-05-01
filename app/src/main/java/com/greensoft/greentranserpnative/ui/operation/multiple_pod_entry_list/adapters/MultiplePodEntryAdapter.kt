@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.common.PeriodSelection
 import com.greensoft.greentranserpnative.databinding.PodListItemBinding
+import com.greensoft.greentranserpnative.model.ImageUtil
 import com.greensoft.greentranserpnative.ui.bottomsheet.signBottomSheet.BottomSheetSignature
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.booking.models.ContentSelectionModel
@@ -48,8 +49,8 @@ class MultiplePodEntryAdapter  @Inject constructor(
 
              }
              layoutBinding.btnSavePod.setOnClickListener {
-                 onRowClick.onRowClick(model, "SAVE_SELECT", adapterPosition)
-
+                 val currentModel = podList[adapterPosition]
+                 onRowClick.onRowClick(currentModel, "SAVE_SELECT", adapterPosition)
              }
 
              layoutBinding.signatureLayout.setOnClickListener {
@@ -175,19 +176,20 @@ class MultiplePodEntryAdapter  @Inject constructor(
         notifyItemChanged(adapterPosition)
     }
 
-    fun getEnteredData(): ArrayList<PodEntryListModel>{
-        return podList
+    fun getEnteredData(index: Int): PodEntryListModel{
+        return podList[index]
     }
 
 
     fun setSignatureImage(bitmap: Bitmap, adapterPosition: Int) {
         podList[adapterPosition].signImg = bitmap
-        podList[adapterPosition].signImg = bitmap
+        podList[adapterPosition].signImgBase64 = ImageUtil.convert(bitmap)
         notifyItemChanged(adapterPosition)
     }
 
     fun setPodImage(bitmap: Bitmap, adapterPosition: Int) {
         podList[adapterPosition].podImg = bitmap
+        podList[adapterPosition].podImgBase64 = ImageUtil.convert(bitmap)
         notifyItemChanged(adapterPosition)
     }
 }

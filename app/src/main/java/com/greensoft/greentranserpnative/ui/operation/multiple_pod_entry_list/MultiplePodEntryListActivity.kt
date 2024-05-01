@@ -11,8 +11,6 @@ import com.google.gson.reflect.TypeToken
 
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityMultiplePodEntryListBinding
-import com.greensoft.greentranserpnative.model.ImageUtil
-import com.greensoft.greentranserpnative.model.SingleDatePickerWIthViewTypeModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.signBottomSheet.BottomSheetSignature
 import com.greensoft.greentranserpnative.ui.bottomsheet.signBottomSheet.SignatureBottomSheetCompleteListener
@@ -20,11 +18,9 @@ import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import com.greensoft.greentranserpnative.ui.operation.booking.BookingActivity
 import com.greensoft.greentranserpnative.ui.operation.multiple_pod_entry_list.adapters.MultiplePodEntryAdapter
 import com.greensoft.greentranserpnative.ui.operation.multiple_pod_entry_list.models.RelationListModel
 import com.greensoft.greentranserpnative.ui.operation.pending_for_delivery_update_list.models.PodEntryListModel
-import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
 import javax.inject.Inject
 
 class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
@@ -39,12 +35,12 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
     private var drsSelectedData: PodEntryListModel? = null
    var drNo:String =""
    var relationName:String =""
-    var signPath =""
+//    var signPath =""
 //    var dtDetails :SingleDatePickerWIthViewTypeModel? =null
     var podImagePath =""
     var enteredMobileNum=""
     var enteredReceivedBy=""
-    var signBitmap: Bitmap? = null
+//    var signBitmap: Bitmap? = null
     var deliveryDt =""
     var deliveryTime =""
     var currentDt = getViewCurrentDate()
@@ -154,12 +150,12 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
 
         } else if(clickType == "SAVE_SELECT") {
 //            successToast("test${index}")
-
+            val podCardModel = data as PodEntryListModel
             AlertDialog.Builder(this)
                 .setTitle("Alert!!!")
                 .setMessage("Are you sure you want to save this POD entry?")
                 .setPositiveButton("Yes") { _, _ ->
-                    savePod(index)
+                    savePod(podCardModel, index)
                 }
                 .setNeutralButton("No") { _, _ ->
 
@@ -169,7 +165,8 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
 
 
         }else if(clickType == "SIGNATURE_SELECT"){
-            val bottomSheet= BottomSheetSignature.newInstance(this, getCompanyId(), this, signBitmap)
+            val model = data as PodEntryListModel
+            val bottomSheet= BottomSheetSignature.newInstance(this, getCompanyId(), this, model.signImg)
             bottomSheet.show(supportFragmentManager, BottomSheetSignature.TAG)
 
         }else if(clickType == "POD_IMAGE_SELECT"){
@@ -208,19 +205,12 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
         TODO("Not yet implemented")
     }
 
-    override fun onComplete(clickType: String, imageBitmap: Bitmap) {
+    override fun onSignCompleteWithAdapter(clickType: String, imageBitmap: Bitmap, index: Int) {
+        super.onSignCompleteWithAdapter(clickType, imageBitmap, index)
         if(clickType == BottomSheetSignature.COMPLETED_CLICK_LISTENER_TAG) {
-            signBitmap = imageBitmap
-            signPath = ImageUtil.convert(signBitmap!!)
-        }
-    }
-
-    override fun onCompleteWithAdapter(clickType: String, imageBitmap: Bitmap, index: Int) {
-        super.onCompleteWithAdapter(clickType, imageBitmap, index)
-        if(clickType == BottomSheetSignature.COMPLETED_CLICK_LISTENER_TAG) {
-            signBitmap = imageBitmap
-            signPath = ImageUtil.convert(signBitmap!!)
-            rvAdapter?.setSignatureImage(signBitmap!!, index)
+//            signBitmap = imageBitmap
+//            signPath = ImageUtil.convert(signBitmap!!)
+            rvAdapter?.setSignatureImage(imageBitmap, index)
         }
     }
 
@@ -238,37 +228,39 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
         )
     }
 
-    private fun savePod(index: Int) {
-        var grNo: String = rvList[index].grno.toString()
-        var podTime: String = rvList[index].dlvtime.toString()
-        var PodDt: String = rvList[index].dlvdt.toString()
+    private fun savePod(podCardModel: PodEntryListModel, index: Int) {
+        var grNo: String = podCardModel.grno.toString()
+        var podTime: String = podCardModel.dlvtime.toString()
+        var PodDt: String = podCardModel.dlvdt.toString()
 
-        var stampRequired: String = rvList[index].stampRequired.toString()
-        var signRequired: String = rvList[index].signRequired.toString()
+        var stampRequired: String = podCardModel.stampRequired.toString()
+        var signRequired: String = podCardModel.signRequired.toString()
         var remark: String = ""
         var dataIdStr = "";
         var enteredQtyStr = "";
-        var adapterEnteredData: ArrayList<PodEntryListModel>? = rvAdapter?.getEnteredData()
+        var savingSignImage: String = if(signRequired == "Y" && podCardModel.signImgBase64 != null) podCardModel.signImgBase64!! else ""
+        var savingPodImage: String = if(stampRequired == "Y" && podCardModel.podImgBase64 != null) podCardModel.podImgBase64!! else ""
+//        var adapterEnteredData: PodEntryListModel? = rvAdapter?.getEnteredData(index)
 
-                if (rvList[index].mobileno.isNullOrEmpty()) {
-                    errorToast("Mobile No. Not Entered at INPUT - ${index + 1}")
-                    return
-                } else if(rvList[index].receivedby.isNullOrEmpty()){
-                    errorToast(" received By Not Entered at INPUT - ${index + 1}")
-                    return
-                }else if(rvList[index].relation.isNullOrEmpty()){
-                    errorToast(" relation Not Selected at INPUT - ${index + 1}")
-                    return
-                }else if(rvList[index].dlvtime.isNullOrEmpty()){
-                    errorToast(" delivery time Not Selected at INPUT - ${index + 1}")
-                    return
-                }else if( rvList[index].podImg == null){
-                    errorToast(" pod image not attached at INPUT - ${index + 1}")
-                    return
-                }else if( rvList[index].signImg == null){
-                    errorToast(" sign image not attached at INPUT - ${index + 1}")
-                    return
-                }
+        if (podCardModel.mobileno.isNullOrEmpty()) {
+            errorToast("Mobile No. Not Entered at INPUT - ${index + 1}")
+            return
+        } else if(podCardModel.receivedby.isNullOrEmpty()){
+            errorToast(" received By Not Entered at INPUT - ${index + 1}")
+            return
+        }else if(podCardModel.relation.isNullOrEmpty()){
+            errorToast(" relation Not Selected at INPUT - ${index + 1}")
+            return
+        }else if(podCardModel.dlvtime.isNullOrEmpty()){
+            errorToast(" delivery time Not Selected at INPUT - ${index + 1}")
+            return
+        }else if(podCardModel.podImg == null && stampRequired == "Y"){
+            errorToast(" pod image not attached at INPUT - ${index + 1}")
+            return
+        }else if(podCardModel.signImg == null && signRequired == "Y"){
+            errorToast(" sign image not attached at INPUT - ${index + 1}")
+            return
+        }
 
 
         viewModel.savePodEntry(
@@ -282,8 +274,8 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
             phoneNo = enteredMobileNum,
             sign =signRequired ,
             stamp = stampRequired,
-            podImage =podImagePath,
-            signImage = signPath,
+            podImage = savingPodImage,
+            signImage = savingSignImage,
             remarks ="",
             userCode = getUserCode(),
             sessionId =getSessionId(),
