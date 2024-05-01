@@ -1742,7 +1742,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
                         try {
                             var grNo: String = data as String
                             grNo.let {
-                                openPrintGrBottomSheet(this,"Print Gr BottomSheet",grNo)
+                                openPrintGrBottomSheet(this,"Print Sticker",grNo)
                             }
                         } catch (ex: Exception) {
                             errorToast(ex.message)
