@@ -11,6 +11,7 @@ import com.google.gson.reflect.TypeToken
 
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityMultiplePodEntryListBinding
+import com.greensoft.greentranserpnative.databinding.PodListItemBinding
 import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.signBottomSheet.BottomSheetSignature
 import com.greensoft.greentranserpnative.ui.bottomsheet.signBottomSheet.SignatureBottomSheetCompleteListener
@@ -26,24 +27,27 @@ import javax.inject.Inject
 class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
     AlertCallback<Any>, OnRowClick<Any>, SignatureBottomSheetCompleteListener,
     BottomSheetClick<Any> {
-        lateinit var  activityBinding:ActivityMultiplePodEntryListBinding
-        private val viewModel:MultiplePodEntryViewModel by viewModels()
-        private var rvAdapter :MultiplePodEntryAdapter ?= null
+    lateinit var  activityBinding:ActivityMultiplePodEntryListBinding
+    private val viewModel:MultiplePodEntryViewModel by viewModels()
+    private var rvAdapter :MultiplePodEntryAdapter ?= null
     private var relationList: ArrayList<RelationListModel> = ArrayList()
     private var rvList: ArrayList<PodEntryListModel> = ArrayList()
-        private lateinit var manager: LinearLayoutManager
+    private lateinit var manager: LinearLayoutManager
     private var drsSelectedData: PodEntryListModel? = null
-   var drNo:String =""
-   var relationName:String =""
+    var drNo:String =""
+    var relationName:String =""
 //    var signPath =""
 //    var dtDetails :SingleDatePickerWIthViewTypeModel? =null
-    var podImagePath =""
+//    var podImagePath =""
     var enteredMobileNum=""
     var enteredReceivedBy=""
 //    var signBitmap: Bitmap? = null
     var deliveryDt =""
     var deliveryTime =""
     var currentDt = getViewCurrentDate()
+
+    private var setImageIndex: Int = -1
+    private var layoutBinding: PodListItemBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityMultiplePodEntryListBinding.inflate(layoutInflater)
@@ -76,7 +80,7 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
          }
          imageClicked.observe(this) { clicked ->
              if (clicked) {
-
+                 this.layoutBinding?.let { setPodImage(setImageIndex, it) }
              }
          }
          singleDatePeriodWithViewType.observe(this){ periodWithViewType ->
@@ -99,9 +103,11 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
      }
 
 
-    private fun setPodImage(index: Int){
-        rvAdapter?.setPodImage(imageBitmapList[0],index)
-        podImagePath= imageBase64List[0].toString()
+    private fun setPodImage(index: Int, layoutBinding: PodListItemBinding){
+        if(imageBitmapList.size > 0) {
+            rvAdapter?.setPodImage(imageBitmapList[imageBitmapList.size - 1], index, layoutBinding)
+        }
+//        podImagePath= imageBase64List[0].toString()
     }
 
 
@@ -166,11 +172,12 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
 
         }else if(clickType == "SIGNATURE_SELECT"){
             val model = data as PodEntryListModel
-            val bottomSheet= BottomSheetSignature.newInstance(this, getCompanyId(), this, model.signImg)
+            val bottomSheet= BottomSheetSignature.newInstance(this, getCompanyId(), this, model.signImg, index)
             bottomSheet.show(supportFragmentManager, BottomSheetSignature.TAG)
 
         }else if(clickType == "POD_IMAGE_SELECT"){
-            showImageDialog()
+//            setImageIndex = index
+//            showImageDialog()
         } else if(clickType == "DATE_SELECT"){
             openSingleDatePickerWithViewType("DATE_SELECTION",true,index)
         }else if (clickType  == "TIME_SELECT"){
@@ -180,6 +187,17 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
 
     }
 
+    override fun onImageClickedMultiplePodEntry(
+        data: Any,
+        clickType: String,
+        index: Int,
+        layoutBinding: PodListItemBinding
+    ) {
+        super.onImageClickedMultiplePodEntry(data, clickType, index, layoutBinding)
+        setImageIndex = index
+        this.layoutBinding = layoutBinding
+        showImageDialog()
+    }
 
     override fun onItemClickWithAdapter(data: Any, clickType: String, index: Int) {
         super.onItemClickWithAdapter(data, clickType, index)
@@ -210,7 +228,7 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
         if(clickType == BottomSheetSignature.COMPLETED_CLICK_LISTENER_TAG) {
 //            signBitmap = imageBitmap
 //            signPath = ImageUtil.convert(signBitmap!!)
-            rvAdapter?.setSignatureImage(imageBitmap, index)
+//            rvAdapter?.setSignatureImage(imageBitmap, index)
         }
     }
 
@@ -246,19 +264,19 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
             errorToast("Mobile No. Not Entered at INPUT - ${index + 1}")
             return
         } else if(podCardModel.receivedby.isNullOrEmpty()){
-            errorToast(" received By Not Entered at INPUT - ${index + 1}")
+            errorToast(" Received By Not Entered at INPUT - ${index + 1}")
             return
         }else if(podCardModel.relation.isNullOrEmpty()){
-            errorToast(" relation Not Selected at INPUT - ${index + 1}")
+            errorToast(" Relation Not Selected at INPUT - ${index + 1}")
             return
         }else if(podCardModel.dlvtime.isNullOrEmpty()){
-            errorToast(" delivery time Not Selected at INPUT - ${index + 1}")
+            errorToast(" Delivery time Not Selected at INPUT - ${index + 1}")
             return
-        }else if(podCardModel.podImg == null && stampRequired == "Y"){
-            errorToast(" pod image not attached at INPUT - ${index + 1}")
+        }else if(savingPodImage == "" && stampRequired == "Y"){
+            errorToast(" Pod image not attached at INPUT - ${index + 1}")
             return
-        }else if(podCardModel.signImg == null && signRequired == "Y"){
-            errorToast(" sign image not attached at INPUT - ${index + 1}")
+        }else if(savingSignImage == "" && signRequired == "Y"){
+            errorToast(" Please Sign at INPUT - ${index + 1}")
             return
         }
 

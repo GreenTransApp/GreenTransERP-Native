@@ -51,7 +51,9 @@
             android:exported="false" />
         <activity
             android:name=".ui.operation.multiple_pod_entry_list.MultiplePodEntryListActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".ui.operation.pending_for_delivery_update_list.PendingDeliveryDrsListActivity"
+            />
         <activity
             android:name=".ui.operation.upload_image.UploadBookingImageActivity"
             android:exported="false"
@@ -98,10 +100,14 @@
             android:exported="false" />
         <activity
             android:name=".ui.operation.delivery.DeliveryOptionActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity"
+            />
         <activity
             android:name=".ui.operation.scan_and_delivery.ScanAndDeliveryActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity"
+            />
         <activity
             android:name=".ui.operation.drsScan.DrsScanActivity"
             android:exported="false"

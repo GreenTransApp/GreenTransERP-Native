@@ -10,6 +10,7 @@ android {
     namespace 'com.greensoft.greentranserpnative'
     compileSdk 34
 
+
     defaultConfig {
         applicationId "com.greensoft.greentranserpnative"
         minSdk 26
