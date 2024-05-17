@@ -3,7 +3,9 @@ package com.greensoft.greentranserpnative.utils
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import android.text.InputFilter
 import android.util.Log
+import android.widget.EditText
 import android.widget.Toast
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.DespatchManifestEnteredDataModel
@@ -145,5 +147,9 @@ object Utils {
             return "NOT AVAILABLE"
         }
         return value.toString()
+    }
+
+    fun allCapsInput(editText: EditText): Array<InputFilter> {
+        return editText.filters + InputFilter.AllCaps()
     }
 }

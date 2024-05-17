@@ -73,22 +73,6 @@ class PendingDeliveryDrsListActivity  @Inject constructor(): BaseActivity(),
                  hideProgressDialog()
              }
          })
-         viewModel.podListLiveData.observe(this){ data ->
-             podGrList = data
-
-             if(podGrList.size !=0){
-                 hideProgressDialog()
-                 val gson = Gson()
-                 val jsonString = gson.toJson(podGrList)
-                 val intent = Intent(this,MultiplePodEntryListActivity::class.java)
-                 intent.putExtra("ARRAY_JSON", jsonString)
-                 startActivity(intent)
-             }
-             else{
-
-                 successToast(mContext,"data not send")
-             }
-         }
      }
 
     private fun refreshData() {
@@ -97,9 +81,6 @@ class PendingDeliveryDrsListActivity  @Inject constructor(): BaseActivity(),
             delay(1500)
             activityBinding.swipeRefreshLayout.isRefreshing = false
         }
-    }
-    private fun setOnClick(){
-
     }
 
     private fun setupRecyclerView() {
@@ -125,14 +106,6 @@ class PendingDeliveryDrsListActivity  @Inject constructor(): BaseActivity(),
       )
     }
 
-
-    private  fun  getPodGrList(drsNo:String?){
-        viewModel.getPodEntryList(
-            companyId =  getCompanyId(),
-            drsNo = drsNo.toString()
-        )
-
-    }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return super.onCreateOptionsMenu(menu)
@@ -161,8 +134,14 @@ class PendingDeliveryDrsListActivity  @Inject constructor(): BaseActivity(),
             "POD_SELECT" -> run {
                 val model: DrsPendingListModel = data as DrsPendingListModel
                 drsNo=model.documentno.toString()
-                getPodGrList(drsNo)
+                drsNo?.let { openMultiplePodEntryPage(it) }
             }
         }
+    }
+
+    private fun openMultiplePodEntryPage(drsNo: String) {
+        val intent = Intent(this,MultiplePodEntryListActivity::class.java)
+        intent.putExtra("DRS_NO", drsNo)
+        startActivity(intent)
     }
 }

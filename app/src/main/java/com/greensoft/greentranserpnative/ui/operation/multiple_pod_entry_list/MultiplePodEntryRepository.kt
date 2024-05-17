@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.base.BaseRepository
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.ui.operation.multiple_pod_entry_list.models.RelationListModel
+import com.greensoft.greentranserpnative.ui.operation.pending_for_delivery_update_list.models.PodEntryListModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodSaveModel
 import retrofit2.Call
 import retrofit2.Callback
@@ -20,10 +21,15 @@ class MultiplePodEntryRepository  @Inject constructor() : BaseRepository(){
     val relationLiveData: LiveData<ArrayList<RelationListModel>>
         get() = relationListMuteLiveData
 
+    private val grListMuteLiveData = MutableLiveData<ArrayList<PodEntryListModel>>()
+    val grListLiveData : LiveData<ArrayList<PodEntryListModel>>
+        get() = grListMuteLiveData
 
     private val podSaveMuteLiveData = MutableLiveData<PodSaveModel>()
     val podSaveLiveData: LiveData<PodSaveModel>
         get() = podSaveMuteLiveData
+
+
     fun getRelationList( companyId:String) {
         viewDialogMutData.postValue(true)
         api.getRelationList(companyId).enqueue(object: Callback<CommonResult> {
@@ -138,6 +144,39 @@ class MultiplePodEntryRepository  @Inject constructor() : BaseRepository(){
 
             })
 
+    }
+
+    fun getGrListForPod(companyId:String, drsNo:String) {
+        viewDialogMutData.postValue(true)
+        api.getPodList(companyId,drsNo).enqueue(object:
+            Callback<CommonResult> {
+            override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
+                if(response.body() != null){
+                    val result = response.body()!!
+                    val gson = Gson()
+                    if(result.CommandStatus == 1){
+                        val jsonArray = getResult(result);
+                        if(jsonArray != null) {
+                            val listType = object: TypeToken<List<PodEntryListModel>>() {}.type
+                            val resultList: ArrayList<PodEntryListModel> = gson.fromJson(jsonArray.toString(), listType);
+                            grListMuteLiveData.postValue(resultList)
+                        }
+                    } else {
+                        isError.postValue(result.CommandMessage.toString());
+                    }
+                } else {
+                    isError.postValue(SERVER_ERROR);
+                }
+                viewDialogMutData.postValue(false)
+
+            }
+
+            override fun onFailure(call: Call<CommonResult?>, t: Throwable) {
+                viewDialogMutData.postValue(false)
+                isError.postValue(t.message)
+            }
+
+        })
     }
 
 

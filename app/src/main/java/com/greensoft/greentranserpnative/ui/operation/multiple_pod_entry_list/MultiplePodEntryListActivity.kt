@@ -22,6 +22,9 @@ import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.multiple_pod_entry_list.adapters.MultiplePodEntryAdapter
 import com.greensoft.greentranserpnative.ui.operation.multiple_pod_entry_list.models.RelationListModel
 import com.greensoft.greentranserpnative.ui.operation.pending_for_delivery_update_list.models.PodEntryListModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.LoadingListModel
+import com.greensoft.greentranserpnative.utils.Utils
+import okhttp3.internal.Util
 import javax.inject.Inject
 
 class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
@@ -32,20 +35,10 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
     private var rvAdapter :MultiplePodEntryAdapter ?= null
     private var relationList: ArrayList<RelationListModel> = ArrayList()
     private var rvList: ArrayList<PodEntryListModel> = ArrayList()
-    private lateinit var manager: LinearLayoutManager
-    private var drsSelectedData: PodEntryListModel? = null
-    var drNo:String =""
-    var relationName:String =""
-//    var signPath =""
-//    var dtDetails :SingleDatePickerWIthViewTypeModel? =null
-//    var podImagePath =""
-    var enteredMobileNum=""
-    var enteredReceivedBy=""
-//    var signBitmap: Bitmap? = null
-    var deliveryDt =""
-    var deliveryTime =""
+    private lateinit var linearLayoutManager: LinearLayoutManager
     var currentDt = getViewCurrentDate()
-
+    var sqlCurrentDt = getSqlCurrentDate()
+    private var drsNo: String? = null
     private var setImageIndex: Int = -1
     private var layoutBinding: PodListItemBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,9 +47,20 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
         setUpToolbar("Save Multiple POD")
+        getIntentData()
         setObserver()
         getRelationList()
-        getDrsDetails()
+        getGrListForPod()
+    }
+
+    private fun getIntentData() {
+        if(intent != null) {
+            val drsNoFromIntent = intent.getStringExtra("DRS_NO")
+            if(!drsNoFromIntent.isNullOrBlank()) {
+                drsNo = drsNoFromIntent
+                Utils.logger("DRS_NO", drsNoFromIntent)
+            }
+        }
     }
 
 
@@ -73,31 +77,33 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
              }
          })
 
-         viewModel.relationLiveData.observe(this){ List->
-             relationList =List
-
-
+         viewModel.relationLiveData.observe(this){ list ->
+             relationList = list
          }
+
+         viewModel.grListLiveData.observe(this) { grList ->
+             rvList = grList
+             setupRecyclerView()
+         }
+
          imageClicked.observe(this) { clicked ->
              if (clicked) {
                  this.layoutBinding?.let { setPodImage(setImageIndex, it) }
              }
          }
-         singleDatePeriodWithViewType.observe(this){ periodWithViewType ->
-//             dtDetails = mPeriod
-             if(rvAdapter != null) {
-                 rvAdapter?.setSelectedDt(periodWithViewType.periodSelection, periodWithViewType.index)
-                 deliveryDt = periodWithViewType.periodSelection.sqlsingleDate.toString()
-             }
-         }
-         timeSelectionWithViewType.observe(this){ timeWithViewType ->
-//             dtDetails = mPeriod
-             if(rvAdapter != null) {
-                 rvAdapter?.setSelectedTime(timeWithViewType.timeSelection, timeWithViewType.index)
-                  deliveryTime = timeWithViewType.timeSelection
-
-             }
-         }
+//         singleDatePeriodWithViewType.observe(this){ periodWithViewType ->
+////             dtDetails = mPeriod
+//             if(rvAdapter != null) {
+//                 rvAdapter?.setSelectedDt(periodWithViewType.periodSelection, periodWithViewType.index)
+//             }
+//         }
+//         timeSelectionWithViewType.observe(this){ timeWithViewType ->
+////             dtDetails = mPeriod
+//             if(rvAdapter != null) {
+//                 rvAdapter?.setSelectedTime(timeWithViewType.timeSelection, timeWithViewType.index)
+//
+//             }
+//         }
 
 
      }
@@ -111,29 +117,30 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
     }
 
 
-      private fun getDrsDetails(){
-          if(intent != null) {
-              val jsonString = intent.getStringExtra("ARRAY_JSON")
-              if(jsonString != "") {
-                  val gson = Gson()
-                  val listType = object : TypeToken<List<PodEntryListModel>>() {}.type
-                  val resultList: ArrayList<PodEntryListModel> =
-                      gson.fromJson(jsonString.toString(), listType)
-                  rvList.addAll(resultList)
-                  rvList.forEachIndexed { _, element ->
-                      drNo=element.drsno.toString()
-                      setupRecyclerView()
-                  }
-              }
-          }
+      private fun getGrListForPod() {
+          viewModel.getGrListForPod(
+              companyId =  getCompanyId(),
+              drsNo = drsNo.toString()
+          )
+
+//          if(intent != null) {
+//              val jsonString = intent.getStringExtra("ARRAY_JSON")
+//              if(jsonString != "") {
+//                  val gson = Gson()
+//                  val listType = object : TypeToken<List<PodEntryListModel>>() {}.type
+//                  val resultList: ArrayList<PodEntryListModel> =
+//                      gson.fromJson(jsonString.toString(), listType)
+//                  rvList = resultList
+//                  setupRecyclerView()
+//              }
+//          }
     }
 
     private fun setupRecyclerView() {
-        manager = LinearLayoutManager(this)
-        rvAdapter = MultiplePodEntryAdapter(rvList, this,this,this
-        )
+        linearLayoutManager = LinearLayoutManager(this)
+        rvAdapter = MultiplePodEntryAdapter(rvList, this,this,this)
         activityBinding.recyclerView.apply {
-            layoutManager = manager
+            layoutManager = linearLayoutManager
             adapter = rvAdapter
         }
     }
@@ -175,13 +182,13 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
             val bottomSheet= BottomSheetSignature.newInstance(this, getCompanyId(), this, model.signImg, index)
             bottomSheet.show(supportFragmentManager, BottomSheetSignature.TAG)
 
-        }else if(clickType == "POD_IMAGE_SELECT"){
-//            setImageIndex = index
-//            showImageDialog()
-        } else if(clickType == "DATE_SELECT"){
-            openSingleDatePickerWithViewType("DATE_SELECTION",true,index)
-        }else if (clickType  == "TIME_SELECT"){
-            openTimePickerWithViewType("TIME_SELECTION",true, index)
+//        }else if(clickType == "POD_IMAGE_SELECT"){
+////            setImageIndex = index
+////            showImageDialog()
+//        } else if(clickType == "DATE_SELECT"){
+//            openSingleDatePickerWithViewType("DATE_SELECTION",true,index)
+//        }else if (clickType  == "TIME_SELECT"){
+//            openTimePickerWithViewType("TIME_SELECTION",true, index)
         }
 
 
@@ -204,7 +211,7 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
         if (clickType == "Relation Selection") {
             val selectedRelation=data as RelationListModel
             rvAdapter?.setRelation(selectedRelation, index)
-            relationName=selectedRelation.relations.toString()
+//            relationName=selectedRelation.relations.toString()
 
 //        }else if (clickType == "DATE_SELECTION"){
 //            val selectedDt=data as PodEntryListModel
@@ -232,13 +239,13 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
         }
     }
 
-    fun getEnteredMobileNo(mobileNo:String){
-        enteredMobileNum = mobileNo
-    }
-
-     fun getEnterReceivedBy(receivedBy:String){
-         enteredReceivedBy = receivedBy
-     }
+//    fun getEnteredMobileNo(mobileNo:String){
+//        enteredMobileNum = mobileNo
+//    }
+//
+//     fun getEnterReceivedBy(receivedBy:String){
+//         enteredReceivedBy = receivedBy
+//     }
 
       fun getRelationList(){
         viewModel.getRelation(
@@ -249,7 +256,10 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
     private fun savePod(podCardModel: PodEntryListModel, index: Int) {
         var grNo: String = podCardModel.grno.toString()
         var podTime: String = podCardModel.dlvtime.toString()
-        var PodDt: String = podCardModel.dlvdt.toString()
+        var podDt: String = podCardModel.dlvdt.toString()
+        var enteredReceivedBy = podCardModel.receivedby.toString()
+        var selectedRelation = podCardModel.relation.toString()
+        var enteredMobileNum = podCardModel.mobileno.toString()
 
         var stampRequired: String = podCardModel.stampRequired.toString()
         var signRequired: String = podCardModel.signRequired.toString()
@@ -281,14 +291,15 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
         }
 
 
+
         viewModel.savePodEntry(
             companyId =getCompanyId(),
             loginBranchCode= getLoginBranchCode(),
             grNo = grNo,
-            dlvTime = deliveryTime,
+            dlvTime = podTime,
             name =enteredReceivedBy,
-            dlvDt =deliveryDt,
-            relation = relationName,
+            dlvDt = podDt,
+            relation = selectedRelation,
             phoneNo = enteredMobileNum,
             sign =signRequired ,
             stamp = stampRequired,
@@ -302,7 +313,6 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
             deliveryBoy ="",
             boyId = getExecutiveId(),
             podDt = getSqlCurrentDate(),
-
             pckgs = "",
             pckgsStr = enteredQtyStr,
             dataIdStr = dataIdStr

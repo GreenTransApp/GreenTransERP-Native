@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.greensoft.greentranserpnative.base.BaseViewModel
 import com.greensoft.greentranserpnative.ui.operation.multiple_pod_entry_list.models.RelationListModel
+import com.greensoft.greentranserpnative.ui.operation.pending_for_delivery_update_list.models.PodEntryListModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodSaveModel
 
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,6 +26,9 @@ class MultiplePodEntryViewModel @Inject constructor(private val _repo: MultipleP
     val relationLiveData: LiveData<ArrayList<RelationListModel>>
         get() = _repo.relationLiveData
 
+    val grListLiveData: LiveData<ArrayList<PodEntryListModel>>
+        get() = _repo.grListLiveData
+
     val saveLiveData: LiveData<PodSaveModel>
         get() = _repo.podSaveLiveData
 
@@ -32,6 +36,12 @@ class MultiplePodEntryViewModel @Inject constructor(private val _repo: MultipleP
     fun getRelation( companyId:String){
         viewModelScope.launch(Dispatchers.IO) {
             _repo.getRelationList(companyId)
+        }
+    }
+
+    fun getGrListForPod(companyId: String, drsNo: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            _repo.getGrListForPod(companyId, drsNo)
         }
     }
 
