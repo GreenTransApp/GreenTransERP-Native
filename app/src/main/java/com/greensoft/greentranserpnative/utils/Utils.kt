@@ -152,4 +152,8 @@ object Utils {
     fun allCapsInput(editText: EditText): Array<InputFilter> {
         return editText.filters + InputFilter.AllCaps()
     }
+
+    fun checkStringNullable(str: String?): String {
+        return if(str.isNullOrBlank()) "" else str
+    }
 }

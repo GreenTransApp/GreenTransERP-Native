@@ -3,6 +3,7 @@ package com.greensoft.greentranserpnative.ui.operation.multiple_pod_entry_list
 import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -158,29 +159,18 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
     }
     override fun onRowClick(data: Any, clickType: String, index: Int) {
         super.onRowClick(data, clickType, index)
-        if (clickType == "RELATION_SELECT") {
+        if (clickType == MultiplePodEntryAdapter.RELATION_CLICK_TAG) {
             openRelationSelectionBottomSheet(relationList, index)
 
-        } else if(clickType == "SAVE_SELECT") {
+        } else if(clickType == MultiplePodEntryAdapter.SAVE_POD_TAG) {
 //            successToast("test${index}")
             val podCardModel = data as PodEntryListModel
-            AlertDialog.Builder(this)
-                .setTitle("Alert!!!")
-                .setMessage("Are you sure you want to save this POD entry?")
-                .setPositiveButton("Yes") { _, _ ->
-                    savePod(podCardModel, index)
-                }
-                .setNeutralButton("No") { _, _ ->
-
-
-                }
-                .show()
-
-
-        }else if(clickType == "SIGNATURE_SELECT"){
-            val model = data as PodEntryListModel
-            val bottomSheet= BottomSheetSignature.newInstance(this, getCompanyId(), this, model.signImg, index)
-            bottomSheet.show(supportFragmentManager, BottomSheetSignature.TAG)
+            logger(MultiplePodEntryAdapter.SAVE_POD_TAG, podCardModel.toString())
+            showAlertForSavePod(podCardModel, index)
+//        }else if(clickType == "SIGNATURE_SELECT"){
+//            val model = data as PodEntryListModel
+//            val bottomSheet= BottomSheetSignature.newInstance(this, getCompanyId(), this, model.signImg, index)
+//            bottomSheet.show(supportFragmentManager, BottomSheetSignature.TAG)
 
 //        }else if(clickType == "POD_IMAGE_SELECT"){
 ////            setImageIndex = index
@@ -194,6 +184,21 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
 
     }
 
+    fun showAlertForSavePod(podCardModel: PodEntryListModel, index: Int) {
+        AlertDialog.Builder(this)
+            .setTitle("Alert!!!")
+            .setMessage("Are you sure you want to save this POD entry?")
+            .setPositiveButton("Yes") { _, _ ->
+                savePod(podCardModel, index)
+            }
+            .setNeutralButton("No") { _, _ ->
+
+
+            }
+            .show()
+    }
+
+
     override fun onImageClickedMultiplePodEntry(
         data: Any,
         clickType: String,
@@ -201,9 +206,15 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
         layoutBinding: PodListItemBinding
     ) {
         super.onImageClickedMultiplePodEntry(data, clickType, index, layoutBinding)
-        setImageIndex = index
-        this.layoutBinding = layoutBinding
-        showImageDialog()
+        when(clickType) {
+            MultiplePodEntryAdapter.POD_IMAGE_CLICK_TAG -> {
+                imageBase64List.clear()
+                imageBitmapList.clear()
+                setImageIndex = index
+                this.layoutBinding = layoutBinding
+                showImageDialog()
+            }
+        }
     }
 
     override fun onItemClickWithAdapter(data: Any, clickType: String, index: Int) {

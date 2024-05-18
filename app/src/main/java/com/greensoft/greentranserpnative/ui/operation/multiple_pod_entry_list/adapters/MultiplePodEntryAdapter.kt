@@ -68,6 +68,10 @@ class MultiplePodEntryAdapter  @Inject constructor(
         }
     }
     companion object {
+
+        const val SAVE_POD_TAG = "SAVE_SELECT"
+        const val RELATION_CLICK_TAG = "RELATION_SELECT"
+        const val POD_IMAGE_CLICK_TAG = "POD_IMAGE_SELECT"
         fun convertImageUriToBase64(contentResolver: ContentResolver, imageUri: Uri): String? {
             return try {
                 val inputStream: InputStream? = contentResolver.openInputStream(imageUri)
@@ -115,7 +119,7 @@ class MultiplePodEntryAdapter  @Inject constructor(
          fun setOnclick(model:PodEntryListModel){
 
              layoutBinding.inputRelation.setOnClickListener {
-                 onRowClick.onRowClick(model, "RELATION_SELECT", adapterPosition)
+                 onRowClick.onRowClick(model, RELATION_CLICK_TAG, adapterPosition)
 
              }
 //             layoutBinding.inputDate.setOnClickListener {
@@ -130,7 +134,7 @@ class MultiplePodEntryAdapter  @Inject constructor(
 //             }
              layoutBinding.btnSavePod.setOnClickListener {
                  val currentModel = podList[adapterPosition]
-                 onRowClick.onRowClick(currentModel, "SAVE_SELECT", adapterPosition)
+                 validateCardBeforeSave(currentModel, adapterPosition)
              }
 
              layoutBinding.signatureLayout.setOnClickListener {
@@ -140,9 +144,7 @@ class MultiplePodEntryAdapter  @Inject constructor(
                  bottomSheet.show(activity.supportFragmentManager, BottomSheetSignature.TAG)
              }
              layoutBinding.imageLayout.setOnClickListener {
-                 onRowClick.onImageClickedMultiplePodEntry(model, "POD_IMAGE_SELECT", adapterPosition, layoutBinding)
-
-//                 activity.showImageDialog()
+                 onRowClick.onImageClickedMultiplePodEntry(model, POD_IMAGE_CLICK_TAG, adapterPosition, layoutBinding)
              }
 
 
@@ -214,6 +216,36 @@ class MultiplePodEntryAdapter  @Inject constructor(
              }
 
          }
+
+        fun validateCardBeforeSave(model: PodEntryListModel, position: Int) {
+            if(model.dlvdt.isNullOrBlank()) {
+                errorToast("Please select a DATE.")
+                return
+            } else if(model.dlvtime.isNullOrBlank()) {
+                errorToast("Please select a TIME.")
+                return
+            } else if(model.receivedby.isNullOrBlank()) {
+                errorToast("Please enter RECEIVED BY.")
+                return
+            } else if(model.mobileno.isNullOrBlank()) {
+                errorToast("Please enter MOBILE NO.")
+                return
+            } else if(model.relation.isNullOrBlank()) {
+                errorToast("Please select a RELATION.")
+                return
+            } else if(model.signRequired == "Y" && model.signImgBase64.isNullOrBlank()) {
+                errorToast("Please enter your SIGNATURE.")
+                return
+            } else if(model.stampRequired == "Y" && model.podImgBase64.isNullOrBlank()) {
+                errorToast("Please add an IMAGE.")
+                return
+            }
+            savePod(model, position)
+        }
+
+        fun savePod(model: PodEntryListModel, position: Int){
+            onRowClick.onRowClick(model, SAVE_POD_TAG, position)
+        }
         fun onBind(model: PodEntryListModel, onRowClick: OnRowClick<Any>) {
 //            layoutBinding.model = model
             layoutBinding.index = adapterPosition
@@ -342,5 +374,13 @@ class MultiplePodEntryAdapter  @Inject constructor(
         podList[adapterPosition].podImgBase64 = ImageUtil.convert(bitmap)
         layoutBinding.podImage.setImageBitmap(bitmap)
 //        notifyItemChanged(adapterPosition)
+    }
+
+    fun successToast(str: String?) {
+        activity.successToast(str)
+    }
+
+    fun errorToast(str: String?) {
+        activity.errorToast(str)
     }
 }

@@ -343,13 +343,15 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
      }
 
 
-    private fun testFunction() {
+    private fun testFunction(view: View?) {
+//        successToast(mContext, , view)
+        successToast("THIS IS A TEST< HOW ARE YOU DOING< I AM DOING GOOD MY FRIEND")
 //        val intent=Intent(this,InScanDetailWithScannerActivity::class.java)
-        val intent=Intent(this,DRSActivity::class.java)
-        startActivity(intent)
+//        val intent=Intent(this,DRSActivity::class.java)
+//        startActivity(intent)
 //        Utils.changeDateFormatForEway("28/08/2023 02:37:00 PM")
 //        Utils.changeDateFormatForEway("08/08/2023 09:31:00 AM")
-        Utils.changeDateFormatForEwayInvoiceDt("30-10-2023")
+//        Utils.changeDateFormatForEwayInvoiceDt("30-10-2023")
 //        dispatchTakePictureIntent()
 //        selectImage()
 //        val intent = Intent(this, CameraX::class.java)
@@ -383,7 +385,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
             }
         }
         activityBinding.testDebugging.setOnClickListener {
-            testFunction()
+            testFunction(it)
 
         }
 //        activityBinding.btnLogOut.setOnClickListener {

@@ -1,7 +1,6 @@
 package com.greensoft.greentranserpnative.base
 
 import android.Manifest
-import android.R
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
@@ -17,6 +16,7 @@ import android.device.ScanManager
 import android.device.scanner.configuration.PropertyID
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.media.RingtoneManager
 import android.net.ConnectivityManager
@@ -28,6 +28,8 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Base64
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -36,14 +38,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.snackbar.Snackbar.SnackbarLayout
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.greensoft.greentranserpnative.ENV
+import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.common.CommonResult
 import com.greensoft.greentranserpnative.common.PeriodSelection
 import com.greensoft.greentranserpnative.model.SingleDatePickerWIthViewTypeModel
@@ -71,7 +77,6 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 
 @AndroidEntryPoint
@@ -294,19 +299,56 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
             return formatter.format(date)
         }
 
-        fun successToast(mContext: Context, msg: String?) {
+        fun showSnackBar(view: View, mContext: Context, msg: String?, isSuccessSnackBar: Boolean) {
+            if(msg.isNullOrBlank()) {
+                return
+            }
+            val snackbar = Snackbar.make(view, "", Snackbar.LENGTH_LONG)
+            val layoutInflater = LayoutInflater.from(mContext)
+            val customSnackView: View =
+                layoutInflater.inflate(com.greensoft.greentranserpnative.R.layout.custom_snackbar, null)
+            val materialCard: MaterialCardView = customSnackView.findViewById(R.id.snackbar_materialCardView)
+            var strokeColor = "#38761d"
+            var cardBackgroundColor = "#9fc490"
+            if(isSuccessSnackBar) {
+                strokeColor = "#38761d"
+                cardBackgroundColor = "#9fc490"
+            } else {
+                strokeColor = "#c62d42"
+                cardBackgroundColor = "#ca9d9d"
+            }
+            materialCard.setStrokeColor(Color.parseColor(strokeColor))
+            materialCard.setCardBackgroundColor(Color.parseColor(cardBackgroundColor))
+            val snackbarLayout = snackbar.view as SnackbarLayout
+            snackbarLayout.setPadding(0, 0, 0, 0)
+            var textView: TextView = customSnackView.findViewById(R.id.snackBar_Msg)
+            textView.setText(msg)
+            snackbarLayout.addView(customSnackView, 0)
+            snackbar.show()
+        }
+        fun successToast(mContext: Context, msg: String?, view: View? = null) {
 //        Toast.makeText(mContext,msg,Toast.LENGTH_LONG).show();
+
+            if(view != null) {
+                showSnackBar(view, mContext, msg, true)
+                return;
+            } else {
+                val rootView: View =
+                    (this as Activity).window.decorView.findViewById(android.R.id.content)
+                showSnackBar(rootView, this, msg, true)
+                return
+            }
 
             if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.Q) {
 
                 val toast = Toast.makeText(mContext, msg, Toast.LENGTH_LONG)
                 val view = toast.view
                 view!!.background.setColorFilter(
-                    ContextCompat.getColor(mContext, R.color.holo_green_dark),
+                    ContextCompat.getColor(mContext, android.R.color.holo_green_dark),
 
                     PorterDuff.Mode.SRC_IN
                 )
-                val text = view!!.findViewById<TextView>(R.id.message)
+                val text = view.findViewById<TextView>(android.R.id.message)
                 text.setTextColor(ContextCompat.getColor(mContext, R.color.white))
                 toast.show()
                 // only for gingerbread and newer versions
@@ -317,16 +359,27 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
             }
         }
 
-        fun errorToast(mContext: Context, msg: String?) {
+        fun errorToast(mContext: Context, msg: String?, view: View? = null) {
             //        Toast.makeText(mContext,msg,Toast.LENGTH_LONG).show();
+
+            if(view != null) {
+                showSnackBar(view, mContext, msg, false)
+                return;
+            } else {
+                val rootView: View =
+                    (this as Activity).window.decorView.findViewById(android.R.id.content)
+                showSnackBar(rootView, mContext, msg, false)
+                return
+            }
+
             if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.Q) {
                 val toast = Toast.makeText(mContext, msg, Toast.LENGTH_LONG)
                 val view = toast.view
                 view!!.background.setColorFilter(
-                    ContextCompat.getColor(mContext, R.color.holo_red_dark),
+                    ContextCompat.getColor(mContext, android.R.color.holo_red_dark),
                     PorterDuff.Mode.SRC_IN
                 )
-                val text = view!!.findViewById<TextView>(R.id.message)
+                val text = view!!.findViewById<TextView>(android.R.id.message)
                 text.setTextColor(ContextCompat.getColor(mContext, R.color.white))
                 toast.show()
             } else {
@@ -514,19 +567,28 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
         return JsonResult
     }
 
-    open fun successToast(msg: String?) {
+    open fun successToast(msg: String?, view: View? = null) {
 //        Toast.makeText(mContext,msg,Toast.LENGTH_LONG).show();
+        if(view != null) {
+            showSnackBar(view, this, msg, true)
+            return;
+        } else {
+            val rootView: View =
+                (this as Activity).window.decorView.findViewById(android.R.id.content)
+            showSnackBar(rootView, this, msg, true)
+            return
+        }
 
         if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.Q) {
 
             val toast = Toast.makeText(mContext, msg, Toast.LENGTH_LONG)
             val view = toast.view
             view!!.background.setColorFilter(
-                ContextCompat.getColor(mContext, R.color.holo_green_dark),
+                ContextCompat.getColor(mContext, android.R.color.holo_green_dark),
 
                 PorterDuff.Mode.SRC_IN
             )
-            val text = view!!.findViewById<TextView>(R.id.message)
+            val text = view!!.findViewById<TextView>(android.R.id.message)
             text.setTextColor(ContextCompat.getColor(mContext, R.color.white))
             toast.show()
                 // only for gingerbread and newer versions
@@ -537,17 +599,26 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
         }
     }
 
-    open fun errorToast(msg: String?) {
+    open fun errorToast(msg: String?, view: View? = null) {
         playSound()
+        if(view != null) {
+            showSnackBar(view, this, msg, false)
+            return;
+        } else {
+            val rootView: View =
+                (this as Activity).window.decorView.findViewById(android.R.id.content)
+            showSnackBar(rootView, this, msg, false)
+            return
+        }
         //        Toast.makeText(mContext,msg,Toast.LENGTH_LONG).show();
         if (android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.Q) {
             val toast = Toast.makeText(mContext, msg, Toast.LENGTH_LONG)
             val view = toast.view
             view!!.background.setColorFilter(
-                ContextCompat.getColor(mContext, R.color.holo_red_dark),
+                ContextCompat.getColor(mContext, android.R.color.holo_red_dark),
                 PorterDuff.Mode.SRC_IN
             )
-            val text = view!!.findViewById<TextView>(R.id.message)
+            val text = view!!.findViewById<TextView>(android.R.id.message)
             text.setTextColor(ContextCompat.getColor(mContext, R.color.white))
             toast.show()
         } else {
@@ -555,6 +626,30 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
                 Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    open fun showSnackBar(view: View, mContext: Context, msg: String?, isSuccessSnackBar: Boolean) {
+        if(msg.isNullOrBlank()) {
+            return
+        }
+        val snackbar = Snackbar.make(view, "", Snackbar.LENGTH_LONG)
+        val layoutInflater = LayoutInflater.from(mContext)
+        val customSnackView: View =
+            layoutInflater.inflate(com.greensoft.greentranserpnative.R.layout.custom_snackbar, null)
+        val materialCard: MaterialCardView = customSnackView.findViewById(R.id.snackbar_materialCardView)
+        if(isSuccessSnackBar) {
+            materialCard.setStrokeColor(Color.parseColor("#38761d"))
+            materialCard.setCardBackgroundColor(Color.parseColor("#9fc490"))
+        } else {
+            materialCard.setStrokeColor(Color.parseColor("#c62d42"))
+            materialCard.setCardBackgroundColor(Color.parseColor("#ca9d9d"))
+        }
+        val snackbarLayout = snackbar.view as SnackbarLayout
+        snackbarLayout.setPadding(0, 0, 0, 0)
+        var textView: TextView = customSnackView.findViewById(R.id.snackBar_Msg)
+        textView.setText(msg)
+        snackbarLayout.addView(customSnackView, 0)
+        snackbar.show()
     }
 
     open fun getResult1(response: CommonResult): JSONArray? {
@@ -1052,6 +1147,10 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
          startActivity(Intent
              (Intent.ACTION_VIEW, Uri.parse(imageBase64List.elementAt(0)))
          )
+    }
+
+    fun logger(tag: String, msg: String) {
+        Log.d(tag, msg)
     }
 
 }

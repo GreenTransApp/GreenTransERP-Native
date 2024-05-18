@@ -1,6 +1,9 @@
 package com.greensoft.greentranserpnative.ui.operation.pending_for_delivery_update_list.models
 
 import android.graphics.Bitmap
+import com.greensoft.greentranserpnative.utils.Utils
+import okhttp3.internal.Util
+import kotlin.math.sign
 
 data class PodEntryListModel(
     val arrivalatstn: String?,
@@ -69,4 +72,20 @@ data class PodEntryListModel(
     var podImgBase64: String?,
     var stampRequired:String?,
     var signRequired :String?
-)
+) {
+    fun subStringableString(str: String?) : String {
+        return if(str.isNullOrBlank()) "null" else str.substring(0, 10)
+    }
+    override fun toString(): String {
+        val jsonLikeString = "{\n" +
+                "\tdlvDt: ${dlvdt},\n" +
+                "\tdlvTime: ${dlvtime},\n" +
+                "\treceivedBy: ${receivedby},\n" +
+                "\tmobileNo: ${mobileno},\n" +
+                "\trelation: ${relation},\n" +
+                "\tsignature: ${subStringableString(signImgBase64)},\n" +
+                "\tpodImage: ${subStringableString(podImgBase64)}\n" +
+                "\n}"
+        return jsonLikeString
+    }
+}
