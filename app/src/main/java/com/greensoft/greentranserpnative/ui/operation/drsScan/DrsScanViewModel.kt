@@ -38,7 +38,7 @@ class DrsScanViewModel  @Inject constructor(private val _repo: DrsScanRepository
 
         viewModelScope.launch(Dispatchers.IO){
             _repo.updateSticker(companyId,userCode,loginBranchCode,branchCode,manifestNo,drsDt, drsTime,modeCode,vendCode,
-                custCode, remarks,stickerNo,deliveredBy, agentCode, vehicleNo,sessionId,)
+                custCode, remarks,stickerNo,deliveredBy, agentCode, vehicleNo,sessionId)
         }
     }
 

@@ -21,6 +21,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
+import androidx.core.text.isDigitsOnly
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -345,7 +346,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
 
     private fun testFunction(view: View?) {
 //        successToast(mContext, , view)
-        successToast("THIS IS A TEST< HOW ARE YOU DOING< I AM DOING GOOD MY FRIEND")
+//        successToast("THIS IS A TEST< HOW ARE YOU DOING< I AM DOING GOOD MY FRIEND")
 //        val intent=Intent(this,InScanDetailWithScannerActivity::class.java)
 //        val intent=Intent(this,DRSActivity::class.java)
 //        startActivity(intent)
@@ -360,6 +361,11 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
 //        supportFragmentManager.beginTransaction().add(frag, "TEST").commit()
 
 //        openBookingIndentInfoBottomSheet(this,"Booking Indent Information",this,)
+        val mobileNo: String = "1234567891"
+        if(mobileNo.isDigitsOnly() == false) {
+            errorToast("Mobile No not entered properly, Please check.")
+            return;
+        }
 
     }
 

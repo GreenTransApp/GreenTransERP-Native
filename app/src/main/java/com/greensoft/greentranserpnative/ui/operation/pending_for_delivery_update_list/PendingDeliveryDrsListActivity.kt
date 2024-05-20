@@ -94,14 +94,13 @@ class PendingDeliveryDrsListActivity  @Inject constructor(): BaseActivity(),
 
     private fun getPendingDrsList(){
       viewModel.getDrsPendingList(
-//          companyId = getCompanyId(),
-          companyId ="10",
+          companyId = getCompanyId(),
           userCode = getUserCode(),
           loginBranchCode = getLoginBranchCode(),
-          fromDt = "2023-08-30",
-          toDt = "2024-08-31",
-//          fromDt = fromDate,
-//          toDt = toDate,
+//          fromDt = "2023-08-30",
+//          toDt = "2024-08-31",
+          fromDt = fromDate,
+          toDt = toDate,
           sessionId = getSessionId()
       )
     }

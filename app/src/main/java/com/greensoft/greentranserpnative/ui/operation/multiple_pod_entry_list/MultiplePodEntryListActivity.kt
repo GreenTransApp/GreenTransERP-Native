@@ -92,6 +92,12 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
                  this.layoutBinding?.let { setPodImage(setImageIndex, it) }
              }
          }
+
+         viewModel.saveLiveData.observe(this) { saved ->
+             if(saved.commandstatus == 1) {
+                 getGrListForPod()
+             }
+         }
 //         singleDatePeriodWithViewType.observe(this){ periodWithViewType ->
 ////             dtDetails = mPeriod
 //             if(rvAdapter != null) {
@@ -267,7 +273,7 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
     private fun savePod(podCardModel: PodEntryListModel, index: Int) {
         var grNo: String = podCardModel.grno.toString()
         var podTime: String = podCardModel.dlvtime.toString()
-        var podDt: String = podCardModel.dlvdt.toString()
+        var podDt: String = podCardModel.sqlpoddt.toString()
         var enteredReceivedBy = podCardModel.receivedby.toString()
         var selectedRelation = podCardModel.relation.toString()
         var enteredMobileNum = podCardModel.mobileno.toString()
@@ -281,25 +287,25 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
         var savingPodImage: String = if(stampRequired == "Y" && podCardModel.podImgBase64 != null) podCardModel.podImgBase64!! else ""
 //        var adapterEnteredData: PodEntryListModel? = rvAdapter?.getEnteredData(index)
 
-        if (podCardModel.mobileno.isNullOrEmpty()) {
-            errorToast("Mobile No. Not Entered at INPUT - ${index + 1}")
-            return
-        } else if(podCardModel.receivedby.isNullOrEmpty()){
-            errorToast(" Received By Not Entered at INPUT - ${index + 1}")
-            return
-        }else if(podCardModel.relation.isNullOrEmpty()){
-            errorToast(" Relation Not Selected at INPUT - ${index + 1}")
-            return
-        }else if(podCardModel.dlvtime.isNullOrEmpty()){
-            errorToast(" Delivery time Not Selected at INPUT - ${index + 1}")
-            return
-        }else if(savingPodImage == "" && stampRequired == "Y"){
-            errorToast(" Pod image not attached at INPUT - ${index + 1}")
-            return
-        }else if(savingSignImage == "" && signRequired == "Y"){
-            errorToast(" Please Sign at INPUT - ${index + 1}")
-            return
-        }
+//        if (podCardModel.mobileno.isNullOrEmpty()) {
+//            errorToast("Mobile No. Not Entered at INPUT - ${index + 1}")
+//            return
+//        } else if(podCardModel.receivedby.isNullOrEmpty()){
+//            errorToast(" Received By Not Entered at INPUT - ${index + 1}")
+//            return
+//        }else if(podCardModel.relation.isNullOrEmpty()){
+//            errorToast(" Relation Not Selected at INPUT - ${index + 1}")
+//            return
+//        }else if(podCardModel.dlvtime.isNullOrEmpty()){
+//            errorToast(" Delivery time Not Selected at INPUT - ${index + 1}")
+//            return
+//        }else if(savingPodImage == "" && stampRequired == "Y"){
+//            errorToast(" Pod image not attached at INPUT - ${index + 1}")
+//            return
+//        }else if(savingSignImage == "" && signRequired == "Y"){
+//            errorToast(" Please Sign at INPUT - ${index + 1}")
+//            return
+//        }
 
 
 

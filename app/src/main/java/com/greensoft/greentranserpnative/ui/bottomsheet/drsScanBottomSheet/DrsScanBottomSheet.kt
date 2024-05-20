@@ -157,11 +157,12 @@ class DrsScanBottomSheet @Inject constructor(): BaseFragment(), OnRowClick<Any>,
             for(scannedDrsList in rvList) {
                 if(scannedDrsList.stickerno == scannedStickerNo) {
                     stickerAlreadyExists = true
-                    removeSticker(scannedStickerNo)
                     break
                 }
             }
-            if(!stickerAlreadyExists) {
+            if(stickerAlreadyExists) {
+                removeSticker(scannedStickerNo)
+            } else {
                 updateSticker(scannedStickerNo)
             }
 //            Utils.debugToast(this, "sticker no $scannedStickerNo")
@@ -264,14 +265,15 @@ class DrsScanBottomSheet @Inject constructor(): BaseFragment(), OnRowClick<Any>,
                 drsNo,
                 detail.drsdate,
                 detail.drstime,
-                detail.vehiclecode.toString(),
+//                detail.vehiclecode.toString(),
+                "A9531",
                 detail.vendcode.toString(),
                 "",
                 detail.remarks.toString(),
                 stickerNo,
                 detail.deliveredby.toString(),
                 detail.dlvagentcode.toString(),
-                detail.vehiclecode.toString(),
+                detail.vehicleno.toString(),
                 getSessionId()
             )
         }

@@ -308,12 +308,10 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
             val customSnackView: View =
                 layoutInflater.inflate(com.greensoft.greentranserpnative.R.layout.custom_snackbar, null)
             val materialCard: MaterialCardView = customSnackView.findViewById(R.id.snackbar_materialCardView)
+            snackbar.getView().setBackgroundColor(Color.TRANSPARENT);
             var strokeColor = "#38761d"
             var cardBackgroundColor = "#9fc490"
-            if(isSuccessSnackBar) {
-                strokeColor = "#38761d"
-                cardBackgroundColor = "#9fc490"
-            } else {
+            if(!isSuccessSnackBar) {
                 strokeColor = "#c62d42"
                 cardBackgroundColor = "#ca9d9d"
             }

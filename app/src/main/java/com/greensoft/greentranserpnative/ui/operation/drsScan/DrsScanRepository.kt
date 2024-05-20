@@ -37,7 +37,7 @@ class DrsScanRepository  @Inject constructor(): BaseRepository(){
                        stickerNo:String,deliveredBy:String,agentCode:String,vehicleNo:String,sessionId:String) {
         viewDialogMutData.postValue(true)
         api.updateDrsSticker( companyId,userCode,loginBranchCode,branchCode,manifestNo,drsDt, drsTime,
-            modeCode, vendCode,custCode, remarks,stickerNo,deliveredBy, agentCode, vehicleNo,sessionId,).enqueue(object:Callback<CommonResult> {
+            modeCode, vendCode,custCode, remarks,stickerNo,deliveredBy, agentCode, vehicleNo,sessionId).enqueue(object:Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){
                     val result = response.body()!!

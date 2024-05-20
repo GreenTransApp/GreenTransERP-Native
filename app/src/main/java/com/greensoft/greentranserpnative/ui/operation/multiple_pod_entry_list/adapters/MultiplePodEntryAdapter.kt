@@ -20,6 +20,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.text.isDigitsOnly
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -218,6 +219,7 @@ class MultiplePodEntryAdapter  @Inject constructor(
          }
 
         fun validateCardBeforeSave(model: PodEntryListModel, position: Int) {
+            val mobileNo: String = if(model.mobileno.isNullOrBlank()) "" else model.mobileno!!
             if(model.dlvdt.isNullOrBlank()) {
                 errorToast("Please select a DATE.")
                 return
@@ -227,7 +229,7 @@ class MultiplePodEntryAdapter  @Inject constructor(
             } else if(model.receivedby.isNullOrBlank()) {
                 errorToast("Please enter RECEIVED BY.")
                 return
-            } else if(model.mobileno.isNullOrBlank()) {
+            } else if(mobileNo.isBlank()) {
                 errorToast("Please enter MOBILE NO.")
                 return
             } else if(model.relation.isNullOrBlank()) {
@@ -238,7 +240,10 @@ class MultiplePodEntryAdapter  @Inject constructor(
                 return
             } else if(model.stampRequired == "Y" && model.podImgBase64.isNullOrBlank()) {
                 errorToast("Please add an IMAGE.")
-                return
+                return;
+            } else if(!mobileNo.isDigitsOnly()) {
+                errorToast("Mobile No not entered properly, Please check.")
+                return;
             }
             savePod(model, position)
         }
