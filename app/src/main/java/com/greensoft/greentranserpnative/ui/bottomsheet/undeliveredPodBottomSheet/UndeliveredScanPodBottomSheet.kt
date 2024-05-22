@@ -3,26 +3,21 @@ package com.greensoft.greentranserpnative.ui.bottomsheet.undeliveredPodBottomShe
 import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.FrameLayout
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseFragment
 import com.greensoft.greentranserpnative.databinding.FragmentUndeliveredScanPodBottomSheetBinding
-import com.greensoft.greentranserpnative.ui.bottomsheet.common.models.CommonBottomSheetModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.undeliveredPodBottomSheet.models.UndeliveredEnteredDataModel
-import com.greensoft.greentranserpnative.ui.bottomsheet.vehicleSelection.VehicleSelectionAdapter
 
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
-import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.ScanAndDeliveryViewModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.adapter.ScanUndeliveryAdapter
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanDelReasonModel
@@ -41,6 +36,7 @@ class UndeliveredScanPodBottomSheet @Inject constructor(): BaseFragment() {
     private var linearLayoutManager: LinearLayoutManager? = null
     private var index: Int = -1
     private lateinit var undelReasonList: ArrayList<ScanDelReasonModel>
+    var reasonName = ""
 
     companion object {
 
@@ -57,6 +53,7 @@ class UndeliveredScanPodBottomSheet @Inject constructor(): BaseFragment() {
             val instance: UndeliveredScanPodBottomSheet = UndeliveredScanPodBottomSheet()
             instance.mContext = mContext
             instance.rvList = rvList
+            instance.title = title
             instance.bottomSheetClick = bottomSheetClick
             instance.undelReasonList = undelReasonList
             ITEM_CLICK_VIEW_TYPE = title
@@ -82,18 +79,19 @@ class UndeliveredScanPodBottomSheet @Inject constructor(): BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
             layoutBinding.toolbarTitle.text = title
         setUpRecyclerView()
-        layoutBinding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                rvAdapter?.filter?.filter(query)
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                rvAdapter?.filter?.filter(newText)
-                return false
-            }
-
-        })
+        setSpinner()
+//        layoutBinding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                rvAdapter?.filter?.filter(query)
+//                return false
+//            }
+//
+//            override fun onQueryTextChange(newText: String?): Boolean {
+//                rvAdapter?.filter?.filter(newText)
+//                return false
+//            }
+//
+//        })
 
         dialog!!.setOnShowListener { dialog ->
             val d = dialog as BottomSheetDialog
@@ -143,6 +141,27 @@ class UndeliveredScanPodBottomSheet @Inject constructor(): BaseFragment() {
         layoutBinding.recyclerView.itemAnimator = DefaultItemAnimator()
         layoutBinding.recyclerView.isNestedScrollingEnabled = true
         rvAdapter!!.notifyDataSetChanged()
+    }
+
+    private fun setSpinner(){
+        layoutBinding.inputRelation.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    reasonName = undelReasonList[position].reasonname .toString()
+                    when (reasonName) {
+
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    TODO("Not yet implemented")
+                }
+            }
     }
 
 }

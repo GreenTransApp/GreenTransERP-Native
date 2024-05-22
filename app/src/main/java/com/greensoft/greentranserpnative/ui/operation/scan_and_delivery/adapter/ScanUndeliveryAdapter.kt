@@ -41,56 +41,56 @@ class ScanUndeliveryAdapter (private val stickerList: ArrayList<ScanStickerModel
 //             "SUNDAY HOLIDAY"
 //         )
 
-       private fun setOnClicks(model: ScanStickerModel) {
-           binding.reason.onItemSelectedListener = object:
-               AdapterView.OnItemSelectedListener {
-               override fun onItemSelected(
-                   parent: AdapterView<*>?,
-                   view: View?,
-                   position: Int,
-                   id: Long
-               ) {
-                   stickerList[adapterPosition].reasons = unDelReasonList[position].reasonname
-                   stickerList[adapterPosition].reasonCode = unDelReasonList[position].reasoncode
-                   Log.d("reasons", "onItemSelected:${ stickerList[adapterPosition].reasons} ")
-//                   when(item) {
+//       private fun setOnClicks(model: ScanStickerModel) {
+//           binding.reason.onItemSelectedListener = object:
+//               AdapterView.OnItemSelectedListener {
+//               override fun onItemSelected(
+//                   parent: AdapterView<*>?,
+//                   view: View?,
+//                   position: Int,
+//                   id: Long
+//               ) {
+//                   stickerList[adapterPosition].reasons = unDelReasonList[position].reasonname
+//                   stickerList[adapterPosition].reasonCode = unDelReasonList[position].reasoncode
+//                   Log.d("reasons", "onItemSelected:${ stickerList[adapterPosition].reasons} ")
+////                   when(item) {
+//////
+////                       "ADDRESS NOT AVAILABLE" -> {
+////                       }
+////                       "DAMAGED GOODS" -> {
+////                       }
+////                       "CONCERN PERSON NOT AVAILABLE" -> {
+////                       }
+////                       "TRAIN LATE" -> {
+////                       }
+////                       "FLIGHT DELAY" -> {
+////                       }
+////                       "SUNDAY HOLIDAY" -> {
+////                       }
+////                       else -> {
 ////
-//                       "ADDRESS NOT AVAILABLE" -> {
-//                       }
-//                       "DAMAGED GOODS" -> {
-//                       }
-//                       "CONCERN PERSON NOT AVAILABLE" -> {
-//                       }
-//                       "TRAIN LATE" -> {
-//                       }
-//                       "FLIGHT DELAY" -> {
-//                       }
-//                       "SUNDAY HOLIDAY" -> {
-//                       }
-//                       else -> {
+////                       }
+////                   }
+//               }
 //
-//                       }
-//                   }
-               }
-
-               override fun onNothingSelected(parent: AdapterView<*>?) {
-
-               }
-
-           }
-       }
+//               override fun onNothingSelected(parent: AdapterView<*>?) {
+//
+//               }
+//
+//           }
+//       }
 
         fun bindData(model: ScanStickerModel) {
             binding.model = model
             binding.index = adapterPosition
             setUpAdapter()
-            setOnClicks(model)
+//            setOnClicks(model)
 
 
         }
        private fun setUpAdapter() {
            val reasonAdapter = ArrayAdapter(mContext, R.layout.simple_list_item_1, unDelReasonList)
-           binding.reason.adapter = reasonAdapter
+//           binding.reason.adapter = reasonAdapter
 
        }
     }

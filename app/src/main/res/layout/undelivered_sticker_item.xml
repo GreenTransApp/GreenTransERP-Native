@@ -39,7 +39,7 @@
 
                         <EditText
                             android:id="@+id/sNo"
-                            android:layout_width="50sp"
+                            android:layout_width="75dp"
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:focusable="false"
@@ -49,25 +49,26 @@
 
                         <EditText
                             android:id="@+id/sticker_no"
-                            android:layout_width="200sp"
+                            android:layout_width="280dp"
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:focusable="false"
                             android:text="@{String.valueOf(model.stickerno)}"
                             android:background="@drawable/table_content_cell_bg"
                             android:textSize="16sp" />
-                        <LinearLayout
-                            android:id="@+id/input_layout_reason"
-                            android:layout_width="250sp"
-                            android:layout_margin="1sp"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/table_content_cell_bg">
-                            <Spinner
-                                android:id="@+id/reason"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                />
-                        </LinearLayout>
+
+<!--                        <LinearLayout-->
+<!--                            android:id="@+id/input_layout_reason"-->
+<!--                            android:layout_width="250sp"-->
+<!--                            android:layout_margin="1sp"-->
+<!--                            android:layout_height="match_parent"-->
+<!--                            android:background="@drawable/table_content_cell_bg">-->
+<!--                            <Spinner-->
+<!--                                android:id="@+id/reason"-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                />-->
+<!--                        </LinearLayout>-->
 
 <!--                        <EditText-->
 <!--                            android:id="@+id/reason"-->

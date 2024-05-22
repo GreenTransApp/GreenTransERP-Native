@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -80,10 +81,12 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
         activityBinding.btnUpArrow.visibility=View.GONE
         activityBinding.inputDate.setText(getViewCurrentDate())
         activityBinding.inputTime.setText(getSqlCurrentTime())
-        activityBinding.inputDeliveryDt.setText(getViewCurrentDate())
-        activityBinding.inputDeliveryTime.setText(getSqlCurrentTime())
+//        activityBinding.inputDeliveryDt.setText(getViewCurrentDate())
+//        activityBinding.inputDeliveryTime.setText(getSqlCurrentTime())
         activityBinding.signatureLayout.visibility = View.GONE
         activityBinding.imageLayout.visibility = View.GONE
+
+        activityBinding.inputReceiverBy.filters = Utils.allCapsInput(activityBinding.inputReceiverBy)
     }
 
     private fun saveStickerToPod(stickerNo: String) {
@@ -176,6 +179,7 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
                 activityBinding.stickerGrid.visibility =  View.VISIBLE
                 activityBinding.btnUpArrow.visibility=View.VISIBLE
                 activityBinding.btnDownArrow.visibility= View.GONE
+                activityBinding.inputGrno.setText(rvList[0].grno.toString())
 
             }
 
@@ -228,16 +232,17 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
 
     private fun setPodDetails(){
         activityBinding.inputGrno.setText(podDetail?.grno.toString())
-        activityBinding.inputOrigin.setText(Utils.checkNullOrEmpty(podDetail?.origin.toString()))
-        activityBinding.inputDestination.setText(Utils.checkNullOrEmpty(podDetail?.destname.toString()))
-        activityBinding.inputBookingDt.setText(Utils.checkNullOrEmpty(podDetail?.grdt.toString()))
-        activityBinding.inputBookingTime.setText(Utils.checkNullOrEmpty(podDetail?.picktime.toString()))
-        activityBinding.inputArrivalDt.setText(Utils.checkNullOrEmpty(podDetail?.receivedt.toString()))
-        activityBinding.inputArrivalTime.setText(Utils.checkNullOrEmpty(podDetail?.receivetime.toString()))
+//        activityBinding.inputOrigin.setText(Utils.checkNullOrEmpty(podDetail?.origin.toString()))
+//        activityBinding.inputDestination.setText(Utils.checkNullOrEmpty(podDetail?.destname.toString()))
+//        activityBinding.inputBookingDt.setText(Utils.checkNullOrEmpty(podDetail?.grdt.toString()))
+//        activityBinding.inputBookingTime.setText(Utils.checkNullOrEmpty(podDetail?.picktime.toString()))
+//        activityBinding.inputArrivalDt.setText(Utils.checkNullOrEmpty(podDetail?.receivedt.toString()))
+//        activityBinding.inputArrivalTime.setText(Utils.checkNullOrEmpty(podDetail?.receivetime.toString()))
         activityBinding.inputReceiverBy.setText(Utils.checkNullOrEmpty(podDetail?.name.toString()))
+//        activityBinding.inputReceiverBy.filters = Utils.allCapsInput(activityBinding.inputReceiverBy)
         activityBinding.inputReceiverbyMobile.setText(Utils.checkNullOrEmpty(podDetail?.phno.toString()))
-        activityBinding.inputRemark.setText(Utils.checkNullOrEmpty(podDetail?.remarks.toString()))
-        activityBinding.inputDeliveryBoy.setText(Utils.checkNullOrEmpty(userDataModel?.username.toString()))
+//        activityBinding.inputRemark.setText(Utils.checkNullOrEmpty(podDetail?.remarks.toString()))
+//        activityBinding.inputDeliveryBoy.setText(Utils.checkNullOrEmpty(userDataModel?.username.toString()))
 
     }
       @SuppressLint("UseCompatLoadingForDrawables")
@@ -262,12 +267,12 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
           activityBinding.inputTime.setOnClickListener {
               openTimePicker()
           }
-          activityBinding.inputDeliveryDt.setOnClickListener {
-              openSingleDatePicker()
-          }
-          activityBinding.inputDeliveryTime.setOnClickListener {
-              openTimePicker()
-          }
+//          activityBinding.inputDeliveryDt.setOnClickListener {
+//              openSingleDatePicker()
+//          }
+//          activityBinding.inputDeliveryTime.setOnClickListener {
+//              openTimePicker()
+//          }
 
           activityBinding.signatureLayout.setOnClickListener {
               val bottomSheet= BottomSheetSignature.newInstance(this, getCompanyId(), this, signBitmap)
@@ -384,7 +389,7 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
             }
 
         }
-        openUndeliveredBottomSheet(mContext,"",this,undeliveredStickerList,unDelReasonList)
+        openUndeliveredBottomSheet(mContext,"UnDelivery",this,undeliveredStickerList,unDelReasonList)
     }
 
     fun openUndeliveredBottomSheet(mContext: Context, title: String, bottomSheetClick: BottomSheetClick<Any>, stickerList: ArrayList<ScanStickerModel>, unDelReasonList: ArrayList<ScanDelReasonModel>) {
@@ -427,7 +432,7 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
     }
 
     override fun onItemClick(data: Any, clickType: String) {
-        TODO("Not yet implemented")
+        Toast.makeText(this, "pending work", Toast.LENGTH_SHORT).show()
     }
 
     override fun onClick(data: Any, clickType: String) {
