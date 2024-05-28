@@ -41,6 +41,7 @@ import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.login.LoginActivity
 import com.greensoft.greentranserpnative.ui.navDrawer.ProfileActivity
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.bookingOption.BookingOptionActivity
 import com.greensoft.greentranserpnative.ui.operation.call_register.CallRegisterActivity
 import com.greensoft.greentranserpnative.ui.operation.communicationList.CommunicationListActivity
 import com.greensoft.greentranserpnative.ui.operation.communicationList.models.CommunicationListModel
@@ -436,7 +437,7 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
                 startActivity(intent)
             }
             "GTAPP_PENDINGINDENT" -> run {
-                val intent = Intent(this, PickupReferenceActivity::class.java)
+                val intent = Intent(this, BookingOptionActivity::class.java)
                 intent.putExtra("MENU_DATA", jsonSerialized)
                 startActivity(intent)
             }
