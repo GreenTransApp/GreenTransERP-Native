@@ -180,11 +180,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:hintTextColor="@color/black"
-                android:hint="Relation"
+                android:hint="Reason"
                 >
                 <Spinner
                     android:focusable="false"
-                    android:id="@+id/input_relation"
+                    android:id="@+id/input_reason"
                     android:layout_width="match_parent"
                     android:layout_height="55sp"
                     />

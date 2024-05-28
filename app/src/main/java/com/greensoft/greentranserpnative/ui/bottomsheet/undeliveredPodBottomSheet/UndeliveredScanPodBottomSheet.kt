@@ -1,5 +1,6 @@
 package com.greensoft.greentranserpnative.ui.bottomsheet.undeliveredPodBottomSheet
 
+import android.R
 import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.FrameLayout
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -22,6 +24,7 @@ import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.ScanAndD
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.adapter.ScanUndeliveryAdapter
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanDelReasonModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanStickerModel
+import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -35,28 +38,29 @@ class UndeliveredScanPodBottomSheet @Inject constructor(): BaseFragment() {
     private var rvAdapter: ScanUndeliveryAdapter? = null
     private var linearLayoutManager: LinearLayoutManager? = null
     private var index: Int = -1
-    private lateinit var undelReasonList: ArrayList<ScanDelReasonModel>
-    var reasonName = ""
+    private var unDelReasonList: ArrayList<ScanDelReasonModel> = ArrayList()
+
 
     companion object {
 
         const val TAG = "UndeliveredBottomSheet"
-        var ITEM_CLICK_VIEW_TYPE = "UNDELIVERED_POD_BOTTOM_SHEET"
+//        var ITEM_CLICK_VIEW_TYPE = "UNDELIVERED_POD_BOTTOM_SHEET"
         val UNDELIVERED_SAVE_CLICK_TAG = "UNDELIVERED_SAVE_CLICK_TAG"
+        var selectedReasonModel: ScanDelReasonModel = ScanDelReasonModel(1, null, "", "SELECT", "N")
         fun  newInstance(
             mContext: Context,
             title: String,
             bottomSheetClick: BottomSheetClick<Any>,
             rvList: java.util.ArrayList<ScanStickerModel>,
-            undelReasonList: ArrayList<ScanDelReasonModel>
+            unDelReasonList: ArrayList<ScanDelReasonModel>
         ): UndeliveredScanPodBottomSheet {
             val instance: UndeliveredScanPodBottomSheet = UndeliveredScanPodBottomSheet()
             instance.mContext = mContext
             instance.rvList = rvList
             instance.title = title
             instance.bottomSheetClick = bottomSheetClick
-            instance.undelReasonList = undelReasonList
-            ITEM_CLICK_VIEW_TYPE = title
+            instance.unDelReasonList.add(selectedReasonModel)
+            instance.unDelReasonList.addAll(unDelReasonList)
             return instance
         }
     }
@@ -109,12 +113,13 @@ class UndeliveredScanPodBottomSheet @Inject constructor(): BaseFragment() {
             var unDelReasonCodeCSV: String = ""
             rvList.forEachIndexed { index, scanStickerModel ->
                 stickerCSV += scanStickerModel.stickerno.toString() + ","
-                unDelReasonCodeCSV += scanStickerModel.reasonCode.toString() + ","
+                unDelReasonCodeCSV += selectedReasonModel.reasoncode.toString() + ","
+//                unDelReasonCodeCSV += scanStickerModel.reasonCode.toString() + ","
             }
 
             val undeliveredDataModel = UndeliveredEnteredDataModel(
-                stickerStr = stickerCSV,
-                unDelReasonCodeStr = unDelReasonCodeCSV,
+                unDelStickerStr = stickerCSV,
+                unDelReasonStr = unDelReasonCodeCSV,
             )
             bottomSheetClick?.onItemClick(undeliveredDataModel, UNDELIVERED_SAVE_CLICK_TAG)
             dismiss()
@@ -132,7 +137,7 @@ class UndeliveredScanPodBottomSheet @Inject constructor(): BaseFragment() {
                 rvList,
                 mContext,
                 bottomSheetClick!!,
-                undelReasonList!!
+                unDelReasonList!!
             )
             linearLayoutManager = LinearLayoutManager(activity)
         }
@@ -144,7 +149,10 @@ class UndeliveredScanPodBottomSheet @Inject constructor(): BaseFragment() {
     }
 
     private fun setSpinner(){
-        layoutBinding.inputRelation.onItemSelectedListener =
+        val unDelReasonAdapter = ArrayAdapter(mContext, R.layout.simple_list_item_1, unDelReasonList)
+        layoutBinding.inputReason.adapter = unDelReasonAdapter
+
+        layoutBinding.inputReason.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -152,14 +160,16 @@ class UndeliveredScanPodBottomSheet @Inject constructor(): BaseFragment() {
                     position: Int,
                     id: Long
                 ) {
-                    reasonName = undelReasonList[position].reasonname .toString()
-                    when (reasonName) {
-
-                    }
+                    selectedReasonModel = unDelReasonList[position]
+                    Utils.logger(TAG, "${selectedReasonModel.reasonname} - ${selectedReasonModel.reasoncode}");
+//                    reasonName = unDelReasonList[position].reasonname.toString()
+//                    reasonCode = unDelReasonList[position].reasoncode.toString()
+//                    when (reasonName) {
+//
+//                    }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
-                    TODO("Not yet implemented")
                 }
             }
     }

@@ -4,12 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +19,7 @@ import com.greensoft.greentranserpnative.model.ImageUtil
 import com.greensoft.greentranserpnative.ui.bottomsheet.signBottomSheet.BottomSheetSignature
 import com.greensoft.greentranserpnative.ui.bottomsheet.signBottomSheet.SignatureBottomSheetCompleteListener
 import com.greensoft.greentranserpnative.ui.bottomsheet.undeliveredPodBottomSheet.UndeliveredScanPodBottomSheet
+import com.greensoft.greentranserpnative.ui.bottomsheet.undeliveredPodBottomSheet.models.UndeliveredEnteredDataModel
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
 import com.greensoft.greentranserpnative.ui.common.alert.CommonAlert
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
@@ -45,17 +44,17 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
     private var savePodData: ScanDeliverySaveModel? = null
     private var rvAdapter: ScanDeliveryAdapter? = null
     var relationType = ""
-    var stampRequired =""
-    var signRequired =""
     var podImagePath =""
     var signPath =""
-    var pckgs =""
-    var stickerNumber =""
-    var grDt = getSqlCurrentDate()
+    var grNo = ""
+    var dlvDtViewDt = getViewCurrentDate()
+    var dlvDtSqlDt = getSqlCurrentDate()
+    var dlvTime = ""
+//    var dlvTime = getSqlCurrentTime()
     var signBitmap: Bitmap? = null
+    private var selectedRelation: RelationListModel? = null
     private var relationList: ArrayList<RelationListModel> = ArrayList()
     private var rvList: ArrayList<ScanStickerModel> = ArrayList()
-    private var undeliveredStickerList: ArrayList<ScanStickerModel> = ArrayList()
     private var unDelReasonList: ArrayList<ScanDelReasonModel> = ArrayList()
     private val viewModel: ScanAndDeliveryViewModel by viewModels()
 
@@ -75,12 +74,12 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
     private fun setInitData(){
         setSupportActionBar(activityBinding.toolBar.root)
         setUpToolbar("Scan And Delivery")
-        activityBinding.inputDate.setText(getViewCurrentDate())
-        activityBinding.inputTime.setText(getSqlCurrentTime())
+        activityBinding.inputDate.setText(dlvDtViewDt)
+//        activityBinding.inputTime.setText(dlvTime)
         activityBinding.stickerGrid.visibility =  View.GONE
         activityBinding.btnUpArrow.visibility=View.GONE
-        activityBinding.inputDate.setText(getViewCurrentDate())
-        activityBinding.inputTime.setText(getSqlCurrentTime())
+//        activityBinding.inputDate.setText(getViewCurrentDate())
+//        activityBinding.inputTime.setText(getSqlCurrentTime())
 //        activityBinding.inputDeliveryDt.setText(getViewCurrentDate())
 //        activityBinding.inputDeliveryTime.setText(getSqlCurrentTime())
         activityBinding.signatureLayout.visibility = View.GONE
@@ -90,14 +89,15 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
     }
 
     private fun saveStickerToPod(stickerNo: String) {
-     viewModel.saveScanDeliveryPod(
+     viewModel.updateStickerForPod(
          companyId =  getCompanyId(),
          userCode = getUserCode(),
          branchCode = getLoginBranchCode(),
          loginBranchCode = getLoginBranchCode(),
          stickerNo = stickerNo,
          menuCode = "GTAPP_DELIVERYNATIVE",
-         sessionId = getSessionId()
+         sessionId = getSessionId(),
+         grNo = grNo
      )
     }
     private fun setSpinner(){
@@ -109,10 +109,7 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
                     position: Int,
                     id: Long
                 ) {
-                    relationType = relationList[position].relations.toString()
-                    when (relationType) {
-
-                    }
+                    selectedRelation = relationList[position]
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -132,11 +129,12 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
             for(scanStickerModel in rvList) {
                 if(scanStickerModel.stickerno == stickerNo) {
                     stickerAlreadyExists = true
-                    removeStickerAlert(stickerNo)
                     break
                 }
             }
-            if(!stickerAlreadyExists) {
+            if(stickerAlreadyExists) {
+                removeStickerAlert(stickerNo)
+            } else {
                 saveStickerToPod(stickerNo)
             }
         }
@@ -166,7 +164,10 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
 
         }
         viewModel.relationLiveData.observe(this){ List->
-            relationList =List
+            relationList = List
+            if(relationList.size > 0) {
+                selectedRelation = relationList[0]
+            }
             val relationAdapter =
                 ArrayAdapter(this, android.R.layout.simple_list_item_1,relationList )
             activityBinding.inputRelation.adapter = relationAdapter
@@ -186,21 +187,25 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
         }
 
         mPeriod.observe(this) { date ->
+            dlvDtViewDt = date.viewsingleDate.toString()
+            dlvDtSqlDt = date.sqlsingleDate.toString()
             activityBinding.inputDate.setText(date.viewsingleDate)
-            grDt = date.sqlsingleDate.toString()
         }
         timePeriod.observe(this) { time ->
+            dlvTime = time
             activityBinding.inputTime.setText(time)
         }
 
         imageClicked.observe(this) { clicked ->
-            if(clicked) {
-                setPodImage()
+            if(clicked && imageBitmapList.size > 0) {
+                activityBinding.podImage.setImageBitmap(imageBitmapList[0]);
+                podImagePath= imageBase64List[0]
             }
         }
 
-        viewModel.saveLiveData .observe(this){data->
+        viewModel.updateStickerLiveData .observe(this){ data->
             savePodData = data;
+            grNo = savePodData?.grno.toString()
             getPodDetails(savePodData?.grno.toString())
             getScanStickerList(savePodData?.grno.toString())
         }
@@ -219,16 +224,6 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
 
     }
 
-    private fun setPodImage(){
-        if(imageBase64List.isEmpty() && imageBitmapList.isEmpty()) {
-            imageBase64List.add("EMPTY")
-            imageBitmapList.add(
-                BitmapFactory.decodeResource(mContext.resources,
-                R.drawable.baseline_add_a_photo_24))
-        }
-        activityBinding.podImage.setImageBitmap(imageBitmapList[0]);
-        podImagePath= imageBase64List[0].toString()
-    }
 
     private fun setPodDetails(){
         activityBinding.inputGrno.setText(podDetail?.grno.toString())
@@ -279,6 +274,8 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
               bottomSheet.show(supportFragmentManager, BottomSheetSignature.TAG)
           }
           activityBinding.imageLayout.setOnClickListener{
+              imageBase64List.clear()
+              imageBitmapList.clear()
               showImageDialog()
           }
 
@@ -286,27 +283,21 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
               if (activityBinding.signCheck.isChecked) {
                   activityBinding.signatureLayout.visibility =View.VISIBLE
                   activityBinding.mainImgLayout.visibility =View.VISIBLE
-                  signRequired = "Y"
               }else{
                   activityBinding.signatureLayout.visibility =View.GONE
                   activityBinding.mainImgLayout.visibility =View.GONE
-                  signBitmap = null
-                  signRequired = "N"
-                  activityBinding.signImg.setImageDrawable(getResources().getDrawable(R.drawable.image))
+                  activityBinding.signImg.setImageDrawable(Utils.getResourcesDrawable(mContext, R.drawable.image))
+//                  activityBinding.signImg.setImageDrawable(getResources().getDrawable(R.drawable.image, null))
               }
           }
           activityBinding.imageCheck.setOnCheckedChangeListener { buttonView, isChecked ->
               if (activityBinding.imageCheck.isChecked) {
                   activityBinding.imageLayout.visibility = View.VISIBLE
                   activityBinding.mainImgLayout.visibility = View.VISIBLE
-                  stampRequired = "Y"
               } else {
                   activityBinding.imageLayout.visibility = View.GONE
                   activityBinding.mainImgLayout.visibility = View.GONE
-                  imageBase64List.clear()
-                  imageBitmapList.clear()
-                  activityBinding.podImage.setImageDrawable(getResources().getDrawable(R.drawable.image))
-                  stampRequired = "N"
+                  activityBinding.podImage.setImageDrawable(Utils.getResourcesDrawable(mContext, R.drawable.image))
 
               }
 
@@ -381,7 +372,7 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
 
 
     private fun finalSaveWithValidation(){
-        undeliveredStickerList.clear()
+        var undeliveredStickerList: ArrayList<ScanStickerModel> = ArrayList()
         rvList.forEachIndexed{index, item ->
             if (rvList[index].scanned == "N"){
                 undeliveredStickerList.add(item)
@@ -389,10 +380,20 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
             }
 
         }
-        openUndeliveredBottomSheet(mContext,"UnDelivery",this,undeliveredStickerList,unDelReasonList)
+        if(undeliveredStickerList.size > 0) {
+            openUndeliveredBottomSheet(
+                mContext,
+                "Not-Delivered Stickers",
+                this,
+                undeliveredStickerList,
+                unDelReasonList
+            )
+        } else {
+            savePodWithStickers("", "")
+        }
     }
 
-    fun openUndeliveredBottomSheet(mContext: Context, title: String, bottomSheetClick: BottomSheetClick<Any>, stickerList: ArrayList<ScanStickerModel>, unDelReasonList: ArrayList<ScanDelReasonModel>) {
+    private fun openUndeliveredBottomSheet(mContext: Context, title: String, bottomSheetClick: BottomSheetClick<Any>, stickerList: ArrayList<ScanStickerModel>, unDelReasonList: ArrayList<ScanDelReasonModel>) {
 
         val bottomSheetDialog = UndeliveredScanPodBottomSheet.newInstance(mContext, title, bottomSheetClick, stickerList,unDelReasonList)
 
@@ -432,7 +433,18 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
     }
 
     override fun onItemClick(data: Any, clickType: String) {
-        Toast.makeText(this, "pending work", Toast.LENGTH_SHORT).show()
+        when (clickType) {
+            UndeliveredScanPodBottomSheet.UNDELIVERED_SAVE_CLICK_TAG -> {
+                try {
+                    val undeliveredDataModel = data as UndeliveredEnteredDataModel
+                    Utils.logger(javaClass.toString(), "{\n'Un-Sticker: ${undeliveredDataModel.unDelStickerStr}'\n'Reason: ${undeliveredDataModel.unDelReasonStr}\n}'")
+//                    savePodWithStickers(undeliveredDataModel.unDelStickerStr, undeliveredDataModel.unDelReasonStr)
+                } catch (ex: Exception) {
+                    errorToast(ex.message)
+                }
+
+            }
+        }
     }
 
     override fun onClick(data: Any, clickType: String) {
@@ -442,9 +454,54 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
     override fun onSignComplete(clickType: String, imageBitmap: Bitmap) {
         if(clickType == BottomSheetSignature.COMPLETED_CLICK_LISTENER_TAG) {
             signBitmap = imageBitmap
-            activityBinding.signImg.setImageBitmap(signBitmap);
             signPath = ImageUtil.convert(signBitmap!!)
+            activityBinding.signImg.setImageBitmap(signBitmap);
 
+        }
+    }
+
+    private fun savePodWithStickers(unDelStickerStr: String, unDelReasonStr: String) {
+        val isSignChecked = activityBinding.signCheck.isChecked
+        val isPodChecked = activityBinding.imageCheck.isChecked
+        val signImage = signPath
+        val podImage = podImagePath
+        val receiveBy: String = activityBinding.inputReceiverBy.text.toString()
+        val mobileNo: String = activityBinding.inputReceiverbyMobile.text.toString()
+
+        if(grNo.isBlank()) {
+            errorToast("Please scan a sticker to make the POD.")
+        }else if(receiveBy.isBlank()) {
+            errorToast("Please enter Receive By.")
+        } else if(mobileNo.isBlank()) {
+            errorToast("Please enter Mobile No.")
+        } else if(isSignChecked && signImage.isBlank()) {
+            errorToast("Please add your Signature.")
+        } else if(isPodChecked && podImage.isBlank()) {
+            errorToast("Please add POD Image.")
+        } else if(selectedRelation == null) {
+            errorToast("Select Relation.")
+        } else {
+            viewModel.savePodWithStickers(
+                getCompanyId(),
+                podImagePath,
+                signPath,
+                getUserCode(),
+                getLoginBranchCode(),
+                grNo,
+                dlvDtSqlDt,
+                dlvTime,
+                receiveBy,
+                selectedRelation?.relations,
+                mobileNo,
+                if(isSignChecked) "Y" else "N",
+                if(isPodChecked) "Y" else "N",
+                "",
+                "",
+                getSessionId(),
+                Utils.menuModel?.menucode,
+                unDelStickerStr,
+                unDelReasonStr
+            )
         }
     }
 }

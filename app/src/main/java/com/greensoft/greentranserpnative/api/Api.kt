@@ -558,6 +558,7 @@ interface Api {
         @Field("prmstickerno")stickerNo:String?,
         @Field("prmmenucode")menuCode:String?,
         @Field("prmsessionid")sessionId:String?,
+        @Field("prmgrno") grNo:String?,
     ):Call<CommonResult>
 
     @FormUrlEncoded
@@ -689,6 +690,29 @@ interface Api {
         @Query("prmloadingno") loadingNo: String?,
     ): Call<CommonResult>
 
+    @FormUrlEncoded
+    @POST("PODAPI/ErpNative_SavePodwithStickers")
+    fun savePodWithStickers(
+        @Field("prmconnstring") companyId: String?,
+        @Field("prmpodimage") podImage: String?,
+        @Field("prmsignimage") signImage: String?,
+        @Field("prmusercode") userCode: String?,
+        @Field("prmloginbranchcode") loginBranchCode: String?,
+        @Field("prmgrno") grNo: String?,
+        @Field("prmdlvdt") dlvDt: String?,
+        @Field("prmdlvtime") dlvTime: String?,
+        @Field("prmname") name: String?,
+        @Field("prmrelation") relation: String?,
+        @Field("prmphno") phoneNo: String?,
+        @Field("prmsign") isSign: String?,
+        @Field("prmstamp") isStamp: String?,
+        @Field("prmremarks") remarks: String?,
+        @Field("prmpoddt") podDt: String?,
+        @Field("prmsessionid") sessionId: String?,
+        @Field("prmmenucode") menuCode: String?,
+        @Field("prmundelstickerstr") unDelStickerStr: String?,
+        @Field("prmundelreasonstr") unDelReasonStr: String?
 
+    ) : Call<CommonResult>
 
 }

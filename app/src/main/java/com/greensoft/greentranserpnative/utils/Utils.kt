@@ -2,11 +2,14 @@ package com.greensoft.greentranserpnative.utils
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.text.InputFilter
 import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
+import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.ui.home.models.UserMenuModel
 import com.greensoft.greentranserpnative.ui.operation.despatch_manifest.models.DespatchManifestEnteredDataModel
 import com.greensoft.greentranserpnative.ui.operation.eway_bill.ItemEwayBillModel
@@ -151,6 +154,10 @@ object Utils {
 
     fun allCapsInput(editText: EditText): Array<InputFilter> {
         return editText.filters + InputFilter.AllCaps()
+    }
+
+    fun getResourcesDrawable(mContext: Context, id: Int): Drawable? {
+        return AppCompatResources.getDrawable(mContext, id)
     }
 
     fun checkStringNullable(str: String?): String {
