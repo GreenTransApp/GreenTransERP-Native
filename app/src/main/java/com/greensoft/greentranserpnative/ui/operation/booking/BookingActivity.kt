@@ -196,9 +196,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>, B
 
     override fun onResume() {
         super.onResume()
-        if(ENV.DEBUGGING) {
-            showPrintGrAlert("4000039185")
-        }
+
 //        refreshData()
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

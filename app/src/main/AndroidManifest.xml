@@ -47,15 +47,16 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.bottomsheet.customerSelection.CustomerSelectionBottomSheet"
+            android:exported="false" />
+        <activity
             android:name=".ui.operation.bookingWithoutIndent.DirectBooking"
             android:exported="false"
-            android:parentActivityName=".ui.operation.bookingOption.BookingOptionActivity"
-            />
+            android:parentActivityName=".ui.operation.bookingOption.BookingOptionActivity" />
         <activity
             android:name=".ui.operation.bookingOption.BookingOptionActivity"
             android:exported="false"
             android:parentActivityName=".ui.home.HomeActivity" />
-            />
         <activity
             android:name=".ui.bottomsheet.printGR.PrintGrBottomSheet"
             android:exported="false" />
