@@ -1,0 +1,1624 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <include
+            layout="@layout/toolbar"
+            android:id="@+id/toolBar"
+            />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@id/refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/input_layout_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginRight="5dp"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text=" Booking Date"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/danger"
+                                    android:text=" * "
+                                    />
+                            </LinearLayout>
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint=""
+                                >
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:drawableRight="@drawable/calendar"
+                                    android:drawableTint="@color/colorPrimary"
+                                    android:id="@+id/input_date"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textAllCaps="true"
+                                    android:focusable="false"
+                                    />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/input_layout_time"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="5dp"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Booking Time"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/danger"
+                                    android:text=" * "
+                                    />
+                            </LinearLayout>
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint=""
+                                >
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/input_time"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:drawableRight="@drawable/clock"
+                                    android:drawableTint="@color/colorPrimary"
+                                    android:textAllCaps="true"
+                                    android:focusable="false"
+                                    />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                        </LinearLayout>
+
+
+
+                    </LinearLayout>
+
+
+
+
+                    <LinearLayout
+                        android:id="@+id/input_layout_gr"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        app:layout_constraintTop_toBottomOf="@+id/input_layout_branch"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginRight="5dp"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="GR#"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/danger"
+                                    android:text=" * "
+                                    />
+                            </LinearLayout>
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/input_layout_grNo"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                >
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/input_grNo"
+                                    android:layout_width="match_parent"
+                                    android:inputType="text"
+                                    android:maxLength="8"
+                                    android:layout_height="wrap_content"
+                                    />
+                                <!--                        android:hint="ENTER GR #"-->
+                                <!--                        android:textAllCaps="true"-->
+                                <!--                        android:inputType=  "number"-->
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="5dp"
+                            android:orientation="horizontal">
+                            <CheckBox
+                                android:id="@+id/auto_gr_check"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text=" Auto"
+                                />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/input_layout_custName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Customer Code"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/danger"
+                                android:text=" * "
+                                />
+                        </LinearLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            >
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/input_custCode"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:focusable="false"
+
+                                android:textAllCaps="true"
+                                android:textColor="@color/black"
+
+                                />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/input_layout_CngrName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Customer"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/danger"
+                                android:text=" * "
+                                />
+                        </LinearLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            >
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/input_custName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:focusable="false"
+                                android:inputType="textEmailAddress"
+                                android:textAllCaps="true"
+                                android:textColor="@color/black" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+
+
+                    <LinearLayout
+                        android:id="@+id/input_layout_cngeName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Department"
+                                />
+
+                        </LinearLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            >
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/input_department"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAllCaps="true"
+                                android:enabled="false"
+                                android:textColor="@color/black"
+                                android:inputType="text"
+                                />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/origin_card"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="20dp"
+                            android:padding="20dp"
+                            app:cardCornerRadius="20dp"
+                            app:strokeWidth="1dp"
+                            app:strokeColor="@color/gray"
+                            app:layout_constraintTop_toTopOf="parent"
+                            >
+
+
+                            <LinearLayout
+                                android:id="@+id/linearLayoutOriginCard"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="10dp"
+                                android:orientation="vertical"
+                                >
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginHorizontal="10dp"
+                                    android:layout_marginVertical="5dp"
+                                    android:orientation="vertical">
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Origin Pin Code"
+                                            />
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:textColor="@color/danger"
+                                            android:text=" * "
+                                            />
+                                    </LinearLayout>
+
+                                    <com.google.android.material.textfield.TextInputLayout
+                                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+
+                                        >
+                                        <com.google.android.material.textfield.TextInputEditText
+                                            android:id="@+id/input_originPinCode"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:textAllCaps="true"
+                                            android:focusable="false"
+                                            android:textColor="@color/black"
+                                            android:inputType="text"
+                                            />
+
+                                    </com.google.android.material.textfield.TextInputLayout>
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginHorizontal="10dp"
+                                    android:layout_marginVertical="5dp"
+                                    android:orientation="vertical">
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Origin Gateway "
+                                            />
+                                    </LinearLayout>
+
+                                    <com.google.android.material.textfield.TextInputLayout
+                                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+
+                                        >
+                                        <com.google.android.material.textfield.TextInputEditText
+                                            android:id="@+id/originGateway"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:textAllCaps="true"
+                                            android:textColor="@color/black"
+                                            android:inputType="text"
+                                            />
+
+                                    </com.google.android.material.textfield.TextInputLayout>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginHorizontal="10dp"
+                                    android:layout_marginVertical="5dp"
+                                    android:orientation="horizontal">
+
+                                    <LinearLayout
+                                        android:id="@+id/layout_origin_oda"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:layout_marginEnd="5dp"
+                                        android:orientation="vertical">
+                                        <LinearLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="horizontal">
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="Origin ODA"
+                                                />
+                                        </LinearLayout>
+                                        <com.google.android.material.textfield.TextInputLayout
+                                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:hint=""
+                                            >
+                                            <com.google.android.material.textfield.TextInputEditText
+
+                                                android:id="@+id/input_origin_oda"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:textAllCaps="true"
+                                                android:textColor="@color/black"
+                                                android:hint=""
+                                                />
+                                            <!--                                android:text="@{String.valueOf(inScanCardDetailModel.receivedpckgs)}"-->
+
+                                        </com.google.android.material.textfield.TextInputLayout>
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:layout_marginStart="5dp"
+                                        android:orientation="vertical">
+                                        <LinearLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="horizontal">
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="ODA Distance"
+                                                />
+                                        </LinearLayout>
+                                        <com.google.android.material.textfield.TextInputLayout
+                                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:hint=""
+                                            >
+                                            <com.google.android.material.textfield.TextInputEditText
+                                                android:id="@+id/input_origin_oda_distance"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:textAllCaps="true"
+                                                android:inputType="text"
+                                                android:focusable="true"
+                                                android:textColor="@color/black"
+                                                android:hint=""
+                                                />
+                                            <!--                                android:background="@color/disabled_color"-->
+
+                                        </com.google.android.material.textfield.TextInputLayout>
+
+                                    </LinearLayout>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginHorizontal="10dp"
+                                    android:layout_marginVertical="5dp"
+                                    android:orientation="vertical">
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Origin"
+                                            />
+                                    </LinearLayout>
+
+                                    <com.google.android.material.textfield.TextInputLayout
+                                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+
+                                        >
+                                        <com.google.android.material.textfield.TextInputEditText
+                                            android:id="@+id/input_origin"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:textAllCaps="true"
+                                            android:focusable="false"
+                                            android:textColor="@color/black"
+                                            android:inputType="text"
+                                            />
+
+                                    </com.google.android.material.textfield.TextInputLayout>
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginHorizontal="10dp"
+                                    android:layout_marginVertical="5dp"
+                                    android:orientation="vertical">
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Area"
+                                            />
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:textColor="@color/danger"
+                                            android:text=" * "
+                                            />
+                                    </LinearLayout>
+
+                                    <com.google.android.material.textfield.TextInputLayout
+                                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+
+                                        >
+                                        <com.google.android.material.textfield.TextInputEditText
+                                            android:id="@+id/input_originArea"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:textAllCaps="true"
+                                            android:focusable="false"
+                                            android:textColor="@color/black"
+                                            android:inputType="text"
+                                            />
+
+                                    </com.google.android.material.textfield.TextInputLayout>
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/destination_card"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="20dp"
+                            android:padding="20dp"
+                            app:cardCornerRadius="20dp"
+                            app:strokeWidth="1dp"
+                            app:strokeColor="@color/gray"
+                            app:layout_constraintTop_toTopOf="parent"
+                            >
+
+
+                            <LinearLayout
+                                android:id="@+id/linearLayoutDestinationCard"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="10dp"
+                                android:orientation="vertical"
+                                >
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginHorizontal="10dp"
+                                    android:layout_marginVertical="5dp"
+                                    android:orientation="vertical">
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Destination Pin Code"
+                                            />
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:textColor="@color/danger"
+                                            android:text=" * "
+                                            />
+                                    </LinearLayout>
+
+                                    <com.google.android.material.textfield.TextInputLayout
+                                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+
+                                        >
+                                        <com.google.android.material.textfield.TextInputEditText
+                                            android:id="@+id/input_destinationPinCode"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:textAllCaps="true"
+                                            android:focusable="false"
+                                            android:textColor="@color/black"
+                                            android:inputType="text"
+                                            />
+
+                                    </com.google.android.material.textfield.TextInputLayout>
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginHorizontal="10dp"
+                                    android:layout_marginVertical="5dp"
+                                    android:orientation="vertical">
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Destination Gateway "
+                                            />
+                                    </LinearLayout>
+
+                                    <com.google.android.material.textfield.TextInputLayout
+                                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+
+                                        >
+                                        <com.google.android.material.textfield.TextInputEditText
+                                            android:id="@+id/destinationGateway"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:textAllCaps="true"
+                                            android:focusable="true"
+                                            android:textColor="@color/black"
+                                            android:inputType="text"
+                                            />
+
+                                    </com.google.android.material.textfield.TextInputLayout>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginHorizontal="10dp"
+                                    android:layout_marginVertical="5dp"
+                                    android:orientation="horizontal">
+
+                                    <LinearLayout
+                                        android:id="@+id/layout_destination_oda"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:layout_marginEnd="5dp"
+                                        android:orientation="vertical">
+                                        <LinearLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="horizontal">
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="Destination ODA"
+                                                />
+                                        </LinearLayout>
+                                        <com.google.android.material.textfield.TextInputLayout
+                                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:hint=""
+                                            >
+                                            <com.google.android.material.textfield.TextInputEditText
+
+                                                android:id="@+id/input_destination_oda"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:textAllCaps="true"
+                                                android:textColor="@color/black"
+                                                android:hint=""
+                                                />
+                                            <!--                                android:text="@{String.valueOf(inScanCardDetailModel.receivedpckgs)}"-->
+
+                                        </com.google.android.material.textfield.TextInputLayout>
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:layout_marginStart="5dp"
+                                        android:orientation="vertical">
+                                        <LinearLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="horizontal">
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="ODA Distance"
+                                                />
+                                        </LinearLayout>
+                                        <com.google.android.material.textfield.TextInputLayout
+                                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:hint=""
+                                            >
+                                            <com.google.android.material.textfield.TextInputEditText
+                                                android:id="@+id/input_destination_oda_distance"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:textAllCaps="true"
+                                                android:inputType="text"
+                                                android:focusable="true"
+                                                android:textColor="@color/black"
+                                                android:hint=""
+                                                />
+                                            <!--                                android:background="@color/disabled_color"-->
+
+                                        </com.google.android.material.textfield.TextInputLayout>
+
+                                    </LinearLayout>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginHorizontal="10dp"
+                                    android:layout_marginVertical="5dp"
+                                    android:orientation="vertical">
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Destination"
+                                            />
+                                    </LinearLayout>
+
+                                    <com.google.android.material.textfield.TextInputLayout
+                                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+
+                                        >
+                                        <com.google.android.material.textfield.TextInputEditText
+                                            android:id="@+id/input_destination"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:textAllCaps="true"
+                                            android:focusable="false"
+                                            android:textColor="@color/black"
+                                            android:inputType="text"
+                                            />
+
+                                    </com.google.android.material.textfield.TextInputLayout>
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginHorizontal="10dp"
+                                    android:layout_marginVertical="5dp"
+                                    android:orientation="vertical">
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Area"
+                                            />
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:textColor="@color/danger"
+                                            android:text=" * "
+                                            />
+                                    </LinearLayout>
+
+                                    <com.google.android.material.textfield.TextInputLayout
+                                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+
+                                        >
+                                        <com.google.android.material.textfield.TextInputEditText
+                                            android:id="@+id/input_destination_area"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:textAllCaps="true"
+                                            android:focusable="false"
+                                            android:textColor="@color/black"
+                                            android:inputType="text"
+                                            />
+
+                                    </com.google.android.material.textfield.TextInputLayout>
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/input_layout_consignor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Consignor"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/danger"
+                                android:text=" * "
+                                />
+                        </LinearLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            >
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/consignorName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAllCaps="true"
+                                android:focusable="false"
+                                android:textColor="@color/black"
+                                android:inputType="text"
+                                />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/input_layout_consignor_mobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Consignor Mobile"
+                                />
+                        </LinearLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            >
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/consignorMobile"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAllCaps="true"
+                                android:focusable="true"
+                                android:textColor="@color/black"
+                                android:inputType="text"
+                                />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/input_layout_consignee"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Consignee"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/danger"
+                                android:text=" * "
+                                />
+                        </LinearLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            >
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/consigneeName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAllCaps="true"
+                                android:focusable="false"
+                                android:textColor="@color/black"
+                                android:inputType="text"
+                                />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/input_layout_consigneeMobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Consignee Mobile"
+                                />
+                        </LinearLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            >
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/consigneeMobile"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAllCaps="true"
+                                android:focusable="true"
+                                android:textColor="@color/black"
+                                android:inputType="text"
+                                />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Service Type"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/danger"
+                                android:text=" * "
+                                />
+                        </LinearLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/input_layout_serviceType"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:background="@drawable/spinner_background"
+                            android:layout_height="wrap_content"
+                            >
+                            <Spinner
+                                android:id="@+id/selectService"
+                                android:layout_width="match_parent"
+                                android:layout_height="60sp"
+                                />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Pckgs Type"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/danger"
+                                android:text=" * "
+                                />
+                        </LinearLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/input_layout_pckgsType"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:background="@drawable/spinner_background"
+                            android:layout_height="wrap_content"
+                            >
+                            <Spinner
+                                android:id="@+id/selectPckgs"
+                                android:layout_width="match_parent"
+                                android:layout_height="60sp"
+                                />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/input_layout_no_pckgs"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginRight="5dp"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="No of Pckgs"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/danger"
+                                    android:text=" * "
+                                    />
+                            </LinearLayout>
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint=""
+                                >
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/input_no_of_pckgs"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textAllCaps="true"
+                                    android:focusable="true"
+                                    android:textColor="@color/black"
+                                    android:inputType="text"
+                                    />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginRight="5dp"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Actual Weight"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/danger"
+                                    android:text=" * "
+                                    />
+                            </LinearLayout>
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/input_layout_aWeight"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint=""
+                                >
+                                <com.google.android.material.textfield.TextInputEditText
+
+                                    android:id="@+id/input_aWeight"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textAllCaps="true"
+                                    android:focusable="false"
+                                    android:inputType=  "number"
+                                    android:background="@drawable/disable_txtfield_bg"
+                                    />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="5dp"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Volumetric Weight"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/danger"
+                                    android:text=" * "
+                                    />
+                            </LinearLayout>
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/input_layout_volWeight"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+                                >
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/input_volWeight"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textAllCaps="true"
+                                    android:focusable="false"
+                                    android:text="0"
+                                    android:textColor="@color/black"
+                                    android:inputType=  "number"
+                                    android:background="@drawable/disable_txtfield_bg"
+                                    />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/input_layout_chWeight"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="5dp"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Chargable Weight"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/danger"
+                                    android:text=" * "
+                                    />
+                            </LinearLayout>
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint=""
+                                >
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/input_chargeableWeight"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textAllCaps="true"
+                                    android:inputType="text"
+                                    android:focusable="false"
+                                    android:textColor="@color/black"
+                                    android:background="@drawable/disable_txtfield_bg"
+                                    />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        android:orientation="horizontal">
+
+
+
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/input_layout_no_invoice"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginRight="5dp"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="No of Invoice"
+                                    />
+                            </LinearLayout>
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint=""
+                                >
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/input_no_of_invoice"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textAllCaps="true"
+                                    android:focusable="true"
+                                    android:textColor="@color/black"
+                                    android:inputType="text"
+                                    />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="5dp"
+                            android:orientation="vertical">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/invoice_btn"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="10dp"
+                                android:layout_marginTop="20dp"
+                                android:padding="15dp"
+                                android:text="ENTER"
+                                app:cornerRadius="10dp"
+                                />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginTop="5dp"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Booked By"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/danger"
+                                    android:text=" * "
+                                    />
+
+                            </LinearLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/input_layout_BookedType"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+
+                                android:background="@drawable/spinner_background"
+                                android:layout_height="wrap_content"
+                                >
+                                <Spinner
+                                    android:focusable="false"
+                                    android:id="@+id/selectedBookedType"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="55sp"
+                                    />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/input_layout_vehicle_vendor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Vehicle Vendor"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/danger"
+                                android:text=" * "
+                                />
+                        </LinearLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Enter vendor"
+                            >
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/input_vehicle_vendor"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAllCaps="true"
+                                android:focusable="false"
+                                android:textColor="@color/black"
+                                android:inputType="text"
+                                />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/input_layout_vehicle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Vehicle#"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/danger"
+                                android:text=" * "
+                                />
+
+                        </LinearLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Enter vehicle"
+                            >
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/input_vehicle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAllCaps="true"
+                                android:focusable="false"
+                                android:textColor="@color/black"
+                                android:inputType="text"
+                                />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+
+
+                    <LinearLayout
+                        android:id="@+id/input_layout_pickBoy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginVertical="5dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Pickup Boy Name"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/danger"
+                                android:text=" * "
+                                />
+
+                        </LinearLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            >
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/input_pickupBoy"
+                                android:layout_width="match_parent"
+                                android:background="@drawable/disable_txtfield_bg"
+                                android:layout_height="wrap_content"
+                                android:textAllCaps="true"
+                                android:focusable="false"
+
+                                android:textColor="@color/black"
+                                android:inputType="text"
+                                />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Remark"
+                                />
+
+                        </LinearLayout>
+
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/input_layout_remark"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint=""
+                            >
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/input_remark"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:maxLines="4"
+                                android:layout_gravity="top|start"
+                                android:textColor="@color/black"
+                                android:lines="3"
+                                android:inputType="textMultiLine"
+                                />
+
+
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_save"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginTop="10dp"
+                        android:padding="15dp"
+                        android:text="SAVE"
+                        app:cornerRadius="10dp"
+                        />
+
+                </LinearLayout>
+            </ScrollView>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </LinearLayout>
+</layout>

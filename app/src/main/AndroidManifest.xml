@@ -47,13 +47,22 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.operation.bookingWithoutIndent.DirectBooking"
+            android:exported="false"
+            android:parentActivityName=".ui.operation.bookingOption.BookingOptionActivity"
+            />
+        <activity
+            android:name=".ui.operation.bookingOption.BookingOptionActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.home.HomeActivity" />
+            />
+        <activity
             android:name=".ui.bottomsheet.printGR.PrintGrBottomSheet"
             android:exported="false" />
         <activity
             android:name=".ui.operation.multiple_pod_entry_list.MultiplePodEntryListActivity"
             android:exported="false"
-            android:parentActivityName=".ui.operation.pending_for_delivery_update_list.PendingDeliveryDrsListActivity"
-            />
+            android:parentActivityName=".ui.operation.pending_for_delivery_update_list.PendingDeliveryDrsListActivity" />
         <activity
             android:name=".ui.operation.upload_image.UploadBookingImageActivity"
             android:exported="false"
@@ -101,13 +110,11 @@
         <activity
             android:name=".ui.operation.delivery.DeliveryOptionActivity"
             android:exported="false"
-            android:parentActivityName=".ui.home.HomeActivity"
-            />
+            android:parentActivityName=".ui.home.HomeActivity" />
         <activity
             android:name=".ui.operation.scan_and_delivery.ScanAndDeliveryActivity"
             android:exported="false"
-            android:parentActivityName=".ui.home.HomeActivity"
-            />
+            android:parentActivityName=".ui.home.HomeActivity" />
         <activity
             android:name=".ui.operation.drsScan.DrsScanActivity"
             android:exported="false"
@@ -239,8 +246,7 @@
         <activity
             android:name=".ui.operation.pending_for_delivery_update_list.PendingDeliveryDrsListActivity"
             android:exported="false"
-            android:parentActivityName=".ui.home.HomeActivity"
-            />
+            android:parentActivityName=".ui.home.HomeActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
