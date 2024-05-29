@@ -715,4 +715,24 @@ interface Api {
 
     ) : Call<CommonResult>
 
+    @GET("BookingAPI/GetCustomerListJeena")
+    fun getCustomerList(
+        @Query("prmcompanyid") companyId: String,
+        @Query("prmusercode") userCode: String?,
+        @Query("prmbranchcode") branchCode: String?,
+        @Query("prmsessionid") sessionId: String?,
+        @Query("prmmenucode") menuCode: String?,
+        @Query("prmcharstr") charStr: String?
+    ): Call<CommonResult>
+
+    @GET("BookingAPI/getPinCodeList")
+    fun getPinCodeList(
+        @Query("prmcompanyid") companyId: String,
+        @Query("prmbranchcode") branchCode: String?,
+        @Query("prmusercode") userCode: String?,
+        @Query("prmmenucode") menuCode: String?,
+        @Query("prmsessionid") sessionId: String?,
+        @Query("prmcharstr") charStr: String?
+    ): Call<CommonResult>
+
 }
