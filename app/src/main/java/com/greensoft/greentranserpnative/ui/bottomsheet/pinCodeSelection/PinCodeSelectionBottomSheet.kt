@@ -1,8 +1,8 @@
-package com.greensoft.greentranserpnative.ui.bottomsheet.customerSelection
-
+package com.greensoft.greentranserpnative.ui.bottomsheet.pinCodeSelection
 
 import android.content.Context
 import android.content.res.Resources
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,43 +13,44 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseFragment
-import com.greensoft.greentranserpnative.databinding.BottomSheetCustomerSelectionBinding
-import com.greensoft.greentranserpnative.ui.bottomsheet.customerSelection.model.CustomerSelectionModel
+import com.greensoft.greentranserpnative.databinding.BottomSheetPinCodeSelectionBinding
+import com.greensoft.greentranserpnative.ui.bottomsheet.customerSelection.CustomerSelectionAdapter
+import com.greensoft.greentranserpnative.ui.bottomsheet.customerSelection.CustomerSelectionBottomSheet
+import com.greensoft.greentranserpnative.ui.bottomsheet.pinCodeSelection.model.PinCodeModel
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@AndroidEntryPoint
-class CustomerSelectionBottomSheet  @Inject constructor(): BaseFragment(), OnRowClick<Any> {
+class PinCodeSelectionBottomSheet @Inject constructor(): BaseFragment(), OnRowClick<Any> {
 
-    private lateinit var layoutBinding:BottomSheetCustomerSelectionBinding
+    private lateinit var layoutBinding: BottomSheetPinCodeSelectionBinding
     private var onRowClick: OnRowClick<Any> = this
-    private var onCustomerSelected: OnRowClick<Any>? = null
+    private var onPinCodeSelected: OnRowClick<Any>? = null
     private var title: String = "Selection"
-    private var clickType: String = "custName"
-    private val viewModel: CustomerSelectionViewModel by viewModels()
-    private var rvAdapter: CustomerSelectionAdapter?=null
+    private var locationtype: String = ""
+    private val viewModel: PinCodeSelectionViewModel by viewModels()
+    private var rvAdapter: PinCodeSelectionAdapter?=null
     private lateinit var manager: LinearLayoutManager
-    private var customerList:ArrayList<CustomerSelectionModel> = ArrayList()
-    private var customerCategory:String = ""
+    private var pinCodeDataList:ArrayList<PinCodeModel> = ArrayList()
 
 
     companion object{
-        const val TAG = "CustomerBottomSheet"
-        const val CUSTOMER_CLICK_TYPE = "CUSTOMER_LOV_SELECTION"
+        const val TAG = "PinCodeBottomSheet"
+        const val ORIGIN_PIN_CODE_CLICK_TYPE = "ORIGIN_PIN_CODE_LOV_SELECTION"
+        const val DESTINATION_PIN_CODE_CLICK_TYPE = "DESTINATION_PIN_CODE_LOV_SELECTION"
 
         fun newInstance(
             mContext: Context,
             title: String,
             onVendorSelected: OnRowClick<Any>,
             clickType: String
-        ): CustomerSelectionBottomSheet {
-            val instance: CustomerSelectionBottomSheet = CustomerSelectionBottomSheet()
+        ): PinCodeSelectionBottomSheet {
+            val instance: PinCodeSelectionBottomSheet = PinCodeSelectionBottomSheet()
             instance.mContext = mContext
             instance.title = title
-            instance.onCustomerSelected = onVendorSelected
-            instance.clickType = clickType
+            instance.onPinCodeSelected = onVendorSelected
+            instance.locationtype = clickType
             return instance
         }
     }
@@ -59,14 +60,20 @@ class CustomerSelectionBottomSheet  @Inject constructor(): BaseFragment(), OnRow
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        layoutBinding = BottomSheetCustomerSelectionBinding.inflate(layoutInflater)
+        layoutBinding = BottomSheetPinCodeSelectionBinding.inflate(layoutInflater)
         return layoutBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        layoutBinding.toolbarTitle.text = title
+        if (locationtype=="O"){
+           layoutBinding.toolbarTitle.text = "Origin PinCode Seletion"
+        }
+        else if (locationtype=="D"){
+            layoutBinding.toolbarTitle.text = "Destination PinCode Selection"
+        }
+
 
         dialog!!.setOnShowListener { dialog ->
             val d = dialog as BottomSheetDialog
@@ -89,7 +96,7 @@ class CustomerSelectionBottomSheet  @Inject constructor(): BaseFragment(), OnRow
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                getCustomerList(newText)
+                getPinCodeList(newText)
                 return false
             }
 
@@ -98,11 +105,10 @@ class CustomerSelectionBottomSheet  @Inject constructor(): BaseFragment(), OnRow
     }
 
     private fun setObservers(){
-        viewModel.customerLivedata.observe(this){ custList->
-            customerList = custList
+        viewModel.pinCodeLiveData.observe(this){pinCodeData->
+            pinCodeDataList = pinCodeData
             setupRecyclerView()
         }
-
     }
 
     private fun setupRecyclerView() {
@@ -110,19 +116,21 @@ class CustomerSelectionBottomSheet  @Inject constructor(): BaseFragment(), OnRow
             manager = LinearLayoutManager(mContext)
             layoutBinding.recyclerView.layoutManager = manager
         }
-        rvAdapter = CustomerSelectionAdapter(customerList, onRowClick)
+        rvAdapter = PinCodeSelectionAdapter(pinCodeDataList, onRowClick)
         layoutBinding.recyclerView.adapter = rvAdapter
     }
 
-    private fun getCustomerList(query:String?){
+    private fun getPinCodeList(query:String?){
         if (query!=null){
-            viewModel.getCustomerList(
+            viewModel.getPinCode(
+
                 getCompanyId(),
                 getUserCode(),
                 getLoginBranchCode(),
                 getSessionId(),
                 "GTAPP_BOOKINGWITHOUTINDENT",
                 query
+
             )
         }
 
@@ -130,7 +138,7 @@ class CustomerSelectionBottomSheet  @Inject constructor(): BaseFragment(), OnRow
 
     override fun onDetach() {
         super.onDetach()
-        onCustomerSelected = null
+        onPinCodeSelected = null
     }
 
     fun close(){
@@ -139,12 +147,21 @@ class CustomerSelectionBottomSheet  @Inject constructor(): BaseFragment(), OnRow
         }
     }
 
+
+
+
     override fun onClick(data: Any, clickType: String) {
-        if (onCustomerSelected!=null){
-            if (clickType== CustomerSelectionAdapter.CUSTOMER_SELECTION_ROW_CLICK){
-                onCustomerSelected?.onClick(data,CUSTOMER_CLICK_TYPE)
+        if (onPinCodeSelected!=null){
+            if (clickType== PinCodeSelectionAdapter.PIN_CODE_SELECTION_ROW_CLICK && locationtype=="O"){
+                onPinCodeSelected?.onClick(data, ORIGIN_PIN_CODE_CLICK_TYPE)
                 dismiss()
+            }
+             if (clickType== PinCodeSelectionAdapter.PIN_CODE_SELECTION_ROW_CLICK && locationtype=="D"){
+                 onPinCodeSelected?.onClick(data, DESTINATION_PIN_CODE_CLICK_TYPE)
+                 dismiss()
             }
         }
     }
+
+
 }

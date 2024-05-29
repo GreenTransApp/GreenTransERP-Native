@@ -1,11 +1,18 @@
 package com.greensoft.greentranserpnative.ui.operation.bookingWithoutIndent
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityDirectBookingBinding
+import com.greensoft.greentranserpnative.ui.bottomsheet.customerSelection.CustomerSelectionBottomSheet
+import com.greensoft.greentranserpnative.ui.bottomsheet.customerSelection.model.CustomerSelectionModel
+import com.greensoft.greentranserpnative.ui.bottomsheet.pinCodeSelection.PinCodeSelectionBottomSheet
+import com.greensoft.greentranserpnative.ui.bottomsheet.pinCodeSelection.model.PinCodeModel
+import com.greensoft.greentranserpnative.ui.bottomsheet.vendorSelection.VendorSelectionBottomSheet
+import com.greensoft.greentranserpnative.ui.bottomsheet.vendorSelection.model.VendorModelDRS
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
@@ -52,6 +59,21 @@ class DirectBooking @Inject constructor(): BaseActivity(), OnRowClick<Any>, Aler
             }
             activityBinding.inputGrNo.isEnabled = !(bool)
         }
+
+        activityBinding.inputCustCode.setOnClickListener {
+            customerSelectionBottomSheet(this,"Customer Selection",this,"custCode")
+        }
+
+        activityBinding.inputCustName.setOnClickListener {
+            customerSelectionBottomSheet(this,"Customer Selection",this,"custName")
+        }
+        activityBinding.inputOriginPinCode.setOnClickListener {
+            pinCodeSelectionBottomSheet(this,"Pin Code Selection",this,"O")
+        }
+        activityBinding.inputDestinationPinCode.setOnClickListener {
+            pinCodeSelectionBottomSheet(this,"Pin Code Selection",this,"D")
+        }
+        activityBinding.inputPickupBoy.setText(userDataModel?.username)
     }
 
     private fun setObservers(){
@@ -81,6 +103,16 @@ class DirectBooking @Inject constructor(): BaseActivity(), OnRowClick<Any>, Aler
         }
     }
 
+
+    private fun customerSelectionBottomSheet(mContext: Context, title: String, onRowClick: OnRowClick<Any>,clickType: String) {
+        val bottomSheetDialog = CustomerSelectionBottomSheet.newInstance(mContext,title,onRowClick,clickType)
+        bottomSheetDialog.show(supportFragmentManager, VendorSelectionBottomSheet.TAG)
+    }
+    private fun pinCodeSelectionBottomSheet(mContext: Context, title: String, onRowClick: OnRowClick<Any>,clickType: String) {
+        val bottomSheetDialog = PinCodeSelectionBottomSheet.newInstance(mContext,title,onRowClick,clickType)
+        bottomSheetDialog.show(supportFragmentManager, VendorSelectionBottomSheet.TAG)
+    }
+
     override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {
         TODO("Not yet implemented")
     }
@@ -90,6 +122,42 @@ class DirectBooking @Inject constructor(): BaseActivity(), OnRowClick<Any>, Aler
     }
 
     override fun onClick(data: Any, clickType: String) {
-        TODO("Not yet implemented")
+        if (clickType==CustomerSelectionBottomSheet.CUSTOMER_CLICK_TYPE){
+            try {
+                val selectedCustomerName = data as CustomerSelectionModel
+                activityBinding.inputCustName.setText(selectedCustomerName.custname)
+                activityBinding.inputCustCode.setText(selectedCustomerName.custcode)
+            } catch (ex:Exception){
+                errorToast(ex.message)
+            }
+        }
+        if (clickType==PinCodeSelectionBottomSheet.ORIGIN_PIN_CODE_CLICK_TYPE){
+            try {
+                val selectedPinData = data as PinCodeModel
+                activityBinding.inputOriginPinCode.setText(selectedPinData.code)
+                activityBinding.originGateway.setText(selectedPinData.flagseven)
+                activityBinding.inputOriginOda.setText(selectedPinData.flagfive)
+                activityBinding.inputOrigin.setText(selectedPinData.flagfour)
+                activityBinding.inputOriginArea.setText(selectedPinData.flagone)
+                activityBinding.inputOriginOdaDistance.setText(selectedPinData.intvalue.toString())
+            } catch (ex:Exception){
+                errorToast(ex.message)
+            }
+        }
+
+        if (clickType==PinCodeSelectionBottomSheet.DESTINATION_PIN_CODE_CLICK_TYPE){
+            try {
+                val selectedPinData = data as PinCodeModel
+                activityBinding.inputDestinationPinCode.setText(selectedPinData.code)
+                activityBinding.destinationGateway.setText(selectedPinData.flagseven)
+                activityBinding.inputDestinationOda.setText(selectedPinData.flagfive)
+                activityBinding.inputDestination.setText(selectedPinData.flagfour)
+                activityBinding.inputDestinationArea.setText(selectedPinData.flagone)
+                activityBinding.inputDestinationOdaDistance.setText(selectedPinData.intvalue.toString())
+            } catch (ex:Exception){
+                errorToast(ex.message)
+            }
+        }
+
     }
 }
