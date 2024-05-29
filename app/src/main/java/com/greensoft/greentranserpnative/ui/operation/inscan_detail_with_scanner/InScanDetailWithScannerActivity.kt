@@ -91,6 +91,9 @@ class InScanDetailWithScannerActivity  @Inject constructor(): BaseActivity(), On
     }
 
     private fun setObservers(){
+        viewModel.isError.observe(this) { errMsg ->
+            errorToast(errMsg)
+        }
         viewModel.inScanDetailLiveData.observe(this){ inScanData->
             inScanDetailData = inScanData
             setInScanData()
@@ -102,7 +105,7 @@ class InScanDetailWithScannerActivity  @Inject constructor(): BaseActivity(), On
         mScanner.observe(this){ stickerNo->
 //            Companion.successToast(mContext, stickerNo)
             addInScanSticker(stickerNo)
-            playSound()
+//            playSound()
         }
         viewModel.inScanAddStickerLiveData.observe(this) { inScanSuccess ->
             successToast(inScanSuccess.commandmessage.toString())
