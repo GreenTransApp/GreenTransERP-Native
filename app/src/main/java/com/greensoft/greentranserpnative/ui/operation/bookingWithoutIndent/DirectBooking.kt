@@ -7,8 +7,12 @@ import android.text.InputType
 import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityDirectBookingBinding
+import com.greensoft.greentranserpnative.ui.bottomsheet.cngrCngeSelection.CngrCngeSelectionBottomSheet
+import com.greensoft.greentranserpnative.ui.bottomsheet.cngrCngeSelection.model.CngrCngeSelectionModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.customerSelection.CustomerSelectionBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.customerSelection.model.CustomerSelectionModel
+import com.greensoft.greentranserpnative.ui.bottomsheet.departmentSelection.DepartmentSelectionBottomSheet
+import com.greensoft.greentranserpnative.ui.bottomsheet.departmentSelection.model.DepartmentSelectionModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.pinCodeSelection.PinCodeSelectionBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.pinCodeSelection.model.PinCodeModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.vendorSelection.VendorSelectionBottomSheet
@@ -67,11 +71,20 @@ class DirectBooking @Inject constructor(): BaseActivity(), OnRowClick<Any>, Aler
         activityBinding.inputCustName.setOnClickListener {
             customerSelectionBottomSheet(this,"Customer Selection",this,"custName")
         }
+        activityBinding.inputDepartment.setOnClickListener {
+            departmentSelectionBottomSheet(this,"Department Selection",this,"department")
+        }
         activityBinding.inputOriginPinCode.setOnClickListener {
             pinCodeSelectionBottomSheet(this,"Pin Code Selection",this,"O")
         }
         activityBinding.inputDestinationPinCode.setOnClickListener {
             pinCodeSelectionBottomSheet(this,"Pin Code Selection",this,"D")
+        }
+        activityBinding.consignorName.setOnClickListener {
+            cngrCngeSelectionBottomSheet(this,"Consignor Selection",this,"R")
+        }
+        activityBinding.consigneeName.setOnClickListener {
+            cngrCngeSelectionBottomSheet(this,"Consignee Selection", this,"E")
         }
         activityBinding.inputPickupBoy.setText(userDataModel?.username)
     }
@@ -106,11 +119,20 @@ class DirectBooking @Inject constructor(): BaseActivity(), OnRowClick<Any>, Aler
 
     private fun customerSelectionBottomSheet(mContext: Context, title: String, onRowClick: OnRowClick<Any>,clickType: String) {
         val bottomSheetDialog = CustomerSelectionBottomSheet.newInstance(mContext,title,onRowClick,clickType)
-        bottomSheetDialog.show(supportFragmentManager, VendorSelectionBottomSheet.TAG)
+        bottomSheetDialog.show(supportFragmentManager, CustomerSelectionBottomSheet.TAG)
+    }
+    private fun departmentSelectionBottomSheet(mContext: Context, title: String, onRowClick: OnRowClick<Any>,clickType: String) {
+        val bottomSheetDialog = DepartmentSelectionBottomSheet.newInstance(mContext,title,onRowClick,clickType)
+        bottomSheetDialog.show(supportFragmentManager, DepartmentSelectionBottomSheet.TAG)
     }
     private fun pinCodeSelectionBottomSheet(mContext: Context, title: String, onRowClick: OnRowClick<Any>,clickType: String) {
         val bottomSheetDialog = PinCodeSelectionBottomSheet.newInstance(mContext,title,onRowClick,clickType)
-        bottomSheetDialog.show(supportFragmentManager, VendorSelectionBottomSheet.TAG)
+        bottomSheetDialog.show(supportFragmentManager, PinCodeSelectionBottomSheet.TAG)
+    }
+
+    private fun cngrCngeSelectionBottomSheet(mContext: Context, title: String, onRowClick: OnRowClick<Any>,clickType: String) {
+        val bottomSheetDialog = CngrCngeSelectionBottomSheet.newInstance(mContext,title,onRowClick,clickType)
+        bottomSheetDialog.show(supportFragmentManager, CngrCngeSelectionBottomSheet.TAG)
     }
 
     override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {
@@ -131,7 +153,7 @@ class DirectBooking @Inject constructor(): BaseActivity(), OnRowClick<Any>, Aler
                 errorToast(ex.message)
             }
         }
-        if (clickType==PinCodeSelectionBottomSheet.ORIGIN_PIN_CODE_CLICK_TYPE){
+        else if (clickType==PinCodeSelectionBottomSheet.ORIGIN_PIN_CODE_CLICK_TYPE){
             try {
                 val selectedPinData = data as PinCodeModel
                 activityBinding.inputOriginPinCode.setText(selectedPinData.code)
@@ -145,7 +167,7 @@ class DirectBooking @Inject constructor(): BaseActivity(), OnRowClick<Any>, Aler
             }
         }
 
-        if (clickType==PinCodeSelectionBottomSheet.DESTINATION_PIN_CODE_CLICK_TYPE){
+       else if (clickType==PinCodeSelectionBottomSheet.DESTINATION_PIN_CODE_CLICK_TYPE){
             try {
                 val selectedPinData = data as PinCodeModel
                 activityBinding.inputDestinationPinCode.setText(selectedPinData.code)
@@ -154,6 +176,33 @@ class DirectBooking @Inject constructor(): BaseActivity(), OnRowClick<Any>, Aler
                 activityBinding.inputDestination.setText(selectedPinData.flagfour)
                 activityBinding.inputDestinationArea.setText(selectedPinData.flagone)
                 activityBinding.inputDestinationOdaDistance.setText(selectedPinData.intvalue.toString())
+            } catch (ex:Exception){
+                errorToast(ex.message)
+            }
+        }
+
+       else if (clickType==DepartmentSelectionBottomSheet.DEPARTMENT_CLICK_TYPE){
+            try {
+                val selectedDepartmentData = data as DepartmentSelectionModel
+                activityBinding.inputDepartment.setText(selectedDepartmentData.custdeptname)
+            } catch (ex:Exception){
+                errorToast(ex.message)
+            }
+        }
+        else if (clickType==CngrCngeSelectionBottomSheet.CNGR_CLICK_TYPE){
+            try {
+                val selectedCngeCngrData = data as CngrCngeSelectionModel
+                activityBinding.consignorName.setText(selectedCngeCngrData.name)
+                activityBinding.consignorMobile.setText(selectedCngeCngrData.telno?:"")
+            } catch (ex:Exception){
+                errorToast(ex.message)
+            }
+        }
+        else if (clickType==CngrCngeSelectionBottomSheet.CNGE_CLICK_TYPE){
+            try {
+                val selectedCngeCngrData = data as CngrCngeSelectionModel
+                activityBinding.consigneeName.setText(selectedCngeCngrData.name)
+                activityBinding.consigneeMobile.setText(selectedCngeCngrData.telno?:"")
             } catch (ex:Exception){
                 errorToast(ex.message)
             }

@@ -35,9 +35,9 @@ class CustomerSelectionAdapter @Inject constructor(
 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val datahHolder = holder as CustomerSelectionAdapter.CustomerSelectionViewHolder
+        val dataHolder = holder as CustomerSelectionAdapter.CustomerSelectionViewHolder
         val dataModel: CustomerSelectionModel = filterList[position]
-        datahHolder.onBind(dataModel,onRowClick)
+        dataHolder.onBind(dataModel,onRowClick)
     }
 
     override fun getItemCount(): Int {

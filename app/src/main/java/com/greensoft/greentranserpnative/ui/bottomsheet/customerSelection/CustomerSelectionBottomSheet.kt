@@ -42,13 +42,13 @@ class CustomerSelectionBottomSheet  @Inject constructor(): BaseFragment(), OnRow
         fun newInstance(
             mContext: Context,
             title: String,
-            onVendorSelected: OnRowClick<Any>,
+            onCustomerSelected: OnRowClick<Any>,
             clickType: String
         ): CustomerSelectionBottomSheet {
             val instance: CustomerSelectionBottomSheet = CustomerSelectionBottomSheet()
             instance.mContext = mContext
             instance.title = title
-            instance.onCustomerSelected = onVendorSelected
+            instance.onCustomerSelected = onCustomerSelected
             instance.clickType = clickType
             return instance
         }
