@@ -125,7 +125,7 @@ class DepartmentSelectionBottomSheet @Inject constructor(): BaseFragment(), OnRo
                 getCompanyId(),
                 getUserCode(),
                 getSessionId(),
-                "",
+                "0000000001",
                 "GTAPP_BOOKINGWITHOUTINDENT",
                 "104",
                 query
