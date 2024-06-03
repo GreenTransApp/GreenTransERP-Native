@@ -1,14 +1,12 @@
 package com.greensoft.greentranserpnative.ui.operation.bookingOption
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.gson.Gson
-import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.databinding.ActivityBookingOptionBinding
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
-import com.greensoft.greentranserpnative.ui.operation.bookingWithoutIndent.DirectBooking
+import com.greensoft.greentranserpnative.ui.operation.bookingWithoutIndent.DirectBookingActivity
 import com.greensoft.greentranserpnative.ui.operation.pickup_reference.PickupReferenceActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -31,7 +29,7 @@ class BookingOptionActivity @Inject constructor() : BaseActivity(), OnRowClick<A
             startActivity(intent)
         }
         activityBinding.directBooking.setOnClickListener {
-            val intent = Intent(this,DirectBooking::class.java)
+            val intent = Intent(this,DirectBookingActivity::class.java)
             startActivity(intent)
         }
     }

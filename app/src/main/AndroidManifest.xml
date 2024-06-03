@@ -62,7 +62,7 @@
             android:name=".ui.bottomsheet.customerSelection.CustomerSelectionBottomSheet"
             android:exported="false" />
         <activity
-            android:name=".ui.operation.bookingWithoutIndent.DirectBooking"
+            android:name=".ui.operation.bookingWithoutIndent.DirectBookingActivity"
             android:exported="false"
             android:parentActivityName=".ui.operation.bookingOption.BookingOptionActivity" />
         <activity
