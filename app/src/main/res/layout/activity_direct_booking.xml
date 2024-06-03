@@ -209,7 +209,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/input_layout_custName"
+                        android:id="@+id/input_layout_custCode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="10dp"
@@ -254,7 +254,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/input_layout_CngrName"
+                        android:id="@+id/input_layout_custName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="10dp"
@@ -296,10 +296,8 @@
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
 
-
-
                     <LinearLayout
-                        android:id="@+id/input_layout_cngeName"
+                        android:id="@+id/input_layout_Department"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="10dp"
@@ -314,7 +312,12 @@
                                 android:layout_height="wrap_content"
                                 android:text="Department"
                                 />
-
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/danger"
+                                android:text=" * "
+                                />
                         </LinearLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
@@ -323,15 +326,15 @@
                             android:layout_height="wrap_content"
 
                             >
+
                             <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/input_department"
+                                android:id="@+id/input_department_name"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:focusable="false"
+                                android:inputType="textEmailAddress"
                                 android:textAllCaps="true"
-                                android:enabled="false"
-                                android:textColor="@color/black"
-                                android:inputType="text"
-                                />
+                                android:textColor="@color/black" />
 
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
@@ -946,7 +949,7 @@
                                 android:textAllCaps="true"
                                 android:focusable="true"
                                 android:textColor="@color/black"
-                                android:inputType="text"
+                                android:inputType="phone"
                                 />
 
                         </com.google.android.material.textfield.TextInputLayout>
@@ -1024,7 +1027,7 @@
                                 android:textAllCaps="true"
                                 android:focusable="true"
                                 android:textColor="@color/black"
-                                android:inputType="text"
+                                android:inputType="phone"
                                 />
 
                         </com.google.android.material.textfield.TextInputLayout>
@@ -1151,18 +1154,243 @@
                                     android:textAllCaps="true"
                                     android:focusable="true"
                                     android:textColor="@color/black"
-                                    android:inputType="text"
+                                    android:inputType="number"
                                     />
 
                             </com.google.android.material.textfield.TextInputLayout>
 
                         </LinearLayout>
 
+                    </LinearLayout>
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            >
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                >
+
+                                <TextView
+                                    android:id="@+id/sNo_txt"
+                                    android:layout_width="52sp"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_horizontal"
+                                    android:textColor="@color/white"
+                                    android:text="S#"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:textSize="12sp" />
+
+
+
+                                <TextView
+                                    android:id="@+id/pckgs_txt"
+                                    android:layout_width="202sp"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_horizontal"
+                                    android:textColor="@color/white"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:text="Pckgs"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/refNo_txt"
+                                    android:layout_width="202sp"
+
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_horizontal"
+                                    android:textColor="@color/white"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:text="Ref#"
+                                    android:textSize="12sp" />
+
+
+                                <TextView
+                                    android:id="@+id/packing_txt"
+                                    android:layout_width="252sp"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_horizontal"
+                                    android:textColor="@color/white"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:text="Packing"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/boxNo_txt"
+                                    android:layout_width="150sp"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_horizontal"
+                                    android:textColor="@color/white"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:text="Box No."
+                                    android:textSize="12sp"
+                                    android:visibility="gone"
+                                    />
+
+                                <TextView
+                                    android:id="@+id/content_txt"
+                                    android:layout_width="202sp"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_horizontal"
+                                    android:textColor="@color/white"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:text="Content"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/temperature_txt"
+                                    android:layout_width="202sp"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_horizontal"
+                                    android:textColor="@color/white"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:text="Temperature"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/selectDatalogger_txt"
+                                    android:layout_width="204sp"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_horizontal"
+                                    android:textColor="@color/white"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:text="Datalogger"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/dataloggerNum_txt"
+                                    android:layout_width="202sp"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_horizontal"
+                                    android:textColor="@color/white"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:text="Datalogger #"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/weight_txt"
+                                    android:layout_width="152sp"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_horizontal"
+                                    android:textColor="@color/white"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:text="Weight"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/length_txt"
+                                    android:layout_width="152sp"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_horizontal"
+                                    android:textColor="@color/white"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:text="Length"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/breadth_txt"
+                                    android:layout_width="152sp"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_horizontal"
+                                    android:textColor="@color/white"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:text="breadth"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/height_txt"
+                                    android:layout_width="152sp"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_horizontal"
+                                    android:textColor="@color/white"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:text="Height"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/chek_gel_pack_txt"
+                                    android:layout_width="152sp"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_horizontal"
+                                    android:textColor="@color/white"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:text="Gel Pack ?"/>
+
+                                <TextView
+                                    android:id="@+id/gel_pack_item_txt"
+                                    android:layout_width="152sp"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_horizontal"
+                                    android:textColor="@color/white"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:text="Gel Pack Item"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/gel_pack_quantity_txt"
+                                    android:layout_width="152sp"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_horizontal"
+                                    android:textColor="@color/white"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:text="Gel Pack Qty"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/dry_ice_txt"
+                                    android:layout_width="152sp"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_horizontal"
+                                    android:textColor="@color/white"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:text="Dry Ice Qty"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/action_txt"
+                                    android:layout_width="152sp"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_horizontal"
+                                    android:textColor="@color/white"
+                                    android:background="@drawable/table_header_cell_bg"
+                                    android:text="Action"
+                                    android:textSize="12sp" />
+
+                            </LinearLayout>
+
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/pckgsRecyclerView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:layout_constraintTop_toBottomOf="@+id/period"
+                                tools:listitem="@layout/booking_item_view"
+                                tools:itemCount="3"
+                                />
+                        </LinearLayout>
+                    </HorizontalScrollView>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        android:orientation="horizontal"
+                        android:layout_weight="3"
+                        >
+
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:layout_marginRight="5dp"
+                            android:layout_marginStart="5dp"
                             android:orientation="vertical">
                             <LinearLayout
                                 android:layout_width="wrap_content"
@@ -1171,7 +1399,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Actual Weight"
+                                    android:text="Actual            Weight"
                                     />
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -1201,14 +1429,6 @@
                             </com.google.android.material.textfield.TextInputLayout>
 
                         </LinearLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="10dp"
-                        android:layout_marginVertical="5dp"
-                        android:orientation="horizontal">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -1298,6 +1518,7 @@
                             </com.google.android.material.textfield.TextInputLayout>
 
                         </LinearLayout>
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -1306,10 +1527,6 @@
                         android:layout_marginHorizontal="10dp"
                         android:layout_marginVertical="5dp"
                         android:orientation="horizontal">
-
-
-
-
 
                     </LinearLayout>
 
@@ -1350,7 +1567,8 @@
                                     android:textAllCaps="true"
                                     android:focusable="true"
                                     android:textColor="@color/black"
-                                    android:inputType="text"
+                                    android:inputType="number"
+
                                     />
 
                             </com.google.android.material.textfield.TextInputLayout>
@@ -1374,6 +1592,23 @@
                                 app:cornerRadius="10dp"
                                 />
                         </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginVertical="5dp"
+                        android:orientation="horizontal">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/invoiceRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toBottomOf="@+id/period"
+                            tools:listitem="@layout/item_invoice_list"
+                            tools:itemCount="3"
+                            />
                     </LinearLayout>
 
                     <LinearLayout
@@ -1441,6 +1676,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
                             <TextView
+                                android:id="@+id/agent_vendor_header"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Vehicle Vendor"
@@ -1454,6 +1690,7 @@
                         </LinearLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/agent_vendor_placeholder"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

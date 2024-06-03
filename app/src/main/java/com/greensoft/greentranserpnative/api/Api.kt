@@ -735,4 +735,26 @@ interface Api {
         @Query("prmcharstr") charStr: String?
     ): Call<CommonResult>
 
+    @GET("BookingAPI/GetCustDepartmentList")
+    fun getDepartmentList(
+        @Query("prmcompanyid") companyId: String?,
+        @Query("prmusercode") userCode: String?,
+        @Query("prmsessionid") sessionId: String?,
+        @Query("prmcustcode") custCode: String?,
+        @Query("prmmenucode") menuCode: String?,
+        @Query("prmorgcode") originCode:String?,
+        @Query("prmcharstr") charStr: String?
+    ): Call<CommonResult>
+
+    @GET("BookingAPI/getCngrCngeListForBooking")
+    fun getCngrCngeList(
+        @Query("prmcompanyid") companyId: String?,
+        @Query("prmbranchcode") branchCode: String?,
+        @Query("prmusercode") userCode: String?,
+        @Query("prmcustcode") custCode: String?,
+        @Query("prmcngrcnge") cngrCnge: String?,
+        @Query("prmsessionid") sessionId: String?,
+        @Query("prmcharstr") charStr: String?
+    ): Call<CommonResult>
+
 }

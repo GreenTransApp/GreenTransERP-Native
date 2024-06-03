@@ -1,8 +1,7 @@
-package com.greensoft.greentranserpnative.ui.bottomsheet.pinCodeSelection
+package com.greensoft.greentranserpnative.ui.bottomsheet.cngrCngeSelection
 
 import android.content.Context
 import android.content.res.Resources
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,44 +12,46 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.greensoft.greentranserpnative.R
 import com.greensoft.greentranserpnative.base.BaseFragment
-import com.greensoft.greentranserpnative.databinding.BottomSheetPinCodeSelectionBinding
+import com.greensoft.greentranserpnative.databinding.BottomSheetCngrCngeSelectionBinding
+import com.greensoft.greentranserpnative.ui.bottomsheet.cngrCngeSelection.model.CngrCngeSelectionModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.customerSelection.CustomerSelectionAdapter
 import com.greensoft.greentranserpnative.ui.bottomsheet.customerSelection.CustomerSelectionBottomSheet
-import com.greensoft.greentranserpnative.ui.bottomsheet.pinCodeSelection.model.PinCodeModel
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.utils.Utils
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-class PinCodeSelectionBottomSheet @Inject constructor(): BaseFragment(), OnRowClick<Any> {
-
-    private lateinit var layoutBinding: BottomSheetPinCodeSelectionBinding
+@AndroidEntryPoint
+class CngrCngeSelectionBottomSheet  @Inject constructor(): BaseFragment(), OnRowClick<Any> {
+    private lateinit var layoutBinding:BottomSheetCngrCngeSelectionBinding
     private var onRowClick: OnRowClick<Any> = this
-    private var onPinCodeSelected: OnRowClick<Any>? = null
-    private var title: String = "Selection"
-    private var locationtype: String = ""
-    private val viewModel: PinCodeSelectionViewModel by viewModels()
-    private var rvAdapter: PinCodeSelectionAdapter?=null
+    private var onCngrCngeSelected: OnRowClick<Any>? = null
+    private var title: String = ""
+    private val viewModel: CngrCngeSelectionViewModel by viewModels()
+    private var rvAdapter: CngrCngeSelectionAdapter?=null
     private lateinit var manager: LinearLayoutManager
-    private var pinCodeDataList:ArrayList<PinCodeModel> = ArrayList()
+    private var cngrCngeList:ArrayList<CngrCngeSelectionModel> = ArrayList()
+    private var cngrCngeType:String? = null
+
 
 
     companion object{
-        const val TAG = "PinCodeBottomSheet"
-        const val ORIGIN_PIN_CODE_CLICK_TYPE = "ORIGIN_PIN_CODE_LOV_SELECTION"
-        const val DESTINATION_PIN_CODE_CLICK_TYPE = "DESTINATION_PIN_CODE_LOV_SELECTION"
+        const val TAG = "CngrCngeBottomSheet"
+        const val CNGR_CLICK_TYPE = "CNGR_LOV_SELECTION"
+        const val CNGE_CLICK_TYPE = "CNGE_LOV_SELECTION"
 
         fun newInstance(
             mContext: Context,
             title: String,
-            onPinCodeSelected: OnRowClick<Any>,
+            onCngrCngeSelected: OnRowClick<Any>,
             clickType: String
-        ): PinCodeSelectionBottomSheet {
-            val instance: PinCodeSelectionBottomSheet = PinCodeSelectionBottomSheet()
+        ): CngrCngeSelectionBottomSheet {
+            val instance: CngrCngeSelectionBottomSheet = CngrCngeSelectionBottomSheet()
             instance.mContext = mContext
             instance.title = title
-            instance.onPinCodeSelected = onPinCodeSelected
-            instance.locationtype = clickType
+            instance.onCngrCngeSelected = onCngrCngeSelected
+            instance.cngrCngeType = clickType
             return instance
         }
     }
@@ -60,21 +61,20 @@ class PinCodeSelectionBottomSheet @Inject constructor(): BaseFragment(), OnRowCl
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        layoutBinding = BottomSheetPinCodeSelectionBinding.inflate(layoutInflater)
+        layoutBinding = BottomSheetCngrCngeSelectionBinding.inflate(layoutInflater)
         return layoutBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (locationtype=="O"){
-           layoutBinding.toolbarTitle.text = "Origin PinCode Seletion"
-        }
-        else if (locationtype=="D"){
-            layoutBinding.toolbarTitle.text = "Destination PinCode Selection"
-        }
+        if (cngrCngeType=="R"){
+            layoutBinding.toolbarTitle.text = "Consignor Selection"
 
+        } else if (cngrCngeType=="E"){
+            layoutBinding.toolbarTitle.text = "Consignee Selection "
 
+        }
         dialog!!.setOnShowListener { dialog ->
             val d = dialog as BottomSheetDialog
             val bottomSheet: FrameLayout =
@@ -96,7 +96,7 @@ class PinCodeSelectionBottomSheet @Inject constructor(): BaseFragment(), OnRowCl
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                getPinCodeList(newText)
+                getCngrCngeList(newText)
                 return false
             }
 
@@ -105,40 +105,31 @@ class PinCodeSelectionBottomSheet @Inject constructor(): BaseFragment(), OnRowCl
     }
 
     private fun setObservers(){
-        viewModel.pinCodeLiveData.observe(this){pinCodeData->
-            pinCodeDataList = pinCodeData
+        viewModel.cngrCngeLiveData.observe(this){ cngrCngeData->
+            cngrCngeList = cngrCngeData
             setupRecyclerView()
         }
+
     }
 
-    private fun setupRecyclerView() {
-        if (rvAdapter == null) {
-            manager = LinearLayoutManager(mContext)
-            layoutBinding.recyclerView.layoutManager = manager
-        }
-        rvAdapter = PinCodeSelectionAdapter(pinCodeDataList, onRowClick)
-        layoutBinding.recyclerView.adapter = rvAdapter
-    }
-
-    private fun getPinCodeList(query:String?){
+    private fun getCngrCngeList(query:String?){
         if (query!=null){
-            viewModel.getPinCode(
-
+            viewModel.getCngrCngeList(
                 getCompanyId(),
-                getUserCode(),
                 getLoginBranchCode(),
+                getUserCode(),
+                "0000000001",
+                cngrCngeType,
                 getSessionId(),
-                "GTAPP_BOOKINGWITHOUTINDENT",
                 query
 
             )
         }
-
     }
 
     override fun onDetach() {
         super.onDetach()
-        onPinCodeSelected = null
+        onCngrCngeSelected = null
     }
 
     fun close(){
@@ -148,20 +139,27 @@ class PinCodeSelectionBottomSheet @Inject constructor(): BaseFragment(), OnRowCl
     }
 
 
+    private fun setupRecyclerView() {
+        if (rvAdapter == null) {
+            manager = LinearLayoutManager(mContext)
+            layoutBinding.recyclerView.layoutManager = manager
+        }
+        rvAdapter = CngrCngeSelectionAdapter(cngrCngeList, onRowClick)
+        layoutBinding.recyclerView.adapter = rvAdapter
+    }
+
 
 
     override fun onClick(data: Any, clickType: String) {
-        if (onPinCodeSelected!=null){
-            if (clickType== PinCodeSelectionAdapter.PIN_CODE_SELECTION_ROW_CLICK && locationtype=="O"){
-                onPinCodeSelected?.onClick(data, ORIGIN_PIN_CODE_CLICK_TYPE)
+        if (onCngrCngeSelected!=null){
+            if (clickType== CngrCngeSelectionAdapter.CNGR_CNGE_SELECTION_ROW_CLICK && cngrCngeType=="R"){
+                onCngrCngeSelected?.onClick(data, CNGR_CLICK_TYPE)
                 dismiss()
-            }
-             if (clickType== PinCodeSelectionAdapter.PIN_CODE_SELECTION_ROW_CLICK && locationtype=="D"){
-                 onPinCodeSelected?.onClick(data, DESTINATION_PIN_CODE_CLICK_TYPE)
-                 dismiss()
+            } else if (clickType== CngrCngeSelectionAdapter.CNGR_CNGE_SELECTION_ROW_CLICK && cngrCngeType=="E"){
+                onCngrCngeSelected?.onClick(data, CNGE_CLICK_TYPE)
+                dismiss()
             }
         }
     }
-
 
 }

@@ -47,13 +47,22 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.bottomsheet.cngrCngeSelection.CngrCngeSelectionBottomSheet"
+            android:exported="false" />
+        <activity
+            android:name=".ui.bottomsheet.departmentSelection.DepartmentSelectionBottomSheet"
+            android:exported="false" />
+        <activity
+            android:name=".ui.bottomsheet.commonSelection.CommonSelectionBottomSheet"
+            android:exported="false" />
+        <activity
             android:name=".ui.bottomsheet.pinCodeSelection.PinCodeSelectionBottomSheet"
             android:exported="false" />
         <activity
             android:name=".ui.bottomsheet.customerSelection.CustomerSelectionBottomSheet"
             android:exported="false" />
         <activity
-            android:name=".ui.operation.bookingWithoutIndent.DirectBooking"
+            android:name=".ui.operation.bookingWithoutIndent.DirectBookingActivity"
             android:exported="false"
             android:parentActivityName=".ui.operation.bookingOption.BookingOptionActivity" />
         <activity

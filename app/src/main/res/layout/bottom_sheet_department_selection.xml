@@ -69,7 +69,6 @@
                     android:layout_height="match_parent"
                     app:iconifiedByDefault="false"
                     app:queryHint="Search Here..."
-                    android:inputType="number"
                     />
 
             </com.google.android.material.card.MaterialCardView>
