@@ -80,6 +80,7 @@ class BookingAdapter @Inject constructor(
 //              onRowClick.onRowClick(singlePickupRefModel, "VALIDATE_BOX", adapterPosition)
 //
 //          }
+
            binding.pckgs.addTextChangedListener(object : TextWatcher {
                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                }
@@ -101,6 +102,33 @@ class BookingAdapter @Inject constructor(
                }
 
            })
+
+        binding.pckgs.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                bookingList[adapterPosition].pcs = p0.toString().toIntOrNull() ?: 0
+                Log.d("entered_pckgs",bookingList[adapterPosition].pcs.toString())
+//                val enteredVal = p0.toString().toIntOrNull()
+//                if (enteredVal != null) {
+//                    if (enteredVal <= 0) {
+////                        binding.pckgs.setText("")
+//
+//                        bookingList[adapterPosition].pcs = binding.pckgs.text.toString().toInt()
+//                        Log.d("entered_pckgs",bookingList[adapterPosition].pcs.toString())
+//                    }
+//                }
+//                if (enteredVal != null && enteredVal.toString().startsWith("0")) {
+////                       binding.pckgs.setText(trimLeadingZeros(p0.toString()))
+//                }
+            }
+
+        })
 
            binding.length.addTextChangedListener(object : TextWatcher {
                override fun beforeTextChanged(
@@ -480,11 +508,11 @@ class BookingAdapter @Inject constructor(
     fun serviceTypeChanged() {
         if(activity.productCode =="A"){
             bookingList.forEachIndexed { index, singlePickupRefModel ->
-                singlePickupRefModel.localVWeight = ( singlePickupRefModel.localLength * singlePickupRefModel.localBreath * singlePickupRefModel.localHeight ).toFloat() / 6000
+                singlePickupRefModel.localVWeight = ( singlePickupRefModel.localLength * singlePickupRefModel.localBreath * singlePickupRefModel.localHeight ).toFloat() / 6000 * singlePickupRefModel.pcs
             }
         }else{
             bookingList.forEachIndexed { index, singlePickupRefModel ->
-                singlePickupRefModel.localVWeight = ( singlePickupRefModel.localLength * singlePickupRefModel.localBreath * singlePickupRefModel.localHeight ).toFloat() / 5000
+                singlePickupRefModel.localVWeight = ( singlePickupRefModel.localLength * singlePickupRefModel.localBreath * singlePickupRefModel.localHeight ).toFloat() / 5000 * singlePickupRefModel.pcs
             }
         }
         calculateTotalVWeight()
