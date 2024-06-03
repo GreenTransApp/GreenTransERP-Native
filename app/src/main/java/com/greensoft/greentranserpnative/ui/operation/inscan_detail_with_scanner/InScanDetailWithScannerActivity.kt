@@ -158,12 +158,14 @@ class InScanDetailWithScannerActivity  @Inject constructor(): BaseActivity(), On
 
 
     private fun getInScanDetails(){
+        inScanCardDetailList.clear()
+        setupRecyclerView()
         viewModel.getInScanDetails(
             getCompanyId(),
             getUserCode(),
             getLoginBranchCode(),
             manifestNo.toString(),
-            "i",
+            "I",
             getSessionId()
         )
     }
