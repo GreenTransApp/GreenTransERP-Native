@@ -53,7 +53,10 @@ class OutstationInscanDetailWithScannerActivity  @Inject constructor(): BaseActi
         getInScanDetails()
 
         setOnClick()
-        openReceivingDetailsBottomSheet()
+        if (savedInstanceState == null) {
+            openReceivingDetailsBottomSheet()
+        }
+
     }
 
     private fun openReceivingDetailsBottomSheet() {
