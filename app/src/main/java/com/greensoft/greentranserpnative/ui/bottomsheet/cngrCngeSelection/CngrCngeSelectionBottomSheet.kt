@@ -33,6 +33,8 @@ class CngrCngeSelectionBottomSheet  @Inject constructor(): BaseFragment(), OnRow
     private lateinit var manager: LinearLayoutManager
     private var cngrCngeList:ArrayList<CngrCngeSelectionModel> = ArrayList()
     private var cngrCngeType:String? = null
+    private var custCode:String? =null
+    private var branchCode:String? =null
 
 
 
@@ -45,13 +47,17 @@ class CngrCngeSelectionBottomSheet  @Inject constructor(): BaseFragment(), OnRow
             mContext: Context,
             title: String,
             onCngrCngeSelected: OnRowClick<Any>,
-            clickType: String
+            clickType: String,
+            custCode:String,
+            branchcode  :String
         ): CngrCngeSelectionBottomSheet {
             val instance: CngrCngeSelectionBottomSheet = CngrCngeSelectionBottomSheet()
             instance.mContext = mContext
             instance.title = title
             instance.onCngrCngeSelected = onCngrCngeSelected
             instance.cngrCngeType = clickType
+            instance.custCode = custCode
+            instance.branchCode = branchcode
             return instance
         }
     }
@@ -116,9 +122,10 @@ class CngrCngeSelectionBottomSheet  @Inject constructor(): BaseFragment(), OnRow
         if (query!=null){
             viewModel.getCngrCngeList(
                 getCompanyId(),
-                getLoginBranchCode(),
+                branchCode,
                 getUserCode(),
-                "0000000001",
+//                "0000000001",
+                custCode,
                 cngrCngeType,
                 getSessionId(),
                 query
