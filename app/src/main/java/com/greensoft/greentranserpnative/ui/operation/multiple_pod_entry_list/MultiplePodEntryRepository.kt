@@ -146,9 +146,10 @@ class MultiplePodEntryRepository  @Inject constructor() : BaseRepository(){
 
     }
 
-    fun getGrListForPod(companyId:String, drsNo:String) {
+    fun getGrListForPod(companyId:String, userCode: String, branchCode: String, menuCode: String, sessionId: String, drsNo:String) {
         viewDialogMutData.postValue(true)
-        api.getPodList(companyId,drsNo).enqueue(object:
+//        api.getPodList(companyId,drsNo).enqueue(object:
+        api.getPendingGrListForDelivery(companyId, userCode, branchCode, menuCode, sessionId, drsNo).enqueue(object:
             Callback<CommonResult> {
             override fun onResponse(call: Call<CommonResult?>, response: Response<CommonResult>) {
                 if(response.body() != null){

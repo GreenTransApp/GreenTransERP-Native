@@ -39,9 +39,9 @@ class MultiplePodEntryViewModel @Inject constructor(private val _repo: MultipleP
         }
     }
 
-    fun getGrListForPod(companyId: String, drsNo: String){
+    fun getGrListForPod(companyId:String, userCode: String, branchCode: String, menuCode: String, sessionId: String, drsNo:String) {
         viewModelScope.launch(Dispatchers.IO) {
-            _repo.getGrListForPod(companyId, drsNo)
+            _repo.getGrListForPod(companyId, userCode, branchCode, menuCode, sessionId, drsNo)
         }
     }
 

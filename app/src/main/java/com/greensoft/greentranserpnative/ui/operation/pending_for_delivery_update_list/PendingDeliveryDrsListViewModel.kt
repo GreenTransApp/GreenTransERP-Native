@@ -24,15 +24,15 @@ class PendingDeliveryDrsListViewModel @Inject constructor(private val _repo: Pen
         get() = _repo.drsPendingListLivedata
 
 
-    val podListLiveData: LiveData<ArrayList<PodEntryListModel>>
-        get() = _repo.podListLivedata
+//    val podListLiveData: LiveData<ArrayList<PodEntryListModel>>
+//        get() = _repo.podListLivedata
 
 
-    fun getPodEntryList(companyId: String,drsNo:String){
-        viewModelScope.launch(Dispatchers.IO) {
-            _repo.getPodList(companyId,drsNo)
-        }
-    }
+//    fun getPodEntryList(companyId: String,drsNo:String){
+//        viewModelScope.launch(Dispatchers.IO) {
+//            _repo.getPodList(companyId,drsNo)
+//        }
+//    }
     fun getDrsPendingList(companyId: String,userCode:String,loginBranchCode:String,fromDt:String,toDt:String,sessionId:String){
         viewModelScope.launch(Dispatchers.IO) {
             _repo.getDrsPendingList(companyId,userCode,loginBranchCode,fromDt,toDt,sessionId)

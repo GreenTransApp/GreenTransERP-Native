@@ -127,6 +127,10 @@ class MultiplePodEntryListActivity  @Inject constructor(): BaseActivity(),
       private fun getGrListForPod() {
           viewModel.getGrListForPod(
               companyId =  getCompanyId(),
+              userCode = getUserCode(),
+              branchCode = getLoginBranchCode(),
+              menuCode = if(Utils.menuModel == null ) "GTAPP_DELIVERYNATIVE" else Utils.menuModel!!.menucode,
+              sessionId = getSessionId(),
               drsNo = drsNo.toString()
           )
 

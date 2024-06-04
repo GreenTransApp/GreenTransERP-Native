@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.greensoft.greentranserpnative.databinding.PendingDrsListItemBinding
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.pending_for_delivery_update_list.models.DrsPendingListModel
+import java.util.Locale
 import javax.inject.Inject
 
 class PendingDeliveryDrsListAdapter  @Inject constructor(
@@ -59,7 +60,8 @@ class PendingDeliveryDrsListAdapter  @Inject constructor(
                 } else {
                     val filteredList: ArrayList<DrsPendingListModel> = ArrayList()
                     for (row in drsList) {
-//                        if(
+                        if(
+                            row.documentno?.contains(charString, true) == true
 //                             row.custname.lowercase().contains(charString.lowercase(Locale.getDefault()))
 //                            row.grno.contains(charString.lowercase(Locale.getDefault()))
 //                            ||row.destname.contains(charString.lowercase(Locale.getDefault()))
@@ -67,9 +69,9 @@ class PendingDeliveryDrsListAdapter  @Inject constructor(
 //                            ||row.cngr.lowercase().contains(charString.lowercase(Locale.getDefault()))
 
 
-//                        ){
+                        ){
                         filteredList.add(row)
-//                        }
+                        }
                     }
                     filterList = filteredList
                 }

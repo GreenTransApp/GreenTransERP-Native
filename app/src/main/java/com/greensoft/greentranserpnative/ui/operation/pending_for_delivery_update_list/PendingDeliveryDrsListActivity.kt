@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,20 +24,21 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 @AndroidEntryPoint
-class PendingDeliveryDrsListActivity  @Inject constructor(): BaseActivity(),
+class PendingDeliveryDrsListActivity @Inject constructor() : BaseActivity(),
     AlertCallback<Any>, OnRowClick<Any>,
     BottomSheetClick<Any> {
 
-        lateinit var  activityBinding:ActivityPendingDeliveryDrsListBinding
-        private  val viewModel:PendingDeliveryDrsListViewModel by viewModels()
-        private  var rvList:ArrayList<DrsPendingListModel> = ArrayList()
-        private  var podGrList:ArrayList<PodEntryListModel> = ArrayList()
-        private var rvAdapter :PendingDeliveryDrsListAdapter? =null
-        private lateinit var manager: LinearLayoutManager
-        private var fromDate: String = getSqlDate()!!
-        private var toDate:String = getSqlDate()!!
-        private var drsNo:String? =""
+    lateinit var activityBinding: ActivityPendingDeliveryDrsListBinding
+    private val viewModel: PendingDeliveryDrsListViewModel by viewModels()
+    private var rvList: ArrayList<DrsPendingListModel> = ArrayList()
+    private var podGrList: ArrayList<PodEntryListModel> = ArrayList()
+    private var rvAdapter: PendingDeliveryDrsListAdapter? = null
+    private lateinit var manager: LinearLayoutManager
+    private var fromDate: String = getSqlDate()!!
+    private var toDate: String = getSqlDate()!!
+    private var drsNo: String? = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityPendingDeliveryDrsListBinding.inflate(layoutInflater)
@@ -48,32 +50,44 @@ class PendingDeliveryDrsListActivity  @Inject constructor(): BaseActivity(),
         getPendingDrsList()
     }
 
-     private fun setObservers(){
-         activityBinding.swipeRefreshLayout.setOnRefreshListener {
-             refreshData()
-         }
-       viewModel.drsPendingListLiveData.observe(this){ drsData ->
-           rvList =drsData
-           setupRecyclerView()
+    private fun setObservers() {
+        activityBinding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                rvAdapter?.filter?.filter(query)
+                return false
+            }
 
-       }
-         mPeriod.observe(this) { it ->
-             fromDate = it.sqlFromDate.toString()
-             toDate = it.sqlToDate.toString()
-             refreshData()
+            override fun onQueryTextChange(newText: String?): Boolean {
+                rvAdapter?.filter?.filter(newText)
+                return false
+            }
 
-         }
-         viewModel.isError.observe(this){ errMsg->
-             errorToast(errMsg)
-         }
-         viewModel.viewDialogLiveData.observe(this, Observer { show ->
-             if(show) {
-                 showProgressDialog()
-             } else {
-                 hideProgressDialog()
-             }
-         })
-     }
+        })
+        activityBinding.swipeRefreshLayout.setOnRefreshListener {
+            refreshData()
+        }
+        viewModel.drsPendingListLiveData.observe(this) { drsData ->
+            rvList = drsData
+            setupRecyclerView()
+
+        }
+        mPeriod.observe(this) { it ->
+            fromDate = it.sqlFromDate.toString()
+            toDate = it.sqlToDate.toString()
+            refreshData()
+
+        }
+        viewModel.isError.observe(this) { errMsg ->
+            errorToast(errMsg)
+        }
+        viewModel.viewDialogLiveData.observe(this, Observer { show ->
+            if (show) {
+                showProgressDialog()
+            } else {
+                hideProgressDialog()
+            }
+        })
+    }
 
     private fun refreshData() {
         getPendingDrsList()
@@ -84,7 +98,7 @@ class PendingDeliveryDrsListActivity  @Inject constructor(): BaseActivity(),
     }
 
     private fun setupRecyclerView() {
-        if(rvAdapter== null) {
+        if (rvAdapter == null) {
             manager = LinearLayoutManager(this)
             activityBinding.recyclerView.layoutManager = manager
         }
@@ -92,17 +106,17 @@ class PendingDeliveryDrsListActivity  @Inject constructor(): BaseActivity(),
         activityBinding.recyclerView.adapter = rvAdapter
     }
 
-    private fun getPendingDrsList(){
-      viewModel.getDrsPendingList(
-          companyId = getCompanyId(),
-          userCode = getUserCode(),
-          loginBranchCode = getLoginBranchCode(),
+    private fun getPendingDrsList() {
+        viewModel.getDrsPendingList(
+            companyId = getCompanyId(),
+            userCode = getUserCode(),
+            loginBranchCode = getLoginBranchCode(),
 //          fromDt = "2023-08-30",
 //          toDt = "2024-08-31",
-          fromDt = fromDate,
-          toDt = toDate,
-          sessionId = getSessionId()
-      )
+            fromDt = fromDate,
+            toDt = toDate,
+            sessionId = getSessionId()
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -120,6 +134,7 @@ class PendingDeliveryDrsListActivity  @Inject constructor(): BaseActivity(),
         }
         return super.onOptionsItemSelected(item)
     }
+
     override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {
         TODO("Not yet implemented")
     }
@@ -132,14 +147,14 @@ class PendingDeliveryDrsListActivity  @Inject constructor(): BaseActivity(),
         when (clickType) {
             "POD_SELECT" -> run {
                 val model: DrsPendingListModel = data as DrsPendingListModel
-                drsNo=model.documentno.toString()
+                drsNo = model.documentno.toString()
                 drsNo?.let { openMultiplePodEntryPage(it) }
             }
         }
     }
 
     private fun openMultiplePodEntryPage(drsNo: String) {
-        val intent = Intent(this,MultiplePodEntryListActivity::class.java)
+        val intent = Intent(this, MultiplePodEntryListActivity::class.java)
         intent.putExtra("DRS_NO", drsNo)
         startActivity(intent)
     }
