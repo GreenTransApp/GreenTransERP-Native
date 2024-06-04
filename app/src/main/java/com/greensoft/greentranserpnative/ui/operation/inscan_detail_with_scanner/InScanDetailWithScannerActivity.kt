@@ -48,7 +48,9 @@ class InScanDetailWithScannerActivity  @Inject constructor(): BaseActivity(), On
         getInScanDetails()
 
         setOnClick()
-        openReceivingDetailsBottomSheet()
+        if (savedInstanceState == null) {
+            openReceivingDetailsBottomSheet()
+        }
     }
 
     private fun openReceivingDetailsBottomSheet() {
