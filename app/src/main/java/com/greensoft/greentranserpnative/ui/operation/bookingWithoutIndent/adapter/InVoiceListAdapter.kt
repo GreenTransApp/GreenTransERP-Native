@@ -1,4 +1,4 @@
-package com.greensoft.greentranserpnative.ui.operation.bookingWithoutIndent
+package com.greensoft.greentranserpnative.ui.operation.bookingWithoutIndent.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.greensoft.greentranserpnative.common.PeriodSelection
 import com.greensoft.greentranserpnative.databinding.ItemInvoiceListBinding
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.bookingWithoutIndent.DirectBookingActivity
 import com.greensoft.greentranserpnative.ui.operation.bookingWithoutIndent.model.InvoiceDataModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -17,7 +18,8 @@ import javax.inject.Inject
 class InVoiceListAdapter @Inject constructor(
     private val invoiceList: ArrayList<InvoiceDataModel>,
     private val onRowClick: OnRowClick<Any>?=null,
-    private val activity: DirectBookingActivity):RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+    private val activity: DirectBookingActivity
+):RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -31,7 +33,7 @@ class InVoiceListAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val dataHolder = holder as InVoiceListAdapter.InvoiceViewHolder
+        val dataHolder = holder as InvoiceViewHolder
         val dataModel:InvoiceDataModel = invoiceList[position]
         dataHolder.onBind(dataModel,onRowClick)
     }
@@ -71,6 +73,9 @@ class InVoiceListAdapter @Inject constructor(
             }
             layoutBinding.inputInvoiceDt.setOnClickListener {
                 selectDate("InVoiceDate")
+            }
+            layoutBinding.removeBtn.setOnClickListener {
+                onRowClick?.onRowClick(model, "REMOVE_SELECT", adapterPosition)
             }
 
         }

@@ -81,27 +81,27 @@ class BookingAdapter @Inject constructor(
 //
 //          }
 
-           binding.pckgs.addTextChangedListener(object : TextWatcher {
-               override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-               }
-
-               override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-               }
-
-               override fun afterTextChanged(p0: Editable?) {
-                   val enteredVal = p0.toString().toIntOrNull()
-                   if (enteredVal != null) {
-                       if (enteredVal <= 0) {
-                           binding.pckgs.setText("")
-                       }
-                   }
-                   if (enteredVal != null && enteredVal.toString().startsWith("0")) {
-//                       binding.pckgs.setText(trimLeadingZeros(p0.toString()))
-                   }
-               }
-
-           })
+//           binding.pckgs.addTextChangedListener(object : TextWatcher {
+//               override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+//               }
+//
+//               override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+//
+//               }
+//
+//               override fun afterTextChanged(p0: Editable?) {
+//                   val enteredVal = p0.toString().toIntOrNull()
+//                   if (enteredVal != null) {
+//                       if (enteredVal <= 0) {
+//                           binding.pckgs.setText("")
+//                       }
+//                   }
+//                   if (enteredVal != null && enteredVal.toString().startsWith("0")) {
+////                       binding.pckgs.setText(trimLeadingZeros(p0.toString()))
+//                   }
+//               }
+//
+//           })
 
         binding.pckgs.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {

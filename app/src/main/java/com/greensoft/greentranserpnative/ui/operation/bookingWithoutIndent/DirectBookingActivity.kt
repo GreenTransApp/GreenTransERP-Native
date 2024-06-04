@@ -2,7 +2,10 @@ package com.greensoft.greentranserpnative.ui.operation.bookingWithoutIndent
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
 import android.text.InputType
+import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -25,10 +28,18 @@ import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
+import com.greensoft.greentranserpnative.ui.operation.booking.BookingActivity
+import com.greensoft.greentranserpnative.ui.operation.booking.BookingAdapter
+import com.greensoft.greentranserpnative.ui.operation.bookingWithoutIndent.adapter.DirectBookingAdapter
+import com.greensoft.greentranserpnative.ui.operation.bookingWithoutIndent.adapter.InVoiceListAdapter
 import com.greensoft.greentranserpnative.ui.operation.bookingWithoutIndent.model.InvoiceDataModel
 import com.greensoft.greentranserpnative.ui.operation.drs.model.DeliverByModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_manifest.models.GrSelectionModel
+import com.greensoft.greentranserpnative.ui.operation.pickup_reference.models.SinglePickupRefModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlin.math.round
+
 @AndroidEntryPoint
 class DirectBookingActivity @Inject constructor(): BaseActivity(), OnRowClick<Any>, AlertCallback<Any>,
     BottomSheetClick<Any> {
@@ -38,15 +49,23 @@ class DirectBookingActivity @Inject constructor(): BaseActivity(), OnRowClick<An
     private val serviceTypeList: ArrayList<DeliverByModel> = ArrayList()
     private val pckgsTypeList: ArrayList<DeliverByModel> = ArrayList()
     private val invoiceList: ArrayList<InvoiceDataModel> = ArrayList()
+    private var bookingList: ArrayList<SinglePickupRefModel> = ArrayList()
+    private var bookingAdapter: DirectBookingAdapter? = null
 
     private var rvAdapter: InVoiceListAdapter?=null
     var vendorCode = ""
     var vehicleCode = ""
     var bookedByCode = "M"
-    var serviceByCode = ""
+    var productCode = ""
     var pckgsByCode = ""
+    var pckgsType = ""
 
     private var sqlDate: String? = null
+    companion object {
+        val JEENA_PACKING: String = "Jeena Packing"
+        const val PRINT_GR_TAG = "PRINT_GR_TAG"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityBinding = ActivityDirectBookingBinding.inflate(layoutInflater)
@@ -143,7 +162,134 @@ class DirectBookingActivity @Inject constructor(): BaseActivity(), OnRowClick<An
             }
         }
 
+        activityBinding.inputNoOfPckgs.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
 
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                var noOfPckgs =p0.toString().toIntOrNull() ?: 0
+
+//                 if(noOfPckgs > 0) {
+//                      var data =bookingList[0]
+////                     if (bookingList.isNotEmpty()) {
+////                         data =bookingList[0]
+////                     }
+//                     if (pckgsType == DirectBookingActivity.JEENA_PACKING) {
+//                         for (i in 1..noOfPckgs) {
+//
+//                              var obj =SinglePickupRefModel(data)
+//                           bookingList.add(obj)
+//                         }
+//                     }else{
+//                        bookingAdapter?.addItemAtIndex(data,0)
+//                     }
+//
+//
+//
+//                 }
+
+
+                 if(noOfPckgs > 0) {
+                       var data = SinglePickupRefModel(
+                           Departmentcode = 0,
+                           Origin = "",
+                           aweight = 0.0,
+                           boxno = "",
+                           branchname = "",
+                           cnge = "",
+                           cngeaddress = "",
+                           cngecity = "",
+                           cngecode = "",
+                           cngecstno = "",
+                           cngeemail = "",
+                           cngelstno = "",
+                           cngestate = "",
+                           cngestaxregno = "",
+                           cngetelno="",
+                           cngetinno = "",
+                           cngezipcode = "",
+                           cngr = "",
+                           cngraddress = "",
+                           cngrcity = "",
+                           cngrcode = "",
+                           cngrcstno = "",
+                           cngremail = "",
+                           cngrlstno = "",
+                           cngrstate = "",
+                           cngrstaxregno = "",
+                           cngrtelno = "",
+                           cngrtinno = "",
+                           cngrzipcode = "",
+                           commandmessage = "",
+                           commandstatus = 0,
+                           contents = "",
+                           contentsCode = "",
+                           custcode = "",
+                           custname = "",
+                           datalogger = "",
+                           dataloggerno = "",
+                           departmentname = "",
+                           destcode = "",
+                           destname = "",
+                           detailreferenceno = "",
+                           dryice = "",
+                           dryiceqty = 0.0,
+                           enabledryiceqty = "",
+                           gelpack = "N",
+                           gelpackqty = 0,
+                           gelpacktype = "",
+                           gelpackitemcode = "",
+                           goods = "",
+                           iatavolfactor = 0,
+                           orgcode = "",
+                           packagetype = "",
+                           packing = "",
+                           packingcode = "",
+                           pckgbreath = 0.0,
+                           pckgheight = 0.0,
+                           pckglength = 0.0,
+                           localBreath = 0.0,
+                           localHeight = 0.0,
+                           localLength = 0.0,
+                           pckgs = 0,
+                           pcs = 0,
+                           referenceno = "",
+                           servicetype = "",
+                           stockitemcode = "",
+                           tempurature = "",
+                           tempuratureCode = "",
+                           transactionid = 0,
+                           volfactor = 0.0f,
+                           weight = 0.0,
+                           localVWeight = 0.0f,
+                           isBoxValidated = false
+                       )
+                     if (pckgsType == DirectBookingActivity.JEENA_PACKING) {
+                         for (i in 1..noOfPckgs) {
+                              var obj =SinglePickupRefModel(data)
+                              bookingList.add(obj)
+                         }
+                     }else{
+
+                             var obj =SinglePickupRefModel(data)
+                             bookingList.add(obj)
+
+//                        bookingAdapter?.addItemAtIndex(data,0)
+                     }
+
+                 setupBookingRecyclerView()
+
+                 } else{
+                      bookingList.clear()
+
+                 }
+            }
+
+        })
     }
 
     private fun setObservers(){
@@ -156,7 +302,38 @@ class DirectBookingActivity @Inject constructor(): BaseActivity(), OnRowClick<An
 
         }
     }
+//    private fun updateBookingList(numberOfItems: Int) {
+//        bookingList.clear() // Clear the current list
+//        for (i in 1..numberOfItems) {
+//            val obj = SinglePickupRefModel(refModel)
+//            bookingList.add(obj)
+//            bookingAdapter?.notifyItemInserted(bookingList.size - 1)
+//        }
+//    }
 
+    private fun setupBookingRecyclerView() {
+        if (bookingAdapter == null) {
+            manager = LinearLayoutManager(this)
+            activityBinding.bookingRv.layoutManager = manager
+        }
+        bookingAdapter = DirectBookingAdapter(this, productCode, this, bookingList, this)
+        activityBinding.bookingRv.adapter = bookingAdapter
+//    }
+    }
+    fun addMoreGridItem(refModel: SinglePickupRefModel) {
+        Log.d("CREATING NEW ITEM IN THE GRID, PACKAGE_TYPE", refModel.packagetype.toString())
+        if (refModel.packagetype.toString() == BookingActivity.JEENA_PACKING) {
+
+        } else {
+            try {
+                val obj = SinglePickupRefModel(refModel)
+                bookingList.add(obj)
+                bookingAdapter?.notifyItemInserted(bookingList.size - 1)
+            } catch (err: Exception) {
+                errorToast(err.message)
+            }
+        }
+    }
     private fun checkFieldsBeforeSave(){
         if(activityBinding.inputDate.text.isNullOrEmpty()){
             activityBinding.inputDate.error="Please Select Date"
@@ -293,30 +470,27 @@ class DirectBookingActivity @Inject constructor(): BaseActivity(), OnRowClick<An
             }
         }
 
-//        else if (clickType=="EwbDate"){
-//            try {
-//            openSingleDatePicker()
-//            } catch (ex:Exception){
-//                errorToast(ex.message)
-//            }
-//        }
-//        else if (clickType=="InVoiceDate"){
-//            try {
-//                openSingleDatePicker()
-//            } catch (ex:Exception){
-//                errorToast(ex.message)
-//            }
-//        }
-//        else if (clickType=="EwbValidUptoDate"){
-//            try {
-//                openSingleDatePicker()
-//            } catch (ex:Exception){
-//                errorToast(ex.message)
-//            }
-//        }
-
+    }
+    fun setVWeight(vWeight: Float) {
+        val localVWeight = round(vWeight)
+        activityBinding.inputVolWeight.setText(localVWeight.toString())
     }
 
+    fun setAWeight(aWeight: Int) {
+        activityBinding.inputAWeight.setText(aWeight.toString())
+    }
+    fun setCWeight(cWeight: Int) {
+        activityBinding.inputChargeableWeight.setText(cWeight.toString())
+        val aWeight = activityBinding.inputAWeight.text.toString().toDoubleOrNull()
+        val cWeight = activityBinding.inputChargeableWeight.text.toString().toDoubleOrNull()
+        var vWeight = activityBinding.inputVolWeight.text.toString().toDoubleOrNull()
+        if (aWeight != null) {
+            if (vWeight == null) vWeight = 0.0
+            val higherValue = Math.max(aWeight.toInt() ?: 0, vWeight.toInt() ?: 0)
+            activityBinding.inputChargeableWeight.setText(higherValue.toString())
+        }
+
+    }
     private fun setBookedBySpinners() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, bookingTypeList)
         activityBinding.selectedBookedType.adapter = adapter
@@ -391,19 +565,19 @@ class DirectBookingActivity @Inject constructor(): BaseActivity(), OnRowClick<An
                     position: Int,
                     id: Long
                 ) {
-                    serviceByCode = serviceTypeList[position].code
-                    when(serviceByCode) {
+                    productCode = serviceTypeList[position].code
+                    when(productCode) {
                         "A" -> run {
-                            errorToast("air")
+//                            errorToast("air")
                         }
                         "S" -> run {
-                            errorToast("surface")
+//                            errorToast("surface")
                         }
                         "E" -> run {
-                           errorToast("express")
+//                           errorToast("express")
                         }
                         "T" -> run {
-                            errorToast("train")
+//                            errorToast("train")
                         }
                         else -> {
 
@@ -431,12 +605,15 @@ class DirectBookingActivity @Inject constructor(): BaseActivity(), OnRowClick<An
                     id: Long
                 ) {
                     pckgsByCode = pckgsTypeList[position].code
+                    pckgsType = pckgsTypeList[position].name
+                    bookingList.clear()
                     when(pckgsByCode) {
-                        "J" -> run {
-                            successToast("jeena packing block")
+
+
+                            "J" -> run {
                         }
                         "T" -> run {
-                            successToast("pre packing block")
+
                         }
 
                         else -> {
@@ -467,6 +644,18 @@ class DirectBookingActivity @Inject constructor(): BaseActivity(), OnRowClick<An
         invoiceList.clear() // Clear the current list
         for (i in 1..numberOfItems) {
             invoiceList.add(InvoiceDataModel("","","","","","",""))
+        }
+    }
+    override fun onRowClick(data: Any, clickType: String, index: Int) {
+        super.onRowClick(data, clickType, index)
+        val removingItem: InvoiceDataModel = data as InvoiceDataModel
+
+        if(invoiceList.isNotEmpty() && index <= invoiceList.size - 1) {
+            invoiceList.removeAt(index)
+            setupInvoiceRecyclerView()
+            successToast("Successfully Removed. Invoice: ${removingItem.invoiceno}")
+        } else {
+            errorToast("Something went wrong.")
         }
     }
 }
