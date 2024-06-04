@@ -170,14 +170,21 @@ class DirectBookingActivity @Inject constructor() : BaseActivity(), OnRowClick<A
         }
         activityBinding.consignorName.setOnClickListener {
             var branchcode:String= ""
-//            if(activityBinding.inputCustCode.text.toString() != "" )){
-//             branchcode = getLoginBranchCode()
-//            }
+            if(activityBinding.inputCustCode.text != null && activityBinding.inputCustCode.text!!.isNotEmpty() ){
+             branchcode = getLoginBranchCode()
+            }else{
+                 errorToast("Please Select Customer First")
+            }
             cngrCngeSelectionBottomSheet(this, "Consignor Selection", this, "R",activityBinding.inputCustCode.text.toString(),branchcode)
         }
         activityBinding.consigneeName.setOnClickListener {
-//
-//            cngrCngeSelectionBottomSheet(this, "Consignee Selection", this, "E",activityBinding.inputCustCode.text.toString())
+              var branchcode :String=""
+            if(destinationCode != null && destinationCode.isNotEmpty()){
+                branchcode = destinationCode
+                cngrCngeSelectionBottomSheet(this, "Consignee Selection", this, "E",activityBinding.inputCustCode.text.toString(),branchcode)
+                 }else{
+                   errorToast("Please Select Destination First")
+            }
         }
 
         activityBinding.inputVehicle.setOnClickListener {
