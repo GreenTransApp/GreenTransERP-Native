@@ -55,7 +55,7 @@ data class SinglePickupRefModel(
     val goods: String,
     val iatavolfactor: Int,
     val orgcode: String?,
-    val packagetype: String?,
+    var packagetype: String?,
     var packing: String,
     var packingcode: String?,
     val pckgbreath: Double,
@@ -73,7 +73,7 @@ data class SinglePickupRefModel(
     var tempuratureCode: String,
     val transactionid: Int,
     var volfactor: Float,
-    val weight: Double,
+    var weight: Double,
     var localVWeight: Float,
     var isBoxValidated: Boolean
 ) {
@@ -89,7 +89,7 @@ data class SinglePickupRefModel(
     constructor(original: SinglePickupRefModel) : this(
         Departmentcode = original.Departmentcode,
         Origin = original.Origin,
-        aweight = original.aweight,
+        weight = original.weight,
         boxno = original.boxno,
         branchname = original.branchname,
         cnge = original.cnge,
@@ -130,6 +130,7 @@ data class SinglePickupRefModel(
         packagetype = original.packagetype,
         transactionid = original.transactionid,
 
+
         packing = "",
         packingcode = "",
         pckgbreath = 0.0,
@@ -148,7 +149,7 @@ data class SinglePickupRefModel(
         tempurature = "",
         tempuratureCode = "",
         volfactor = 0.0f,
-        weight = 0.0,
+        aweight = 0.0,
         localVWeight = 0.0f,
         isBoxValidated = false,
         dryice = "",

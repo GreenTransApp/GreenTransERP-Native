@@ -334,10 +334,13 @@ class DirectBookingAdapter @Inject constructor(
             }
             binding.gridData = singlePickupRefModel
             binding.index = adapterPosition
+            singlePickupRefModel.packagetype = activity.pckgsType
             if(singlePickupRefModel.packagetype.toString() == BookingActivity.JEENA_PACKING) {
                 binding.boxLayout.visibility = View.VISIBLE
+                binding.removeBtnLayout.visibility=View.GONE
             } else {
                 binding.boxLayout.visibility = View.GONE
+                binding.removeBtnLayout.visibility=View.VISIBLE
             }
             setOnClicks(singlePickupRefModel)
             setUpAdapter()

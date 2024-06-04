@@ -1184,8 +1184,21 @@
                         </LinearLayout>
 
                     </LinearLayout>
+                <TextView
 
+                    android:id="@+id/gridType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textColor="@color/success"
+                    android:textSize="25dp"
+                    >
+
+                </TextView>
                     <HorizontalScrollView
+                        android:id="@+id/item_grid"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
@@ -1394,6 +1407,17 @@
                                 tools:listitem="@layout/booking_item_view" />
                         </LinearLayout>
                     </HorizontalScrollView>
+                    <com.google.android.material.button.MaterialButton
+                        android:visibility="gone"
+                        android:id="@+id/btn_add_more"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginTop="10dp"
+                        android:padding="15dp"
+                        android:text="Add More"
+                        app:cornerRadius="10dp"
+                        />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

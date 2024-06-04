@@ -201,6 +201,8 @@ class BookingAdapter @Inject constructor(
                override fun afterTextChanged(s: Editable?) {
 //                   onRowClick.onRowClick(singlePickupRefModel, "LENGTH_SELECT", adapterPosition)
 //                   Log.d("test", "afterTextChanged:  length of  obj")
+                   bookingList[adapterPosition].weight =
+                       s.toString().toDoubleOrNull() ?: "0".toDouble()
                    calculateTotalAWeight(adapterPosition, binding)
                }
            })
@@ -456,6 +458,9 @@ class BookingAdapter @Inject constructor(
     fun setEnteredBoxNo(index: Int, layoutBinding: BookingItemViewBinding){
      bookingList[index].boxno=layoutBinding.boxNo.text.toString()
     }
+    fun setEnteredWeight(index: Int, layoutBinding: BookingItemViewBinding){
+     bookingList[index].weight=layoutBinding.weight.text.toString().toDouble()
+    }
     fun setEnteredReferenceNum(index: Int, layoutBinding: BookingItemViewBinding){
      bookingList[index].referenceno=layoutBinding.refNo.text.toString()
     }
@@ -527,13 +532,15 @@ class BookingAdapter @Inject constructor(
    }
     fun calculateTotalAWeight(index: Int, layoutBinding: BookingItemViewBinding){
         var aWeight: Int? = layoutBinding.weight.text.toString().toIntOrNull()
+        actualWeight= 0
         if(aWeight == null) {
 //               activity.errorToast("Weight in wrong format.")
             return
         }
         if(aWeight > 0){
+
             bookingList.forEachIndexed {index, element ->
-                actualWeight= (actualWeight+element.aweight).toInt()
+                actualWeight= (actualWeight+element.weight).toInt()
             }
         }
         if(actualWeight.toFloat().isNaN()){
