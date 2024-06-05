@@ -10,7 +10,7 @@ import com.greensoft.greentranserpnative.databinding.EwayBillRecyclerviewItemBin
 import com.greensoft.greentranserpnative.ui.operation.booking.BookingActivity
 
 class EwayBillAdapter(
-            private val mActivity: BookingActivity,
+            private val mActivity: BaseActivity,
             private val EwayBillList: ArrayList<ItemEwayBillModel>,
 //          private val bottomSheetClick: BottomSheetClick<Any>
     ):RecyclerView.Adapter<EwayBillAdapter.EwayBillViewHolder>() {

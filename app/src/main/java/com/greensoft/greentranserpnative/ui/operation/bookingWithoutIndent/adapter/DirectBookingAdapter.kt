@@ -188,7 +188,10 @@ class DirectBookingAdapter @Inject constructor(
                 override fun afterTextChanged(s: Editable?) {
 //                   onRowClick.onRowClick(singlePickupRefModel, "LENGTH_SELECT", adapterPosition)
 //                   Log.d("test", "afterTextChanged:  length of  obj")
+                    bookingList[adapterPosition].weight =
+                        s.toString().toDoubleOrNull() ?: "0".toDouble()
                     calculateTotalAWeight(adapterPosition, binding)
+//                    calculateTotalAWeight(adapterPosition, binding)
                 }
             })
 
@@ -329,12 +332,12 @@ class DirectBookingAdapter @Inject constructor(
         fun bindData(singlePickupRefModel: SinglePickupRefModel, onRowClick: OnRowClick<Any>) {
 //           if(singlePickupRefModel.gelpacktype)
             logDebug("DATALOGGER: ${singlePickupRefModel.dataloggerno}")
-            if(singlePickupRefModel.gelpacktype == "0") {
+            if(singlePickupRefModel.gelpacktype == "0" ||  singlePickupRefModel.gelpacktype == "") {
                 singlePickupRefModel.gelpacktype = "SELECT"
             }
             binding.gridData = singlePickupRefModel
             binding.index = adapterPosition
-            singlePickupRefModel.packagetype = activity.pckgsType
+//            singlePickupRefModel.packagetype = activity.pckgsType
             if(singlePickupRefModel.packagetype.toString() == BookingActivity.JEENA_PACKING) {
                 binding.boxLayout.visibility = View.VISIBLE
                 binding.removeBtnLayout.visibility=View.GONE
@@ -428,11 +431,11 @@ class DirectBookingAdapter @Inject constructor(
             if(activity.productCode =="A"){
 //                   actualVWeight= (bookingList[index].pckglength * bookingList[index].pckgbreath * bookingList[index].pckgheight).toFloat()/6000
 //                actualVWeight= (layoutBinding.length.toString().toInt() * layoutBinding.breadth.toString().toInt() * layoutBinding.height.toString().toInt()).toFloat()/6000
-                bookingList[index].localVWeight= (layoutBinding.length.text.toString().toDouble() * layoutBinding.breadth.text.toString().toDouble() * layoutBinding.height.text.toString().toDouble()).toFloat()/6000
+                bookingList[index].localVWeight = ((layoutBinding.length.text.toString().toDouble() * layoutBinding.breadth.text.toString().toDouble() * layoutBinding.height.text.toString().toDouble()).toFloat()/6000).toInt()
             }else{
 //                   actualVWeight= (bookingList[index].pckglength * bookingList[index].pckgbreath * bookingList[index].pckgheight).toFloat()/5000
 //                   actualVWeight= (layoutBinding.length.text.toString().toDouble() * layoutBinding.breadth.text.toString().toDouble() * layoutBinding.height.text.toString().toDouble()).toFloat()/5000
-                bookingList[index].localVWeight= (layoutBinding.length.text.toString().toDouble() * layoutBinding.breadth.text.toString().toDouble() * layoutBinding.height.text.toString().toDouble()).toFloat()/5000
+                bookingList[index].localVWeight= ((layoutBinding.length.text.toString().toDouble() * layoutBinding.breadth.text.toString().toDouble() * layoutBinding.height.text.toString().toDouble()).toFloat()/5000).toInt()
             }
 
         }else if(bookingList[index].volfactor.isNaN()){
@@ -440,20 +443,20 @@ class DirectBookingAdapter @Inject constructor(
 
         }else{
 //            actualVWeight= ceil(bookingList[index].volfactor.toFloat() * bookingList[index].pcs.toDouble()).toFloat()
-            bookingList[index].localVWeight= ceil(bookingList[index].volfactor.toFloat() * bookingList[index].pcs.toDouble()).toFloat()
+            bookingList[index].localVWeight= (ceil(bookingList[index].localVWeight.toFloat() * bookingList[index].pcs.toDouble()).toFloat()).toInt()
         }
-        calculateTotalVWeight()
+         calculateTotalVWeight()
 
     }
 
     fun serviceTypeChanged() {
         if(activity.productCode =="A"){
             bookingList.forEachIndexed { index, singlePickupRefModel ->
-                singlePickupRefModel.localVWeight = ( singlePickupRefModel.localLength * singlePickupRefModel.localBreath * singlePickupRefModel.localHeight ).toFloat() / 6000 * singlePickupRefModel.pcs
+                singlePickupRefModel.localVWeight = (( singlePickupRefModel.localLength * singlePickupRefModel.localBreath * singlePickupRefModel.localHeight ).toFloat() / 6000 * singlePickupRefModel.pcs).toInt()
             }
         }else{
             bookingList.forEachIndexed { index, singlePickupRefModel ->
-                singlePickupRefModel.localVWeight = ( singlePickupRefModel.localLength * singlePickupRefModel.localBreath * singlePickupRefModel.localHeight ).toFloat() / 5000 * singlePickupRefModel.pcs
+                singlePickupRefModel.localVWeight = ((singlePickupRefModel.localLength * singlePickupRefModel.localBreath * singlePickupRefModel.localHeight ).toFloat() / 5000 * singlePickupRefModel.pcs).toInt()
             }
         }
         calculateTotalVWeight()
@@ -468,13 +471,15 @@ class DirectBookingAdapter @Inject constructor(
     }
     fun calculateTotalAWeight(index: Int, layoutBinding: BookingItemViewBinding){
         var aWeight: Int? = layoutBinding.weight.text.toString().toIntOrNull()
+        actualWeight= 0
         if(aWeight == null) {
 //               activity.errorToast("Weight in wrong format.")
             return
         }
         if(aWeight > 0){
+
             bookingList.forEachIndexed {index, element ->
-                actualWeight= (actualWeight+element.aweight).toInt()
+                actualWeight= (actualWeight+element.weight).toInt()
             }
         }
         if(actualWeight.toFloat().isNaN()){
@@ -483,7 +488,6 @@ class DirectBookingAdapter @Inject constructor(
         activity.setAWeight(actualWeight)
         calculateChargeableWeight()
     }
-
 
     fun calculateChargeableWeight(){
 

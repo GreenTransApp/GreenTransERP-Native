@@ -152,6 +152,13 @@ object Utils {
         return value.toString()
     }
 
+    fun checkNullOrEmptyWithValue(value: Any?): Boolean {
+        if(value == "" || value == null|| value == "null"){
+            return  true
+        }
+        return  false
+    }
+
     fun allCapsInput(editText: EditText): Array<InputFilter> {
         return editText.filters + InputFilter.AllCaps()
     }

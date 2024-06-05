@@ -18,6 +18,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.greensoft.greentranserpnative.R
+import com.greensoft.greentranserpnative.base.BaseActivity
 import com.greensoft.greentranserpnative.base.BaseFragment
 import com.greensoft.greentranserpnative.databinding.EwayBillLayoutBinding
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
@@ -43,14 +44,14 @@ class EwayBillBottomSheet @Inject constructor() : BaseFragment(), BottomSheetCli
     private var bottomSheetClick: BottomSheetClick<Any> ?=null
     private var ewayBillList: ArrayList<ItemEwayBillModel> = ArrayList()
     private var title: String = "Selection"
-    private lateinit var activity: BookingActivity
+    private lateinit var activity: BaseActivity
     private lateinit var bookingViewModel: BookingViewModel
     private var disableEwayBillForBooking = false
     var showChangeAlert = false
     companion object {
         var ITEM_CLICK_VIEW_TYPE = "EWAY_BILL_BOTTOMSHEET"
         fun  newInstance(
-            activity: BookingActivity,
+            activity: BaseActivity,
             title: String,
             bookingViewModel: BookingViewModel,
             loginDataModel: LoginDataModel?,
@@ -71,7 +72,7 @@ class EwayBillBottomSheet @Inject constructor() : BaseFragment(), BottomSheetCli
 
     fun dataWillBeLostAlert() {
         CommonAlert.createAlert(
-            context!!,
+            mContext,
             "ALERT!!!",
             "WARNING: All entered E-WAY BILLs will be lost and you will have to enter it again. Are you sure you want to change the list?",
             this,
@@ -82,7 +83,7 @@ class EwayBillBottomSheet @Inject constructor() : BaseFragment(), BottomSheetCli
 
     private fun disableEwayAlert() {
         CommonAlert.createAlert(
-            context!!,
+            mContext,
             "DISABLE ALERT!!!",
             "WARNING: All entered E-WAY BILLs will be lost and you will have to enter it again. Are you sure you want to disable?",
             this,

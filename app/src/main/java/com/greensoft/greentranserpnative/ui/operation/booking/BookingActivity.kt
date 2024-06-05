@@ -159,8 +159,13 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>,
         setContentView(activityBinding.root)
         setSupportActionBar(activityBinding.toolBar.root)
         setUpToolbar("BOOKING ENTRY")
+        Utils.ewayBillDetailResponse= null
+        Utils.enteredValidatedEwayBillList= null
+        Utils.enteredEwayBillValidatedData.clear()
+
         setObservers()
         menuModel = getMenuData()
+
         activityBinding.inputDate.inputType = InputType.TYPE_NULL;
         activityBinding.inputTime.inputType = InputType.TYPE_NULL;
         setLayoutVisibility()
@@ -1366,7 +1371,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>,
 
             return
         } else if (activityBinding.inputTime.text.isNullOrEmpty()) {
-            errorToast("Please Select Date")
+            errorToast("Please Select Time")
             return
         } else if (activityBinding.inputCustName.text.isNullOrEmpty()) {
             errorToast("Please Select Customer")
@@ -1396,7 +1401,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>,
         } else if (activityBinding.inputAWeight.text.isNullOrEmpty()) {
             errorToast("Please Enter Actual Weight.")
             return
-        } else if (activityBinding.inputAWeight.text.isNullOrEmpty()) {
+        } else if (activityBinding.inputVolWeight.text.isNullOrEmpty()) {
             errorToast("Please Enter Volumetric Weight.")
             return
         } else if (activityBinding.inputCWeight.text.isNullOrEmpty()) {
