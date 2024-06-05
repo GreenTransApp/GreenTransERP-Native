@@ -1724,7 +1724,7 @@ class BookingActivity @Inject constructor() : BaseActivity(), OnRowClick<Any>,
         Log.d("total pckgs",totalPackage.toString())
 
         if(ENV.DEBUGGING) {
-             successToast(" at save")
+            successToast("ENV DEBUGGING now at save")
             return
         }
         viewModel.saveBooking(

@@ -626,9 +626,11 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
         }
     }
 
-    open fun showSnackBar(view: View, mContext: Context, msg: String?, isSuccessSnackBar: Boolean) {
+    open fun showSnackBar(view: View, mContext: Context, msgParams: String?, isSuccessSnackBar: Boolean) {
+        var msg = msgParams
         if(msg.isNullOrBlank()) {
-            return
+            msg = "EMPTY STRING SNACKBAR"
+//            return
         }
         val snackbar = Snackbar.make(view, "", Snackbar.LENGTH_LONG)
         val layoutInflater = LayoutInflater.from(mContext)

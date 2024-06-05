@@ -1,6 +1,7 @@
 package com.greensoft.greentranserpnative.ui.operation.scan_and_delivery
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -28,6 +29,7 @@ import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodEntryModel
 import com.greensoft.greentranserpnative.ui.operation.multiple_pod_entry_list.models.RelationListModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.adapter.ScanDeliveryAdapter
+import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.SavePodWithStickersModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanDelReasonModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanDeliverySaveModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanStickerModel
@@ -57,6 +59,10 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
     private var rvList: ArrayList<ScanStickerModel> = ArrayList()
     private var unDelReasonList: ArrayList<ScanDelReasonModel> = ArrayList()
     private val viewModel: ScanAndDeliveryViewModel by viewModels()
+
+    companion object {
+        val REMOVE_STICKER_ALERT_TAG: String = "REMOVE_STICKER_ALERT_TAG"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,6 +106,20 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
          grNo = grNo
      )
     }
+
+    override fun onRowClick(data: Any, clickType: String, index: Int) {
+        super.onRowClick(data, clickType, index)
+        when(clickType) {
+            ScanDeliveryAdapter.REMOVE_STICKER_RV_TAG -> {
+                try {
+                    val scanStickerModel: ScanStickerModel = data as ScanStickerModel
+                    removeStickerAlert(scanStickerModel.stickerno.toString())
+                } catch (ex: Exception) {
+                    errorToast(ex.message)
+                }
+            }
+        }
+    }
     private fun setSpinner(){
         activityBinding.inputRelation.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
@@ -121,13 +141,13 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
 
     private fun setObservers() {
         mScanner.observe(this) { stickerNo ->
-            successToast(stickerNo)
+//            successToast(stickerNo)
 
 //            stickerNumber = stickerNo
 //            setupRecyclerView()
             var stickerAlreadyExists: Boolean = false
             for(scanStickerModel in rvList) {
-                if(scanStickerModel.stickerno == stickerNo) {
+                if(scanStickerModel.stickerno == stickerNo && scanStickerModel.scanned == "Y") {
                     stickerAlreadyExists = true
                     break
                 }
@@ -203,14 +223,31 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
             }
         }
 
-        viewModel.updateStickerLiveData .observe(this){ data->
+        viewModel.updateStickerLiveData.observe(this){ data->
             savePodData = data;
             grNo = savePodData?.grno.toString()
             getPodDetails(savePodData?.grno.toString())
             getScanStickerList(savePodData?.grno.toString())
         }
 
+        viewModel.savePodWithStickersLiveData.observe(this) { savePod ->
+            if(savePod.commandstatus == 1) {
+                successToast("SUCCESS")
+                showPODCreatedAlert(savePod)
+            }
+        }
 
+
+    }
+
+    private fun showPODCreatedAlert(model: SavePodWithStickersModel) {
+        AlertDialog.Builder(this)
+            .setTitle("Success!!!")
+            .setMessage(model.commandmessage)
+            .setPositiveButton("Okay") { _, _ ->
+                finish()
+            }
+            .show()
     }
 
 
@@ -233,12 +270,12 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
 //        activityBinding.inputBookingTime.setText(Utils.checkNullOrEmpty(podDetail?.picktime.toString()))
 //        activityBinding.inputArrivalDt.setText(Utils.checkNullOrEmpty(podDetail?.receivedt.toString()))
 //        activityBinding.inputArrivalTime.setText(Utils.checkNullOrEmpty(podDetail?.receivetime.toString()))
-        activityBinding.inputReceiverBy.setText(Utils.checkNullOrEmpty(podDetail?.name.toString()))
 //        activityBinding.inputReceiverBy.filters = Utils.allCapsInput(activityBinding.inputReceiverBy)
-        activityBinding.inputReceiverbyMobile.setText(Utils.checkNullOrEmpty(podDetail?.phno.toString()))
 //        activityBinding.inputRemark.setText(Utils.checkNullOrEmpty(podDetail?.remarks.toString()))
 //        activityBinding.inputDeliveryBoy.setText(Utils.checkNullOrEmpty(userDataModel?.username.toString()))
 
+//        activityBinding.inputReceiverBy.setText(Utils.checkNullOrEmpty(podDetail?.name.toString()))
+//        activityBinding.inputReceiverbyMobile.setText(Utils.checkNullOrEmpty(podDetail?.phno.toString()))
     }
       @SuppressLint("UseCompatLoadingForDrawables")
       private  fun setOnClick(){
@@ -355,7 +392,7 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
             header = "Alert!!",
             description = " Are You Sure You Want To Remove This Sticker?",
             callback =this,
-            alertCallType ="REMOVE_STICKER",
+            alertCallType = REMOVE_STICKER_ALERT_TAG,
             data =  stickerNo
         )
     }
@@ -372,24 +409,48 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
 
 
     private fun finalSaveWithValidation(){
-        var undeliveredStickerList: ArrayList<ScanStickerModel> = ArrayList()
-        rvList.forEachIndexed{index, item ->
-            if (rvList[index].scanned == "N"){
-                undeliveredStickerList.add(item)
-//                navigateToUndeliveredPage(undeliveredStikerList)
-            }
+        val isSignChecked = activityBinding.signCheck.isChecked
+        val isPodChecked = activityBinding.imageCheck.isChecked
+        val inputTime = activityBinding.inputTime.text.toString()
+        val signImage = signPath
+        val podImage = podImagePath
+        val receiveBy: String = activityBinding.inputReceiverBy.text.toString()
+        val mobileNo: String = activityBinding.inputReceiverbyMobile.text.toString()
 
-        }
-        if(undeliveredStickerList.size > 0) {
-            openUndeliveredBottomSheet(
-                mContext,
-                "Not-Delivered Stickers",
-                this,
-                undeliveredStickerList,
-                unDelReasonList
-            )
+        if(grNo.isBlank()) {
+            errorToast("Please scan a sticker to make the POD.")
+        } else if(inputTime.isBlank()) {
+            errorToast("Please enter Delivery Time.")
+        } else if(receiveBy.isBlank()) {
+            errorToast("Please enter Receive By.")
+        } else if(mobileNo.isBlank()) {
+            errorToast("Please enter Mobile No.")
+        } else if(isSignChecked && signImage.isBlank()) {
+            errorToast("Please add your Signature.")
+        } else if(isPodChecked && podImage.isBlank()) {
+            errorToast("Please add POD Image.")
+        } else if(selectedRelation == null) {
+            errorToast("Select Relation.")
         } else {
-            savePodWithStickers("", "")
+            var undeliveredStickerList: ArrayList<ScanStickerModel> = ArrayList()
+            rvList.forEachIndexed { index, item ->
+                if (rvList[index].scanned == "N") {
+                    undeliveredStickerList.add(item)
+//                navigateToUndeliveredPage(undeliveredStikerList)
+                }
+
+            }
+            if (undeliveredStickerList.size > 0) {
+                openUndeliveredBottomSheet(
+                    mContext,
+                    "Not-Delivered Stickers",
+                    this,
+                    undeliveredStickerList,
+                    unDelReasonList
+                )
+            } else {
+                savePodWithStickers("", "")
+            }
         }
     }
 
@@ -422,11 +483,11 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
 
     override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {
         if(alertClick == AlertClick.YES) {
-            if (alertCallType == "REMOVE_STICKER") {
+            if (alertCallType == REMOVE_STICKER_ALERT_TAG) {
                 saveStickerToPod(data.toString())
-            } else if (alertCallType == "SAVE_STICKER") {
-                saveStickerToPod(data.toString())
-            } else if (alertCallType == "START_SCANNING") {
+//            } else if (alertCallType == "SAVE_STICKER") {
+//                saveStickerToPod(data.toString())
+//            } else if (alertCallType == "START_SCANNING") {
 
             }
         }
@@ -437,8 +498,8 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
             UndeliveredScanPodBottomSheet.UNDELIVERED_SAVE_CLICK_TAG -> {
                 try {
                     val undeliveredDataModel = data as UndeliveredEnteredDataModel
-                    Utils.logger(javaClass.toString(), "{\n'Un-Sticker: ${undeliveredDataModel.unDelStickerStr}'\n'Reason: ${undeliveredDataModel.unDelReasonStr}\n}'")
-//                    savePodWithStickers(undeliveredDataModel.unDelStickerStr, undeliveredDataModel.unDelReasonStr)
+//                    Utils.logger(javaClass.toString(), "{\n'Un-Sticker: ${undeliveredDataModel.unDelStickerStr}'\n'Reason: ${undeliveredDataModel.unDelReasonStr}\n}'")
+                    savePodWithStickers(undeliveredDataModel.unDelStickerStr, undeliveredDataModel.unDelReasonStr)
                 } catch (ex: Exception) {
                     errorToast(ex.message)
                 }
@@ -463,6 +524,7 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
     private fun savePodWithStickers(unDelStickerStr: String, unDelReasonStr: String) {
         val isSignChecked = activityBinding.signCheck.isChecked
         val isPodChecked = activityBinding.imageCheck.isChecked
+        val inputTime = activityBinding.inputTime.text.toString()
         val signImage = signPath
         val podImage = podImagePath
         val receiveBy: String = activityBinding.inputReceiverBy.text.toString()
@@ -470,7 +532,9 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
 
         if(grNo.isBlank()) {
             errorToast("Please scan a sticker to make the POD.")
-        }else if(receiveBy.isBlank()) {
+        } else if(inputTime.isBlank()) {
+            errorToast("Please enter Delivery Time.")
+        } else if(receiveBy.isBlank()) {
             errorToast("Please enter Receive By.")
         } else if(mobileNo.isBlank()) {
             errorToast("Please enter Mobile No.")
@@ -481,6 +545,12 @@ class ScanAndDeliveryActivity @Inject constructor() : BaseActivity(), OnRowClick
         } else if(selectedRelation == null) {
             errorToast("Select Relation.")
         } else {
+//            if(ENV.DEBUGGING) {
+//                errorToast("ENV.DEBUGGING AT POD SAVE")
+//                Log.d(this.localClassName, unDelStickerStr)
+//                Log.d(this.localClassName, unDelReasonStr)
+//                return
+//            }
             viewModel.savePodWithStickers(
                 getCompanyId(),
                 podImagePath,

@@ -12,23 +12,31 @@ import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.ScanAndDeliveryActivity
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanStickerModel
 
-class ScanDeliveryAdapter (private val stickerList: ArrayList<ScanStickerModel>,
-                           private val mContext: Context,
-                           private val activity:ScanAndDeliveryActivity,
-                           private val onRowClick: OnRowClick<Any>
-) : RecyclerView.Adapter<ScanDeliveryAdapter.ScanDeliveryViewHolder>(){
+class ScanDeliveryAdapter(
+    private val stickerList: ArrayList<ScanStickerModel>,
+    private val mContext: Context,
+    private val activity: ScanAndDeliveryActivity,
+    private val onRowClick: OnRowClick<Any>
+) : RecyclerView.Adapter<ScanDeliveryAdapter.ScanDeliveryViewHolder>() {
+
+    companion object {
+        val REMOVE_STICKER_RV_TAG: String = "REMOVE_STICKER"
+    }
 
 
     inner class ScanDeliveryViewHolder(val binding: ScanStickerItemBinding) :
-        RecyclerView.ViewHolder(binding.root){
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bindData(model: ScanStickerModel, onRowClick: OnRowClick<Any>) {
             binding.stickerModel = model
             binding.index = adapterPosition
-
-
+            binding.btnRemove.setOnClickListener {
+                onRowClick.onRowClick(model, REMOVE_STICKER_RV_TAG, adapterPosition)
             }
+
         }
+
+    }
 
 //    fun setGridData(position: Int){
 //
@@ -49,7 +57,6 @@ class ScanDeliveryAdapter (private val stickerList: ArrayList<ScanStickerModel>,
         return ScanDeliveryViewHolder(binding)
 
 
-
     }
 
     override fun getItemCount(): Int = stickerList.size
@@ -57,7 +64,7 @@ class ScanDeliveryAdapter (private val stickerList: ArrayList<ScanStickerModel>,
     override fun onBindViewHolder(holder: ScanDeliveryViewHolder, position: Int) {
         val data = stickerList[holder.adapterPosition]
         holder.bindData(data, onRowClick)
-        if(data.scanned == "N" ) {
+        if (data.scanned == "Y") {
             holder.binding.btnRemove.visibility = View.VISIBLE
             holder.binding.gridLayout.setBackgroundColor(
                 ContextCompat.getColor(
@@ -66,8 +73,7 @@ class ScanDeliveryAdapter (private val stickerList: ArrayList<ScanStickerModel>,
                 )
             )
 
-        }
-        else {
+        } else {
             holder.binding.btnRemove.visibility = View.GONE
             holder.binding.gridLayout.setBackgroundColor(
                 ContextCompat.getColor(

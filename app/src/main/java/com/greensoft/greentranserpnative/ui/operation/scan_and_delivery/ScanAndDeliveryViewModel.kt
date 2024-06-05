@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.greensoft.greentranserpnative.base.BaseViewModel
 import com.greensoft.greentranserpnative.ui.operation.pod_entry.models.PodEntryModel
 import com.greensoft.greentranserpnative.ui.operation.multiple_pod_entry_list.models.RelationListModel
+import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.SavePodWithStickersModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanDelReasonModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanDeliverySaveModel
 import com.greensoft.greentranserpnative.ui.operation.scan_and_delivery.models.ScanStickerModel
@@ -34,6 +35,9 @@ class ScanAndDeliveryViewModel @Inject constructor(private val _repo: ScanAndDel
         get() = _repo.updateStickerForPodLiveData
     val unDelReasonList: LiveData<ArrayList<ScanDelReasonModel>>
         get() = _repo.scanDelReasonLiveData
+
+    val savePodWithStickersLiveData: LiveData<SavePodWithStickersModel>
+        get() = _repo.savePodWithStickersLiveData
 
     fun getPodDetails(companyId: String, grNo: String) {
         viewModelScope.launch(Dispatchers.IO) {

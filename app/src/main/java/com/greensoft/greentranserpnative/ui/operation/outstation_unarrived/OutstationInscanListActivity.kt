@@ -3,6 +3,8 @@ package com.greensoft.greentranserpnative.ui.operation.outstation_unarrived
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
@@ -20,6 +22,7 @@ import com.greensoft.greentranserpnative.ui.operation.outstation_inscan_detail_w
 import com.greensoft.greentranserpnative.ui.operation.unarrived.InscanListAdapter
 import com.greensoft.greentranserpnative.ui.operation.unarrived.InscanListViewModel
 import com.greensoft.greentranserpnative.ui.operation.unarrived.models.InscanListModel
+import com.greensoft.greentranserpnative.utils.Utils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import net.posprinter.utils.DataForSendToPrinterTSC.delay
@@ -45,8 +48,21 @@ class OutstationInscanListActivity@Inject constructor(): BaseActivity(), OnRowCl
         setObserver()
         searchItem()
         refreshData()
+    }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.datePicker -> {
+                openDatePicker()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 
@@ -113,17 +129,16 @@ class OutstationInscanListActivity@Inject constructor(): BaseActivity(), OnRowCl
     }
 
     private fun getInscanList(){
+        Utils.logger("OUTSTATION INSCAN: FROMDT", fromDt)
+        Utils.logger("OUTSTATION INSCAN: TODT", toDt)
         viewModel.getInscanList(
             companyId = getCompanyId(),
-//           companyId = "17846899",  // need to change for  jeena
             userCode = getUserCode(),
             branchCode = getLoginBranchCode(),
             sessionId = getSessionId(),
             "ALL",
-            //fromDt = fromDt,
-            fromDt = "2023-11-01",
-            //toDt = toDt,
-            toDt = "2024-04-01",
+            fromDt = fromDt,
+            toDt = toDt,
             manifestType = "O",
             modeType = "A",
 
