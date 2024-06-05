@@ -492,11 +492,11 @@ class BookingAdapter @Inject constructor(
             if(activity.productCode =="A"){
 //                   actualVWeight= (bookingList[index].pckglength * bookingList[index].pckgbreath * bookingList[index].pckgheight).toFloat()/6000
 //                actualVWeight= (layoutBinding.length.toString().toInt() * layoutBinding.breadth.toString().toInt() * layoutBinding.height.toString().toInt()).toFloat()/6000
-                bookingList[index].localVWeight= (layoutBinding.length.text.toString().toDouble() * layoutBinding.breadth.text.toString().toDouble() * layoutBinding.height.text.toString().toDouble()).toFloat()/6000
+                bookingList[index].localVWeight= ((layoutBinding.length.text.toString().toDouble() * layoutBinding.breadth.text.toString().toDouble() * layoutBinding.height.text.toString().toDouble()).toFloat()/6000).toInt()
             }else{
 //                   actualVWeight= (bookingList[index].pckglength * bookingList[index].pckgbreath * bookingList[index].pckgheight).toFloat()/5000
 //                   actualVWeight= (layoutBinding.length.text.toString().toDouble() * layoutBinding.breadth.text.toString().toDouble() * layoutBinding.height.text.toString().toDouble()).toFloat()/5000
-                bookingList[index].localVWeight= (layoutBinding.length.text.toString().toDouble() * layoutBinding.breadth.text.toString().toDouble() * layoutBinding.height.text.toString().toDouble()).toFloat()/5000
+                bookingList[index].localVWeight= ((layoutBinding.length.text.toString().toDouble() * layoutBinding.breadth.text.toString().toDouble() * layoutBinding.height.text.toString().toDouble()).toFloat()/5000).toInt()
             }
 
         }else if(bookingList[index].volfactor.isNaN()){
@@ -504,7 +504,7 @@ class BookingAdapter @Inject constructor(
 
         }else{
 //            actualVWeight= ceil(bookingList[index].volfactor.toFloat() * bookingList[index].pcs.toDouble()).toFloat()
-            bookingList[index].localVWeight= ceil(bookingList[index].volfactor.toFloat() * bookingList[index].pcs.toDouble()).toFloat()
+            bookingList[index].localVWeight= (ceil(bookingList[index].volfactor.toFloat() * bookingList[index].pcs.toDouble()).toFloat()).toInt()
         }
         calculateTotalVWeight()
 
@@ -513,11 +513,11 @@ class BookingAdapter @Inject constructor(
     fun serviceTypeChanged() {
         if(activity.productCode =="A"){
             bookingList.forEachIndexed { index, singlePickupRefModel ->
-                singlePickupRefModel.localVWeight = ( singlePickupRefModel.localLength * singlePickupRefModel.localBreath * singlePickupRefModel.localHeight ).toFloat() / 6000 * singlePickupRefModel.pcs
+                singlePickupRefModel.localVWeight = ((singlePickupRefModel.localLength * singlePickupRefModel.localBreath * singlePickupRefModel.localHeight ).toFloat() / 6000 * singlePickupRefModel.pcs).toInt()
             }
         }else{
             bookingList.forEachIndexed { index, singlePickupRefModel ->
-                singlePickupRefModel.localVWeight = ( singlePickupRefModel.localLength * singlePickupRefModel.localBreath * singlePickupRefModel.localHeight ).toFloat() / 5000 * singlePickupRefModel.pcs
+                singlePickupRefModel.localVWeight = ((singlePickupRefModel.localLength * singlePickupRefModel.localBreath * singlePickupRefModel.localHeight ).toFloat() / 5000 * singlePickupRefModel.pcs).toInt()
             }
         }
         calculateTotalVWeight()

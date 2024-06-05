@@ -74,7 +74,7 @@ data class SinglePickupRefModel(
     val transactionid: Int,
     var volfactor: Float,
     var weight: Double,
-    var localVWeight: Float,
+    var localVWeight: Int,
     var isBoxValidated: Boolean
 ) {
 
@@ -150,7 +150,7 @@ data class SinglePickupRefModel(
         tempuratureCode = "",
         volfactor = 0.0f,
         aweight = 0.0,
-        localVWeight = 0.0f,
+        localVWeight = 0,
         isBoxValidated = false,
         dryice = "",
         dryiceqty = 0.0,

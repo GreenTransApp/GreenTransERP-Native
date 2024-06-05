@@ -798,7 +798,7 @@ interface Api {
         @Field("prmcngeSTaxRegNo")    cngeSTaxRegNo:String?,
         @Field("prmtransactionid")    transactionid :Int?,
         @Field("prmmawbchargeapplicable")    mawbchargeapplicable :String?,
-        @Field("prmcustdeptid")    custdeptid :Int?,
+        @Field("prmcustdeptid")    custdeptid :String?,
         @Field("prmreferencenostr")    referencenostr :String?,
         @Field("prmweightstr")    weightstr :String?,
         @Field("prmpackagetypestr")    packagetypestr :String?,
