@@ -331,9 +331,16 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
                 showSnackBar(view, mContext, msg, true)
                 return;
             } else {
-                val rootView: View =
-                    (this as Activity).window.decorView.findViewById(android.R.id.content)
-                showSnackBar(rootView, this, msg, true)
+                var rootView: View? = null
+                try {
+                    rootView = (this as AppCompatActivity).window.decorView.findViewById(android.R.id.content)
+                } catch (ex: Exception) {
+                    rootView = (mContext as AppCompatActivity).window.decorView.findViewById(android.R.id.content)
+                }
+                if(rootView != null)
+                    showSnackBar(rootView, mContext, msg, true)
+                else
+                    Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show()
                 return
             }
 
@@ -364,9 +371,16 @@ open class BaseActivity @Inject constructor(): AppCompatActivity() {
                 showSnackBar(view, mContext, msg, false)
                 return;
             } else {
-                val rootView: View =
-                    (this as Activity).window.decorView.findViewById(android.R.id.content)
-                showSnackBar(rootView, mContext, msg, false)
+                var rootView: View? = null
+                try {
+                    rootView = (this as AppCompatActivity).window.decorView.findViewById(android.R.id.content)
+                } catch (ex: Exception) {
+                    rootView = (mContext as AppCompatActivity).window.decorView.findViewById(android.R.id.content)
+                }
+                if(rootView != null)
+                    showSnackBar(rootView, mContext, msg, false)
+                else
+                    Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show()
                 return
             }
 

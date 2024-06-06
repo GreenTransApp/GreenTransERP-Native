@@ -171,7 +171,7 @@ class OutstationInscanDetailWithScannerActivity  @Inject constructor(): BaseActi
             getUserCode(),
             getLoginBranchCode(),
             manifestNo.toString(),
-            "i",
+            "O",
             getSessionId()
         )
     }

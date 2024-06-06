@@ -182,7 +182,7 @@ class OutstationInscanDetailWithoutScannerActivity @Inject constructor(): BaseAc
             userDataModel?.usercode.toString(),
             getLoginBranchCode(),
             manifestNo!!,
-            "I",
+            "O",
             getSessionId()
         )
     }
