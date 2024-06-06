@@ -90,7 +90,7 @@ class UploadBookingImageActivity @Inject constructor() : BaseActivity() {
     private fun setObservers() {
         imageClicked.observe(this) { clicked ->
             if(clicked) {
-                successToast("CLICKED")
+//                successToast("CLICKED")
                 var imageBitmap = imageBitmapList.get(imageBitmapList.size - 1)
                 imageBase64 = imageBase64List.get(imageBase64List.size - 1)
                 activityBinding.ivAddImage.setImageBitmap(imageBitmap)
