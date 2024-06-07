@@ -27,11 +27,13 @@ import com.greensoft.greentranserpnative.ui.bottomsheet.departmentSelection.Depa
 import com.greensoft.greentranserpnative.ui.bottomsheet.departmentSelection.model.DepartmentSelectionModel
 import com.greensoft.greentranserpnative.ui.bottomsheet.pinCodeSelection.PinCodeSelectionBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.pinCodeSelection.model.PinCodeModel
+import com.greensoft.greentranserpnative.ui.bottomsheet.printGR.PrintGrBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.vehicleSelection.VehicleSelectionBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.vehicleSelection.model.VehicleModelDRS
 import com.greensoft.greentranserpnative.ui.bottomsheet.vendorSelection.VendorSelectionBottomSheet
 import com.greensoft.greentranserpnative.ui.bottomsheet.vendorSelection.model.VendorModelDRS
 import com.greensoft.greentranserpnative.ui.common.alert.AlertClick
+import com.greensoft.greentranserpnative.ui.common.alert.CommonAlert
 import com.greensoft.greentranserpnative.ui.onClick.AlertCallback
 import com.greensoft.greentranserpnative.ui.onClick.BottomSheetClick
 import com.greensoft.greentranserpnative.ui.onClick.OnRowClick
@@ -262,6 +264,8 @@ class DirectBookingActivity @Inject constructor() : BaseActivity(), OnRowClick<A
         activityBinding.btnAddMore.setOnClickListener {
             if (bookingList.isNotEmpty()) {
                 addMoreGridItem(bookingList[0]);
+            } else{
+                errorToast("Please enter no of pckgs first")
             }
         }
 
@@ -432,6 +436,27 @@ class DirectBookingActivity @Inject constructor() : BaseActivity(), OnRowClick<A
                 bookingAdapter?.enterBoxOnNextAvailable(it.boxno.toString())
             }
         }
+        viewModel.saveBookingLiveData.observe(this) { data ->
+            if (data != null) {
+                if (data.commandstatus == 1) {
+//                    showGrCreatedAlert(data)
+                    showPrintGrAlert(data.grno.toString())
+//                    successToast(data.commandmessage.toString())
+                } else {
+                    errorToast(data.commandmessage.toString())
+                }
+            }
+        }
+    }
+    private fun showPrintGrAlert(grNo: String) {
+        CommonAlert.createAlert(
+            context = this,
+            header = "Alert!!",
+            description = "Are you sure to print GR#: $grNo ?",
+            callback = this,
+            alertCallType = DirectBookingActivity.PRINT_GR_TAG,
+            data = grNo
+        )
     }
 //    private fun updateBookingList(numberOfItems: Int) {
 //        bookingList.clear() // Clear the current list
@@ -725,7 +750,34 @@ class DirectBookingActivity @Inject constructor() : BaseActivity(), OnRowClick<A
     }
 
     override fun onAlertClick(alertClick: AlertClick, alertCallType: String, data: Any?) {
-        TODO("Not yet implemented")
+        when (alertClick) {
+            AlertClick.YES -> run {
+                when (alertCallType) {
+                    DirectBookingActivity.PRINT_GR_TAG -> run {
+                        try {
+                            var grNo: String = data as String
+                            grNo.let {
+                                openPrintGrBottomSheet(this, "Print Sticker", grNo)
+                            }
+                        } catch (ex: Exception) {
+                            errorToast(ex.message)
+                        }
+                    }
+
+                    else -> {
+                        Log.d(DirectBookingActivity.Companion::class.java.name, alertCallType)
+                    }
+                }
+            }
+
+            AlertClick.NO -> run {
+                finish()
+            }
+
+            else -> {
+
+            }
+        }
     }
 
     override fun onItemClick(data: Any, clickType: String) {
@@ -781,7 +833,7 @@ class DirectBookingActivity @Inject constructor() : BaseActivity(), OnRowClick<A
                 val selectedCngeCngrData = data as CngrCngeSelectionModel
                 activityBinding.consignorName.setText(selectedCngeCngrData.name)
                 cngrCode = selectedCngeCngrData.code
-                activityBinding.consignorMobile.setText(selectedCngeCngrData.telno ?: "")
+//                activityBinding.consignorMobile.setText(selectedCngeCngrData.telno ?: "")
                 cngrAddress = selectedCngeCngrData.address
                 cngrCity = selectedCngeCngrData.city
                 cngrzipCode = selectedCngeCngrData.zipcode
@@ -1038,6 +1090,10 @@ class DirectBookingActivity @Inject constructor() : BaseActivity(), OnRowClick<A
         }
     }
 
+    private fun openPrintGrBottomSheet(mContext: Context, title: String, grNo: String) {
+        val bottomSheetDialog = PrintGrBottomSheet.newInstance(mContext, title, grNo)
+        bottomSheetDialog.show(supportFragmentManager, PrintGrBottomSheet.TAG)
+    }
 //    override fun onRowClick(data: Any, clickType: String, index: Int) {
 //        super.onRowClick(data, clickType, index)
 //        val removingItem: InvoiceDataModel = data as InvoiceDataModel
@@ -1181,11 +1237,11 @@ class DirectBookingActivity @Inject constructor() : BaseActivity(), OnRowClick<A
 //            val dimBreath=singleRefList[i].localBreath
 //            val dimLength=singleRefList[i].localLength
             val dimHeight =
-                if (adapterEnteredData == null) bookingList[i].localHeight else adapterEnteredData[i].localHeight
+                if (adapterEnteredData == null) bookingList[i].localHeight.toInt() else adapterEnteredData[i].localHeight.toInt()
             val dimBreath =
-                if (adapterEnteredData == null) bookingList[i].localBreath else adapterEnteredData[i].localBreath
+                if (adapterEnteredData == null) bookingList[i].localBreath.toInt()else adapterEnteredData[i].localBreath.toInt()
             val dimLength =
-                if (adapterEnteredData == null) bookingList[i].localLength else adapterEnteredData[i].localLength
+                if (adapterEnteredData == null) bookingList[i].localLength.toInt() else adapterEnteredData[i].localLength.toInt()
             val boxNoStr = adapterEnteredData?.get(i)?.boxno ?: bookingList[i].boxno ?: ""
             val gelPackStr = bookingList[i].gelpack
             val gelPackQtyStr = adapterEnteredData?.get(i)?.gelpackqty ?: bookingList[i].gelpackqty
