@@ -45,7 +45,7 @@ class UploadPodImageActivity @Inject constructor() : BaseActivity() {
     private fun setOnClicks() {
         imageClicked.observe(this) { clicked ->
             if(clicked) {
-                successToast("CLICKED")
+//                successToast("CLICKED")
                 var imageBitmap = imageBitmapList.get(imageBitmapList.size - 1)
                 imageBase64 = imageBase64List.get(imageBase64List.size - 1)
                 activityBinding.ivAddImage.setImageBitmap(imageBitmap)
@@ -122,6 +122,7 @@ class UploadPodImageActivity @Inject constructor() : BaseActivity() {
         imageBase64 = ""
         isGrValidated = false
         activityBinding.inputGr.setText("")
+        activityBinding.inputGr.isEnabled = true
         activityBinding.ivAddImage.visibility = View.GONE
         activityBinding.ivAddImage.setImageResource(R.drawable.baseline_add_a_photo_24)
         activityBinding.btnSave.visibility = View.GONE
