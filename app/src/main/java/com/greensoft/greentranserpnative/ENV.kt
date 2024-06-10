@@ -18,14 +18,14 @@ class ENV {
         val DEFAULT_BLUETOOTH_ADDRESS_PREF_TAG = "DEFAULT_BLUETOOTH_ADDRESS_${PREF_TAG}"
         val IMAGE_PREF_SHARE = "image_prefs${PREF_TAG}"
 
-        val DEBUGGING: Boolean = true
+        val DEBUGGING: Boolean = false
         val LOCAL_API: Boolean = false
 
         val APP_NAME = "GreenTransERPNative"
 //       const val DEBUG_USERNAME: String = "ADMIN@GREENTRANS"
 //       const val DEBUG_PASSWORD: String = "GREEN@#321"
         const val DEBUG_USERNAME: String = "TESTING@JEENA"
-        const val DEBUG_PASSWORD: String = "12345678"
+        const val DEBUG_PASSWORD: String = "9560824948@"
 //       const val DEBUG_USERNAME: String = "DELHIPICKUPBOY@GREENTRANS"
 //       const val DEBUG_PASSWORD: String = "123456"
 //        const val DEBUG_USERNAME: String = "PANKAJ@JEENA"

@@ -166,6 +166,10 @@ class OutstationInscanDetailWithScannerActivity  @Inject constructor(): BaseActi
 
 
     private fun getInScanDetails(){
+        if(inScanCardDetailList.size > 0) {
+            inScanCardDetailList.clear()
+            setupRecyclerView()
+        }
         viewModel.getInScanDetails(
             getCompanyId(),
             getUserCode(),
