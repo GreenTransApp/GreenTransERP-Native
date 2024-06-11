@@ -29,10 +29,18 @@ class HomeViewModel @Inject constructor(private val _repository: HomeRepository)
     val notificationPanelListLiveData: LiveData<ArrayList<NotificationPanelBottomSheetModel>>
         get() = _repository.notificationPanelListLiveData
 
-    fun getUserMenu(companyId:String, spname: String, param:List<String>, values:ArrayList<String>){
-        viewModelScope.launch(Dispatchers.IO) {
-            _repository.getUserMenu(companyId,spname, param,values)
-        }
+//    fun getUserMenu(companyId:String, spname: String, param:List<String>, values:ArrayList<String>){
+//        viewModelScope.launch(Dispatchers.IO) {
+//            _repository.getUserMenu(companyId,spname, param,values)
+//        }
+//    }
+
+//    suspend fun getUserMenu(companyId:String, spname: String, param:List<String>, values:ArrayList<String>): ArrayList<UserMenuModel>? {
+    suspend fun getUserMenu( companyId:String, userCode: String, branchCode: String, fromDt: String, toDt: String, appVersion: String): ArrayList<UserMenuModel>? {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            return _repository.getUserMenu(companyId,spname, param,values)
+//        }
+        return _repository.getUserMenu(companyId, userCode, branchCode, fromDt, toDt, appVersion)
     }
 
     fun getNotificationPanelList(companyId:String, spname: String, param:List<String>, values:ArrayList<String>){

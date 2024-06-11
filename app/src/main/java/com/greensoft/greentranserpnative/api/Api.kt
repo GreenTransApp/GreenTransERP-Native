@@ -854,4 +854,14 @@ interface Api {
         @Query("prmsessionid") sessionId: String?,
         @Query("prmdrsno") drsNo: String?,
     ): Call<CommonResult>
+
+    @GET("WMS/GetJeenaDashBoard")
+    fun getUserMenu(
+        @Query("prmconnstring") companyId: String,
+        @Query("prmusercode") userCode:String?,
+        @Query("prmbranchcode") branchCode:String?,
+        @Query("prmfromdt") fromDt: String?,
+        @Query("prmtodt") toDt: String?,
+        @Query("prmappversion") appVersion: String?,
+    ): Call<CommonResult>
 }

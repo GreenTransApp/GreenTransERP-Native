@@ -85,7 +85,14 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
     val fromDt: String = "2023-09-11"
     val toDt: String = "2023-10-11"
 //    lateinit var badgeDrawable: BadgeDrawable
-    private  var transactionId:String = "884042"
+//    private  var transactionId:String = "884042"
+    private var transactionId: String = ""
+
+    companion object {
+        val TAG = "HOME_ACTIVITY_TAG"
+    }
+
+
 
     var resultLauncher: ActivityResultLauncher<Intent>
     = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -169,15 +176,45 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
      private fun refreshData(){
          getUserMenu()
      }
-    private fun getUserMenu(){
-//            "greentransapp_usermenu_native_WMS",
-//            listOf("prmusercode","prmapp"),
-        viewModel.getUserMenu(
-            loginDataModel?.companyid.toString(),
-            "gtapp_erpnative_jeenadashboard",
-            listOf("prmusercode","prmloginbranchcode","prmfromdt","prmtodt","prmappversion"),
-            arrayListOf(userDataModel?.usercode.toString(), userDataModel?.loginbranchcode.toString(), fromDt, toDt ,ENV.APP_VERSION)
-        )
+//    private fun getUserMenu(){
+////            "greentransapp_usermenu_native_WMS",
+////            listOf("prmusercode","prmapp"),
+//        viewModel.getUserMenu(
+//            loginDataModel?.companyid.toString(),
+//            "gtapp_erpnative_jeenadashboard",
+//            listOf("prmusercode","prmloginbranchcode","prmfromdt","prmtodt","prmappversion"),
+//            arrayListOf(userDataModel?.usercode.toString(), userDataModel?.loginbranchcode.toString(), fromDt, toDt ,ENV.APP_VERSION)
+//        )
+//    }
+
+    private fun getUserMenu() {
+        Log.d(TAG, "1")
+        lifecycleScope.launch {
+            Log.d(TAG, "2")
+//            val localMenuList = viewModel.getUserMenu(
+//                loginDataModel?.companyid.toString(),
+//                "gtapp_erpnative_jeenadashboard",
+//                listOf("prmusercode","prmloginbranchcode","prmfromdt","prmtodt","prmappversion"),
+//                arrayListOf(userDataModel?.usercode.toString(), userDataModel?.loginbranchcode.toString(), fromDt, toDt ,ENV.APP_VERSION)
+//            )
+            val localMenuList = viewModel.getUserMenu(
+                getCompanyId(),
+                userDataModel?.usercode.toString(),
+                userDataModel?.loginbranchcode.toString(),
+                fromDt,
+                toDt ,
+                ENV.APP_VERSION
+            )
+            Log.d(TAG, "3")
+            if(localMenuList != null) {
+                if(localMenuList.size > 0) {
+                    menuList = localMenuList
+                    setupRecyclerView()
+                }
+            }
+
+        }
+        Log.d(TAG, "4")
     }
 
     private fun setNotificationCounter(counter: Int) {
@@ -316,7 +353,8 @@ class HomeActivity   @Inject constructor(): BaseActivity(), OnRowClick<Any>, Nav
         }
 
         mScanner.observe(this){data->
-            Companion.successToast(mContext,data)
+//            Companion.successToast(mContext,data)
+            BaseActivity.successToast(mContext, data)
 //            playSound()
         }
     }
